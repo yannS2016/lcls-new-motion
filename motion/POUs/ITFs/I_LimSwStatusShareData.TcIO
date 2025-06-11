@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_LimSwStatusShareData" Id="{05293a1e-386a-46e0-b219-a39c6e520011}">
+    <Declaration><![CDATA[INTERFACE I_LimSwStatusShareData
+]]></Declaration>
+    <Property Name="HomeBusy" Id="{2382ab9e-e464-498b-b3d1-3eb574860f78}">
+      <Declaration><![CDATA[PROPERTY HomeBusy : BOOL]]></Declaration>
+      <Get Name="Get" Id="{35889636-b658-4fba-89f2-a1033924d466}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="LimBackward" Id="{be547acb-e1fd-4050-bb2d-6f025603040d}">
+      <Declaration><![CDATA[PROPERTY LimBackward : BOOL]]></Declaration>
+      <Set Name="Set" Id="{1064053d-7051-418d-af4e-8ef6837c518f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="LimForward" Id="{507a6415-3928-42e3-8134-3e476dbbb9d5}">
+      <Declaration><![CDATA[PROPERTY LimForward : BOOL]]></Declaration>
+      <Set Name="Set" Id="{6976668a-3343-4e7d-8696-f0561798ac20}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="LimHome" Id="{7438c6e7-800b-414c-9ad6-226a2391d055}">
+      <Declaration><![CDATA[PROPERTY LimHome : BOOL]]></Declaration>
+      <Set Name="Set" Id="{76272b5c-968c-401a-a649-70372123cf48}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="MoveBusy" Id="{5e0e073b-50c5-4948-be6f-702b298fdd9b}">
+      <Declaration><![CDATA[PROPERTY MoveBusy : BOOL]]></Declaration>
+      <Get Name="Get" Id="{f6af31e0-cb12-4de7-b30f-e64dd9ed7440}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="NegativeDirection" Id="{9dde2d2c-6ea8-4c4f-9a29-430cb504c6a3}">
+      <Declaration><![CDATA[PROPERTY NegativeDirection : BOOL]]></Declaration>
+      <Get Name="Get" Id="{304943df-a34e-4d56-8af4-18e58cdebd37}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="NewMoveReq" Id="{470d22ec-d499-457f-bd91-c8f2969f0877}">
+      <Declaration><![CDATA[PROPERTY NewMoveReq : BOOL]]></Declaration>
+      <Get Name="Get" Id="{99c62cdc-4799-4413-bfd3-3fdf623fa6bb}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="PositiveDirection" Id="{b4b9bcd8-0d26-4798-b88f-a394bea26cbf}">
+      <Declaration><![CDATA[PROPERTY PositiveDirection : BOOL]]></Declaration>
+      <Get Name="Get" Id="{cc5f8abd-898d-42b9-9407-3ac75b0da583}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="ResetDone" Id="{f7b4446b-64dc-419d-81f1-3b9e4c9e3169}">
+      <Declaration><![CDATA[PROPERTY ResetDone : BOOL]]></Declaration>
+      <Get Name="Get" Id="{1753b70e-ceab-416b-a694-57df3291d784}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{3c943093-deb8-48b9-900a-7bf40f233716}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+  </Itf>
+</TcPlcObject>

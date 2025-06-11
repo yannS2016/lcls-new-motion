@@ -1,0 +1,366 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_AxisParametersNC" Id="{7f8d36cc-18a1-4d6c-99dd-bd0795394dcd}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_AxisParametersNC IMPLEMENTS I_AxisParameters
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+    {attribute 'no_copy'}
+    AxisRef : REFERENCE TO AXIS_REF;
+    iPersistentDataStorage : I_PersistentDataStorage;
+
+    nRawEncoderULINT AT %I*: ULINT;
+    // Raw encoder IO for UINT (Relative Encoders)
+    nRawEncoderUINT AT %I*: UINT;
+    // Raw encoder IO for INT (LVDT)
+    nRawEncoderINT AT %I*: INT;
+    // Raw encoder IO for INT (EL5072 LVDT)
+    nRawEncoderDINT AT %I*: DINT;
+    // Encoder count summary, if linked above
+    {attribute 'pytmc' := '
+        pv: PLC:nEncoderCount
+        io: i
+        field: DESC Count from encoder hardware
+    '}
+    nEncoderCount: UDINT;
+    // Position lag difference
+    {attribute 'pytmc' := '
+        pv: PLC:fPosDiff
+        io: i
+        field: DESC Position lag difference
+    '}
+    fPosDiff: LREAL;
+    // NC parameters that are exposed with pytmc pragmas
+    {attribute 'pytmc' := '
+        pv: PLC:AxisPar
+        io: i
+        field: DESC Axis configuration parameters in the numerical controller.
+    '}
+    stAxisParametersExposed : ST_AxisParameterSetExposed;
+    // MC_ReadParameterSet Output
+    mcReadParams: MC_ReadParameterSet;
+    //{attribute 'hide'}
+    stAxisParameters: ST_AxisParameterSet;
+    bNcParamsReadInit   : BOOL;
+    // save and restore
+    fbSetPos: MC_SetPosition;
+    bClearPositionLag : BOOL := TRUE;
+    NCParamsTimer : TON;
+    bAxisParamsInit : BOOL;
+    nLatchErrId : BOOL;
+    bRestoreDone 	: BOOL;
+    bRestoreError 	: BOOL;
+    nRestoreErrorID : UDINT;
+    // save and Restore
+    RestoreTimer: TON;
+    bRestoreInit: BOOL;
+    bRestoreLoad: BOOL;
+    nLatchError: UDINT;
+    bEncError: BOOL;
+    tRetryDelay: TIME := T#1S;
+    tRefreshDelay: TIME := T#1S;
+    bUpdateEnable : BOOL;
+    bExecute : BOOL;
+    nMaxRetries: UINT := 10;
+    nCurrTries: UINT := 0;
+    bRestoreWaitRetry: BOOL;
+    tonRestoreRetry: TON;
+    tRefreshTime : TIME := T#1S;
+    bError				: BOOL;
+    nErrorId			: UDINT:=0;
+    sMessage : T_MAXSTRING;
+
+    bSaveEnabled	: BOOL := TRUE;
+    bDone : BOOL;
+    bBusy    : BOOL;
+END_VAR
+
+VAR PERSISTENT
+    {attribute 'conditionalshow'}
+    bSaved: BOOL;
+    {attribute 'conditionalshow'}
+    fSavedPosition: LREAL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Calibrate raw encoder data
+THIS^.ScaleRawEncoder();
+
+// Periodic update of NC parameters
+NCParamsTimer( IN:=bUpdateEnable AND NOT bExecute, PT:=tRefreshDelay);
+bExecute S= NCParamsTimer.Q;
+mcReadParams(
+    Parameter:=THIS^.stAxisParameters,
+    Axis:=THIS^.AxisRef,
+    Execute:=bUpdateEnable AND bExecute,
+    Error=>bError,
+    ErrorID=>nErrorID,
+    Busy=>bBusy,
+    Done => bDone);
+
+// Copy axis parameters that we want to expose to the EPICS layer.
+THIS^.stAxisParametersExposed.bCtrlEnablePosDiffControl     := THIS^.stAxisParameters.bCtrlEnablePosDiffControl;
+THIS^.stAxisParametersExposed.bEncEnableSoftEndMaxControl   := THIS^.stAxisParameters.bEncEnableSoftEndMaxControl;
+THIS^.stAxisParametersExposed.bEncEnableSoftEndMinControl   := THIS^.stAxisParameters.bEncEnableSoftEndMinControl;
+THIS^.stAxisParametersExposed.fAccelerationMax              := THIS^.stAxisParameters.fAccelerationMax;
+THIS^.stAxisParametersExposed.fCtrlPosDiffMax               := THIS^.stAxisParameters.fCtrlPosDiffMax;
+THIS^.stAxisParametersExposed.fCtrlPosDiffMaxTime           := THIS^.stAxisParameters.fCtrlPosDiffMaxTime;
+THIS^.stAxisParametersExposed.fDecelerationMax              := THIS^.stAxisParameters.fDecelerationMax;
+THIS^.stAxisParametersExposed.fEncSoftEndMax                := THIS^.stAxisParameters.fEncSoftEndMax;
+THIS^.stAxisParametersExposed.fEncSoftEndMin                := THIS^.stAxisParameters.fEncSoftEndMin;
+THIS^.stAxisParametersExposed.fVeloMaximum                  := THIS^.stAxisParameters.fVeloMaximum;
+THIS^.stAxisParametersExposed.fEncOffset               		:= THIS^.stAxisParameters.fEncOffset;
+THIS^.stAxisParametersExposed.fEncScaleFactorInternal       := THIS^.stAxisParameters.fEncScaleFactorInternal;
+
+IF mcReadParams.ErrorID <> 0 THEN
+    nLatchErrId := 0;
+END_IF
+bExecute R= mcReadParams.Done OR mcReadParams.Error;
+THIS^.bAxisParamsInit S= mcReadParams.Done;
+
+
+// Save Encoder position
+// needs some pre-conditions to use persistent storage
+IF bSaveEnabled THEN
+    // Check ST_MotionStage for an encoder error (range 0x44nn)
+    bEncError:= AxisRef.Status.Error AND  ( AxisRef.Status.ErrorID  >= 16#4400  AND AxisRef.Status.ErrorID <= 16#44FF );
+    // Do not save if we're currently loading or if there is an encoder error
+    IF NOT bRestoreLoad AND NOT bEncError AND NOT bRestoreWaitRetry THEN
+        fSavedPosition := AxisRef.NcToPlc.ActPos;
+        // This persistent variable lets us check if anything was saved
+        // It will be TRUE at startup if we have saved values
+        bSaved := TRUE;
+        (*
+            use this with a timer of a change threshold on the fActPosition
+            to trigger a save from this PLC program. otherwise this will be a spamming
+            persistence, filling up the disk.
+        *)
+        //iPersistentDataStorage.TriggerWriteOfPersistentData := bSaveEnabled;
+    END_IF
+END_IF
+]]></ST>
+    </Implementation>
+    <Property Name="AxisParamsError" Id="{239ac2b3-3c2a-4399-a932-e6c718d2e1bb}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY AxisParamsError : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{4e85ac84-f8ba-45e9-84c6-7c5588481cb5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[AxisParamsError := bError;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="AxisParamsErrorID" Id="{7fc4dd77-9990-47fb-a3f3-15f5d1c36a93}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY AxisParamsErrorID : UDINT
+]]></Declaration>
+      <Get Name="Get" Id="{d39cb682-a948-4eed-b151-61c04c28fc87}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[AxisParamsErrorID := nErrorID;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="AxisParamsInit" Id="{a0575603-f379-443c-8fcf-402542f903ce}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY AxisParamsInit : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{2ef7b70d-e8b5-4a7c-b6d9-8882f4c8d790}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[AxisParamsInit := bAxisParamsInit;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="EncoderParamsSave" Id="{29eaeb35-c218-4604-adff-fca8f06a68eb}">
+      <Declaration><![CDATA[METHOD EncoderParamsSave
+VAR_INPUT
+    Enable	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.bSaveEnabled := Enable;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ExposeAxisParams" Id="{d1c3b848-a85c-4697-aa4e-a392a6f23769}">
+      <Declaration><![CDATA[METHOD ExposeAxisParams
+VAR_INPUT
+    Enable: BOOL;
+    RefreshDelay: TIME;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.bUpdateEnable:= Enable;
+THIS^.tRefreshDelay:= RefreshDelay;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_Init" Id="{6c116c09-ef45-432c-8e07-3fe37fad5966}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
+    AxisRef : REFERENCE TO AXIS_REF;
+    iPersistentDataStorage : I_PersistentDataStorage;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;
+THIS^.iPersistentDataStorage := iPersistentDataStorage;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Message" Id="{32b322a0-2932-4424-b95e-453b6c119c35}">
+      <Declaration><![CDATA[PROPERTY Message : T_MAXSTRING
+]]></Declaration>
+      <Get Name="Get" Id="{e135d05b-80a3-4ab1-9f4a-39e3dfbcfa43}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Message := sMessage;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="RefVeloSearch" Id="{5735fb85-0be0-4a0c-80a8-b61350b0c2d1}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY RefVeloSearch : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{af40d57e-8351-45be-9af1-5d364693fb2b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[RefVeloSearch := THIS^.stAxisParameters.fRefVeloSearch;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="RefVeloSync" Id="{a6e12d44-9094-4586-b6c6-065562b64be3}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY RefVeloSync : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{dfa185c9-0e75-4040-80b1-2e94d9447652}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[RefVeloSync:= THIS^.stAxisParameters.fRefVeloSync;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="RestoreAxisParams" Id="{68aa741c-8d0b-49b0-a5c7-e5cb1bf9c532}">
+      <Declaration><![CDATA[{attribute 'call_after_init'}
+METHOD RestoreAxisParams
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Trigger a load if anything was saved at all
+IF NOT bRestoreInit THEN
+    bRestoreInit := TRUE;
+    bRestoreLoad S= bSaved;
+    fbSetPos.Options.ClearPositionLag := TRUE;
+END_IF
+
+// Set our position if bRestoreLoad is true
+fbSetPos( Axis:=THIS^.AxisRef, Execute:=bRestoreLoad, Position:=fSavedPosition);
+
+// Only load once, at startup
+bRestoreLoad R= fbSetPos.Done OR fbSetPos.Error;
+
+IF fbSetPos.Error THEN
+    // Keep the error latched, it can disappear if Execute is set to FALSE
+    nLatchError := fbSetPos.ErrorID;
+    nCurrTries := nCurrTries + 1;
+    IF nCurrTries >= nMaxRetries THEN
+    // Alert the user that something has gone wrong
+    bError := TRUE;
+        nErrorId := nLatchError;
+        sMessage := 'Error loading previously saved position.';
+    ELSE
+        // Reset the FB for the next retry
+        fbSetPos( Axis:=THIS^.AxisRef, Execute:=bRestoreLoad, Position:=fSavedPosition);
+        // Try again
+        bRestoreWaitRetry := TRUE;
+    END_IF
+ELSE
+    THIS^.bRestoreDone := TRUE;
+END_IF
+
+tonRestoreRetry( IN := bRestoreWaitRetry, PT := tRetryDelay);
+bRestoreLoad S= tonRestoreRetry.Q;
+bRestoreWaitRetry R= tonRestoreRetry.Q;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="RestoreDone" Id="{e7e6ffa0-ec40-4879-b319-9d4ca78e63b6}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY RestoreDone : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{4baad02a-e870-46d0-aa29-7a3586bea07c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="SavedPosition" Id="{4a2e7fd2-dff9-49f3-8bb0-6e6d2bbd5bd1}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY SavedPosition : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{47036862-e42a-472d-9c02-661c5f9aa886}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[SavedPosition := fSavedPosition;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ScaledEncoderCount" Id="{d81c0e55-4ea7-4a05-869f-d72e8a4ea95e}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY ScaledEncoderCount : UDINT
+]]></Declaration>
+      <Get Name="Get" Id="{3c473915-1f59-45dd-90cc-be2e45b56ba4}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="ScaleRawEncoder" Id="{eb3341cc-367a-44d0-8a42-35c37667da1b}">
+      <Declaration><![CDATA[METHOD ScaleRawEncoder : UDINT
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF nRawEncoderULINT <> 0 THEN
+    IF nRawEncoderULINT < 4294967296 THEN
+        nEncoderCount := ULINT_TO_UDINT(nRawEncoderULINT);
+    ELSE
+        nEncoderCount := ULINT_TO_UDINT(18446744073709551615 - nRawEncoderULINT);
+    END_IF
+ELSIF nRawEncoderUINT <> 0 THEN
+    nEncoderCount := UINT_TO_UDINT(nRawEncoderUINT);
+ELSIF nRawEncoderINT <> 0 THEN
+    nEncoderCount := INT_TO_UDINT(nRawEncoderINT);
+ELSIF nRawEncoderDINT <> 0 THEN
+    nEncoderCount := DINT_TO_UDINT(nRawEncoderDINT);
+ELSE
+    nEncoderCount := 0;
+END_IF
+
+ScaleRawEncoder := nEncoderCount ;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

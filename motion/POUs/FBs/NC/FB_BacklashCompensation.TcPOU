@@ -1,0 +1,287 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_BacklashCompensation" Id="{15421978-726d-43ca-8e30-d33510c30e01}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_BacklashCompensation IMPLEMENTS I_BacklashCompensation
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+(* Other status information for users of the IOC *)
+    (* Backlash compensation*)
+    // Enabled axis backlash compensation
+    {attribute 'pytmc' := '
+        pv: PLC:bBacklashEn
+        io: io
+        field: ZNAM FALSE
+        field: ONAM TRUE
+        field: DESC Enable Backlash compensation
+    '}
+    bBacklashEn: BOOL;
+
+    // backlash compensation status
+    {attribute 'pytmc' := '
+        pv: PLC:bBacklasStatus
+        io: i
+        field: ZNAM DISABLED
+        field: ONAM ENABLED
+        field: DESC Backlash compensation status
+    '}
+    bBacklashStatus: BOOL;
+
+    // Backlash compensation value
+    {attribute 'pytmc' := '
+        pv: PLC:fTargetBacklash
+        io: io
+        field: DESC Backlash compensation
+    '}
+    fTargetBacklash: LREAL;
+
+    // Current Backlash compensation value ?
+    {attribute 'pytmc' := '
+        pv: PLC:fMeasuredCompensation
+        io: i
+        field: DESC Currently applied compensation
+    '}
+    fMeasuredCompensation: LREAL;
+    {attribute 'no_copy'}
+    AxisRef : REFERENCE TO AXIS_REF;
+    fbMcBacklashCompensation: MC_BacklashCompensation;
+    fCompensation : LREAL := 0.0;
+    fPrevCompensation : LREAL := 0.0;
+    bExecute: BOOL;
+    fRampVelocity : LREAL := 0.0;
+    bCompEnable : BOOL;
+    bError : BOOL;
+    bBusy : BOOL;
+    nErrorID : UDINT;
+    eDisableMode: E_DisableMode := E_DISABLEMODE.DisableModeHold;
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*Note: Configure within the axis parameters set "position correction" to true
+    Directional change FOR compensation
+      FALSE: positive backlash:
+      TRUE -> Negative backlash compensation
+    Reset Compensation to register a new value change
+    fRampVelocity : a tenth of Moveabsolute velocity is a good starting point
+*)
+// use bUserBacklashEn for addtional control in user code, i.e fb_motionDrive
+bCompEnable R= NOT THIS^.bExecute OR (THIS^.fCompensation<>THIS^.fPrevCompensation);
+bCompEnable S= THIS^.bBacklashEn AND THIS^.bExecute;
+
+fbMcBacklashCompensation(Axis:=AxisRef,
+    Enable:= THIS^.bCompEnable,
+    Backlash:= THIS^.fCompensation,
+    CompensationInPositiveDirection:=(THIS^.fCompensation < 0.0),
+    Ramp:=( THIS^.fRampVelocity ),
+    DisableMode:=THIS^.eDisableMode,
+    Enabled=> THIS^.bBacklashStatus,
+    Error=>bError,
+    ErrorID=>nErrorID,
+    CurrentBacklash=>THIS^.fMeasuredCompensation
+);
+fPrevCompensation:=THIS^.fCompensation;]]></ST>
+    </Implementation>
+    <Property Name="Aborted" Id="{59820488-53e0-4bd0-9746-41b9b903c795}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY Aborted : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{af423ed0-d781-4de7-b003-71fdc1e2f7f8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="BacklashCompensation" Id="{28619ab5-da60-4dc4-96a8-3e2ae3773706}">
+      <Declaration><![CDATA[(*
+    Handle positive/negative backlash compensation
+    User needs to set the direction of backlash from the sign of the compensation value
+    Backlash compensation is disabled during referencing (homing).
+    When direction is positive/negative, further movement in the negative/positive direction not compensated
+    further movement in the negative/positive direction will be compensated
+*)
+METHOD BacklashCompensation
+VAR_INPUT
+    Enable     : BOOL;
+    Execute		: BOOL;
+    Compensation	: LREAL;
+    fRampVelocity	: LREAL := 0.0;
+    DisableMode	: E_DISABLEMODE := E_DISABLEMODE.DisableModeHold;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.bBacklashEn := Enable;
+THIS^.bExecute:= Execute;
+THIS^.fCompensation := Compensation;
+THIS^.fRampVelocity := fRampVelocity;
+THIS^.eDisableMode:=DisableMode;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="BacklashCompensationError" Id="{0213434a-d40a-49c7-a6b4-a3e9e9a7a41a}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY BacklashCompensationError : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{c1a3c97c-ae91-4276-85b5-feecf9e8d7c5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[BacklashCompensationError := bError;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="BacklashCompensationErrorID" Id="{b6765fc0-40e7-4ce5-aa13-569ea50920db}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY BacklashCompensationErrorID : UDINT
+]]></Declaration>
+      <Get Name="Get" Id="{3dbdc77e-7172-4e8a-b541-0b84a6087295}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[BacklashCompensationErrorID := nErrorID;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="DisableMode" Id="{53c6506c-5bdd-4302-9265-cf391f81ab52}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY DisableMode : Tc2_MC2.E_DisableMode
+]]></Declaration>
+      <Get Name="Get" Id="{83699fed-7c9a-45f8-a19a-4c4ebe2dd24d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[DisableMode := eDisableMode;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{39d232f5-a9eb-4d58-ab29-3912c1ce412d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[eDisableMode := DisableMode;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Enable" Id="{0764491b-0151-48b3-a209-42977e2a8123}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY Enable : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{a6cfe4e6-634a-44e1-96e3-baba05866bf2}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{eb474936-a45a-470b-9101-01be918e46e2}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="FB_Init" Id="{86eeb26b-dd4d-42ae-bdf4-cda3d947fa1b}">
+      <Declaration><![CDATA[METHOD FB_Init : BOOL
+VAR_INPUT
+    bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+    bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+    AxisRef : REFERENCE TO AXIS_REF;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="MeasureBacklash" Id="{022a8867-c28c-4e7c-88fa-1c1e1f6f1ad1}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY MeasureBacklash : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{bb138911-4f3b-47a1-847c-b5cced113ef6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Message" Id="{799861dc-10f6-42dd-a8b5-747f46787023}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY Message : Tc2_System.T_MaxString
+]]></Declaration>
+      <Get Name="Get" Id="{b04d60be-1e7a-4ed8-aad3-cee013905d08}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="RampVelocity" Id="{76749366-9411-4661-8b8c-18ba08142b43}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY RampVelocity : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{caf430de-192d-46d6-8a06-13f72e9f2d28}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{b2241740-8837-42a0-a140-3bf96cff327a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Status" Id="{af32d349-40c9-44a6-9a95-336c4eab0563}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY Status : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{1cbb27e8-07e5-41b6-9a8c-b8f937914736}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="TargetCompensation" Id="{334ba0a8-29f6-4e4d-a663-883982f2c046}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY TargetCompensation : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{5537d24d-4a27-4b14-9a70-6dd34c4f750f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{ce68a1b8-3548-439c-85dd-a481cd699082}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+  </POU>
+</TcPlcObject>

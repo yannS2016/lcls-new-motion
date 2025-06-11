@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_Reset" Id="{b13e0a07-13fe-4130-92d2-b67a6bf512d3}">
+    <Declaration><![CDATA[INTERFACE I_Reset
+]]></Declaration>
+    <Property Name="ExecReset" Id="{a2a2f50e-316e-4d84-97b1-13d693124282}">
+      <Declaration><![CDATA[PROPERTY ExecReset : BOOL]]></Declaration>
+      <Set Name="Set" Id="{5af552b3-de41-4bb7-8575-885408c31c54}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Method Name="Reset" Id="{6de39cad-1884-4ec7-b494-38b114cd7658}">
+      <Declaration><![CDATA[METHOD Reset
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="ResetBusy" Id="{0dcd0461-4313-48f9-8cd0-fb4c21feef7d}">
+      <Declaration><![CDATA[PROPERTY ResetBusy : BOOL]]></Declaration>
+      <Get Name="Get" Id="{60e12a27-7f75-4317-b2bc-2d250342c39c}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="ResetDone" Id="{bb784cbf-17a8-432f-aadf-22fcb5fecc6c}">
+      <Declaration><![CDATA[PROPERTY ResetDone : BOOL]]></Declaration>
+      <Get Name="Get" Id="{f83b19e6-00dd-4fa2-8d16-a92fd4d26631}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="ResetError" Id="{df9aa5b8-56fc-4693-865f-0277cf76b958}">
+      <Declaration><![CDATA[PROPERTY ResetError : BOOL]]></Declaration>
+      <Get Name="Get" Id="{b0a6c8d5-7534-4098-9b97-c37ee815f05f}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="ResetErrorID" Id="{7fd91d91-4ae3-41d2-a2a6-3db4fead9dd5}">
+      <Declaration><![CDATA[PROPERTY ResetErrorID : UDINT]]></Declaration>
+      <Get Name="Get" Id="{7849cabf-22f5-4195-800f-ea3857cd3a2b}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_LimSwStatus" Id="{256e382d-89de-4efb-b391-22faa6fe67b6}">
+    <Declaration><![CDATA[INTERFACE I_LimSwStatus
+]]></Declaration>
+    <Property Name="LimBackward" Id="{936f7f31-d3e8-44eb-a938-4f1d2b772924}">
+      <Declaration><![CDATA[PROPERTY LimBackward : BOOL]]></Declaration>
+      <Get Name="Get" Id="{674a8534-77af-4482-bc88-a8057594656a}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="LimForward" Id="{2ca1a4d8-d314-49d6-af9c-42d0cd0c5f8c}">
+      <Declaration><![CDATA[PROPERTY LimForward : BOOL]]></Declaration>
+      <Get Name="Get" Id="{1ab90dae-08a4-4861-86aa-8e864610f7ce}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="LimHit" Id="{47b40357-a6d2-424c-8d61-6def8adf35ea}">
+      <Declaration><![CDATA[PROPERTY LimHit : BOOL]]></Declaration>
+      <Get Name="Get" Id="{5b7da088-c907-40ff-9f45-2b91673d5738}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="LimHitIdling" Id="{a9898372-986c-4ee4-bc98-43640fd003f2}">
+      <Declaration><![CDATA[PROPERTY LimHitIdling : BOOL]]></Declaration>
+      <Get Name="Get" Id="{d9233391-3505-4407-ade5-ca790ab05516}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="LimHitMoving" Id="{12768a8b-8e2d-462d-ac59-05ed276cdf42}">
+      <Declaration><![CDATA[PROPERTY LimHitMoving : BOOL]]></Declaration>
+      <Get Name="Get" Id="{f40fa498-6562-48ff-8455-7f34f6bbcf01}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="LimHome" Id="{e0d4fef3-e66d-4929-a418-cdbd99f66b09}">
+      <Declaration><![CDATA[PROPERTY LimHome : BOOL]]></Declaration>
+      <Get Name="Get" Id="{3d897795-ae50-410a-9c07-41dea1575429}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="MoveBackwardEnabled" Id="{b4e7f086-2ef8-4485-be7e-4532b5db4264}">
+      <Declaration><![CDATA[PROPERTY MoveBackwardEnabled : BOOL]]></Declaration>
+      <Get Name="Get" Id="{9b0ef177-2451-44cd-bad6-e27eaa34b91b}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="MoveForwardEnabled" Id="{c448b972-f646-4f09-a55d-f335dff878cb}">
+      <Declaration><![CDATA[PROPERTY MoveForwardEnabled : BOOL]]></Declaration>
+      <Get Name="Get" Id="{63539f14-b019-40ce-9a44-701a06eafced}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="Status" Id="{ad2a89e1-41ec-4053-88de-27c1f75c0736}">
+      <Declaration><![CDATA[METHOD Status
+VAR_INPUT
+	NewMoveReq : BOOL;
+	Reset : BOOL;
+	HomeBusy: BOOL;
+	PositiveDirectionEnabled : BOOL;
+	NegativeDirectionEnabled : BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="Warning" Id="{1b98f41d-ef99-4e0f-8e76-a2ade70cd32d}">
+      <Declaration><![CDATA[PROPERTY Warning : BOOL]]></Declaration>
+      <Get Name="Get" Id="{25b7225f-f85c-46d5-99ff-635c5137c3d3}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

@@ -1,0 +1,424 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HomeNC" Id="{970a142c-358e-492f-9cec-3782954ac4db}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_HomeNC IMPLEMENTS I_Home
+VAR
+    {attribute 'no_copy'}
+    AxisRef : REFERENCE TO AXIS_REF;
+    iMotionLogger : I_MotionLogger;
+    //iHomeShareData : I_HomeShareData ;
+    bExecute  : BOOL;
+    bBusy			: BOOL;
+    bDone			: BOOL;
+    bError 			: BOOL;
+    bAbort       : BOOL;
+    bLocalAbort       : BOOL;
+    nErrorID 		: UDINT;
+    fRefVeloSearch	: LREAL;
+    fRefVeloSync	: LREAL;
+    fOffset  : LREAL;
+    fPosition	: LREAL;
+    bFirstDirection: BOOL;
+    rtDone				: R_TRIG;
+    rtAborted : R_TRIG;
+    sMessage : T_MAXSTRING;
+    fbMcSetPos: MC_SetPosition;
+    fbMcJog: MC_Jog;
+    rtExec: R_TRIG;
+    ftExec: F_TRIG;
+    nStateMachine: E_HomeStates;
+    nStateAfterStop: E_HomeStates;
+    nMoves: INT;
+    bFirstDir: BOOL;
+    bAtHome: BOOL;
+    bMove: BOOL;
+    nErrCount: INT;
+    eMode: E_EpicsHomeCmd :=E_EpicsHomeCmd.NONE;
+    bLimForward : BOOL;
+    bLimBackward : BOOL;
+    bLimHome : BOOL;
+
+END_VAR
+
+VAR CONSTANT
+    (*
+        This is a simpler way of disabling the soft limits that ends up being really obvious if something has gone wrong.
+        If you turn the limits off/on, not only do you need to keep track of if you had soft limits set,
+        but you need to always restore this properly or risk some issue.
+        Instead, I set position to a ridiculous value that can always move forward or backward.
+        If this gets stuck for any reason it's very clear that something has gone wrong,
+        rather than a silent failure of the soft limit marks.
+    *)
+    FWD_START: LREAL := -99999999;
+    BWD_START: LREAL :=  99999999;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[THIS^.fbMcSetPos.Options.ClearPositionLag := TRUE;
+THIS^.rtExec(CLK:=THIS^.bExecute);
+THIS^.ftExec(CLK:=THIS^.bExecute);
+
+THIS^.bError R= NOT THIS^.bExecute;
+IF NOT THIS^.bError THEN
+    THIS^.nErrorID := 0;
+END_IF
+
+CASE THIS^.eMode OF
+    E_EpicsHomeCmd.LOW_LIMIT:
+        THIS^.bFirstDir := FALSE;
+        THIS^.bAtHome := NOT THIS^.bLimBackward;
+        THIS^.bMove := THIS^.bExecute;
+    E_EpicsHomeCmd.HIGH_LIMIT:
+        THIS^.bFirstDir := TRUE;
+        THIS^.bAtHome := NOT THIS^.bLimForward;
+        THIS^.bMove := THIS^.bExecute;
+    E_EpicsHomeCmd.HOME_VIA_LOW:
+        THIS^.bFirstDir := FALSE;
+        THIS^.bAtHome := THIS^.bLimHome;
+        THIS^.bMove := THIS^.bExecute;
+    E_EpicsHomeCmd.HOME_VIA_HIGH:
+        THIS^.bFirstDir := TRUE;
+        THIS^.bAtHome := THIS^.bLimHome;
+        THIS^.bMove := THIS^.bExecute;
+    E_EpicsHomeCmd.ABSOLUTE_SET:
+        THIS^.fbMcSetPos(
+            Axis:=AxisRef,
+            Execute:=THIS^.bExecute,
+            // to review, this should come from EPICS Itf
+            Position:=THIS^.fPosition);
+        THIS^.bBusy := THIS^.rtExec.Q;
+        THIS^.bDone := NOT THIS^.rtExec.Q;
+        THIS^.bMove := FALSE;
+    E_EpicsHomeCmd.NONE:
+        THIS^.bMove := FALSE;
+        THIS^.bBusy := THIS^.rtExec.Q;
+        THIS^.bDone := NOT THIS^.rtExec.Q;
+    ELSE
+        THIS^.bMove := FALSE;
+END_CASE
+
+IF THIS^.bMove THEN
+    IF THIS^.bBusy AND THIS^.rtAborted.Q THEN
+        THIS^.nStateMachine := E_HomeStates.ERROR;
+        THIS^.bLocalAbort := TRUE;
+    END_IF
+    CASE THIS^.nStateMachine OF
+        // Wait for a rising edge
+        E_HomeStates.IDLE:
+            THIS^.bBusy := FALSE;
+            THIS^.nErrCount := 0;
+            THIS^.fbMcSetPos(
+                Axis:=AxisRef,
+                Execute:=FALSE);
+            THIS^.fbMcJog(
+                Axis:=AxisRef,
+                JogForward:=FALSE,
+                JogBackwards:=FALSE);
+            IF THIS^.rtExec.Q THEN
+                THIS^.nStateMachine := E_HomeStates.NEXT_MOVE;
+                nMoves := 0;
+                THIS^.bDone := FALSE;
+                THIS^.bBusy := TRUE;
+                THIS^.bError := FALSE;
+                THIS^.nErrorID := 0;
+                THIS^.bLocalAbort := FALSE;
+            END_IF
+        // Figure out whether to move forward, move backward, or give up
+        E_HomeStates.NEXT_MOVE:
+            THIS^.fbMcSetPos(
+                Axis:=AxisRef,
+                Execute:=FALSE);
+            THIS^.fbMcJog(
+                Axis:=AxisRef,
+                JogForward:=FALSE,
+                JogBackwards:=FALSE);
+            CASE nMoves OF
+                0:
+                    IF THIS^.bFirstDir THEN
+                        nStateAfterStop := E_HomeStates.CHECK_FWD;
+                    ELSE
+                        nStateAfterStop := E_HomeStates.CHECK_BWD;
+                    END_IF
+                1:
+                    IF NOT THIS^.bFirstDir THEN
+                        nStateAfterStop := E_HomeStates.CHECK_FWD;
+                    ELSE
+                        nStateAfterStop := E_HomeStates.CHECK_BWD;
+                    END_IF
+                ELSE
+                    nStateAfterStop := E_HomeStates.ERROR;
+            END_CASE
+            nMoves := nMoves + 1;
+            IF THIS^.bAtHome THEN
+                nStateAfterStop := E_HomeStates.FINAL_MOVE;
+            END_IF
+            THIS^.nStateMachine := E_HomeStates.WAIT_STOP;
+        // Move forward until we find the home signal or reach end of travel
+        E_HomeStates.CHECK_FWD:
+            THIS^.fbMcSetPos(
+                Axis:=AxisRef,
+                Execute:=TRUE,
+                Position:=FWD_START);
+            THIS^.fbMcJog(
+                Axis:=AxisRef,
+                JogForward:=THIS^.bLimForward AND NOT bATHome,
+                JogBackwards:=FALSE,
+                Mode:=E_JogMode.MC_JOGMODE_CONTINOUS,
+                Velocity:=THIS^.fRefVeloSearch);
+            IF NOT THIS^.fbMcJog.JogForward THEN
+                THIS^.nStateMachine := E_HomeStates.NEXT_MOVE;
+            ELSIF THIS^.fbMcJog.Error THEN
+                THIS^.fbMcJog(
+                    Axis:=AxisRef,
+                    JogForward:=FALSE,
+                    JogBackwards:=FALSE);
+                THIS^.nErrCount := THIS^.nErrCount + 1;
+                IF THIS^.nErrCount >= 3 THEN
+                    THIS^.nStateMachine := E_HomeStates.ERROR;
+                END_IF
+            END_IF
+        // Move backward until we find the home signal or reach end of travel
+        E_HomeStates.CHECK_BWD:
+            THIS^.fbMcSetPos(
+                Axis:=AxisRef,
+                Execute:=TRUE,
+                Position:=BWD_START);
+            THIS^.fbMcJog(
+                Axis:=AxisRef,
+                JogForward:=FALSE,
+                JogBackwards:=THIS^.bLimBackward AND NOT bAtHome,
+                Mode:=E_JogMode.MC_JOGMODE_CONTINOUS,
+                Velocity:=THIS^.fRefVeloSearch);
+            IF NOT THIS^.fbMcJog.JogBackwards THEN
+                THIS^.nStateMachine := E_HomeStates.NEXT_MOVE;
+            ELSIF THIS^.fbMcJog.Error THEN
+                THIS^.fbMcJog(
+                    Axis:=AxisRef,
+                    JogForward:=FALSE,
+                    JogBackwards:=FALSE);
+                THIS^.nErrCount := THIS^.nErrCount + 1;
+                IF THIS^.nErrCount >= 3 THEN
+                    THIS^.nStateMachine := E_HomeStates.ERROR;
+                END_IF
+            END_IF
+        // Set position to get within soft lims, move slowly off signal
+        E_HomeStates.FINAL_MOVE:
+            THIS^.fbMcSetPos(
+                Axis:=AxisRef,
+                Execute:=TRUE,
+                Position:=THIS^.fPosition);
+            IF THIS^.bAtHome THEN
+                THIS^.fbMcJog(
+                    Axis:=AxisRef,
+                    JogForward:=NOT bFirstDir,
+                    JogBackwards:=bFirstDir,
+                    Mode:=E_JogMode.MC_JOGMODE_CONTINOUS,
+                    Velocity:=THIS^.fRefVeloSync);
+            ELSIF THIS^.fbMcJog.Error THEN
+                THIS^.fbMcJog(
+                    Axis:=AxisRef,
+                    JogForward:=FALSE,
+                    JogBackwards:=FALSE);
+                THIS^.nErrCount := THIS^.nErrCount + 1;
+                IF THIS^.nErrCount >= 3 THEN
+                    THIS^.nStateMachine := E_HomeStates.ERROR;
+                END_IF
+            ELSE
+                THIS^.fbMcJog(
+                    Axis:=AxisRef,
+                    JogForward:=FALSE,
+                    JogBackwards:=FALSE);
+                THIS^.fbMcSetPos(
+                    Axis:=AxisRef,
+                    Execute:=FALSE);
+                THIS^.nStateMachine := E_HomeStates.WAIT_STOP;
+                nStateAfterStop := E_HomeStates.FINAL_SETPOS;
+            END_IF
+        E_HomeStates.FINAL_SETPOS:
+            THIS^.fbMcSetPos(
+                Axis:=AxisRef,
+                Execute:=TRUE,
+                Position:=THIS^.fPosition);
+            THIS^.nStateMachine := E_HomeStates.IDLE;
+            THIS^.bBusy := FALSE;
+            THIS^.bDone := TRUE;
+        E_HomeStates.ERROR:
+            THIS^.bError := TRUE;
+            THIS^.nErrorID := THIS^.fbMcJog.ErrorID;
+            nStateMachine := E_HomeStates.FINAL_SETPOS;
+            THIS^.fbMcSetPos(
+                Axis:=AxisRef,
+                Execute:=FALSE);
+            IF bLocalAbort THEN
+                THIS^.sMessage := 'Homing interrupted';
+            ELSE
+               THIS^.sMessage := 'Homing failure';
+            END_IF
+        E_HomeStates.WAIT_STOP:
+            IF AxisRef.Status.NotMoving THEN
+                THIS^.nStateMachine := nStateAfterStop;
+            END_IF
+    END_CASE
+END_IF
+
+// we should normally do this in interrupted state if moving
+// otherwise we need to reset, the error state should perhaps handle this
+rtDone(CLK:=bDone);
+// an interruption can be external i.e, an halt, Reset or a local condition
+THIS^.rtAborted(CLK:=THIS^.bAbort);
+IF  rtDone.Q OR rtAborted.Q THEN
+    THIS^.bExecute := FALSE;
+    THIS^.bBusy := FALSE;
+    THIS^.bDone := FALSE;
+    THIS^.bMove := FALSE;
+END_IF
+]]></ST>
+    </Implementation>
+    <Property Name="ExecHome" Id="{ef12f807-e6b7-4482-893d-970f3f2a77e4}">
+      <Declaration><![CDATA[PROPERTY ExecHome : BOOL
+]]></Declaration>
+      <Set Name="Set" Id="{fcd56ab2-dba6-4591-ade3-ce54344454a9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[THIS^.bExecute := ExecHome ;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="FB_Init" Id="{36203808-aa8e-419d-b89f-47cad560b581}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
+    AxisRef : REFERENCE TO AXIS_REF;
+    iMotionLogger : I_MotionLogger;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;
+THIS^.iMotionLogger := iMotionLogger;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Home" Id="{bc450e32-fe3c-4fef-961a-7ec21133b561}">
+      <Declaration><![CDATA[METHOD  Home
+VAR_INPUT
+    Execute	: BOOL;
+    HomeSpeedFast	: LREAL;
+    HomeSpeedSlow	: LREAL;
+    HomeOffset	: LREAL;
+    HomePosition	: LREAL := 0;
+    UserAbort	: BOOL;
+    HomeMode	: E_EpicsHomeCmd;
+    LimForward	:BOOL;
+    LimBackward :BOOL;
+    LimHome :BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.bAbort := UserAbort;
+THIS^.fRefVeloSearch := HomeSpeedFast;
+THIS^.fRefVeloSync	:= HomeSpeedSlow;
+THIS^.fPosition	:=HomePosition;
+THIS^.fOffset := HomeOffset;
+THIS^.eMode := HomeMode;
+THIS^.bLimForward	:= LimForward;
+THIS^.bLimBackward := LimBackward;
+THIS^.bLimHome := LimHome;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="HomeBusy" Id="{c7e43be2-48b0-438b-8ceb-465d60425bfc}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY HomeBusy : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{cb0740bd-cd32-462e-8d30-3401b18588d5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[HomeBusy := THIS^.bBusy;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="HomeDone" Id="{a400b97e-6245-4667-8036-7fb53f8ce97f}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY HomeDone : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{aef52b53-9bff-4703-970f-52b560ffba73}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[HomeDone := THIS^.bDone;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="HomeError" Id="{d9029227-7d8c-4426-821a-d46327fbfa6d}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY HomeError : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{4884c9e1-0ab0-469e-aae8-b83b96b6f583}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[HomeError := THIS^.bError;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="HomeErrorID" Id="{cf64e9b6-c8bf-4aa1-9fa1-b62063c78b03}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY HomeErrorID : UDINT
+]]></Declaration>
+      <Get Name="Get" Id="{e14def51-9c37-4182-ba09-611583cf679e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[HomeErrorID := THIS^.nErrorID;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="HomeMode" Id="{bacfc68b-674d-49fb-a838-6a7b08d66c8b}">
+      <Declaration><![CDATA[PROPERTY HomeMode : E_EpicsHomeCmd
+]]></Declaration>
+      <Set Name="Set" Id="{d7a9685a-e050-4fa2-92a8-d25079a18728}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[eMode := HomeMode;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="HomeOffset" Id="{48496da5-ced9-4c7a-88b4-656a32aa685b}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY HomeOffset : LREAL
+]]></Declaration>
+      <Set Name="Set" Id="{0ef7a418-62f9-4e76-9f2c-837b987f3900}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[fOffset := HomeOffset;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="HomePosition" Id="{afef80c7-a1a3-4197-a7a0-d9553542477a}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY HomePosition : LREAL
+]]></Declaration>
+      <Set Name="Set" Id="{6ac419d4-6add-4703-8089-625e0296877b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[fPosition := HomePosition;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+  </POU>
+</TcPlcObject>

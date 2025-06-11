@@ -1,0 +1,241 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_MoveAbsoluteNC" Id="{e71196e8-5955-4e1c-a924-f415b73d00ec}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MoveAbsoluteNC IMPLEMENTS I_MoveAbsolute
+VAR
+    {attribute 'no_copy'}
+    AxisRef : REFERENCE TO AXIS_REF;
+    // MoveABsolute
+    fbMcMoveAbsolute : MC_MoveAbsolute;
+    fTargetPosition	: LREAL;
+    fTargetVelocity	: LREAL;
+    fTargetAcceleration	: LREAL := 0.0;
+    fTargetDeceleration	: LREAL := 0.0;
+    fTargetJerk	: LREAL := 0.0;
+    eBufferMode	: MC_BufferMode := MC_BufferMode.MC_Aborting;
+    rtBusy : R_TRIG;
+    ftBusy : F_TRIG;
+    rtDone : R_TRIG;
+    rtAborted : R_TRIG;
+    bExecute : BOOL;
+    bAborted : BOOL;
+    bError : BOOL;
+    bBusy : BOOL;
+    bDone : BOOL;
+    nErrorID : UDINT;
+    sMessage : T_MAXSTRING;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[THIS^.fbMcMoveAbsolute(
+    Axis := THIS^.AxisRef,
+    Execute := THIS^.bExecute,
+    Position := THIS^.fTargetPosition,
+    Velocity := THIS^.fTargetVelocity,
+    Acceleration := THIS^.fTargetAcceleration,
+    Deceleration := THIS^.fTargetDeceleration,
+    Jerk := THIS^.fTargetJerk,
+    BufferMode := THIS^.eBufferMode,
+    Done => ,
+    Busy => THIS^.bBusy,
+    Active => ,
+    CommandAborted => THIS^.bAborted,
+    Error => THIS^.bError,
+    ErrorID => THIS^.nErrorID
+);
+
+rtBusy (CLK:=bBusy);
+ftBusy(CLK:=bBusy);
+// to be checked
+bDone S= ftBusy.Q AND NOT THIS^.bError AND NOT THIS^.AxisRef.Status.HasJob;
+bDone R= rtBusy.Q;
+
+// Reset execute after when done successfull or after abort reset
+// this way the done and error condition is latched till next move or global reset.
+rtDone(CLK:=bDone);
+rtAborted(CLK:=bAborted);
+IF  rtDone.Q OR rtAborted.Q THEN
+    THIS^.bExecute := FALSE;
+END_IF]]></ST>
+    </Implementation>
+    <Property Name="Aborted" Id="{79034fb3-851c-4dbf-91a9-278decee105d}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY Aborted : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{3e1b0d41-0cea-422e-9380-9d54145200b3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Aborted := THIS^.bAborted;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ExecMoveAbsolute" Id="{a3116f66-405a-47a7-b4a3-938cec1d1060}">
+      <Declaration><![CDATA[PROPERTY ExecMoveAbsolute : BOOL
+]]></Declaration>
+      <Set Name="Set" Id="{35e84201-ec7d-464f-85b8-d91ec35178ce}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[THIS^.bExecute := ExecMoveAbsolute;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="FB_Init" Id="{e87d7c58-75a2-4628-877e-343a902489c2}">
+      <Declaration><![CDATA[METHOD FB_Init : BOOL
+VAR_INPUT
+    bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+    bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+    AxisRef : REFERENCE TO AXIS_REF;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveAbsolute" Id="{ec9e8694-906a-4f94-b53d-2b2ff2681c1a}">
+      <Declaration><![CDATA[METHOD MoveAbsolute
+VAR_INPUT
+    Execute     : BOOL;
+    Position	: LREAL;
+    Velocity	: LREAL;
+    Acceleration	: LREAL := 0.0;
+    Deceleration	: LREAL := 0.0;
+    Jerk	: LREAL := 0.0;
+    BufferMode	: MC_BufferMode := MC_BufferMode.MC_Aborting;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.bExecute := Execute;
+THIS^.fTargetPosition := Position;
+THIS^.fTargetVelocity := Velocity;
+THIS^.fTargetAcceleration := Acceleration;
+THIS^.fTargetDeceleration := Deceleration;
+THIS^.fTargetJerk := Jerk;
+THIS^.eBufferMode := BufferMode;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="MoveAbsoluteBusy" Id="{1ae87be5-03cb-4a25-b603-7a901b104320}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY MoveAbsoluteBusy : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{9d197ce2-8fd9-4bc1-99a9-01c16a01edb5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MoveAbsoluteBusy := THIS^.bBusy;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MoveAbsoluteDone" Id="{a764e9fb-e6d3-4787-bb5e-f18a571f3537}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY MoveAbsoluteDone : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{50c96990-1ca2-4598-9b3c-4ce1d489107b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MoveAbsoluteDone := THIS^.bDone;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MoveAbsoluteError" Id="{0185f2b2-2e6f-442f-b749-2bbd8da7d055}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY MoveAbsoluteError : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{1e0b343f-fb19-4817-9dd8-a79547d284ae}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MoveAbsoluteError := THIS^.bError;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MoveAbsoluteErrorID" Id="{765d4df4-ef37-4baf-a5b2-0caf395dd3d5}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY MoveAbsoluteErrorID : UDINT
+]]></Declaration>
+      <Get Name="Get" Id="{616d42e5-15ca-457d-9573-bf6beb7c1f43}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MoveAbsoluteErrorID := THIS^.nErrorID;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="TargetAcceleration" Id="{32c393e6-639b-40b9-8185-895743db4632}">
+      <Declaration><![CDATA[PROPERTY TargetAcceleration : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{bd4018f6-ec37-4c98-876f-fa94187d0f6b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[fTargetAcceleration := TargetAcceleration;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{c9a50a88-e660-464d-bc02-87b114bdf5bb}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="TargetDeceleration" Id="{3b04e3a7-566c-481a-915c-ff43446b6e4e}">
+      <Declaration><![CDATA[PROPERTY TargetDeceleration : LREAL
+]]></Declaration>
+      <Set Name="Set" Id="{3fb02bd1-a8a8-46db-9e37-ab20b139caf6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[fTargetDeceleration := TargetDeceleration;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="TargetJerk" Id="{8366d507-c210-4062-840b-0d9c48429787}">
+      <Declaration><![CDATA[PROPERTY TargetJerk : LREAL
+]]></Declaration>
+      <Set Name="Set" Id="{80a560cf-c281-4c33-a015-53e17dbfec4e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ fTargetJerk := TargetJerk;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="TargetPosition" Id="{8530f6b1-05a9-487d-b316-f229d7b66bc9}">
+      <Declaration><![CDATA[PROPERTY TargetPosition : LREAL
+]]></Declaration>
+      <Set Name="Set" Id="{8167b2ef-63ef-4fba-84d4-9913d068fc45}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[fTargetPosition := TargetPosition;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="TargetVelocity" Id="{3703972a-9533-4742-a75b-3243ff7276f6}">
+      <Declaration><![CDATA[PROPERTY TargetVelocity : LREAL
+]]></Declaration>
+      <Set Name="Set" Id="{56150a65-8b87-410c-95c8-d24a62dcbcb4}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[fTargetVelocity := TargetVelocity;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+  </POU>
+</TcPlcObject>

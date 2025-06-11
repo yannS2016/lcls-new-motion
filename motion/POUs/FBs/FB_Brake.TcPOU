@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_Brake" Id="{54a1ce6e-4604-4795-a15a-9475ea6f5ca5}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Brake IMPLEMENTS I_Brake
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+    // Determines when we automatically disengage the brake
+    nBrakeMode: E_StageBrakeMode:=E_StageBrakeMode.IF_ENABLED;
+    // NC Brake Output: TRUE to release brake
+    bBrakeRelease AT %Q*: BOOL;
+    eMotionState : MC_AxisStates;
+    iBrakeShareData : I_BrakeShareData;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF iBrakeShareData = 0 THEN
+    // throw and exception
+    RETURN;
+END_IF
+
+// Read external private data
+eMotionState := iBrakeShareData.AxisState;
+
+// Handle the brake. TRUE means brake disabled/released
+IF nBrakeMode <> E_StageBrakeMode.NO_BRAKE THEN
+    CASE eMotionState OF
+        MC_AXISSTATE_UNDEFINED,
+        MC_AXISSTATE_DISABLED,
+        MC_AXISSTATE_ERRORSTOP:
+            bBrakeRelease := FALSE;
+        MC_AXISSTATE_STANDSTILL:
+            IF nBrakeMode = E_StageBrakeMode.IF_MOVING THEN
+                bBrakeRelease := FALSE;
+            ELSE
+                bBrakeRelease := TRUE;
+            END_IF
+        ELSE
+            bBrakeRelease := TRUE;
+    END_CASE
+END_IF
+
+
+// update shared data]]></ST>
+    </Implementation>
+    <Property Name="Aborted" Id="{482212d2-7ee4-466e-9032-c3d56b476726}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY Aborted : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{755ebda7-d1f2-4ec7-ae66-696f788a4add}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="BrakeMode" Id="{d2a89635-e044-45f2-b897-1fb228591295}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY BrakeMode : E_StageBrakeMode
+]]></Declaration>
+      <Get Name="Get" Id="{87438a61-12a9-4977-b899-109dc02b161b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{ce177ab8-12d5-44b3-b42b-64a86bd5c208}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="BrakeRelease" Id="{4e9e8280-09ed-4b6e-b3d2-3824c4845e47}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY BrakeRelease : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{89896f71-d183-47a2-830c-dc2b8ef91af6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Busy" Id="{d689c67d-bc67-4289-91da-60705ab67ac8}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY Busy : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{3ff1187a-77d0-47ee-b494-26cd7da1359b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Done" Id="{6216ad20-4deb-442e-8a99-58858392d09e}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY Done : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{145ed9f7-8e7e-4e3e-a0b9-cf1fd5ed1ae4}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Error" Id="{f6662748-f308-48fd-b7e1-7140e892eca9}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Error : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{1fcf427b-7f1c-4aba-8f36-862b331f746f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ErrorID" Id="{34c75ef3-84ca-494c-b695-91ecf1631d70}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY ErrorID : UDINT
+]]></Declaration>
+      <Get Name="Get" Id="{4d4ee5b4-dd7b-4695-a1bd-3d9ca36e2353}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="FB_Init" Id="{eaa04d45-5a43-465b-a598-d05cd9abe9f7}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
+    iBrakeShareData : I_BrakeShareData;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Message" Id="{8ca24488-75c4-4d81-8837-108b6b796842}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Message : T_MAXSTRING
+]]></Declaration>
+      <Get Name="Get" Id="{14dfa477-0d17-4781-9799-75621f18c31e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>

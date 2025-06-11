@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_MotionAxisNCDS402old" Id="{0e4f30c7-9701-46fd-b9a3-891c9877e9a0}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'call_after_init'}
+FUNCTION_BLOCK FB_MotionAxisNCDS402old EXTENDS FB_MotionAxisNCold
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+    iMotionAxisCommonDS402 : I_MotionAxisCommonDS402;
+    fbMotionAxisCommonDS402 	: FB_MotionAxisCommonDS402Old;
+    eModeOfOperation 	: E_DS402OpMode :=  E_DS402OpMode.CSP;
+    bStartReady : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//THIS^.Home((*SUPER^.bCommandedMoveHome*));
+SUPER^();]]></ST>
+    </Implementation>
+    <Method Name="FB_Init" Id="{1dac3e04-3581-442d-91f0-9c2dc1b453ee}">
+      <Declaration><![CDATA[(*FB_Init is always available implicitly and it is used primarily for initialization.
+The return value is not evaluated. For a specific influence, you can also declare the
+methods explicitly and provide additional code there with the standard initialization
+code. You can evaluate the return value.*)
+METHOD FB_Init : BOOL
+VAR_INPUT
+    (* TRUE: the retain variables are initialized (reset warm / reset cold)*)
+    bInitRetains	: BOOL;
+    (* TRUE: the instance will be copied to the copy code afterward (online change)*)
+    bInCopyCode	: BOOL;
+    AxisRef	: REFERENCE TO AXIS_REF;
+    iPersistentDataStorage	: I_PersistentDataStorage;
+    iMotionLogger	: I_MotionLogger;
+    MotionSyncPrivateRef : REFERENCE TO FB_MotionSyncPrivate;
+    iMotionAxisCommonDS402 : I_MotionAxisCommonDS402;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iMotionAxisCommonDS402 :=  iMotionAxisCommonDS402;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Home" Id="{eb6ca2c3-dadc-488d-aa64-29befcb2a8c6}">
+      <Declaration><![CDATA[METHOD Home
+VAR_INPUT
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iMotionAxisCommonDS402.HomeDS402(	Enable:=SUPER^.bCommandedMoveHome,
+                                    HomingMethod:=SUPER^.eHomingMethod,
+                                    HomingSpeedsFast:=SUPER^.fHomingSpeedsFast,
+                                    HomingSpeedsSlow:=SUPER^.fHomingSpeedsFast,
+                                    HomingAcceleration:=SUPER^.fHomingAcceleration,
+                                    HomeOffset:=SUPER^.fHomingAcceleration,
+                                    fHomePosition:=SUPER^.fHomingAcceleration,
+                                    UserAbort:=SUPER^.bInterrupted );
+
+SUPER^.bHomeBusy :=	THIS^.iMotionAxisCommonDS402.HomeBusy;
+SUPER^.bHomeDone:=	THIS^.iMotionAxisCommonDS402.HomeDone;
+SUPER^.bHomeInterrupted:= THIS^.iMotionAxisCommonDS402.HomeInterrupted;
+SUPER^.bHomeError:=	THIS^.iMotionAxisCommonDS402.HomeError;
+SUPER^.nHomeErrorID:=	THIS^.iMotionAxisCommonDS402.HomeErrorID;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="StartMove" Id="{04beed87-ecbf-46f2-ac0b-87255641b197}">
+      <Declaration><![CDATA[(*
+    Check all post condition before updating bCommandedMoveAbsolute
+    The implmentatation will depend on the axis type
+    DS402 NC/Direct axis : Implementation need to check that the drive is in the correct mode before initaiting the move then set bCommandedMoveAbsolute
+    MP NC axis : will immediately write to bCommandedMoveAbsolute
+*)
+METHOD StartMove : BOOL
+VAR_INPUT
+    MoveMode	: E_EpicsMotorCmd;
+    CmdExecute	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF THIS^.fbMotionAxisCommonDS402.SetModeOfOperation(THIS^.eModeOfOperation) THEN
+    THIS^.bStartReady := SUPER^.StartMove(MoveMode, CmdExecute);
+ELSE
+    THIS^.bStartReady := FALSE;
+END_IF
+
+StartMove := THIS^.bStartReady;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

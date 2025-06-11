@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAIN" Id="{61c6dfbc-a7dc-4c03-9ea3-aa217d748554}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+    fbMotionLogger : FB_MotionLogger;
+    // Persistant storage
+    fbPersistentDataStorage : FB_PersistentDataStorage;
+    //
+    fbMotionShareData : FB_MotionShareData;
+    //Brakes : brake fb participate in sync comm with fbMotionDrive, fbMotionAxis and fbMotionInterlocks
+    fbBrake : FB_Brake(iBrakeShareData:=fbMotionShareData) := (BrakeMode := E_StageBrakeMode.IF_MOVING);
+    // common interlocks
+    fbMotionInterlocks : FB_MotionInterlocks ( iMotionLogger:=fbMotionLogger, iMotionInterlocksShareData:=fbMotionShareData);
+    // stage with Limit switches
+    fbLimSwStatus : FB_LimSwStatus ( iMotionLogger:=fbMotionLogger, iLimSwStatusShareData:=fbMotionShareData);
+
+    fbHomeNC : FB_HomeNC(AxisRef:=NcAxis_GVL.testAxis, iMotionLogger:=fbMotionLogger);;
+    fbHaltNC : FB_HaltNC(AxisRef:=NcAxis_GVL.testAxis);
+    fbPowerNC : FB_PowerNC(AxisRef:=NcAxis_GVL.testAxis);
+    fbResetNC : FB_ResetNC(AxisRef:=NcAxis_GVL.testAxis);
+    fbMoveAbsoluteNC : FB_MoveAbsoluteNC(AxisRef:=NcAxis_GVL.testAxis);
+    fbAxisParametersNC: FB_AxisParametersNC(AxisRef:=NcAxis_GVL.testAxis, iPersistentDataStorage := fbPersistentDataStorage);
+    fbAxisStatusNC : FB_AxisStatusNC(AxisRef:=NcAxis_GVL.testAxis);
+
+    fbMotionAxisNC : FB_MotionAxisNC( 	iHome := fbHomeNC,
+                                          iHalt := fbHaltNC,
+                                        iPower := fbPowerNC,
+                                        iReset := fbResetNC,
+                                        iMoveAbsolute := fbMoveAbsoluteNC,
+                                        iAxisParameters:= fbAxisParametersNC,
+                                        iAxisStatus := fbAxisStatusNC,
+                                        (*iLimSwStatus :=fbLimSwStatus*));
+//	fbMotionAxisCommon : FB_MotionAxisCommon(
+//		AxisRef:=NcAxis_GVL.testAxis,
+//		iPersistentDataStorage := fbPersistentDataStorage,
+//		iMotionLogger:=fbMotionLogger,
+//		iHome := fbHome,
+//		iModeOfOperation := fbModeOfOperation
+//	);
+//	fbMotionAxisDS402 : FB_MotionAxisCommon(
+//		AxisRef:=NcAxis_GVL.testAxis,
+//		iPersistentDataStorage := fbPersistentDataStorage,
+//		iMotionLogger:=fbMotionLogger,
+//		iHome := fbHomeDS402,
+//		iModeOfOperation := fbModeOfOperationDS402
+//	);
+//	fbMotionAxisNC : FB_MotionAxisNC(iMotionAxisCommon := fbMotionAxisCommon, iHome := fbHome);
+//// DS402 Axis common featur implmented here.
+//	//fbDS402Common : FB_DS402Common := (HomeMode:=E_EpicsHomeCmd.AUTOZERO, HomePosition:=0.0, HomeOffset:=5.0);
+//	//fbMotionAxisNCDS402 : FB_MotionAxisNCDS402(iMotionAxisNC := fbMotionAxisNC, iMotionAxisCommonDS402 := fbMotionAxisCommonDS402);
+//	//fbMotionDrive : FB_MotionDrive ( iMotionAxisCommon := fbMotionAxisNCDS402 );
+
+//    M1 : ST_MotionEpicsItf := (sName:='Main Axis', fPosition:=10000.0, fVelocity:=50.0, fAcceleration:=50.0, fDeceleration:=50.0);
+//    fbMotionDrive: FB_MotionDrive ( stMotionEpicsItf := M1,
+//                                    iBrake:=fbBrake,
+//                                    iMotionLogger:=fbMotionLogger,
+//                                    iMotionInterlocks:=fbMotionInterlocks,
+//									iLimSwStatus:=fbLimSwStatus,
+//                                    iMotionDriveShareData := fbMotionShareData,
+//                                    iMotionAxisCommon := fbMotionAxisNCDS402
+//								   ) := (Name := 'SmarAct MCS2',  EnableMode:=ENUM_StageEnableMode.DURING_MOTION );
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

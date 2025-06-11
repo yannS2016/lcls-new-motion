@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_DriveCmd" Id="{32204644-5c98-476b-85f8-dcfa96ca1a0e}">
+    <Declaration><![CDATA[INTERFACE I_DriveCmd
+]]></Declaration>
+    <Property Name="CommandedAborted" Id="{1d99348a-3430-4255-9b3c-9dce426a062e}">
+      <Declaration><![CDATA[PROPERTY CommandedAborted : BOOL]]></Declaration>
+      <Get Name="Get" Id="{cbcc2716-a4d8-4b53-a6de-05baab07ff72}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="CommandHalt" Id="{28caa621-b1b5-45c3-948b-355529ae63c2}">
+      <Declaration><![CDATA[PROPERTY CommandHalt : BOOL]]></Declaration>
+      <Get Name="Get" Id="{9fc451d3-9985-4a65-a079-615be98f9e47}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{afbd26a2-5d4f-4673-a5ff-92792f920642}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="CommandMoveAbsolute" Id="{be1022ab-c175-45cf-b747-4904f7dbb61a}">
+      <Declaration><![CDATA[PROPERTY CommandMoveAbsolute : BOOL]]></Declaration>
+      <Get Name="Get" Id="{2b465d88-c80e-452d-bd64-a4daa37a937f}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{148eb03e-69c6-4884-b363-b91c6e29515e}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="CommandMoveHome" Id="{c447ca24-e237-4885-a9a3-281864c8338b}">
+      <Declaration><![CDATA[PROPERTY CommandMoveHome : BOOL]]></Declaration>
+      <Get Name="Get" Id="{bd009231-61d7-4bed-ae68-5c589c9f60c3}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{fd07a648-391b-4835-a127-b5f46d9080b8}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="CommandReset" Id="{cd7e8bfd-a0cf-4671-a69b-1557a160bd00}">
+      <Declaration><![CDATA[PROPERTY CommandReset : BOOL]]></Declaration>
+      <Get Name="Get" Id="{cc6afb54-414e-4354-b571-2acc42bfca27}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{367e203b-5f9b-41d7-9061-a806fa5317d7}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Method Name="ErrorHandling" Id="{8c3f2673-8367-4245-8039-269c7637bb4c}">
+      <Declaration><![CDATA[METHOD ErrorHandling
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="StartMove" Id="{2d898c45-221d-4ab1-9add-83136ca35be3}">
+      <Declaration><![CDATA[(*
+    Check all post condition before updating bCommandedMoveAbsolute
+    The implmentatation will depend on the axis type
+    DS402 NC/Direct axis : Implementation need to check that the drive is in the correct mode before initaiting the move then set bCommandedMoveAbsolute
+    MP NC axis : will immediately write to bCommandedMoveAbsolute
+*)
+METHOD StartMove : BOOL
+VAR_INPUT
+	MoveMode	: E_EpicsMotorCmd;
+	CmdExecute	: BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

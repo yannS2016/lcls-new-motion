@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_MoveAbsolute" Id="{7b52c23d-d549-4d14-b715-d0e842580738}">
+    <Declaration><![CDATA[INTERFACE I_MoveAbsolute
+]]></Declaration>
+    <Property Name="Aborted" Id="{3cbc255c-75e9-4ad4-a183-f5d79abd7d2b}">
+      <Declaration><![CDATA[PROPERTY Aborted : BOOL]]></Declaration>
+      <Get Name="Get" Id="{e3e0c1b9-421e-4378-a6f0-95d48d7a619d}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="ExecMoveAbsolute" Id="{c3f4e0fa-3ecb-436d-b19d-dafe3647ab38}">
+      <Declaration><![CDATA[PROPERTY ExecMoveAbsolute : BOOL]]></Declaration>
+      <Set Name="Set" Id="{9fc317e3-88e6-485d-a498-dca7ddd953b2}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Method Name="MoveAbsolute" Id="{944406bb-ab2e-4a34-b8f7-6e5719833767}">
+      <Declaration><![CDATA[METHOD MoveAbsolute
+VAR_INPUT
+	Execute     : BOOL;
+    Position	: LREAL;
+    Velocity	: LREAL;
+    Acceleration	: LREAL := 0.0;
+    Deceleration	: LREAL := 0.0;
+    Jerk	: LREAL := 0.0;
+    BufferMode	: MC_BufferMode := MC_BufferMode.MC_Aborting;
+END_VAR]]></Declaration>
+    </Method>
+    <Property Name="MoveAbsoluteBusy" Id="{695fcc39-186c-4331-9098-de70b03fd558}">
+      <Declaration><![CDATA[PROPERTY MoveAbsoluteBusy : BOOL]]></Declaration>
+      <Get Name="Get" Id="{b5ea92b2-4cd9-455c-b6ae-9da22a8b84d9}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="MoveAbsoluteDone" Id="{9ba59f72-6f0b-4c7b-9343-7af113119a76}">
+      <Declaration><![CDATA[PROPERTY MoveAbsoluteDone : BOOL]]></Declaration>
+      <Get Name="Get" Id="{a34a1cda-ed04-489a-89f2-807a4c2bf78a}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="MoveAbsoluteError" Id="{34282d73-6471-48bf-87a6-c6af02a98f04}">
+      <Declaration><![CDATA[PROPERTY MoveAbsoluteError : BOOL]]></Declaration>
+      <Get Name="Get" Id="{31231d6b-76fb-4529-8c95-187eb6dd1fec}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="MoveAbsoluteErrorID" Id="{4ae355cc-eee9-4dbf-994c-6409e14defe6}">
+      <Declaration><![CDATA[PROPERTY MoveAbsoluteErrorID : UDINT]]></Declaration>
+      <Get Name="Get" Id="{978b51ff-6054-4e34-8e91-21c1296fde0b}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="TargetAcceleration" Id="{70a35961-bee7-4b46-b0a3-6d71eaea287d}">
+      <Declaration><![CDATA[PROPERTY TargetAcceleration : LREAL]]></Declaration>
+      <Set Name="Set" Id="{b2459bb9-7080-49b9-ae3a-a918cd839621}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="TargetDeceleration" Id="{31845d61-2b46-4eb7-89e1-f67edbd56c4f}">
+      <Declaration><![CDATA[PROPERTY TargetDeceleration : LREAL]]></Declaration>
+      <Set Name="Set" Id="{e7ada26d-8451-438f-b463-e10f2d3a1bb8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="TargetJerk" Id="{9119fca5-a884-4a17-a499-ebd775946ce3}">
+      <Declaration><![CDATA[PROPERTY TargetJerk : LREAL]]></Declaration>
+      <Set Name="Set" Id="{fcaf00f7-169a-4518-82c4-db7d885f20c5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="TargetPosition" Id="{4c3ad4b2-e392-4b88-8a83-082f941a6830}">
+      <Declaration><![CDATA[PROPERTY TargetPosition : LREAL]]></Declaration>
+      <Set Name="Set" Id="{c58fc251-226c-4365-badb-dca9ec823ab7}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="TargetVelocity" Id="{08e71f81-65e6-4cad-a488-7ef932c2b524}">
+      <Declaration><![CDATA[PROPERTY TargetVelocity : LREAL]]></Declaration>
+      <Set Name="Set" Id="{ba3d7175-364b-429d-ade0-cb5cd78570e9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+      </Set>
+    </Property>
+  </Itf>
+</TcPlcObject>

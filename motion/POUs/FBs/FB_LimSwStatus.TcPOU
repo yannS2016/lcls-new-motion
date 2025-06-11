@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_LimSwStatus" Id="{322e8186-deb9-4a53-b303-d1d3662306db}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_LimSwStatus IMPLEMENTS I_LimSwStatus
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+    {attribute 'hide'}
+    iMotionLogger	: I_MotionLogger;
+
+    (* Hardware *)
+   // NC Forward Limit Switch: TRUE if ok to move
+    bLimitForwardEnable AT %I*: BOOL;
+    // NC Backward Limit Switch: TRUE if ok to move
+    bLimitBackwardEnable AT %I*: BOOL;
+    // NO Home Switch: TRUE if at home
+    bHome AT %I*: BOOL;
+
+    {attribute 'hide'}
+    bLimHit : BOOL;
+    bMoveBackwardEnabled : BOOL;
+    bMoveForwardEnabled : BOOL;
+    {attribute 'hide'}
+    ftForwardEnabled : F_TRIG;
+    {attribute 'hide'}
+    ftBackwardEnabled : F_TRIG;
+    {attribute 'hide'}
+    rtUserExec : R_TRIG;
+    {attribute 'hide'}
+    rtReset : R_TRIG;
+    {attribute 'hide'}
+    bLimHitIdling : BOOL;
+    {attribute 'hide'}
+    bLimHitMoving : BOOL;
+    {attribute 'hide'}
+    bWarning: BOOL;
+    {attribute 'hide'}
+    sMessage: T_MAXSTRING;
+    bNewMoveReq : BOOL;
+    bReset : BOOL;
+    bPositiveDirection : BOOL;
+    bNegativeDirection : BOOL;
+    bHomeBusy : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Read Limits status and update shared space
+bMoveBackwardEnabled := bLimitBackwardEnable;
+bMoveForwardEnabled := bLimitForwardEnable;
+
+// Todo: axis idling, critical limit disable faillure
+// clear previous warning and limit hit events with each new request
+// wait for global reset event to complete
+rtReset(CLK:=bReset);
+rtUserExec (CLK:=bNewMoveReq);
+ftForwardEnabled(CLK:=bMoveForwardEnabled);
+ftBackwardEnabled (CLK:=bMoveBackwardEnabled);
+
+IF (ftForwardEnabled.Q AND THIS^.bPositiveDirection)
+        OR (ftBackwardEnabled.Q AND THIS^.bNegativeDirection)
+        AND NOT THIS^.bHomeBusy  THEN
+    // Not an error, just a warning
+    IF NOT bMoveForwardEnabled THEN
+            THIS^.sMessage:='Cannot move past Positive limit.';
+    ELSIF NOT bMoveBackwardEnabled THEN
+            THIS^.sMessage:='Cannot move past Negative limit.';
+    END_IF
+    THIS^.bWarning:=TRUE;
+    THIS^.bLimHit := TRUE;
+    THIS^.bLimHitMoving:=TRUE;
+ELSIF rtUserExec.Q OR rtReset.Q THEN
+    THIS^.bLimHit := FALSE;
+    THIS^.bLimHitMoving := bLimHit;
+    THIS^.bLimHitIdling := bLimHit;
+    THIS^.sMessage := '';
+    THIS^.bWarning := FALSE;
+END_IF
+]]></ST>
+    </Implementation>
+    <Method Name="FB_Init" Id="{e9d4b1d6-7e2a-40e5-abfc-b6d7871092e6}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
+    iMotionLogger	: I_MotionLogger;
+    iLimSwStatusShareData	: I_LimSwStatusShareData;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="LimBackward" Id="{aa63489c-6e6a-4b3c-98b7-5f6f7e3fb754}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY LimBackward : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{134e6218-84e4-4ed6-bfc7-d7acf7d3e2e8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[LimBackward := bLimitBackwardEnable;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="LimForward" Id="{2df92432-ddf8-46fa-9ca0-e9671149f768}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY LimForward : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{c1785027-3e2e-4947-b69b-9e7918a456b0}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[LimForward := bLimitForwardEnable;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="LimHit" Id="{f510c7ce-a1d2-4aed-84bc-03f1d019d2f4}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY LimHit : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{1e5d3be5-c543-46b8-afd6-4d69c846bbb6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="LimHitIdling" Id="{e2383759-743f-482f-a670-ac8df1ae3fbf}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY LimHitIdling : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{4bef7835-b757-492b-9d0a-0abd3adc4ac8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="LimHitMoving" Id="{6aaf6510-ab50-4511-8a06-874853bf780d}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY LimHitMoving : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{b942862e-5cc6-495e-8cc1-f1909d9ecaa8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="LimHome" Id="{bb43c80f-c8b0-49cb-8388-6e64188fca33}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY LimHome : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{fb83aff6-4f66-438e-8ea7-ee58a5c4ea24}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[LimHome := bHome;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MoveBackwardEnabled" Id="{89adc283-9c17-45ca-8f36-46140fc4dc4c}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY MoveBackwardEnabled : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{3db33672-1b0d-4c45-b399-57143d800f06}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MoveForwardEnabled" Id="{5cf35d17-2e51-4927-83dd-9d0c0496a7d4}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY MoveForwardEnabled : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{157158b2-9f48-4b44-a9b9-77a750c8b408}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Status" Id="{a1a77b92-9069-4c95-afb6-6e44858fa0e1}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD Status
+VAR_INPUT
+    NewMoveReq : BOOL;
+    Reset : BOOL;
+    HomeBusy: BOOL;
+    PositiveDirectionEnabled : BOOL;
+    NegativeDirectionEnabled : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Warning" Id="{c7ddb3f1-3a2c-446a-8003-00c9756105d6}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Warning : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{1f972676-2f12-4b3f-adb4-9a49850d0be5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>

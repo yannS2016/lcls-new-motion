@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_Halt" Id="{14029942-f501-4700-ae44-ffd198ee0804}">
+    <Declaration><![CDATA[INTERFACE I_Halt
+]]></Declaration>
+    <Property Name="ExecHalt" Id="{9b612b02-e6fe-499a-8b3e-79abf4f94e66}">
+      <Declaration><![CDATA[PROPERTY ExecHalt : BOOL]]></Declaration>
+      <Set Name="Set" Id="{e554b9d8-8fe8-459e-8090-74311562fc7b}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Method Name="Halt" Id="{d4ac7148-c266-4f03-80ec-1cc697d63c31}">
+      <Declaration><![CDATA[METHOD Halt
+VAR_INPUT
+	Execute : BOOL;
+    Deceleration : LREAL := 0.0;
+    Jerk : LREAL := 0.0;
+    BufferMode	: MC_BufferMode := MC_BufferMode.MC_Aborting;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="HaltBufferMode" Id="{c603523d-3e6d-406a-9c28-c785372ac4f9}">
+      <Declaration><![CDATA[PROPERTY HaltBufferMode : MC_BufferMode]]></Declaration>
+      <Get Name="Get" Id="{dd73ab49-ab3f-4e1b-accd-37a833849ea5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{588c8203-51c6-4070-a58c-c342e4c0f7ed}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="HaltBusy" Id="{8ae225ed-f5ab-4332-acdc-c3e42aaded5a}">
+      <Declaration><![CDATA[PROPERTY HaltBusy : BOOL]]></Declaration>
+      <Get Name="Get" Id="{3e6dd916-c2f0-4863-b925-df304bd91ced}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="HaltDeceleration" Id="{b0d9bc59-f323-45f2-ad94-a6d3058ecc72}">
+      <Declaration><![CDATA[PROPERTY HaltDeceleration : LREAL]]></Declaration>
+      <Set Name="Set" Id="{966d937b-e477-4fec-8d56-cf82ad9e7bae}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="HaltDone" Id="{8055714d-6e20-4cf5-91fc-9c7794dae23b}">
+      <Declaration><![CDATA[PROPERTY HaltDone : BOOL]]></Declaration>
+      <Get Name="Get" Id="{092a4d2a-b995-4f67-bc71-fed54ee1f3b0}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="HaltError" Id="{b9ba3ac4-f6e9-478b-a790-070b8eee962a}">
+      <Declaration><![CDATA[PROPERTY HaltError : BOOL]]></Declaration>
+      <Get Name="Get" Id="{8e5fdeaf-b675-4a22-8ff0-52fbc36f0b62}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="HaltErrorID" Id="{a7865411-559f-48f8-ae61-133b29ccf9ba}">
+      <Declaration><![CDATA[PROPERTY HaltErrorID : UDINT]]></Declaration>
+      <Get Name="Get" Id="{00fd4576-9142-4e39-a11d-09bd0f063a59}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="HaltJerk" Id="{9732ff75-ccee-491e-a82e-79d01f721a28}">
+      <Declaration><![CDATA[PROPERTY HaltJerk : LREAL]]></Declaration>
+      <Set Name="Set" Id="{41efdf2e-48ec-4a96-82ff-f2904126f038}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+  </Itf>
+</TcPlcObject>

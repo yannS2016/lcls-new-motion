@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_Power" Id="{3e27e6e8-6685-424d-9ead-eda513d1c175}">
+    <Declaration><![CDATA[INTERFACE I_Power
+]]></Declaration>
+    <Method Name="Power" Id="{6ec5953f-7853-4ae8-b7bf-ca6c5f20defd}">
+      <Declaration><![CDATA[METHOD Power
+VAR_INPUT
+    Enable	: BOOL;
+    Enable_Positive	: BOOL;
+    Enable_Negative	: BOOL;
+    Override	: LREAL ;
+    BufferMode	: MC_BufferMode;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="PowerEnable" Id="{1110da7f-53f9-4d9e-acd2-6779b9ac57bb}">
+      <Declaration><![CDATA[PROPERTY PowerEnable : BOOL
+]]></Declaration>
+      <Set Name="Set" Id="{68ce8530-0b4e-49b2-b142-87874089ade1}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="PowerEnableNegative" Id="{f4468a5f-99c2-41ef-8494-82f11d6af19e}">
+      <Declaration><![CDATA[PROPERTY PowerEnableNegative : BOOL
+]]></Declaration>
+      <Set Name="Set" Id="{325c8bbd-cb6f-445c-bdde-af74df7c86c0}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="PowerEnablePositive" Id="{a7e67244-44ea-4632-8730-f811e553e6c7}">
+      <Declaration><![CDATA[PROPERTY PowerEnablePositive : BOOL
+]]></Declaration>
+      <Set Name="Set" Id="{665a290f-0612-4dd5-8ddf-d027af35e44f}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="PowerError" Id="{6604d428-f1f1-4c20-a8b9-dc8f79a70991}">
+      <Declaration><![CDATA[PROPERTY PowerError : BOOL]]></Declaration>
+      <Get Name="Get" Id="{b3c2d465-f80b-44c6-b7a9-42c9686181fe}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="PowerErrorID" Id="{ab8e474d-c533-46cf-82e5-024666820951}">
+      <Declaration><![CDATA[PROPERTY PowerErrorID : UDINT]]></Declaration>
+      <Get Name="Get" Id="{640c781c-4181-42bc-8810-58d857789713}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="PowerIsEnabled" Id="{51943bc5-fd82-4d37-a623-d1f89afd6f2e}">
+      <Declaration><![CDATA[PROPERTY PowerIsEnabled : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{f6f920c1-2a15-45fb-99e2-22914eacf6cf}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="PowerOverride" Id="{05600e99-3607-4f22-b5d2-f539e7fc2cd3}">
+      <Declaration><![CDATA[PROPERTY PowerOverride : LREAL]]></Declaration>
+      <Set Name="Set" Id="{d6569857-2f15-4c83-a4a1-ba171e758562}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+  </Itf>
+</TcPlcObject>

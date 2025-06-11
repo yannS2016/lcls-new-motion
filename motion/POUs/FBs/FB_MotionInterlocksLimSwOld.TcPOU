@@ -1,0 +1,256 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_MotionInterlocksLimSwOld" Id="{ab1eea97-93e4-4c0c-8db0-34c18716f063}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionInterlocksLimSwOld IMPLEMENTS I_MotionInterlocks, I_LimSwStatus
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+    iMotionLogger	: I_MotionLogger;
+    iMotionInterlocks	: I_MotionInterlocks;
+    iMotionInterlocksShareData	: I_MotionInterlocksShareData;
+    {attribute 'hide'}
+    bLimHit : BOOL;
+    {attribute 'hide'}
+    bMoveBackwardEnabled : BOOL;
+    bMoveForwardEnabled : BOOL;
+    ftForwardEnabled : F_TRIG;
+    {attribute 'hide'}
+    ftBackwardEnabled : F_TRIG;
+    {attribute 'hide'}
+    rtUserExec : R_TRIG;
+    {attribute 'hide'}
+    bLimHitIdling : BOOL;
+    {attribute 'hide'}
+    bLimHitMoving : BOOL;
+    {attribute 'hide'}
+
+    bReset: BOOL;
+    bError: BOOL;
+    bMoveOk : BOOL;
+    bWarning: BOOL;
+    nErrorID: UDINT;
+    sMessage: T_MAXSTRING;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[bMoveBackwardEnabled := iMotionInterlocksShareData.LimBackward;
+bMoveForwardEnabled := iMotionInterlocksShareData.LimForward;
+
+rtUserExec (CLK:=iMotionInterlocksShareData.NewMoveReq);
+ftForwardEnabled(CLK:=bMoveForwardEnabled);
+ftBackwardEnabled (CLK:=bMoveBackwardEnabled);
+
+IF (ftForwardEnabled.Q AND iMotionInterlocksShareData.PositiveDirection)
+        OR (ftBackwardEnabled.Q AND iMotionInterlocksShareData.NegativeDirection)
+        AND NOT iMotionInterlocksShareData.HomeBusy  THEN
+    // Not an error, just a warning
+    IF NOT bMoveForwardEnabled THEN
+            THIS^.Message:='Cannot move past positive limit.';
+    ELSIF NOT bMoveBackwardEnabled THEN
+            THIS^.Message:='Cannot move past Negative limit.';
+    END_IF
+    THIS^.Error:=FALSE;
+    THIS^.ErrorID:=0;
+    THIS^.MoveOk := FALSE;
+    THIS^.Warning:=TRUE;
+    THIS^.bLimHit := TRUE;
+    THIS^.bLimHitMoving:=TRUE;
+// Todo: axis idling, critical limit disable faillure
+// clear previous warning and limit hit events with each new request
+ELSIF rtUserExec.Q THEN
+    THIS^.bLimHit := FALSE;
+    THIS^.bLimHitMoving := bLimHit;
+    THIS^.bLimHitIdling := bLimHit;
+    THIS^.sMessage := '';
+    THIS^.bWarning := FALSE;
+    THIS^.bMoveOk := TRUE;
+END_IF
+
+// wait for global reset event to complete
+bReset := iMotionInterlocksShareData.ResetDone;
+IF bReset THEN
+    THIS^.bReset := FALSE;
+    THIS^.bError := FALSE;
+    THIS^.bWarning := FALSE;
+    THIS^.nErrorID:= 0;
+    THIS^.sMessage:='';
+END_IF
+
+IF NOT THIS^.Error AND iMotionInterlocks.Error THEN
+    THIS^.Error:=iMotionInterlocks.Error;
+    THIS^.ErrorID:=iMotionInterlocks.ErrorID;
+    THIS^.sMessage := iMotionInterlocks.Message;
+END_IF
+
+THIS^.bMoveOk := THIS^.bMoveOk AND iMotionInterlocks.MoveOk;
+]]></ST>
+    </Implementation>
+    <Property Name="Error" Id="{c9621ca8-d8f2-4872-8a31-f383ac28e17c}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Error : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{8479c732-540c-4a5c-9fc7-110dcd40a8fe}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ErrorID" Id="{f57a8cd0-68b1-499f-853c-e19c0c85f609}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY ErrorID : UDINT
+]]></Declaration>
+      <Get Name="Get" Id="{d8658345-94bd-44c7-b135-2b0f35000a64}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="FB_Init" Id="{38e6bf01-9589-4a1c-9785-544008f3c50a}">
+      <Declaration><![CDATA[(*FB_Init is always available implicitly and it is used primarily for initialization.
+The return value is not evaluated. For a specific influence, you can also declare the
+methods explicitly and provide additional code there with the standard initialization
+code. You can evaluate the return value.*)
+METHOD FB_Init : BOOL
+VAR_INPUT
+    (* TRUE: the retain variables are initialized (reset warm / reset cold)*)
+    bInitRetains	: BOOL;
+    (* TRUE: the instance will be copied to the copy code afterward (online change)*)
+    bInCopyCode	: BOOL;
+    iMotionLogger	: I_MotionLogger;
+    // Common interlocks
+    iMotionInterlocks	: I_MotionInterlocks;
+    iMotionInterlocksShareData	: I_MotionInterlocksShareData;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iMotionInterlocks	:= iMotionInterlocks;
+THIS^.iMotionLogger	:= iMotionLogger;
+THIS^.iMotionInterlocksShareData := iMotionInterlocksShareData;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="LimHit" Id="{e12d3c62-2018-4efe-9b06-7230913182f8}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY LimHit : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{e6f8ffe2-c994-4f2b-b850-219c22a76534}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="LimHitIdling" Id="{7f2015db-1fca-4989-9a30-f9a0a1844546}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY LimHitIdling : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{c8a052a3-2353-48bf-99dc-7da25c13b648}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="LimHitMoving" Id="{d04c92cd-138b-4a30-af41-613f0a66c5dd}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY LimHitMoving : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{c1005b46-eba4-470b-81f5-ca797e7dcac9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Message" Id="{a35fae7d-c0f4-45ed-8ce4-66c645f84140}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Message : T_MAXSTRING
+]]></Declaration>
+      <Get Name="Get" Id="{e677de95-acf0-47b9-8373-f85934b760cf}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MoveBackwardEnabled" Id="{ed189aee-c3df-40c6-a038-e0dd2dcf98eb}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY MoveBackwardEnabled : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{7e89df51-bbb4-4ff3-8b2f-fba900a362ee}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MoveBackwardEnabled := bMoveBackwardEnabled;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MoveForwardEnabled" Id="{ada039dd-f352-4873-a348-dc0635787636}">
+      <Declaration><![CDATA[PROPERTY MoveForwardEnabled : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{cf9a653e-5e86-4712-a4c5-7a173649c53a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MoveForwardEnabled := bMoveForwardEnabled;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="MoveOk" Id="{102bf5ee-9356-4813-bc34-4974a3ffd3f1}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD MoveOk : BOOL
+VAR_INPUT
+    NewMoveReq	: BOOL;
+    Enable	: BOOL;
+    Execute	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="PowerEnabled" Id="{03db7401-41c9-4799-a730-cae92ee922fa}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY PowerEnabled : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{73a6b71f-b17b-41f0-a38f-8b369416fc11}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[PowerEnabled := iMotionInterlocks.PowerEnabled;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Warning" Id="{8a5b15e8-d053-4f95-bdd1-01ad846b2c84}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Warning : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{e2787828-9780-4c60-b6e5-690a88a5c061}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>

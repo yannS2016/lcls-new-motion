@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_MotionInterlocks" Id="{7ac89254-d732-4980-b014-871a72f21fa7}">
+    <Declaration><![CDATA[INTERFACE I_MotionInterlocks EXTENDS __SYSTEM.IQueryInterface, I_Outputs
+]]></Declaration>
+    <Property Name="MoveBackwardEnabled" Id="{437d5026-d3d2-451f-aaec-a79f11811b76}">
+      <Declaration><![CDATA[PROPERTY MoveBackwardEnabled : BOOL]]></Declaration>
+      <Get Name="Get" Id="{7c34fb6f-f131-4c32-8007-32b5760134e0}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="MoveForwardEnabled" Id="{3f0479ef-0797-4b11-80d8-e2af512406d5}">
+      <Declaration><![CDATA[PROPERTY MoveForwardEnabled : BOOL]]></Declaration>
+      <Get Name="Get" Id="{c48ed286-fb7c-46b5-b434-3eb5c4175687}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="MoveOk" Id="{923a20cb-b75b-46f9-bb2a-200129f48beb}">
+      <Declaration><![CDATA[PROPERTY MoveOk : BOOL]]></Declaration>
+      <Get Name="Get" Id="{0ff386a4-7805-4634-a7c9-b25a0c9fccc6}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="PowerEnabled" Id="{21374bb6-d388-4443-be9e-3f9b640d7d98}">
+      <Declaration><![CDATA[PROPERTY PowerEnabled : BOOL]]></Declaration>
+      <Get Name="Get" Id="{84d4d810-7c5b-4fb1-848b-e406f6d15e58}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="Warning" Id="{a495eb89-bd67-43de-a51f-b136c6371ad5}">
+      <Declaration><![CDATA[PROPERTY Warning : BOOL]]></Declaration>
+      <Get Name="Get" Id="{85c76993-019e-4a22-ba48-9ef840ab5fba}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

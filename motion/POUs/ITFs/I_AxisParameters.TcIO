@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_AxisParameters" Id="{f91fa392-42b9-4cf5-a843-28456ed2820b}">
+    <Declaration><![CDATA[INTERFACE I_AxisParameters
+]]></Declaration>
+    <Property Name="AxisParamsError" Id="{e9e077a6-6930-4649-85af-c395ca806531}">
+      <Declaration><![CDATA[PROPERTY AxisParamsError : BOOL]]></Declaration>
+      <Get Name="Get" Id="{a63dffe9-b0a4-48a7-a237-0a9129339422}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="AxisParamsErrorID" Id="{0f4330bf-83b2-422b-8828-706ab87543cd}">
+      <Declaration><![CDATA[PROPERTY AxisParamsErrorID : UDINT]]></Declaration>
+      <Get Name="Get" Id="{9780000b-60a0-4a5c-8cf0-365a7339a4b4}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="AxisParamsInit" Id="{0aff11b7-df26-41a4-b267-6edbd4c57328}">
+      <Declaration><![CDATA[PROPERTY AxisParamsInit : BOOL]]></Declaration>
+      <Get Name="Get" Id="{79d5f5f5-86e1-4e26-b4c1-b2fd6f35a037}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="EncoderParamsSave" Id="{543b2f95-a551-4fd8-9961-1f96cda4fa13}">
+      <Declaration><![CDATA[METHOD EncoderParamsSave
+VAR_INPUT
+    Enable : BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="ExposeAxisParams" Id="{4789401e-3661-49e3-b98c-e95d7eff7616}">
+      <Declaration><![CDATA[METHOD ExposeAxisParams
+VAR_INPUT
+    Enable: BOOL;
+    RefreshDelay: TIME;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="RefVeloSearch" Id="{8a35fa96-dbfb-404d-93a0-e871a2d3d063}">
+      <Declaration><![CDATA[PROPERTY RefVeloSearch : LREAL]]></Declaration>
+      <Get Name="Get" Id="{e8cf9088-9695-42fc-8b81-7f13211fe1dc}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="RefVeloSync" Id="{a25eef31-589e-4b83-ab70-cb029abd6e98}">
+      <Declaration><![CDATA[PROPERTY RefVeloSync : LREAL]]></Declaration>
+      <Get Name="Get" Id="{10344ee7-2ae2-48ac-9706-25700bcdf13f}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="RestoreAxisParams" Id="{507dd76e-711b-4765-ae75-25397b03046b}">
+      <Declaration><![CDATA[METHOD RestoreAxisParams
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="RestoreDone" Id="{6c7c316a-24ab-45a6-b98f-53642b5389c7}">
+      <Declaration><![CDATA[PROPERTY RestoreDone : BOOL]]></Declaration>
+      <Get Name="Get" Id="{8b50b761-13ce-41f8-8f76-0dd608718848}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="SavedPosition" Id="{3eb2be5e-1bc5-4267-9504-fd4efa432df8}">
+      <Declaration><![CDATA[PROPERTY SavedPosition : LREAL]]></Declaration>
+      <Get Name="Get" Id="{3d3eebab-1130-4c6e-a759-bbdd38ce8881}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="ScaledEncoderCount" Id="{93445dbc-b389-4916-96fe-856216773594}">
+      <Declaration><![CDATA[PROPERTY ScaledEncoderCount : UDINT]]></Declaration>
+      <Get Name="Get" Id="{34af533c-cf5f-4a77-a012-16b3af7602a0}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="ScaleRawEncoder" Id="{aa4aa2b3-d892-434a-940d-c34b50da3016}">
+      <Declaration><![CDATA[METHOD ScaleRawEncoder : UDINT
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

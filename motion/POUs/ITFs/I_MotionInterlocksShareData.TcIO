@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_MotionInterlocksShareData" Id="{f664124a-a4eb-460c-beeb-498daf79d1c6}">
+    <Declaration><![CDATA[// Interlocks share data for synced operation with other blocks
+INTERFACE I_MotionInterlocksShareData
+]]></Declaration>
+    <Property Name="DriveEnable" Id="{4dd3591f-84b8-4e13-9a89-d98142eb6311}">
+      <Declaration><![CDATA[PROPERTY DriveEnable : BOOL]]></Declaration>
+      <Get Name="Get" Id="{27fdee54-d7b7-4c60-902e-d64221b0252d}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="GlobalReset" Id="{3cb9be1b-8a2f-4d9a-aeed-5fa8a8a4a1f3}">
+      <Declaration><![CDATA[PROPERTY GlobalReset : BOOL]]></Declaration>
+      <Get Name="Get" Id="{cbce352f-7209-4323-97a9-2a34ea09e939}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="ResetDone" Id="{791a0996-afd2-49f3-b52f-3cbd46ef51c9}">
+      <Declaration><![CDATA[PROPERTY ResetDone : BOOL]]></Declaration>
+      <Get Name="Get" Id="{2aa30525-6630-4d08-bd1f-c5fd1296dbb1}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

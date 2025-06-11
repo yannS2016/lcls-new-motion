@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_Home" Id="{b2162ae7-b954-447f-934b-6cfe92c3e8fb}">
+    <Declaration><![CDATA[INTERFACE I_Home
+]]></Declaration>
+    <Property Name="ExecHome" Id="{4b8b7d56-7d9f-4a15-b1b9-952d60ae0b97}">
+      <Declaration><![CDATA[PROPERTY ExecHome : BOOL
+]]></Declaration>
+      <Set Name="Set" Id="{a2baa0f8-1a86-4c28-ae03-e48fecf13121}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Method Name="Home" Id="{33465a37-8a78-445e-9579-3e71296ed69d}">
+      <Declaration><![CDATA[METHOD  Home
+VAR_INPUT
+	Execute	: BOOL;
+	HomeSpeedFast	: LREAL;
+	HomeSpeedSlow	: LREAL;
+	HomeOffset	: LREAL;
+	HomePosition	: LREAL := 0;
+	UserAbort	: BOOL;
+	HomeMode	: E_EpicsHomeCmd;
+	LimForward	:BOOL;
+	LimBackward :BOOL;
+	LimHome :BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="HomeBusy" Id="{e4e748fe-a137-4b50-93de-47a867048553}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY HomeBusy : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{61f59cc2-67e8-41e1-a264-eb573948f71f}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="HomeDone" Id="{397eafe1-d6df-41e6-9b62-3c37281ae3a5}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY HomeDone : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{c676c0ec-b048-4e09-b3bf-86806cb2f89e}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="HomeError" Id="{0224133d-f162-4bed-a81b-ba3dc03ba1fb}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY HomeError : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{8c0e2fca-7ac9-4da6-acf4-6ee253960870}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="HomeErrorID" Id="{29958cd5-cbf3-4d27-a4fa-56caeca6007c}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY HomeErrorID : UDINT
+]]></Declaration>
+      <Get Name="Get" Id="{faf992c7-d05b-42c6-a855-8f0e61f6a587}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="HomeMode" Id="{24fc7d8a-47fc-487d-84fb-48c81c8d630f}">
+      <Declaration><![CDATA[PROPERTY HomeMode : E_EpicsHomeCmd
+]]></Declaration>
+      <Set Name="Set" Id="{3a00bdbc-d54d-43c2-bc10-36874e2228ba}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="HomeOffset" Id="{26c56b7d-7caa-4e46-8fee-b7378269a34f}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY HomeOffset : LREAL
+]]></Declaration>
+      <Set Name="Set" Id="{2b90ddc1-bc3e-47c8-802d-a091b2bbf459}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="HomePosition" Id="{ca2d6798-d32d-45c8-b5ec-bee98c76a709}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY HomePosition : LREAL
+]]></Declaration>
+      <Set Name="Set" Id="{72bfcf28-b67c-4560-8afb-b53cfa305d5f}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+  </Itf>
+</TcPlcObject>
