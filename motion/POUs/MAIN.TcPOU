@@ -22,15 +22,16 @@ VAR
     fbMoveAbsoluteNC : FB_MoveAbsoluteNC(AxisRef:=NcAxis_GVL.testAxis);
     fbAxisParametersNC: FB_AxisParametersNC(AxisRef:=NcAxis_GVL.testAxis, iPersistentDataStorage := fbPersistentDataStorage);
     fbAxisStatusNC : FB_AxisStatusNC(AxisRef:=NcAxis_GVL.testAxis);
-
+    fbBacklashCompensation : FB_BacklashCompensation(AxisRef:=NcAxis_GVL.testAxis);
     fbMotionAxisNC : FB_MotionAxisNC( 	iHome := fbHomeNC,
-                                          iHalt := fbHaltNC,
+                                        iHalt := fbHaltNC,
                                         iPower := fbPowerNC,
                                         iReset := fbResetNC,
                                         iMoveAbsolute := fbMoveAbsoluteNC,
                                         iAxisParameters:= fbAxisParametersNC,
                                         iAxisStatus := fbAxisStatusNC,
-                                        (*iLimSwStatus :=fbLimSwStatus*));
+                                        iBacklashCompensation :=fbBacklashCompensation
+                                    );
 //	fbMotionAxisCommon : FB_MotionAxisCommon(
 //		AxisRef:=NcAxis_GVL.testAxis,
 //		iPersistentDataStorage := fbPersistentDataStorage,

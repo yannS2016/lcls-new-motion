@@ -3,12 +3,6 @@
   <Itf Name="I_MoveAbsolute" Id="{7b52c23d-d549-4d14-b715-d0e842580738}">
     <Declaration><![CDATA[INTERFACE I_MoveAbsolute
 ]]></Declaration>
-    <Property Name="Aborted" Id="{3cbc255c-75e9-4ad4-a183-f5d79abd7d2b}">
-      <Declaration><![CDATA[PROPERTY Aborted : BOOL]]></Declaration>
-      <Get Name="Get" Id="{e3e0c1b9-421e-4378-a6f0-95d48d7a619d}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
     <Property Name="ExecMoveAbsolute" Id="{c3f4e0fa-3ecb-436d-b19d-dafe3647ab38}">
       <Declaration><![CDATA[PROPERTY ExecMoveAbsolute : BOOL]]></Declaration>
       <Set Name="Set" Id="{9fc317e3-88e6-485d-a498-dca7ddd953b2}">
@@ -27,6 +21,18 @@ VAR_INPUT
     BufferMode	: MC_BufferMode := MC_BufferMode.MC_Aborting;
 END_VAR]]></Declaration>
     </Method>
+    <Property Name="MoveAbsoluteAborted" Id="{3cbc255c-75e9-4ad4-a183-f5d79abd7d2b}">
+      <Declaration><![CDATA[PROPERTY MoveAbsoluteAborted : BOOL]]></Declaration>
+      <Get Name="Get" Id="{e3e0c1b9-421e-4378-a6f0-95d48d7a619d}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="MoveAbsoluteActive" Id="{aa5e4d9b-53b9-487d-aa20-131cb555a892}">
+      <Declaration><![CDATA[PROPERTY MoveAbsoluteActive : BOOL]]></Declaration>
+      <Get Name="Get" Id="{0e48ad5c-2521-41b7-88a3-39e827f8d022}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Property Name="MoveAbsoluteBusy" Id="{695fcc39-186c-4331-9098-de70b03fd558}">
       <Declaration><![CDATA[PROPERTY MoveAbsoluteBusy : BOOL]]></Declaration>
       <Get Name="Get" Id="{b5ea92b2-4cd9-455c-b6ae-9da22a8b84d9}">

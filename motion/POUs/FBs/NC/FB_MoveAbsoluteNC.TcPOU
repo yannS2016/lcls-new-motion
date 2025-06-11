@@ -58,19 +58,6 @@ IF  rtDone.Q OR rtAborted.Q THEN
     THIS^.bExecute := FALSE;
 END_IF]]></ST>
     </Implementation>
-    <Property Name="Aborted" Id="{79034fb3-851c-4dbf-91a9-278decee105d}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY Aborted : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{3e1b0d41-0cea-422e-9380-9d54145200b3}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[Aborted := THIS^.bAborted;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
     <Property Name="ExecMoveAbsolute" Id="{a3116f66-405a-47a7-b4a3-938cec1d1060}">
       <Declaration><![CDATA[PROPERTY ExecMoveAbsolute : BOOL
 ]]></Declaration>
@@ -117,6 +104,32 @@ THIS^.fTargetJerk := Jerk;
 THIS^.eBufferMode := BufferMode;]]></ST>
       </Implementation>
     </Method>
+    <Property Name="MoveAbsoluteAborted" Id="{e282a52e-140a-4032-b49e-bebd36434e55}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY MoveAbsoluteAborted : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{d29e9ff4-92f9-427a-9ec7-fa6fbbe474b3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MoveAbsoluteAborted := THIS^.bAborted;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MoveAbsoluteActive" Id="{dd75b655-9142-4732-8a04-757a4f64e51a}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY MoveAbsoluteActive : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{a477c2f4-fc88-4b80-b4f4-7805da1fb7a8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="MoveAbsoluteBusy" Id="{1ae87be5-03cb-4a25-b603-7a901b104320}">
       <Declaration><![CDATA[{warning 'add property implementation'}
 PROPERTY MoveAbsoluteBusy : BOOL

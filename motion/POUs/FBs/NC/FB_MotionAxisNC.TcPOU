@@ -25,16 +25,16 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Property Name="Aborted" Id="{b7ec7374-27cb-4f60-82f6-b80789e80f63}">
-      <Declaration><![CDATA[PROPERTY Aborted : BOOL
+    <Property Name="Aborted" Id="{d0075b82-3e9e-46e5-acdf-4cebd8ebf67a}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Aborted : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{1b6d03b0-dac1-47f1-b78e-738a2015ba89}">
+      <Get Name="Get" Id="{cf614298-ddff-4307-a171-563e96eb3c02}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[Aborted := THIS^.iMoveAbsolute.Aborted;
-]]></ST>
+          <ST><![CDATA[]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -165,7 +165,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[BacklashCompensationError := THIS^.iBacklashCompensation.BacklashCompensation;]]></ST>
+          <ST><![CDATA[BacklashCompensationError := THIS^.iBacklashCompensation.BacklashCompensationError;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -177,7 +177,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[BacklashCompensationErrorID := THIS^.iBacklashCompensation.BacklashCompensationID;]]></ST>
+          <ST><![CDATA[BacklashCompensationErrorID := THIS^.iBacklashCompensation.BacklashCompensationErrorID;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -815,6 +815,33 @@ END_VAR
                                 );]]></ST>
       </Implementation>
     </Method>
+    <Property Name="MoveAbsoluteAborted" Id="{493fb459-9bd4-4d7b-a474-db654cadc000}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY MoveAbsoluteAborted : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{cccbbef2-aea3-4e0e-88ad-805eb510e259}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MoveAbsoluteAborted := THIS^.iMoveAbsolute.MoveAbsoluteAborted;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MoveAbsoluteActive" Id="{2bd2c4c4-7021-47bc-b00f-a44a5075c29b}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY MoveAbsoluteActive : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{bfacf8f8-bb8d-4aa8-81fb-11582a69eb37}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="MoveAbsoluteBusy" Id="{4a3000a8-cd7f-472d-87ef-4b6eb92705db}">
       <Declaration><![CDATA[PROPERTY MoveAbsoluteBusy : BOOL
 ]]></Declaration>
@@ -1204,6 +1231,19 @@ END_VAR
 ]]></Declaration>
         <Implementation>
           <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Stopped" Id="{627971e5-8a4a-4a11-800c-3f489522ec58}">
+      <Declaration><![CDATA[PROPERTY Stopped : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{bd33aa66-3078-4177-ac77-178f665dcc17}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Stopped := THIS^.iAxisStatus.Stopped;
+]]></ST>
         </Implementation>
       </Get>
     </Property>

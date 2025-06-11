@@ -3,12 +3,6 @@
   <Itf Name="I_AxisStatus" Id="{ced1141c-4936-4e2b-89cc-52f3e59358c7}">
     <Declaration><![CDATA[INTERFACE I_AxisStatus
 ]]></Declaration>
-    <Property Name="Aborted" Id="{36944f75-c180-413c-a460-5dae2ab098bd}">
-      <Declaration><![CDATA[PROPERTY Aborted : BOOL]]></Declaration>
-      <Get Name="Get" Id="{e83ab77c-97e6-4527-aa54-4f9b75869757}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
     <Method Name="AxisEnabled" Id="{630e5032-35fd-49af-8171-ae8c288f92dd}">
       <Declaration><![CDATA[METHOD AxisEnabled : BOOL
 VAR_INPUT
@@ -84,6 +78,12 @@ END_VAR
     <Property Name="StandStill" Id="{56f881a0-102f-43c3-a476-aa30cefe31e9}">
       <Declaration><![CDATA[PROPERTY StandStill : BOOL]]></Declaration>
       <Get Name="Get" Id="{4d5f8519-3e3d-411b-bc51-16b647124219}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="Stopped" Id="{752ae048-f4b8-4fc3-90c4-81c2b42c4222}">
+      <Declaration><![CDATA[PROPERTY Stopped : BOOL]]></Declaration>
+      <Get Name="Get" Id="{9de74096-402c-41b0-8e8b-490e64645362}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>

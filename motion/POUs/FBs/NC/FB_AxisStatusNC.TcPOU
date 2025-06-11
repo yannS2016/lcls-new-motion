@@ -17,19 +17,6 @@ END_VAR
       <ST><![CDATA[THIS^.AxisRef.ReadStatus();
 ]]></ST>
     </Implementation>
-    <Property Name="Aborted" Id="{501fcea0-efc1-435b-80bf-59c89a47c728}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY Aborted : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{dd83948b-0bcb-4ec5-ad0f-f36a0d752f21}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[Aborted := THIS^.AxisRef.Status.HasBeenStopped;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
     <Method Name="AxisEnabled" Id="{2a14e841-fea3-4b30-9123-2945a0231bb1}">
       <Declaration><![CDATA[METHOD AxisEnabled : BOOL
 ]]></Declaration>
@@ -229,6 +216,19 @@ END_VAR
 ]]></Declaration>
         <Implementation>
           <ST><![CDATA[StandStill := THIS^.AxisRef.Status.StandStill;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Stopped" Id="{c6375ac0-08b6-4b85-999a-45c5d7a1fa71}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Stopped : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{abded25b-8407-4890-9c37-9bccdbf06f91}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Stopped := THIS^.AxisRef.Status.HasBeenStopped;]]></ST>
         </Implementation>
       </Get>
     </Property>
