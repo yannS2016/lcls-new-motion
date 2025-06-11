@@ -14,6 +14,12 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
+    <Property Name="PowerActive" Id="{20b72d22-0b79-4e66-8e59-11a346450f29}">
+      <Declaration><![CDATA[PROPERTY PowerActive : BOOL]]></Declaration>
+      <Get Name="Get" Id="{f893a206-91ba-4636-8483-e8eab88dcb57}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Property Name="PowerEnable" Id="{1110da7f-53f9-4d9e-acd2-6779b9ac57bb}">
       <Declaration><![CDATA[PROPERTY PowerEnable : BOOL
 ]]></Declaration>

@@ -19,13 +19,14 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
+    <Property Name="HaltActive" Id="{931a7ba1-a94e-4370-afcb-3d6e40f3a0e7}">
+      <Declaration><![CDATA[PROPERTY HaltActive : BOOL]]></Declaration>
+      <Get Name="Get" Id="{2f305331-f614-4dee-9034-de312cec5ae6}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Property Name="HaltBufferMode" Id="{c603523d-3e6d-406a-9c28-c785372ac4f9}">
       <Declaration><![CDATA[PROPERTY HaltBufferMode : MC_BufferMode]]></Declaration>
-      <Get Name="Get" Id="{dd73ab49-ab3f-4e1b-accd-37a833849ea5}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-      </Get>
       <Set Name="Set" Id="{588c8203-51c6-4070-a58c-c342e4c0f7ed}">
         <Declaration><![CDATA[]]></Declaration>
       </Set>

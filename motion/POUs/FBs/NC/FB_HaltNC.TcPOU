@@ -85,6 +85,19 @@ THIS^.fJerk := Jerk;
 THIS^.eBufferMode := BufferMode;]]></ST>
       </Implementation>
     </Method>
+    <Property Name="HaltActive" Id="{04d62f93-14c5-45c5-834a-45619c35235a}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY HaltActive : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{4a5fb9e3-eee2-4c86-aac7-88671ef9bcae}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[HaltActive := THIS^.fbMcHalt.Active;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="HaltBufferMode" Id="{7337b28e-2d64-4cf3-a38d-55c6ef1e0217}">
       <Declaration><![CDATA[PROPERTY HaltBufferMode : Tc2_MC2.MC_BufferMode
 ]]></Declaration>

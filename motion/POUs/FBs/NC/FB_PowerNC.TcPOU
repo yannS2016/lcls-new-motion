@@ -75,6 +75,19 @@ THIS^.eBufferMode := BufferMode ;
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="PowerActive" Id="{49693f07-c88b-4b06-be0c-0dc75c8f5fac}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY PowerActive : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{b11a8d39-0dfc-40d5-ab4e-e7fe1f8bda7c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="PowerEnable" Id="{252a1d79-0ff2-4213-bc33-fadd45d6a3f9}">
       <Declaration><![CDATA[{attribute 'monitoring':= 'variable'}
 PROPERTY PowerEnable : BOOL
