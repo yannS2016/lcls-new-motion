@@ -16,7 +16,7 @@ VAR_INPUT
     Enable     : BOOL;
 	Execute		: BOOL;
     Compensation	: LREAL;
-    fRampVelocity	: LREAL := 10.0;
+    RampVelocity	: LREAL;
     DisableMode	: E_DISABLEMODE := E_DISABLEMODE.DisableModeHold;
 END_VAR
 ]]></Declaration>

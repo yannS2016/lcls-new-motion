@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <Itf Name="I_MotionAxis" Id="{31a902d0-0933-4477-af85-d5a81bbd2467}">
-    <Declaration><![CDATA[INTERFACE I_MotionAxis EXTENDS __SYSTEM.IQueryInterface, I_AxisParameters, I_AxisStatus, I_DriveAxisCmds, I_Home, I_Halt, I_Power, I_Reset, I_MoveAbsolute
+    <Declaration><![CDATA[INTERFACE I_MotionAxis EXTENDS __SYSTEM.IQueryInterface, I_AxisParameters, I_AxisStatus, I_DriveAxisCmds, I_Home, I_Halt, I_Power, I_Reset, I_MoveAbsolute,I_BacklashCompensation
 ]]></Declaration>
   </Itf>
 </TcPlcObject>
