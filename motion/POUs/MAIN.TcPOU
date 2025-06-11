@@ -32,35 +32,17 @@ VAR
                                         iAxisStatus := fbAxisStatusNC,
                                         iBacklashCompensation :=fbBacklashCompensation
                                     );
-//	fbMotionAxisCommon : FB_MotionAxisCommon(
-//		AxisRef:=NcAxis_GVL.testAxis,
-//		iPersistentDataStorage := fbPersistentDataStorage,
-//		iMotionLogger:=fbMotionLogger,
-//		iHome := fbHome,
-//		iModeOfOperation := fbModeOfOperation
-//	);
-//	fbMotionAxisDS402 : FB_MotionAxisCommon(
-//		AxisRef:=NcAxis_GVL.testAxis,
-//		iPersistentDataStorage := fbPersistentDataStorage,
-//		iMotionLogger:=fbMotionLogger,
-//		iHome := fbHomeDS402,
-//		iModeOfOperation := fbModeOfOperationDS402
-//	);
-//	fbMotionAxisNC : FB_MotionAxisNC(iMotionAxisCommon := fbMotionAxisCommon, iHome := fbHome);
-//// DS402 Axis common featur implmented here.
-//	//fbDS402Common : FB_DS402Common := (HomeMode:=E_EpicsHomeCmd.AUTOZERO, HomePosition:=0.0, HomeOffset:=5.0);
-//	//fbMotionAxisNCDS402 : FB_MotionAxisNCDS402(iMotionAxisNC := fbMotionAxisNC, iMotionAxisCommonDS402 := fbMotionAxisCommonDS402);
-//	//fbMotionDrive : FB_MotionDrive ( iMotionAxisCommon := fbMotionAxisNCDS402 );
 
-//    M1 : ST_MotionEpicsItf := (sName:='Main Axis', fPosition:=10000.0, fVelocity:=50.0, fAcceleration:=50.0, fDeceleration:=50.0);
-//    fbMotionDrive: FB_MotionDrive ( stMotionEpicsItf := M1,
-//                                    iBrake:=fbBrake,
-//                                    iMotionLogger:=fbMotionLogger,
-//                                    iMotionInterlocks:=fbMotionInterlocks,
-//									iLimSwStatus:=fbLimSwStatus,
-//                                    iMotionDriveShareData := fbMotionShareData,
-//                                    iMotionAxisCommon := fbMotionAxisNCDS402
-//								   ) := (Name := 'SmarAct MCS2',  EnableMode:=ENUM_StageEnableMode.DURING_MOTION );
+
+
+    M1 : ST_MotionEpicsItf := (sName:='Main Axis', fPosition:=10000.0, fVelocity:=50.0, fAcceleration:=50.0, fDeceleration:=50.0);
+   fbMotionDrive: FB_MotionDrive ( stMotionEpicsItf := M1,
+                                   iBrake:=fbBrake,
+                                   iMotionLogger:=fbMotionLogger,
+                                   iMotionInterlocks:=fbMotionInterlocks,
+                                   iLimSwStatus:=fbLimSwStatus,
+                                   iMotionAxis := fbMotionAxisNC
+                                   ) := (Name := 'SmarAct MCS2',  EnableMode:=ENUM_StageEnableMode.DURING_MOTION );
 
 END_VAR
 ]]></Declaration>

@@ -82,23 +82,11 @@
       <SubType>Code</SubType>
       <ExcludeFromBuild>true</ExcludeFromBuild>
     </Compile>
-    <Compile Include="POUs\FBs\FB_MotionAxisNCDS402Bk.TcPOU">
-      <SubType>Code</SubType>
-      <ExcludeFromBuild>true</ExcludeFromBuild>
-    </Compile>
-    <Compile Include="POUs\FBs\FB_MotionAxisNCDS402old.TcPOU">
-      <SubType>Code</SubType>
-      <ExcludeFromBuild>true</ExcludeFromBuild>
-    </Compile>
     <Compile Include="POUs\FBs\FB_MotionDrive.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FBs\FB_MotionInterlocks.TcPOU">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FBs\FB_MotionInterlocksLimSwOld.TcPOU">
-      <SubType>Code</SubType>
-      <ExcludeFromBuild>true</ExcludeFromBuild>
     </Compile>
     <Compile Include="POUs\FBs\FB_MotionLogger.TcPOU">
       <SubType>Code</SubType>

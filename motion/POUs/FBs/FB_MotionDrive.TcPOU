@@ -9,7 +9,7 @@ VAR_OUTPUT
 END_VAR
 VAR
     {attribute 'hide'}
-    iMotionAxisCommon: I_MotionAxis;
+    iMotionAxis: I_MotionAxis;
     {attribute 'hide'}
     iBrake 				: I_Brake;
     {attribute 'hide'}
@@ -18,8 +18,7 @@ VAR
     iLimSwStatus : I_LimSwStatus;
     {attribute 'hide'}
     iMotionLogger 		: I_MotionLogger;
-    {attribute 'hide'}
-    iMotionDriveShareData : I_MotionDriveShareData;
+
 //     {attribute 'hide'}
 // 	iMotionAxisNC : I_MotionAxisNC := 0;
 //     {attribute 'hide'}
@@ -323,16 +322,17 @@ VAR_INPUT
     iBrake : I_Brake;
     iMotionInterlocks : I_MotionInterlocks;
     iMotionLogger : I_MotionLogger;
-    iMotionDriveShareData : I_MotionDriveShareData;
-    iMotionAxisCommon: I_MotionAxis;
+    iMotionAxis: I_MotionAxis;
+    iLimSwStatus : I_LimSwStatus;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.iMotionAxisCommon := iMotionAxisCommon;
-THIS^.stMotionEpicsItf REF=stMotionEpicsItf;
-THIS^.iMotionAxisCommon:=iMotionAxisCommon;
+        <ST><![CDATA[THIS^.stMotionEpicsItf REF=stMotionEpicsItf;
+THIS^.iMotionAxis := iMotionAxis;
+THIS^.iMotionLogger:=iMotionLogger;
 THIS^.iBrake:=iBrake;
+THIS^.iLimSwStatus:=iLimSwStatus;
 THIS^.iMotionInterlocks:=iMotionInterlocks;
-THIS^.iMotionDriveShareData := iMotionDriveShareData;
+
 ]]></ST>
       </Implementation>
     </Method>
@@ -381,10 +381,10 @@ END_VAR
         <ST><![CDATA[// update EPICS status
 THIS^.UpdateParamAndStatus();
 
-THIS^.iMotionDriveShareData.NewMoveReq := bNewMoveReq;
-THIS^.iMotionDriveShareData.ExecHome := bExecHome;
-THIS^.iMotionDriveShareData.ExecMove := bExecMove;
-THIS^.iMotionDriveShareData.DriveEnable := stMotionEpicsItf.bEnable;]]></ST>
+// THIS^.iMotionDriveShareData.NewMoveReq := bNewMoveReq;
+// THIS^.iMotionDriveShareData.ExecHome := bExecHome;
+// THIS^.iMotionDriveShareData.ExecMove := bExecMove;
+// THIS^.iMotionDriveShareData.DriveEnable := stMotionEpicsItf.bEnable;]]></ST>
       </Implementation>
     </Method>
     <Method Name="PreMoveHandling" Id="{b70d40df-94ce-4a86-890c-8d206ac7e676}">
@@ -478,9 +478,9 @@ END_VAR
         <ST><![CDATA[// no needed in production since the actualposition is already set on the axis
 // and epics status will get that last position
 // use this to restore anything thats not an axisref paramter.
-rtRestoreDone(CLK:= THIS^.iMotionAxisCommon.RestoreDone);
+rtRestoreDone(CLK:= THIS^.iMotionAxis.RestoreDone);
 IF rtRestoreDone.Q THEN
-    THIS^.stMotionEpicsItf.fPosition := iMotionAxisCommon.SavedPosition;
+    THIS^.stMotionEpicsItf.fPosition := THIS^.iMotionAxis.SavedPosition;
 END_IF]]></ST>
       </Implementation>
     </Method>
