@@ -15,31 +15,10 @@ VAR
     {attribute 'hide'}
     iMotionInterlocks	: I_MotionInterlocks;
     {attribute 'hide'}
-    iLimSwStatus : I_LimSwStatus;
-    {attribute 'hide'}
     iMotionLogger 		: I_MotionLogger;
-
-//     {attribute 'hide'}
-// 	iMotionAxisNC : I_MotionAxisNC := 0;
-//     {attribute 'hide'}
-// 	iMotionAxisNCDS402 : I_MotionAxisNCDS402:= 0;
-//     {attribute 'hide'}
-// 	iMotionAxisDS402 : I_MotionAxisDS402 := 0;
-//     {attribute 'hide'}
-// 	iMotionAxisCommonDS402 : I_MotionAxisCommonDS402 := 0;
-//      {attribute 'hide'}
-// 	iLimSw : I_LimSwStatus := 0;
-//      {attribute 'hide'}
-//     iMotionInterlocksLimSw	: I_MotionInterlocks := 0;
-    bMotionAxisNC      : BOOL;
-    bMotionInterlocks : BOOL;
-    bMotionInterlocksLimSw : BOOL;
-    bMotionAxisNCDS402      : BOOL;
-    bMotionAxisCommonDS402 : BOOL;
-    bMotionAxisDS402      : BOOL;
-
    // EPICS Interface
     stMotionEpicsItf : REFERENCE TO ST_MotionEpicsItf;
+    {attribute 'hide'}
     eMoveMode : E_EpicsMotorCmd := E_EpicsMotorCmd.MOVE_ABSOLUTE;
     // Determines when we automatically enable the motor
     {attribute 'hide'}
@@ -65,7 +44,6 @@ VAR
     '}
     bServo : BOOL;
 
-    bHalt : BOOL;
     sName : STRING;
     {attribute 'hide'}
     eMoveState	: E_MoveState;
@@ -221,7 +199,7 @@ CASE eMoveState OF
 
    E_MoveState.MOVE_INTERRUPTED:
 
-       IF THIS^.iLimSwStatus.LimHitMoving THEN
+       IF THIS^.iMotionInterlocks.InterlockEvent THEN
            eMoveState := E_MoveState.TARGET_REACHED;
        END_IF
        // Wait here for halt or reset done or clearing limit state to be restored
@@ -243,8 +221,8 @@ CASE eMoveState OF
 
 END_CASE
 
-// Halt is always a user stop but not a limit hit or reset.
-THIS^.iMotionAxis.Halt(	Execute:=ftStopExec.Q AND NOT stMotionEpicsItf.bReset AND NOT iLimSwStatus.LimHit
+// Halt is always a user stop but not an interlock event or a reset.
+THIS^.iMotionAxis.Halt(	Execute:=ftStopExec.Q AND NOT stMotionEpicsItf.bReset AND NOT iMotionInterlocks.InterlockEvent
                                              AND (iMotionAxis.MoveAbsoluteBusy AND (nCommandLocal=3))
                                             OR (iMotionAxis.HomeBusy AND (nCommandLocal=10)),
                         Deceleration:=stMotionEpicsItf.fDeceleration);
