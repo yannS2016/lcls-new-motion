@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <Itf Name="I_Brake" Id="{2fdedca0-5e5a-409f-9adf-ce2c06cc3a8d}">
-    <Declaration><![CDATA[INTERFACE I_Brake EXTENDS I_Outputs
+    <Declaration><![CDATA[INTERFACE I_Brake EXTENDS I_Output
 ]]></Declaration>
     <Property Name="AxisState" Id="{ba097a17-7813-4cd5-8d3b-6799b9ffbe35}">
       <Declaration><![CDATA[PROPERTY AxisState : MC_AxisStates]]></Declaration>

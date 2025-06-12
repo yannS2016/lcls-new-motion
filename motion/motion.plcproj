@@ -130,9 +130,6 @@
     <Compile Include="POUs\ITFs\I_BacklashCompensation.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_MotionAxisCommon.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\ITFs\I_Halt.TcIO">
       <SubType>Code</SubType>
     </Compile>
@@ -148,7 +145,7 @@
     <Compile Include="POUs\ITFs\I_MotionInterlocksLimSw.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_Outputs.TcIO">
+    <Compile Include="POUs\ITFs\I_Output.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\ITFs\I_MotionAxis.TcIO">

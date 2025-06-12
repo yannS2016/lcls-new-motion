@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <Itf Name="I_Outputs" Id="{1e11eedc-89a7-4c38-b34d-7c5dc5b34015}">
-    <Declaration><![CDATA[INTERFACE I_Outputs
+  <Itf Name="I_Output" Id="{1e11eedc-89a7-4c38-b34d-7c5dc5b34015}">
+    <Declaration><![CDATA[INTERFACE I_Output
 ]]></Declaration>
     <Property Name="Aborted" Id="{d98a5af1-a570-4962-809a-70d520c908da}">
       <Declaration><![CDATA[PROPERTY Aborted : BOOL]]></Declaration>
