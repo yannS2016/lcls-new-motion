@@ -30,18 +30,6 @@ IF  rtDone.Q THEN
     THIS^.bExecute := FALSE;
 END_IF]]></ST>
     </Implementation>
-    <Property Name="ExecReset" Id="{ddc8bd17-a518-4a3f-a1a8-d54d38c1c9b9}">
-      <Declaration><![CDATA[PROPERTY ExecReset : BOOL
-]]></Declaration>
-      <Set Name="Set" Id="{d7a6e541-aed3-420a-99ea-708e491008c0}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[bExecute := ExecReset;]]></ST>
-        </Implementation>
-      </Set>
-    </Property>
     <Method Name="FB_Init" Id="{0ffde760-6475-4a6a-8e1c-babbb252f4cc}">
       <Declaration><![CDATA[METHOD FB_Init : BOOL
 VAR_INPUT

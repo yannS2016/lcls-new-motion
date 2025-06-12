@@ -85,7 +85,10 @@
     <Compile Include="POUs\FBs\FB_MotionDrive.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\FB_MotionInterlocks.TcPOU">
+    <Compile Include="POUs\FBs\FB_MotionInterlocksGeneric.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FBs\FB_MotionInterlocksLimSw.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FBs\FB_MotionLogger.TcPOU">
@@ -133,7 +136,7 @@
     <Compile Include="POUs\ITFs\I_BacklashCompensation.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_DriveAxisCmds.TcIO">
+    <Compile Include="POUs\ITFs\I_MotionAxisCommon.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\ITFs\I_Halt.TcIO">
@@ -149,6 +152,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\ITFs\I_HomeShareData.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\ITFs\I_MotionInterlocks.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\ITFs\I_MotionInterlocksLimSw.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\ITFs\I_Outputs.TcIO">
@@ -178,10 +187,7 @@
     <Compile Include="POUs\ITFs\I_MotionDriveShareData.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_MotionInterlocks.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\ITFs\I_MotionInterlocksLimSw.TcIO">
+    <Compile Include="POUs\ITFs\I_MotionInterlocksGeneric.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\ITFs\I_MotionInterlocksShareData.TcIO">

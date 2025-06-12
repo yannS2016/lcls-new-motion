@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="FB_MotionInterlocks" Id="{b69073ed-2a55-41fc-84a9-b8fe79332e5e}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionInterlocks IMPLEMENTS I_MotionInterlocks
+  <POU Name="FB_MotionInterlocksGeneric" Id="{b69073ed-2a55-41fc-84a9-b8fe79332e5e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionInterlocksGeneric IMPLEMENTS I_MotionInterlocksGeneric
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
@@ -51,11 +51,13 @@ VAR
     {attribute 'hide'}
     bError : BOOL;
     {attribute 'hide'}
-    nErrorID : BOOL;
+    nErrorID : UDINT;
     {attribute 'hide'}
     bMoveOk : BOOL;
     {attribute 'hide'}
     rtGlobalReset : R_TRIG;
+    {attribute 'hide'}
+    bInterlockEvent : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -137,7 +139,7 @@ PROPERTY Error : BOOL
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[Error := bError;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -150,7 +152,7 @@ PROPERTY ErrorID : UDINT
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[ErrorID := nErrorID;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -173,6 +175,19 @@ THIS^.iMotionInterlocksShareData := iMotionInterlocksShareData;
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="InterlockEvent" Id="{8e1083ac-02c9-4b46-a759-679b00b2a867}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY InterlockEvent : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{9dcd64c3-1451-4b96-bcbf-7013a41cd9fd}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[InterlockEvent := bInterlockEvent;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="Message" Id="{fff95902-de95-4707-8ab7-164e983a966f}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY Message : T_MAXSTRING
@@ -230,19 +245,6 @@ END_VAR
 PROPERTY PowerEnabled : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{c27ac7b3-d93e-4dca-97d4-f9f71a18aff4}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="Warning" Id="{1b105c13-a9db-4372-ad3b-52e2431b5233}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY Warning : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{7a71e79a-2896-452f-a319-fc7eb585c74d}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>

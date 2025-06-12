@@ -3,16 +3,10 @@
   <Itf Name="I_MoveAbsolute" Id="{7b52c23d-d549-4d14-b715-d0e842580738}">
     <Declaration><![CDATA[INTERFACE I_MoveAbsolute
 ]]></Declaration>
-    <Property Name="ExecMoveAbsolute" Id="{c3f4e0fa-3ecb-436d-b19d-dafe3647ab38}">
-      <Declaration><![CDATA[PROPERTY ExecMoveAbsolute : BOOL]]></Declaration>
-      <Set Name="Set" Id="{9fc317e3-88e6-485d-a498-dca7ddd953b2}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Set>
-    </Property>
-    <Method Name="MoveAbsolute" Id="{944406bb-ab2e-4a34-b8f7-6e5719833767}">
+    <Method Name="MoveAbsolute" Id="{6ca50ed1-00a4-4a5f-9fc0-b477fbaad08d}">
       <Declaration><![CDATA[METHOD MoveAbsolute
 VAR_INPUT
-	Execute     : BOOL;
+    Execute     : BOOL;
     Position	: LREAL;
     Velocity	: LREAL;
     Acceleration	: LREAL := 0.0;
@@ -59,6 +53,11 @@ END_VAR]]></Declaration>
     </Property>
     <Property Name="TargetAcceleration" Id="{70a35961-bee7-4b46-b0a3-6d71eaea287d}">
       <Declaration><![CDATA[PROPERTY TargetAcceleration : LREAL]]></Declaration>
+      <Get Name="Get" Id="{b0c3d8d1-9913-4981-8664-bfb4980e47cc}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+      </Get>
       <Set Name="Set" Id="{b2459bb9-7080-49b9-ae3a-a918cd839621}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -67,6 +66,11 @@ END_VAR
     </Property>
     <Property Name="TargetDeceleration" Id="{31845d61-2b46-4eb7-89e1-f67edbd56c4f}">
       <Declaration><![CDATA[PROPERTY TargetDeceleration : LREAL]]></Declaration>
+      <Get Name="Get" Id="{49989b1f-9ad1-42ce-ae84-c2e9084f7f24}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+      </Get>
       <Set Name="Set" Id="{e7ada26d-8451-438f-b463-e10f2d3a1bb8}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -75,6 +79,11 @@ END_VAR
     </Property>
     <Property Name="TargetJerk" Id="{9119fca5-a884-4a17-a499-ebd775946ce3}">
       <Declaration><![CDATA[PROPERTY TargetJerk : LREAL]]></Declaration>
+      <Get Name="Get" Id="{7317eb32-765f-45c5-9ded-fc437c539718}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+      </Get>
       <Set Name="Set" Id="{fcaf00f7-169a-4518-82c4-db7d885f20c5}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -83,6 +92,11 @@ END_VAR
     </Property>
     <Property Name="TargetPosition" Id="{4c3ad4b2-e392-4b88-8a83-082f941a6830}">
       <Declaration><![CDATA[PROPERTY TargetPosition : LREAL]]></Declaration>
+      <Get Name="Get" Id="{a8b5aa6e-8034-411f-99bb-fa4c3fb90788}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+      </Get>
       <Set Name="Set" Id="{c58fc251-226c-4365-badb-dca9ec823ab7}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -91,6 +105,11 @@ END_VAR
     </Property>
     <Property Name="TargetVelocity" Id="{08e71f81-65e6-4cad-a488-7ef932c2b524}">
       <Declaration><![CDATA[PROPERTY TargetVelocity : LREAL]]></Declaration>
+      <Get Name="Get" Id="{c8536a07-ddd6-409b-874d-8785fe4c5867}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+      </Get>
       <Set Name="Set" Id="{ba3d7175-364b-429d-ade0-cb5cd78570e9}">
         <Declaration><![CDATA[VAR
 END_VAR

@@ -39,6 +39,21 @@
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
+    <Property Name="Message" Id="{e8b10816-08b9-43cf-a44e-3e2b5c9d0ccf}">
+      <Declaration><![CDATA[PROPERTY Message : T_MAXSTRING]]></Declaration>
+      <Get Name="Get" Id="{1ea16d51-c727-4125-a99b-38bd676d8335}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="MotionStatus" Id="{ad2a89e1-41ec-4053-88de-27c1f75c0736}">
+      <Declaration><![CDATA[METHOD MotionStatus
+VAR_INPUT
+	HomeBusy: BOOL;
+	PositiveDirectionEnabled : BOOL;
+	NegativeDirectionEnabled : BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
     <Property Name="MoveBackwardEnabled" Id="{b4e7f086-2ef8-4485-be7e-4532b5db4264}">
       <Declaration><![CDATA[PROPERTY MoveBackwardEnabled : BOOL]]></Declaration>
       <Get Name="Get" Id="{9b0ef177-2451-44cd-bad6-e27eaa34b91b}">
@@ -51,17 +66,18 @@
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Method Name="Status" Id="{ad2a89e1-41ec-4053-88de-27c1f75c0736}">
-      <Declaration><![CDATA[METHOD Status
-VAR_INPUT
-	NewMoveReq : BOOL;
-	Reset : BOOL;
-	HomeBusy: BOOL;
-	PositiveDirectionEnabled : BOOL;
-	NegativeDirectionEnabled : BOOL;
-END_VAR
-]]></Declaration>
-    </Method>
+    <Property Name="NewMoveReq" Id="{e1664c35-b93a-47b6-85f7-ea2b3cd54261}">
+      <Declaration><![CDATA[PROPERTY NewMoveReq : BOOL]]></Declaration>
+      <Set Name="Set" Id="{d91f0459-e68e-4b60-a489-d466255b8fba}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="Reset" Id="{ebc31ee6-9df2-4510-9c79-53ae5872697f}">
+      <Declaration><![CDATA[PROPERTY Reset : BOOL]]></Declaration>
+      <Set Name="Set" Id="{1904edbb-4602-44d3-86df-00f14ec41d1a}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
     <Property Name="Warning" Id="{1b98f41d-ef99-4e0f-8e76-a2ade70cd32d}">
       <Declaration><![CDATA[PROPERTY Warning : BOOL]]></Declaration>
       <Get Name="Get" Id="{25b7225f-f85c-46d5-99ff-635c5137c3d3}">

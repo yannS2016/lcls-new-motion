@@ -11,31 +11,31 @@ VAR
     (* Backlash compensation*)
     // Enabled axis backlash compensation
     {attribute 'pytmc' := '
-        pv: PLC:bBacklashEn
+        pv: PLC:bEnBacklashComp
         io: io
         field: ZNAM FALSE
         field: ONAM TRUE
         field: DESC Enable Backlash compensation
     '}
-    bBacklashEn: BOOL;
+    bBacklashCompensationEnable: BOOL;
 
     // backlash compensation status
     {attribute 'pytmc' := '
-        pv: PLC:bBacklasStatus
+        pv: PLC:bBacklasCompStatus
         io: i
         field: ZNAM DISABLED
         field: ONAM ENABLED
         field: DESC Backlash compensation status
     '}
-    bBacklashStatus: BOOL;
+    bBacklashCompensationStatus: BOOL;
 
     // Backlash compensation value
     {attribute 'pytmc' := '
-        pv: PLC:fTargetBacklash
+        pv: PLC:fTargetComp
         io: io
         field: DESC Backlash compensation
     '}
-    fTargetBacklash: LREAL;
+    fTargetCompensation: LREAL;
 
     // Current Backlash compensation value ?
     {attribute 'pytmc' := '
@@ -44,14 +44,15 @@ VAR
         field: DESC Currently applied compensation
     '}
     fMeasuredCompensation: LREAL;
+
     {attribute 'no_copy'}
     AxisRef : REFERENCE TO AXIS_REF;
     fbMcBacklashCompensation: MC_BacklashCompensation;
     fCompensation : LREAL := 0.0;
     fPrevCompensation : LREAL := 0.0;
     bExecute: BOOL;
-    fRampVelocity : LREAL := 0.0;
-    bCompEnable : BOOL;
+    fBacklashCompensationRampVelo : LREAL := 0.0;
+    bLocalEnable : BOOL;
     bError : BOOL;
     bBusy : BOOL;
     nErrorID : UDINT;
@@ -68,16 +69,16 @@ END_VAR
     fRampVelocity : a tenth of Moveabsolute velocity is a good starting point
 *)
 // use bUserBacklashEn for addtional control in user code, i.e fb_motionDrive
-bCompEnable R= NOT THIS^.bExecute OR (THIS^.fCompensation<>THIS^.fPrevCompensation);
-bCompEnable S= THIS^.bBacklashEn AND THIS^.bExecute;
+bLocalEnable R= NOT THIS^.bExecute OR (THIS^.fCompensation<>THIS^.fPrevCompensation);
+bLocalEnable S= THIS^.BacklashCompensationError  AND THIS^.bExecute;
 
 fbMcBacklashCompensation(Axis:=AxisRef,
-    Enable:= THIS^.bCompEnable,
+    Enable:= THIS^.bLocalEnable AND bBacklashCompensationEnable,
     Backlash:= THIS^.fCompensation,
     CompensationInPositiveDirection:=(THIS^.fCompensation < 0.0),
-    Ramp:=( THIS^.fRampVelocity ),
+    Ramp:=( THIS^.fBacklashCompensationRampVelo ),
     DisableMode:=THIS^.eDisableMode,
-    Enabled=> THIS^.bBacklashStatus,
+    Enabled=> THIS^.bBacklashCompensationStatus,
     Error=>bError,
     ErrorID=>nErrorID,
     CurrentBacklash=>THIS^.fMeasuredCompensation
@@ -85,8 +86,7 @@ fbMcBacklashCompensation(Axis:=AxisRef,
 fPrevCompensation:=THIS^.fCompensation;]]></ST>
     </Implementation>
     <Property Name="Aborted" Id="{59820488-53e0-4bd0-9746-41b9b903c795}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY Aborted : BOOL
+      <Declaration><![CDATA[PROPERTY Aborted : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{af423ed0-d781-4de7-b003-71fdc1e2f7f8}">
         <Declaration><![CDATA[VAR
@@ -115,16 +115,55 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.bBacklashEn := Enable;
+        <ST><![CDATA[THIS^.bBacklashCompensationEnable := Enable;
 THIS^.bExecute:= Execute;
 THIS^.fCompensation := Compensation;
-THIS^.fRampVelocity := fRampVelocity;
+THIS^.fBacklashCompensationRampVelo := RampVelocity;
 THIS^.eDisableMode:=DisableMode;]]></ST>
       </Implementation>
     </Method>
+    <Property Name="BacklashCompensationDisableMode" Id="{53c6506c-5bdd-4302-9265-cf391f81ab52}">
+      <Declaration><![CDATA[PROPERTY BacklashCompensationDisableMode : E_DisableMode
+]]></Declaration>
+      <Get Name="Get" Id="{83699fed-7c9a-45f8-a19a-4c4ebe2dd24d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[BacklashCompensationDisableMode := eDisableMode;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{39d232f5-a9eb-4d58-ab29-3912c1ce412d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[eDisableMode := BacklashCompensationDisableMode;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="BacklashCompensationEnable" Id="{0764491b-0151-48b3-a209-42977e2a8123}">
+      <Declaration><![CDATA[PROPERTY BacklashCompensationEnable : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{a6cfe4e6-634a-44e1-96e3-baba05866bf2}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[BacklashCompensationEnable := bBacklashCompensationEnable;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{eb474936-a45a-470b-9101-01be918e46e2}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bBacklashCompensationEnable := BacklashCompensationEnable;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Property Name="BacklashCompensationError" Id="{0213434a-d40a-49c7-a6b4-a3e9e9a7a41a}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY BacklashCompensationError : BOOL
+      <Declaration><![CDATA[PROPERTY BacklashCompensationError : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{c1a3c97c-ae91-4276-85b5-feecf9e8d7c5}">
         <Declaration><![CDATA[VAR
@@ -136,8 +175,7 @@ END_VAR
       </Get>
     </Property>
     <Property Name="BacklashCompensationErrorID" Id="{b6765fc0-40e7-4ce5-aa13-569ea50920db}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY BacklashCompensationErrorID : UDINT
+      <Declaration><![CDATA[PROPERTY BacklashCompensationErrorID : UDINT
 ]]></Declaration>
       <Get Name="Get" Id="{3dbdc77e-7172-4e8a-b541-0b84a6087295}">
         <Declaration><![CDATA[VAR
@@ -148,47 +186,37 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="DisableMode" Id="{53c6506c-5bdd-4302-9265-cf391f81ab52}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY DisableMode : Tc2_MC2.E_DisableMode
+    <Property Name="BacklashCompensationRampVelo" Id="{76749366-9411-4661-8b8c-18ba08142b43}">
+      <Declaration><![CDATA[PROPERTY BacklashCompensationRampVelo : LREAL
 ]]></Declaration>
-      <Get Name="Get" Id="{83699fed-7c9a-45f8-a19a-4c4ebe2dd24d}">
+      <Get Name="Get" Id="{caf430de-192d-46d6-8a06-13f72e9f2d28}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[DisableMode := eDisableMode;]]></ST>
+          <ST><![CDATA[BacklashCompensationRampVelo := fBacklashCompensationRampVelo;]]></ST>
         </Implementation>
       </Get>
-      <Set Name="Set" Id="{39d232f5-a9eb-4d58-ab29-3912c1ce412d}">
+      <Set Name="Set" Id="{b2241740-8837-42a0-a140-3bf96cff327a}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[eDisableMode := DisableMode;]]></ST>
+          <ST><![CDATA[fBacklashCompensationRampVelo := BacklashCompensationRampVelo;]]></ST>
         </Implementation>
       </Set>
     </Property>
-    <Property Name="Enable" Id="{0764491b-0151-48b3-a209-42977e2a8123}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY Enable : BOOL
+    <Property Name="BacklashCompensationStatus" Id="{af32d349-40c9-44a6-9a95-336c4eab0563}">
+      <Declaration><![CDATA[PROPERTY BacklashCompensationStatus : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{a6cfe4e6-634a-44e1-96e3-baba05866bf2}">
+      <Get Name="Get" Id="{1cbb27e8-07e5-41b6-9a8c-b8f937914736}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[BacklashCompensationStatus := bBacklashCompensationStatus;]]></ST>
         </Implementation>
       </Get>
-      <Set Name="Set" Id="{eb474936-a45a-470b-9101-01be918e46e2}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[]]></ST>
-        </Implementation>
-      </Set>
     </Property>
     <Method Name="FB_Init" Id="{86eeb26b-dd4d-42ae-bdf4-cda3d947fa1b}">
       <Declaration><![CDATA[METHOD FB_Init : BOOL
@@ -202,9 +230,9 @@ END_VAR
         <ST><![CDATA[THIS^.AxisRef REF= AxisRef;]]></ST>
       </Implementation>
     </Method>
-    <Property Name="MeasureBacklash" Id="{022a8867-c28c-4e7c-88fa-1c1e1f6f1ad1}">
+    <Property Name="MeasureBacklashCompensation" Id="{022a8867-c28c-4e7c-88fa-1c1e1f6f1ad1}">
       <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY MeasureBacklash : LREAL
+PROPERTY MeasureBacklashCompensation : LREAL
 ]]></Declaration>
       <Get Name="Get" Id="{bb138911-4f3b-47a1-847c-b5cced113ef6}">
         <Declaration><![CDATA[VAR
@@ -220,40 +248,6 @@ END_VAR
 PROPERTY Message : Tc2_System.T_MaxString
 ]]></Declaration>
       <Get Name="Get" Id="{b04d60be-1e7a-4ed8-aad3-cee013905d08}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="RampVelocity" Id="{76749366-9411-4661-8b8c-18ba08142b43}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY RampVelocity : LREAL
-]]></Declaration>
-      <Get Name="Get" Id="{caf430de-192d-46d6-8a06-13f72e9f2d28}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[]]></ST>
-        </Implementation>
-      </Get>
-      <Set Name="Set" Id="{b2241740-8837-42a0-a140-3bf96cff327a}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[]]></ST>
-        </Implementation>
-      </Set>
-    </Property>
-    <Property Name="Status" Id="{af32d349-40c9-44a6-9a95-336c4eab0563}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY Status : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{1cbb27e8-07e5-41b6-9a8c-b8f937914736}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>

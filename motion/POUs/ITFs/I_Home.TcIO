@@ -20,9 +20,6 @@ VAR_INPUT
 	HomePosition	: LREAL := 0;
 	UserAbort	: BOOL;
 	HomeMode	: E_EpicsHomeCmd;
-	LimForward	:BOOL;
-	LimBackward :BOOL;
-	LimHome :BOOL;
 END_VAR
 ]]></Declaration>
     </Method>
@@ -61,6 +58,11 @@ PROPERTY HomeErrorID : UDINT
     <Property Name="HomeMode" Id="{24fc7d8a-47fc-487d-84fb-48c81c8d630f}">
       <Declaration><![CDATA[PROPERTY HomeMode : E_EpicsHomeCmd
 ]]></Declaration>
+      <Get Name="Get" Id="{2d018279-87d3-4673-87eb-4181d869ae1d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+      </Get>
       <Set Name="Set" Id="{3a00bdbc-d54d-43c2-bc10-36874e2228ba}">
         <Declaration><![CDATA[]]></Declaration>
       </Set>
@@ -81,5 +83,14 @@ PROPERTY HomePosition : LREAL
         <Declaration><![CDATA[]]></Declaration>
       </Set>
     </Property>
+    <Method Name="LimitSw" Id="{254f3893-4727-4b55-aff3-7ba82530fbf1}">
+      <Declaration><![CDATA[METHOD LimitSw
+VAR_INPUT
+	LimForward	:BOOL;
+	LimBackward :BOOL;
+	LimHome :BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
   </Itf>
 </TcPlcObject>

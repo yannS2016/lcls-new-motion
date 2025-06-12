@@ -3,12 +3,6 @@
   <Itf Name="I_Reset" Id="{b13e0a07-13fe-4130-92d2-b67a6bf512d3}">
     <Declaration><![CDATA[INTERFACE I_Reset
 ]]></Declaration>
-    <Property Name="ExecReset" Id="{a2a2f50e-316e-4d84-97b1-13d693124282}">
-      <Declaration><![CDATA[PROPERTY ExecReset : BOOL]]></Declaration>
-      <Set Name="Set" Id="{5af552b3-de41-4bb7-8575-885408c31c54}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Set>
-    </Property>
     <Method Name="Reset" Id="{6de39cad-1884-4ec7-b494-38b114cd7658}">
       <Declaration><![CDATA[METHOD Reset
 VAR_INPUT

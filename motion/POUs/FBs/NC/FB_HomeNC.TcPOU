@@ -33,7 +33,7 @@ VAR
     bAtHome: BOOL;
     bMove: BOOL;
     nErrCount: INT;
-    eMode: E_EpicsHomeCmd :=E_EpicsHomeCmd.NONE;
+    eHomeMode: E_EpicsHomeCmd :=E_EpicsHomeCmd.NONE;
     bLimForward : BOOL;
     bLimBackward : BOOL;
     bLimHome : BOOL;
@@ -63,7 +63,7 @@ IF NOT THIS^.bError THEN
     THIS^.nErrorID := 0;
 END_IF
 
-CASE THIS^.eMode OF
+CASE THIS^.eHomeMode OF
     E_EpicsHomeCmd.LOW_LIMIT:
         THIS^.bFirstDir := FALSE;
         THIS^.bAtHome := NOT THIS^.bLimBackward;
@@ -313,9 +313,6 @@ VAR_INPUT
     HomePosition	: LREAL := 0;
     UserAbort	: BOOL;
     HomeMode	: E_EpicsHomeCmd;
-    LimForward	:BOOL;
-    LimBackward :BOOL;
-    LimHome :BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -324,10 +321,8 @@ THIS^.fRefVeloSearch := HomeSpeedFast;
 THIS^.fRefVeloSync	:= HomeSpeedSlow;
 THIS^.fPosition	:=HomePosition;
 THIS^.fOffset := HomeOffset;
-THIS^.eMode := HomeMode;
-THIS^.bLimForward	:= LimForward;
-THIS^.bLimBackward := LimBackward;
-THIS^.bLimHome := LimHome;]]></ST>
+THIS^.eHomeMode := HomeMode;
+]]></ST>
       </Implementation>
     </Method>
     <Property Name="HomeBusy" Id="{c7e43be2-48b0-438b-8ceb-465d60425bfc}">
@@ -385,12 +380,20 @@ END_VAR
     <Property Name="HomeMode" Id="{bacfc68b-674d-49fb-a838-6a7b08d66c8b}">
       <Declaration><![CDATA[PROPERTY HomeMode : E_EpicsHomeCmd
 ]]></Declaration>
+      <Get Name="Get" Id="{018ebc11-483b-4d91-b1ca-54274e9fa554}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[HomeMode := eHomeMode;]]></ST>
+        </Implementation>
+      </Get>
       <Set Name="Set" Id="{d7a9685a-e050-4fa2-92a8-d25079a18728}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[eMode := HomeMode;]]></ST>
+          <ST><![CDATA[eHomeMode := HomeMode;]]></ST>
         </Implementation>
       </Set>
     </Property>
@@ -420,5 +423,19 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
+    <Method Name="LimitSw" Id="{06d1971d-cd58-4bf0-9aa9-7b760a4d83e3}">
+      <Declaration><![CDATA[METHOD LimitSw
+VAR_INPUT
+    LimForward	: BOOL;
+    LimBackward	: BOOL;
+    LimHome	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.bLimForward	:= LimForward;
+THIS^.bLimBackward := LimBackward;
+THIS^.bLimHome := LimHome;]]></ST>
+      </Implementation>
+    </Method>
   </POU>
 </TcPlcObject>

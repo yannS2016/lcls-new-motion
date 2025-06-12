@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <Itf Name="I_MotionInterlocksLimSw" Id="{e002b16f-1804-418d-93ce-ce168a098275}">
-    <Declaration><![CDATA[INTERFACE I_MotionInterlocksLimSw EXTENDS __SYSTEM.IQueryInterface, I_MotionInterlocks, I_LimSwStatus
+  <Itf Name="I_MotionInterlocksLimSw" Id="{fcbaac2d-99c6-4ac2-b5e1-5ff84c410a2f}">
+    <Declaration><![CDATA[INTERFACE I_MotionInterlocksLimSw EXTENDS I_MotionInterlocksGeneric, I_LimSwStatus
 ]]></Declaration>
   </Itf>
 </TcPlcObject>
