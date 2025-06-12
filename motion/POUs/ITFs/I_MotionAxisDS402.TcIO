@@ -1,7 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1">
-  <Itf Name="I_MotionAxisDS402" Id="{6fce1b82-4e78-48ff-82dc-fe8be0cd29cf}">
-    <Declaration><![CDATA[INTERFACE I_MotionAxisDS402 EXTENDS I_MotionAxis, I_DS402Common
-]]></Declaration>
-  </Itf>
-</TcPlcObject>

@@ -3,6 +3,15 @@
   <Itf Name="I_LimSwStatus" Id="{256e382d-89de-4efb-b391-22faa6fe67b6}">
     <Declaration><![CDATA[INTERFACE I_LimSwStatus
 ]]></Declaration>
+    <Method Name="DriveCmd" Id="{df511f30-cad4-4303-88ab-dcbcab9d3c4d}">
+      <Declaration><![CDATA[METHOD DriveCmd
+VAR_INPUT
+	Enable: BOOL;
+	NewMoveReq : BOOL;
+	Reset: BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
     <Property Name="LimBackward" Id="{936f7f31-d3e8-44eb-a938-4f1d2b772924}">
       <Declaration><![CDATA[PROPERTY LimBackward : BOOL]]></Declaration>
       <Get Name="Get" Id="{674a8534-77af-4482-bc88-a8057594656a}">

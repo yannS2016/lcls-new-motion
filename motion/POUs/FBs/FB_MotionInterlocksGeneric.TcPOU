@@ -10,8 +10,6 @@ VAR
     {attribute 'hide'}
     iMotionLogger 		: I_MotionLogger;
     {attribute 'hide'}
-    iMotionInterlocksShareData : I_MotionInterlocksShareData;
-    {attribute 'hide'}
     bAllForwardEnabled: BOOL:=FALSE;
     // Backward enable EPS summary
     {attribute 'hide'}
@@ -46,6 +44,8 @@ VAR
     bEnable: BOOL;
     {attribute 'hide'}
     bReset : BOOL;
+    {attribute 'hide'}
+    bNewMoveReq : BOOL;
     {attribute 'hide'}
     sMessage : STRING;
     {attribute 'hide'}
@@ -84,7 +84,7 @@ ELSIF NOT bHardwareEnable THEN
     sMessage := 'Hardware enbale interlocks triggered!';
 END_IF
 // wait for global reset event to complete
-rtGlobalReset(CLK:=iMotionInterlocksShareData.ResetDone);
+rtGlobalReset(CLK:=bReset);
 IF rtGlobalReset.Q THEN
     bError := FALSE;
     nErrorID:= 0;
@@ -133,13 +133,15 @@ END_VAR
     <Method Name="DriveCmd" Id="{2ba3db39-6bb1-4184-838a-ccd2197a1d93}">
       <Declaration><![CDATA[METHOD DriveCmd
 VAR_INPUT
-    Enable	: BOOL;
-    Reset	: BOOL;
+    Enable: BOOL;
+    NewMoveReq : BOOL;
+    Reset: BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[Enable := bEnable;
-Reset := bReset;]]></ST>
+        <ST><![CDATA[THIS^.bEnable := Enable;
+THIS^.bReset := Reset;
+THIS^.bNewMoveReq := NewMoveReq ;]]></ST>
       </Implementation>
     </Method>
     <Property Name="Error" Id="{21f5c9dd-d9f9-4fb7-a70a-688ad37ac74c}">
@@ -179,11 +181,9 @@ VAR_INPUT
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
 
     iMotionLogger 		: I_MotionLogger;
-    iMotionInterlocksShareData : I_MotionInterlocksShareData;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.iMotionLogger := iMotionLogger;
-THIS^.iMotionInterlocksShareData := iMotionInterlocksShareData;
 ]]></ST>
       </Implementation>
     </Method>

@@ -271,8 +271,9 @@ END_IF
 // update EPICS status
 THIS^.UpdateParamAndStatus();
 
-// Forward drive commands to interlock block
+// Forward drive commands to interlock blocks
 THIS^.iMotionInterlocks.DriveCmd(	Enable:=stMotionEpicsItf.bEnable,
+                                    NewMoveReq:=THIS^.bNewMoveReq,
                                     Reset:=iMotionAxis.ResetDone
                                 );
 // Forward axis state to brake FB

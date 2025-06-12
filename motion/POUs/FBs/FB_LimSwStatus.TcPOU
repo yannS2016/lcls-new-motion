@@ -41,6 +41,8 @@ VAR
     {attribute 'hide'}
     bNewMoveReq : BOOL;
     {attribute 'hide'}
+    bEnable	: BOOL;
+    {attribute 'hide'}
     bReset : BOOL;
     {attribute 'hide'}
     bPositiveDirection : BOOL;
@@ -84,6 +86,20 @@ ELSIF rtUserExec.Q OR rtReset.Q THEN
 END_IF
 ]]></ST>
     </Implementation>
+    <Method Name="DriveCmd" Id="{b140fe49-9bf2-4392-9913-139634acc355}">
+      <Declaration><![CDATA[METHOD DriveCmd
+VAR_INPUT
+    Enable	: BOOL;
+    NewMoveReq	: BOOL;
+    Reset	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.bEnable := Enable;
+THIS^.bReset := Reset;
+THIS^.bNewMoveReq := NewMoveReq ;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="FB_Init" Id="{e9d4b1d6-7e2a-40e5-abfc-b6d7871092e6}">
       <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
 //The return value is not evaluated. For a specific influence, you can also declare the
@@ -94,7 +110,6 @@ VAR_INPUT
     bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
     iMotionLogger	: I_MotionLogger;
-    iLimSwStatusShareData	: I_LimSwStatusShareData;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>

@@ -38,23 +38,21 @@ THIS^.PowerEnables(	Enable:=iMotionInterlocks.PowerEnabled,
                     Enable_Negative:=iMotionInterlocks.MoveBackwardEnabled
                   );
 // Home needs this for Homimg mode slection and update
-THIS^.iHome.HomeLimSw(    LimForward:=iMotionInterlocks.LimForward,
+THIS^.iHome.HomeLimSw(  LimForward:=iMotionInterlocks.LimForward,
                         LimBackward:=iMotionInterlocks.LimBackward,
                         LimHome:=iMotionInterlocks.LimHome
                     );
-// Interlocks needs this to react to limits sw events
+// Lim status interlocks reacts to limits sw events
 THIS^.iMotionInterlocks.MotionStatus(
                             HomeBusy:=THIS^.iHome.HomeBusy,
                             PositiveDirectionEnabled:=THIS^.iAxisStatus.PositiveMotionIsEnabled,
                             NegativeDirectionEnabled:=THIS^.iAxisStatus.NegativeMotionIsEnabled
                         );
 
-THIS^.iMotionInterlocks.Reset := THIS^.iReset.ResetDone;
 THIS^.bDone := THIS^.iHome.HomeDone OR THIS^.iMoveAbsolute.MoveAbsoluteDone;
 THIS^.bBusy := THIS^.iHome.HomeBusy OR THIS^.iMoveAbsolute.MoveAbsoluteBusy;
 // Generalized abort event
 THIS^.bAbortDone := THIS^.iHalt.HaltDone OR THIS^.iReset.ResetDone;
-
 // Forward the abort event to homing block ( this is to sync the home state machine)
 THIS^.iHome.HomeAbort:=THIS^.bAbortDone;
 

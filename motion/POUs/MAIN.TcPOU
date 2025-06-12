@@ -10,9 +10,9 @@ VAR
     //Brakes : brake fb participate in sync comm with fbMotionDrive, fbMotionAxis and fbMotionInterlocks
     fbBrake : FB_Brake := (BrakeMode := E_StageBrakeMode.IF_MOVING);
     // common interlocks
-    fbMotionInterlocksGeneric : FB_MotionInterlocksGeneric ( iMotionLogger:=fbMotionLogger, iMotionInterlocksShareData:=fbMotionShareData);
+    fbMotionInterlocksGeneric : FB_MotionInterlocksGeneric ( iMotionLogger:=fbMotionLogger);
     // stage with Limit switches
-    fbLimSwStatus : FB_LimSwStatus ( iMotionLogger:=fbMotionLogger, iLimSwStatusShareData:=fbMotionShareData);
+    fbLimSwStatus : FB_LimSwStatus ( iMotionLogger:=fbMotionLogger);
     fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw ( iMotionInterlocks:=fbMotionInterlocksGeneric, iLimSwStatus:=fbLimSwStatus);
 
     fbHomeNC : FB_HomeNC(AxisRef:=NcAxis_GVL.testAxis, iMotionLogger:=fbMotionLogger);;
@@ -32,7 +32,7 @@ VAR
                                         iAxisParameters:= fbAxisParametersNC,
                                         iAxisStatus := fbAxisStatusNC,
                                         iBacklashCompensation :=fbBacklashCompensation,
-                                           iMotionInterlocks:=fbMotionInterlocksLimSw
+                                        iMotionInterlocks:=fbMotionInterlocksLimSw
                                     );
 
    M1 : ST_MotionEpicsItf := (sName:='Main Axis', fPosition:=10000.0, fVelocity:=50.0, fAcceleration:=50.0, fDeceleration:=50.0);
@@ -40,7 +40,6 @@ VAR
                                    iBrake:=fbBrake,
                                    iMotionLogger:=fbMotionLogger,
                                    iMotionInterlocks:=fbMotionInterlocksLimSw,
-                                   //iLimSwStatus:=fbLimSwStatus,
                                    iMotionAxis := fbMotionAxisNC
                                    ) := (Name := 'SmarAct MCS2',  EnableMode:=ENUM_StageEnableMode.DURING_MOTION );
 

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <Itf Name="I_DS402Common" Id="{aa475227-9d3f-411c-89b0-156fd641ec44}">
-    <Declaration><![CDATA[INTERFACE I_DS402Common EXTENDS __SYSTEM.IQueryInterface, I_Outputs, I_Home1
+    <Declaration><![CDATA[INTERFACE I_DS402Common EXTENDS __SYSTEM.IQueryInterface, I_Outputs, I_Home
 ]]></Declaration>
     <Method Name="OperationMode" Id="{504f5dfc-7c72-43e8-a5ad-0a8e8e7ecf41}">
       <Declaration><![CDATA[METHOD OperationMode

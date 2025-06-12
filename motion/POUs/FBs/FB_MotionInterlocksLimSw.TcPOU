@@ -66,11 +66,13 @@ END_VAR
       <Declaration><![CDATA[METHOD DriveCmd
 VAR_INPUT
     Enable	: BOOL;
+    NewMoveReq	: BOOL;
     Reset	: BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.iMotionInterlocks.DriveCmd(Enable:=Enable, Reset:=Reset);]]></ST>
+        <ST><![CDATA[THIS^.iMotionInterlocks.DriveCmd(Enable:=Enable, NewMoveReq:=NewMoveReq, Reset:=Reset);
+THIS^.iLimSwStatus.DriveCmd(Enable:=Enable, NewMoveReq:=NewMoveReq, Reset:=Reset);]]></ST>
       </Implementation>
     </Method>
     <Property Name="Error" Id="{e499cdfd-969f-4051-8215-bd6b1edef6bb}">

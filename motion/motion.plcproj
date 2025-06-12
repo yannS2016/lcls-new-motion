@@ -66,9 +66,6 @@
     <Compile Include="GVLs\NcAxis_GVL.TcGVL">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="motionUML.TcCD">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
@@ -92,9 +89,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FBs\FB_MotionLogger.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FBs\FB_MotionShareData.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FBs\FB_PersistentDataStorage.TcPOU">
@@ -148,9 +142,6 @@
     <Compile Include="POUs\ITFs\I_Home.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_HomeShareData.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\ITFs\I_MotionInterlocks.TcIO">
       <SubType>Code</SubType>
     </Compile>
@@ -160,40 +151,19 @@
     <Compile Include="POUs\ITFs\I_Outputs.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_LimSwStatusShareData.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\ITFs\I_MotionAxis.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\ITFs\I_DS402Common.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_MotionAxisDS402.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\ITFs\I_MotionAxisNCDS402.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\ITFs\I_MotionAxisShareData.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\ITFs\I_MotionDrive.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\ITFs\I_MotionDriveShareData.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\ITFs\I_MotionInterlocksGeneric.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_MotionInterlocksShareData.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\ITFs\I_MotionLogger.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\ITFs\I_MotionShareData.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\ITFs\I_MoveAbsolute.TcIO">
@@ -212,6 +182,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="VISUs\motion.TcCD">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -259,8 +232,8 @@
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-  <Data>
-    <o xml:space="preserve" t="OptionKey">
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -327,14 +300,14 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-  </Data>
-  <TypeList>
-    <Type n="Boolean">System.Boolean</Type>
-    <Type n="Hashtable">System.Collections.Hashtable</Type>
-    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-    <Type n="String">System.String</Type>
-  </TypeList>
-</XmlArchive>
+        </Data>
+        <TypeList>
+          <Type n="Boolean">System.Boolean</Type>
+          <Type n="Hashtable">System.Collections.Hashtable</Type>
+          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+          <Type n="String">System.String</Type>
+        </TypeList>
+      </XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>
