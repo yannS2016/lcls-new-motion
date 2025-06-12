@@ -12,6 +12,14 @@ VAR
     bError : BOOL;
     nErrorID:UDINT;
     sMessage : T_MAXSTRING;
+    {attribute 'hide'}
+    bNewMoveReq : BOOL;
+    {attribute 'hide'}
+    bEnable	: BOOL;
+    {attribute 'hide'}
+    bReset : BOOL;
+    {attribute 'hide'}
+    bMoveOk : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -21,7 +29,12 @@ END_VAR
     sMessage := THIS^.iMotionInterlocks.Message;
 ELSIF THIS^.iLimSwStatus.Warning THEN
     sMessage := THIS^.iLimSwStatus.Message;
-END_IF]]></ST>
+END_IF
+// Get General MoveOk signal
+bMoveOk := THIS^.iMotionInterlocks.MoveOk;
+// Forward drive cmds to Generic interlocks and lim status FB
+THIS^.iMotionInterlocks.DriveCmd(Enable:=bEnable, NewMoveReq:=bNewMoveReq, Reset:=bReset);
+THIS^.iLimSwStatus.DriveCmd(Enable:=bEnable, NewMoveReq:=bNewMoveReq, Reset:=bReset);]]></ST>
     </Implementation>
     <Property Name="Aborted" Id="{a1175752-7c2c-4d2c-b0ac-3a4f9f39a027}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
@@ -71,8 +84,9 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.iMotionInterlocks.DriveCmd(Enable:=Enable, NewMoveReq:=NewMoveReq, Reset:=Reset);
-THIS^.iLimSwStatus.DriveCmd(Enable:=Enable, NewMoveReq:=NewMoveReq, Reset:=Reset);]]></ST>
+        <ST><![CDATA[bNewMoveReq := NewMoveReq;
+bEnable	:=Enable;
+bReset :=Reset;]]></ST>
       </Implementation>
     </Method>
     <Property Name="Error" Id="{e499cdfd-969f-4051-8215-bd6b1edef6bb}">
@@ -163,7 +177,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[LimHit := THIS^.iLimSwStatus.LimHit;]]></ST>
+          <ST><![CDATA[]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -262,7 +276,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[MoveOk := THIS^.iMotionInterlocks.MoveOk;]]></ST>
+          <ST><![CDATA[MoveOk := bMoveOk;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -275,7 +289,7 @@ PROPERTY NewMoveReq : BOOL
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[THIS^.iLimSwStatus.NewMoveReq := NewMoveReq;]]></ST>
+          <ST><![CDATA[]]></ST>
         </Implementation>
       </Set>
     </Property>
@@ -287,7 +301,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[PowerEnabled:=THIS^.iMotionInterlocks.PowerEnabled;]]></ST>
+          <ST><![CDATA[]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -313,7 +327,7 @@ PROPERTY Warning : BOOL
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[Warning := THIS^.iLimSwStatus.Warning;]]></ST>
+          <ST><![CDATA[]]></ST>
         </Implementation>
       </Get>
     </Property>

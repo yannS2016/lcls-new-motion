@@ -207,8 +207,7 @@ END_VAR
       </Get>
     </Property>
     <Property Name="StandStill" Id="{f49bd614-c508-4377-a6b7-0f9eab982958}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY StandStill : BOOL
+      <Declaration><![CDATA[PROPERTY StandStill : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{f3718d17-a0bb-4000-88b4-c7094834adc0}">
         <Declaration><![CDATA[VAR

@@ -29,36 +29,95 @@ VAR
     fDeceleration:LREAL;
     fJerk:LREAL;
     eBufferMode:MC_BufferMode;
+    bAxisEnabled : BOOL;
+    eAxisState   : MC_AxisStates;
+    bBacklashCompensationActive : BOOL;
+    fBacklashCompensationRampVelo : LREAL;
+    bExecHalt : BOOL;
+    fHaltDeceleration : LREAL;
+    fHaltJerk :LREAL;
+    eHaltBufferMode : MC_BufferMode := MC_BufferMode.MC_Aborting;
+    bExecHome : BOOL;
+    fHomeSpeedFast:LREAL;
+    fHomeSpeedSlow:LREAL;
+    bHomeBusy : BOOL;
+    bHomeDone : BOOL;
+    eHomeMode : E_EpicsHomeCmd;
+    bExecMoveAbsolute : BOOL;
+bMoveAbsoluteAborted : BOOL;
+fRefVeloSearch : LREAL;
+fRefVeloSync : LREAL;
+bExecReset : BOOL;
+bResetDone : BOOL;
+bMoveAbsoluteBusy : BOOL;
+bStandStill : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// Get enable status for power block
-THIS^.PowerEnables(	Enable:=iMotionInterlocks.PowerEnabled,
-                    Enable_Positive:=iMotionInterlocks.MoveForwardEnabled,
-                    Enable_Negative:=iMotionInterlocks.MoveBackwardEnabled
-                  );
-// Home needs this for Homimg mode slection and update
-THIS^.iHome.HomeLimSw(  LimForward:=iMotionInterlocks.LimForward,
-                        LimBackward:=iMotionInterlocks.LimBackward,
-                        LimHome:=iMotionInterlocks.LimHome
-                    );
-// Lim status interlocks reacts to limits sw events
-THIS^.iMotionInterlocks.MotionStatus(
-                            HomeBusy:=THIS^.iHome.HomeBusy,
-                            PositiveDirectionEnabled:=THIS^.iAxisStatus.PositiveMotionIsEnabled,
-                            NegativeDirectionEnabled:=THIS^.iAxisStatus.NegativeMotionIsEnabled
-                        );
+      <ST><![CDATA[bAxisEnabled:=THIS^.iAxisStatus.AxisEnabled();
+eAxisState := THIS^.iAxisStatus.AxisState;
+bHomeBusy := THIS^.iHome.HomeBusy;
+bHomeDone := THIS^.iHome.HomeDone;
+eHomeMode := THIS^.iHome.HomeMode;
+bMoveAbsoluteAborted := THIS^.iMoveAbsolute.MoveAbsoluteAborted;
+bMoveAbsoluteBusy := THIS^.iMoveAbsolute.MoveAbsoluteBusy;
+fRefVeloSearch := THIS^.iAxisParameters.RefVeloSearch;
+fRefVeloSync := THIS^.iAxisParameters.RefVeloSync;
+THIS^.iReset.Reset(Execute:=bExecReset);
+bResetDone := THIS^.iReset.ResetDone;
+bStandStill := THIS^.iAxisStatus.StandStill;
 
-THIS^.bDone := THIS^.iHome.HomeDone OR THIS^.iMoveAbsolute.MoveAbsoluteDone;
-THIS^.bBusy := THIS^.iHome.HomeBusy OR THIS^.iMoveAbsolute.MoveAbsoluteBusy;
-// Generalized abort event
-THIS^.bAbortDone := THIS^.iHalt.HaltDone OR THIS^.iReset.ResetDone;
-// Forward the abort event to homing block ( this is to sync the home state machine)
-THIS^.iHome.HomeAbort:=THIS^.bAbortDone;
+THIS^.iHalt.Halt(	Execute:=bExecHalt,
+                    Deceleration:=fHaltDeceleration,
+                    Jerk:=fHaltJerk ,
+                    BufferMode:=eHaltBufferMode
+                );
 
-// handle combined Errors conditions
-THIS^.ErrorHandling();
+// Forward motion params to MoveAbsolute block
+THIS^.iMoveAbsolute.MoveAbsolute(	Execute:=bExecMoveAbsolute,
+                                    Position:=fPosition,
+                                    Velocity:=fVelocity,
+                                    Acceleration:=fAcceleration,
+                                    Deceleration:=fDeceleration,
+                                    Jerk:=fJerk,
+                                    BufferMode:=eBufferMode
+                                );
 
+THIS^.iHome.Home(	Execute:=bExecHome,
+                    HomeSpeedFast:=fHomeSpeedFast,
+                    HomeSpeedSlow:=fHomeSpeedSlow,
+                );
+
+THIS^.iBacklashCompensation.BacklashCompensationActive(	Active:=bBacklashCompensationActive,
+                                                    RampVelocity:=fBacklashCompensationRampVelo );
+
+// Get enable status for power block
+// THIS^.PowerEnables(	Enable:=iMotionInterlocks.PowerEnabled,
+//                     Enable_Positive:=iMotionInterlocks.MoveForwardEnabled,
+//                     Enable_Negative:=iMotionInterlocks.MoveBackwardEnabled
+//                   );
+// // Home needs this for Homimg mode slection and update
+// THIS^.iHome.HomeLimSw(  LimForward:=iMotionInterlocks.LimForward,
+//                         LimBackward:=iMotionInterlocks.LimBackward,
+//                         LimHome:=iMotionInterlocks.LimHome
+//                     );
+// // Lim status interlocks reacts to limits sw events
+// THIS^.iMotionInterlocks.MotionStatus(
+//                             HomeBusy:=THIS^.iHome.HomeBusy,
+//                             PositiveDirectionEnabled:=THIS^.iAxisStatus.PositiveMotionIsEnabled,
+//                             NegativeDirectionEnabled:=THIS^.iAxisStatus.NegativeMotionIsEnabled
+//                         );
+//
+// THIS^.bDone := THIS^.iHome.HomeDone OR THIS^.iMoveAbsolute.MoveAbsoluteDone;
+// THIS^.bBusy := THIS^.iHome.HomeBusy OR THIS^.iMoveAbsolute.MoveAbsoluteBusy;
+// // Generalized abort event
+// THIS^.bAbortDone := THIS^.iHalt.HaltDone OR THIS^.iReset.ResetDone;
+// // Forward the abort event to homing block ( this is to sync the home state machine)
+// THIS^.iHome.HomeAbort:=THIS^.bAbortDone;
+//
+// // handle combined Errors conditions
+// THIS^.ErrorHandling();
+//
 ]]></ST>
     </Implementation>
     <Property Name="AbortDone" Id="{1ab55f64-4d04-46ed-aa32-9a609a746501}">
@@ -90,7 +149,8 @@ END_VAR
       <Declaration><![CDATA[METHOD AxisEnabled : BOOL
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[AxisEnabled:=THIS^.iAxisStatus.AxisEnabled();]]></ST>
+        <ST><![CDATA[//AxisEnabled:=THIS^.iAxisStatus.AxisEnabled();
+AxisEnabled:=bAxisEnabled;]]></ST>
       </Implementation>
     </Method>
     <Property Name="AxisError" Id="{6aa36ca9-ca1c-4ab7-aa6a-e2379062f09d}">
@@ -174,7 +234,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[AxisState := THIS^.iAxisStatus.AxisState;]]></ST>
+          <ST><![CDATA[AxisState := eAxisState;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -213,9 +273,8 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.iBacklashCompensation.BacklashCompensationActive(	Active:=Active,
-                                                    RampVelocity:=RampVelocity );
- ]]></ST>
+        <ST><![CDATA[bBacklashCompensationActive := Active;
+fBacklashCompensationRampVelo :=RampVelocity;]]></ST>
       </Implementation>
     </Method>
     <Property Name="BacklashCompError" Id="{b1a1ced2-314f-48e1-acb3-42de0260cdab}">
@@ -376,7 +435,7 @@ END_IF;]]></ST>
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[ErrorID := THIS^.ErrorID;]]></ST>
+          <ST><![CDATA[ErrorID := THIS^.nErrorID;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -434,11 +493,10 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.iHalt.Halt(	Execute:=Execute,
-                    Deceleration:=Deceleration,
-                    Jerk:=Jerk,
-                    BufferMode:=BufferMode
-                );]]></ST>
+        <ST><![CDATA[bExecHalt := Execute;
+fHaltDeceleration := Deceleration;
+fHaltJerk := Jerk;
+eHaltBufferMode := BufferMode;]]></ST>
       </Implementation>
     </Method>
     <Property Name="HaltActive" Id="{77a509ea-ee54-4156-af92-101454fd556e}">
@@ -511,10 +569,9 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.iHome.Home(	Execute:=Execute,
-                    HomeSpeedFast:=HomeSpeedFast,
-                    HomeSpeedSlow:=HomeSpeedSlow,
-                );]]></ST>
+        <ST><![CDATA[bExecHome := Execute;
+fHomeSpeedFast:= HomeSpeedFast;
+fHomeSpeedSlow:=HomeSpeedSlow;]]></ST>
       </Implementation>
     </Method>
     <Property Name="HomeAbort" Id="{4e083433-92fa-4768-b672-82898b93e9cc}">
@@ -546,7 +603,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[HomeBusy := THIS^.iHome.HomeBusy;]]></ST>
+          <ST><![CDATA[HomeBusy := bHomeBusy;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -558,7 +615,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[HomeDone := THIS^.iHome.HomeDone;]]></ST>
+          <ST><![CDATA[HomeDone := bHomeDone;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -606,7 +663,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[HomeMode := THIS^.iHome.HomeMode;]]></ST>
+          <ST><![CDATA[HomeMode := THIS^.eHomeMode;]]></ST>
         </Implementation>
       </Get>
       <Set Name="Set" Id="{fae0bea8-5206-4f4b-8dc8-59ed8de7ea40}">
@@ -614,7 +671,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[THIS^.iHome.HomeMode := HomeMode;]]></ST>
+          <ST><![CDATA[]]></ST>
         </Implementation>
       </Set>
     </Property>
@@ -753,21 +810,14 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[fPosition:=Position;
+        <ST><![CDATA[bExecMoveAbsolute := Execute;
+fPosition:=Position;
 fVelocity:=Velocity;
 fAcceleration:=Acceleration;
 fDeceleration:=Deceleration;
 fJerk:=Jerk;
 eBufferMode:=BufferMode;
-// Forward motion params to MoveAbsolute block
-THIS^.iMoveAbsolute.MoveAbsolute(	Execute:=Execute,
-                                    Position:=fPosition,
-                                    Velocity:=fVelocity,
-                                    Acceleration:=fAcceleration,
-                                    Deceleration:=fDeceleration,
-                                    Jerk:=fJerk,
-                                    BufferMode:=eBufferMode
-                                );]]></ST>
+]]></ST>
       </Implementation>
     </Method>
     <Property Name="MoveAbsoluteAborted" Id="{493fb459-9bd4-4d7b-a474-db654cadc000}">
@@ -779,7 +829,7 @@ PROPERTY MoveAbsoluteAborted : BOOL
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[MoveAbsoluteAborted := THIS^.iMoveAbsolute.MoveAbsoluteAborted;
+          <ST><![CDATA[MoveAbsoluteAborted :=bMoveAbsoluteAborted;
 ]]></ST>
         </Implementation>
       </Get>
@@ -805,7 +855,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[MoveAbsoluteBusy := THIS^.iMoveAbsolute.MoveAbsoluteBusy;]]></ST>
+          <ST><![CDATA[MoveAbsoluteBusy := bMoveAbsoluteBusy;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -969,7 +1019,7 @@ METHOD ReadStatus
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[RefVeloSearch := THIS^.iAxisParameters.RefVeloSearch;]]></ST>
+          <ST><![CDATA[RefVeloSearch := fRefVeloSearch;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -981,7 +1031,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[RefVeloSync := THIS^.iAxisParameters.RefVeloSync;]]></ST>
+          <ST><![CDATA[RefVeloSync := fRefVeloSync;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -992,7 +1042,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.iReset.Reset(Execute:=Execute);]]></ST>
+        <ST><![CDATA[bExecReset := Execute;]]></ST>
       </Implementation>
     </Method>
     <Property Name="ResetBusy" Id="{7f23536f-87d1-4a85-bf32-65e736b0c8b1}">
@@ -1015,7 +1065,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[ResetDone := THIS^.iReset.ResetDone;]]></ST>
+          <ST><![CDATA[ResetDone := bResetDone;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -1094,15 +1144,16 @@ END_VAR
         <ST><![CDATA[THIS^.iAxisParameters.ScaleRawEncoder();]]></ST>
       </Implementation>
     </Method>
-    <Property Name="StandStill" Id="{b32465c9-3cb4-40d2-919a-85c0f790ae48}">
-      <Declaration><![CDATA[PROPERTY StandStill : BOOL
+    <Property Name="StandStill" Id="{4907e5fb-6983-4c1b-841e-8cbc707a3a49}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY StandStill : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{fe51bd3e-91ee-4cd7-943d-4534d1274669}">
+      <Get Name="Get" Id="{101e5691-570a-4201-a10d-88a509f72d27}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[StandStill := THIS^.iAxisStatus.StandStill;]]></ST>
+          <ST><![CDATA[StandStill := bStandStill;]]></ST>
         </Implementation>
       </Get>
     </Property>
