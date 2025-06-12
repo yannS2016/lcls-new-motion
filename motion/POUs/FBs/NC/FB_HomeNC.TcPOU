@@ -265,11 +265,7 @@ IF THIS^.bMove THEN
     END_CASE
 END_IF
 
-// we should normally do this in interrupted state if moving
-// otherwise we need to reset, the error state should perhaps handle this
-rtDone(CLK:=bDone);
-
-IF  rtDone.Q OR rtAborted.Q THEN
+IF  rtAborted.Q THEN
     THIS^.bExecute := FALSE;
     THIS^.bBusy := FALSE;
     THIS^.bDone := FALSE;
