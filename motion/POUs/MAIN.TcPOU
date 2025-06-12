@@ -46,7 +46,23 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[fbMotionInterlocksGeneric();
+fbLimSwStatus();
+fbMotionInterlocksLimSw();
+fbResetNC();
+fbHaltNC();
+fbPowerNC();
+fbHomeNC();
+fbBacklashCompensation();
+fbMoveAbsoluteNC();
+fbAxisParametersNC();
+fbAxisStatusNC();
+fbMotionAxisNC();
+fbMotionDrive();
+fbBrake();
+fbMotionLogger();
+fbPersistentDataStorage();
+]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>
