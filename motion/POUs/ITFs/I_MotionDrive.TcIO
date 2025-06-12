@@ -28,12 +28,6 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Set>
     </Property>
-    <Method Name="PostMoveHandling" Id="{612de660-d06b-48bd-b55c-7d5a817ff0c9}">
-      <Declaration><![CDATA[METHOD PostMoveHandling
-VAR_INPUT
-END_VAR
-]]></Declaration>
-    </Method>
     <Method Name="PreMoveHandling" Id="{9d2919b9-444e-4c31-9bbe-e53274fd277d}">
       <Declaration><![CDATA[METHOD PreMoveHandling
 VAR_INPUT

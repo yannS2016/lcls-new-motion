@@ -57,7 +57,9 @@ END_VAR
       <ST><![CDATA[THIS^.fbMcSetPos.Options.ClearPositionLag := TRUE;
 THIS^.rtExec(CLK:=THIS^.bExecute);
 THIS^.ftExec(CLK:=THIS^.bExecute);
-
+// an interruption can be external i.e, an halt, Reset or a local condition
+THIS^.rtAborted(CLK:=THIS^.bAbort);
+//THIS^.AxisRef.Status.
 THIS^.bError R= NOT THIS^.bExecute;
 IF NOT THIS^.bError THEN
     THIS^.nErrorID := 0;
@@ -264,8 +266,7 @@ END_IF
 // we should normally do this in interrupted state if moving
 // otherwise we need to reset, the error state should perhaps handle this
 rtDone(CLK:=bDone);
-// an interruption can be external i.e, an halt, Reset or a local condition
-THIS^.rtAborted(CLK:=THIS^.bAbort);
+
 IF  rtDone.Q OR rtAborted.Q THEN
     THIS^.bExecute := FALSE;
     THIS^.bBusy := FALSE;
@@ -274,18 +275,6 @@ IF  rtDone.Q OR rtAborted.Q THEN
 END_IF
 ]]></ST>
     </Implementation>
-    <Property Name="ExecHome" Id="{ef12f807-e6b7-4482-893d-970f3f2a77e4}">
-      <Declaration><![CDATA[PROPERTY ExecHome : BOOL
-]]></Declaration>
-      <Set Name="Set" Id="{fcd56ab2-dba6-4591-ade3-ce54344454a9}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[THIS^.bExecute := ExecHome ;]]></ST>
-        </Implementation>
-      </Set>
-    </Property>
     <Method Name="FB_Init" Id="{36203808-aa8e-419d-b89f-47cad560b581}">
       <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
 //The return value is not evaluated. For a specific influence, you can also declare the
@@ -309,22 +298,37 @@ VAR_INPUT
     Execute	: BOOL;
     HomeSpeedFast	: LREAL;
     HomeSpeedSlow	: LREAL;
-    HomeOffset	: LREAL;
-    HomePosition	: LREAL := 0;
-    UserAbort	: BOOL;
-    HomeMode	: E_EpicsHomeCmd;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.bAbort := UserAbort;
+        <ST><![CDATA[THIS^.bExecute := Execute;
 THIS^.fRefVeloSearch := HomeSpeedFast;
-THIS^.fRefVeloSync	:= HomeSpeedSlow;
-THIS^.fPosition	:=HomePosition;
-THIS^.fOffset := HomeOffset;
-THIS^.eHomeMode := HomeMode;
+THIS^.fRefVeloSync := HomeSpeedSlow;
+
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="HomeAbort" Id="{5b48ce4f-5275-4275-a0c7-70d88ce48921}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY HomeAbort : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{700601ba-4b23-4098-9de7-2a87356db0a3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[HomeAbort := bAbort;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{079e557a-cd88-4103-aeb4-b5eb7ae90639}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bAbort := HomeAbort;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Property Name="HomeBusy" Id="{c7e43be2-48b0-438b-8ceb-465d60425bfc}">
       <Declaration><![CDATA[{warning 'add property implementation'}
 PROPERTY HomeBusy : BOOL
@@ -377,6 +381,20 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="HomeLimSw" Id="{06d1971d-cd58-4bf0-9aa9-7b760a4d83e3}">
+      <Declaration><![CDATA[METHOD HomeLimSw
+VAR_INPUT
+    LimForward	: BOOL;
+    LimBackward	: BOOL;
+    LimHome	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.bLimForward	:= LimForward;
+THIS^.bLimBackward := LimBackward;
+THIS^.bLimHome := LimHome;]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="HomeMode" Id="{bacfc68b-674d-49fb-a838-6a7b08d66c8b}">
       <Declaration><![CDATA[PROPERTY HomeMode : E_EpicsHomeCmd
 ]]></Declaration>
@@ -423,19 +441,5 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Method Name="LimitSw" Id="{06d1971d-cd58-4bf0-9aa9-7b760a4d83e3}">
-      <Declaration><![CDATA[METHOD LimitSw
-VAR_INPUT
-    LimForward	: BOOL;
-    LimBackward	: BOOL;
-    LimHome	: BOOL;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[THIS^.bLimForward	:= LimForward;
-THIS^.bLimBackward := LimBackward;
-THIS^.bLimHome := LimHome;]]></ST>
-      </Implementation>
-    </Method>
   </POU>
 </TcPlcObject>

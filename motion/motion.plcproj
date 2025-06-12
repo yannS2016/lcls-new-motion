@@ -145,9 +145,6 @@
     <Compile Include="POUs\ITFs\I_Brake.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_BrakeShareData.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\ITFs\I_Home.TcIO">
       <SubType>Code</SubType>
     </Compile>

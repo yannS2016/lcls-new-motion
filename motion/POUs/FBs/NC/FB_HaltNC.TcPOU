@@ -41,19 +41,6 @@ IF  rtDone.Q THEN
     THIS^.bExecute := FALSE;
 END_IF]]></ST>
     </Implementation>
-    <Property Name="ExecHalt" Id="{b029dd2e-4ddf-4863-82b3-8648d81b0ad5}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY ExecHalt : BOOL
-]]></Declaration>
-      <Set Name="Set" Id="{e67d86a9-bf4d-478f-a33b-2d93cc2ff9cf}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[THIS^.bExecute :=  ExecHalt;]]></ST>
-        </Implementation>
-      </Set>
-    </Property>
     <Method Name="FB_Init" Id="{18cebc01-b938-405d-8b68-4f57807b525a}">
       <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
 //The return value is not evaluated. For a specific influence, you can also declare the
@@ -98,18 +85,6 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="HaltBufferMode" Id="{7337b28e-2d64-4cf3-a38d-55c6ef1e0217}">
-      <Declaration><![CDATA[PROPERTY HaltBufferMode : Tc2_MC2.MC_BufferMode
-]]></Declaration>
-      <Set Name="Set" Id="{4fa05682-b652-4121-b44d-4a8b2a3bc935}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[eBufferMode := HaltBufferMode;]]></ST>
-        </Implementation>
-      </Set>
-    </Property>
     <Property Name="HaltBusy" Id="{2883f0f4-4b95-4139-8a36-d2b2f3dcc31b}">
       <Declaration><![CDATA[{warning 'add property implementation'}
 PROPERTY HaltBusy : BOOL
@@ -122,19 +97,6 @@ END_VAR
           <ST><![CDATA[HaltBusy := bBusy;]]></ST>
         </Implementation>
       </Get>
-    </Property>
-    <Property Name="HaltDeceleration" Id="{53e71343-314a-4971-812b-de31ec077725}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY HaltDeceleration : LREAL
-]]></Declaration>
-      <Set Name="Set" Id="{8aa39272-ea7c-4c8a-88cc-b19176760b77}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[THIS^.fDeceleration := HaltDeceleration;]]></ST>
-        </Implementation>
-      </Set>
     </Property>
     <Property Name="HaltDone" Id="{be7dfb74-7669-4f3f-93f0-cda14723d1f0}">
       <Declaration><![CDATA[PROPERTY HaltDone : BOOL
@@ -173,18 +135,6 @@ END_VAR
           <ST><![CDATA[HaltErrorID := nErrorID;]]></ST>
         </Implementation>
       </Get>
-    </Property>
-    <Property Name="HaltJerk" Id="{ccf57f45-64a9-413b-b5e8-74695a1b4351}">
-      <Declaration><![CDATA[PROPERTY HaltJerk : LREAL
-]]></Declaration>
-      <Set Name="Set" Id="{5532a8e1-15d6-4ddf-bcad-8d399efcf14b}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[fJerk := HaltJerk;]]></ST>
-        </Implementation>
-      </Set>
     </Property>
   </POU>
 </TcPlcObject>

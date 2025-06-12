@@ -6,15 +6,14 @@ VAR
     fbMotionLogger : FB_MotionLogger;
     // Persistant storage
     fbPersistentDataStorage : FB_PersistentDataStorage;
-    //
-    fbMotionShareData : FB_MotionShareData;
+
     //Brakes : brake fb participate in sync comm with fbMotionDrive, fbMotionAxis and fbMotionInterlocks
-    fbBrake : FB_Brake(iBrakeShareData:=fbMotionShareData) := (BrakeMode := E_StageBrakeMode.IF_MOVING);
+    fbBrake : FB_Brake := (BrakeMode := E_StageBrakeMode.IF_MOVING);
     // common interlocks
-    fbMotionInterlocks : FB_MotionInterlocksGeneric ( iMotionLogger:=fbMotionLogger, iMotionInterlocksShareData:=fbMotionShareData);
+    fbMotionInterlocksGeneric : FB_MotionInterlocksGeneric ( iMotionLogger:=fbMotionLogger, iMotionInterlocksShareData:=fbMotionShareData);
     // stage with Limit switches
     fbLimSwStatus : FB_LimSwStatus ( iMotionLogger:=fbMotionLogger, iLimSwStatusShareData:=fbMotionShareData);
-     fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw ( iMotionInterlocks:=fbMotionInterlocks, iLimSwStatus:=fbLimSwStatus);
+    fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw ( iMotionInterlocks:=fbMotionInterlocksGeneric, iLimSwStatus:=fbLimSwStatus);
 
     fbHomeNC : FB_HomeNC(AxisRef:=NcAxis_GVL.testAxis, iMotionLogger:=fbMotionLogger);;
     fbHaltNC : FB_HaltNC(AxisRef:=NcAxis_GVL.testAxis);

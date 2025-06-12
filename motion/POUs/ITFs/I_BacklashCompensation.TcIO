@@ -13,73 +13,52 @@
 *)
 METHOD BacklashCompensation
 VAR_INPUT
-    Enable     : BOOL;
-	Execute		: BOOL;
+    Active     : BOOL;
     Compensation	: LREAL;
     RampVelocity	: LREAL;
     DisableMode	: E_DISABLEMODE := E_DISABLEMODE.DisableModeHold;
 END_VAR
 ]]></Declaration>
     </Method>
-    <Property Name="BacklashCompensationDisableMode" Id="{0895cb27-228d-442d-be60-7b108cb8779a}">
-      <Declaration><![CDATA[PROPERTY BacklashCompensationDisableMode : E_DISABLEMODE]]></Declaration>
-      <Get Name="Get" Id="{5b639a65-3a92-4bfc-9bf1-017768c44834}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-      <Set Name="Set" Id="{0aaace7d-e7af-4d3a-8855-1d6a7fd1bbb2}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Set>
-    </Property>
-    <Property Name="BacklashCompensationEnable" Id="{705e6fa8-d6ff-4042-8fed-7aa14453215a}">
-      <Declaration><![CDATA[PROPERTY BacklashCompensationEnable : BOOL]]></Declaration>
-      <Get Name="Get" Id="{d222f11b-678d-4c52-af6d-690095d252fa}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-      <Set Name="Set" Id="{d967ab92-050d-4b6e-a67c-f99f28890f47}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Set>
-    </Property>
-    <Property Name="BacklashCompensationError" Id="{6f1b59b6-4b74-42e0-b9fe-ffa15d3f45e7}">
-      <Declaration><![CDATA[PROPERTY BacklashCompensationError : BOOL]]></Declaration>
+    <Method Name="BacklashCompensationActive" Id="{bf2a0313-baf0-4f23-9d25-649e80700102}">
+      <Declaration><![CDATA[(*synced Fbs need just to activate the compensation with a given ramp speed
+  other parameters are provided via EPICS (declared in this FB) or via the more extended BackalshCompensation method (simulation) *)
+METHOD BacklashCompensationActive
+VAR_INPUT
+    Active     : BOOL;
+    RampVelocity : LREAL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="BacklashCompError" Id="{6f1b59b6-4b74-42e0-b9fe-ffa15d3f45e7}">
+      <Declaration><![CDATA[PROPERTY BacklashCompError : BOOL]]></Declaration>
       <Get Name="Get" Id="{daae0576-b11a-47a6-b8ad-fd2ba8bffdd8}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Property Name="BacklashCompensationErrorID" Id="{401b0c6b-f002-4c91-8190-9716c225529b}">
-      <Declaration><![CDATA[PROPERTY BacklashCompensationErrorID : UDINT]]></Declaration>
+    <Property Name="BacklashCompErrorID" Id="{401b0c6b-f002-4c91-8190-9716c225529b}">
+      <Declaration><![CDATA[PROPERTY BacklashCompErrorID : UDINT]]></Declaration>
       <Get Name="Get" Id="{11af064e-4fdb-4269-bde7-aa834e9e2b95}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Property Name="BacklashCompensationRampVelo" Id="{8cd265dd-6c90-4161-ac4a-ff52460744b4}">
-      <Declaration><![CDATA[PROPERTY BacklashCompensationRampVelo : LREAL]]></Declaration>
-      <Get Name="Get" Id="{4f1c0d40-5241-4737-91fd-a99f6c34c0fc}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-      <Set Name="Set" Id="{499ddcbb-00a7-4cff-8d4b-d6041629a57c}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Set>
-    </Property>
-    <Property Name="BacklashCompensationStatus" Id="{ad5dd29e-09ce-4214-902d-59b991e685e4}">
-      <Declaration><![CDATA[PROPERTY BacklashCompensationStatus : BOOL]]></Declaration>
+    <Property Name="BacklashCompStatus" Id="{ad5dd29e-09ce-4214-902d-59b991e685e4}">
+      <Declaration><![CDATA[PROPERTY BacklashCompStatus : BOOL]]></Declaration>
       <Get Name="Get" Id="{a39149e1-eecc-44bb-bc32-b9385b7fdf09}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Property Name="MeasureBacklashCompensation" Id="{ff081112-3182-493d-846e-c2192c5f77d6}">
-      <Declaration><![CDATA[PROPERTY MeasureBacklashCompensation : LREAL]]></Declaration>
+    <Property Name="BacklashCompUserEn" Id="{0e887761-1e47-4bcc-b90c-ad725d2076e6}">
+      <Declaration><![CDATA[PROPERTY BacklashCompUserEn : BOOL]]></Declaration>
+      <Set Name="Set" Id="{87cc7722-3cc9-4268-9f17-c9fd9cad6c1f}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="MeasuredBacklashComp" Id="{ff081112-3182-493d-846e-c2192c5f77d6}">
+      <Declaration><![CDATA[PROPERTY MeasuredBacklashComp : LREAL]]></Declaration>
       <Get Name="Get" Id="{5dbd065d-c6db-421a-8993-7aa4f3a00024}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
-    </Property>
-    <Property Name="TargetCompensation" Id="{84e0b4a7-d241-4df9-a3cd-164122514251}">
-      <Declaration><![CDATA[PROPERTY TargetCompensation : LREAL]]></Declaration>
-      <Get Name="Get" Id="{636b5cc6-bb68-4499-971f-12fd2d4192c7}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-      <Set Name="Set" Id="{9da4ffef-d58b-4b0d-9640-614faf3010c2}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Set>
     </Property>
   </Itf>
 </TcPlcObject>

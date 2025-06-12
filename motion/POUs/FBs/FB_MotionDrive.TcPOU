@@ -181,13 +181,17 @@ CASE eMoveState OF
        END_CASE
 
        IF bExecMove THEN
-        THIS^.iMotionAxis.MoveAbsolute(
-                    Execute:=FALSE,
+            THIS^.iMotionAxis.MoveAbsolute(	Execute:=FALSE,
                        Position:=THIS^.stMotionEpicsItf.fPosition,
                        Velocity := THIS^.stMotionEpicsItf.fVelocity,
                        Acceleration := THIS^.stMotionEpicsItf.fAcceleration,
                        Deceleration := THIS^.stMotionEpicsItf.fDeceleration
                 );
+            // Activate backlash compensation
+            THIS^.iMotionAxis.BacklashCompensationActive(Active:=TRUE, RampVelocity:=THIS^.stMotionEpicsItf.fVelocity/10.0);
+       ELSIF bExecHome THEN
+            // Deactivate backlash compensation
+            THIS^.iMotionAxis.BacklashCompensationActive(Active:=FALSE, RampVelocity:=0.0);
        END_IF
        // configure and start move.
        IF iMotionAxis.StartMove( eMoveMode, bCmdExecute ) THEN
@@ -257,14 +261,23 @@ IF THIS^.stMotionEpicsItf.bReset THEN
    THIS^.stMotionEpicsItf.bReset := FALSE;
 END_IF
 
-//// When reset is done axis is standstill
-//// safe to remove power
-//IF iMotionAxis.ResetDone THEN
-//    THIS^.stMotionEpicsItf.bEnable := FALSE;
+// When reset is done axis is standstill
+// safe to remove power
+IF iMotionAxis.ResetDone THEN
+   THIS^.stMotionEpicsItf.bEnable := FALSE;
 
-//END_IF
+END_IF
 
-//THIS^.PostMoveHandling();]]></ST>
+// update EPICS status
+THIS^.UpdateParamAndStatus();
+
+// Forward drive commands to interlock block
+THIS^.iMotionInterlocks.DriveCmd(	Enable:=stMotionEpicsItf.bEnable,
+                                    Reset:=iMotionAxis.ResetDone
+                                );
+// Forward axis state to brake FB
+THIS^.iBrake.AxisState := iMotionAxis.AxisState;
+    ]]></ST>
     </Implementation>
     <Method Name="ClearVars" Id="{fc3a5981-a4d7-4a2d-bb30-c09c583c9e55}">
       <Declaration><![CDATA[METHOD ClearVars
@@ -370,19 +383,6 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Method Name="PostMoveHandling" Id="{bff11fe6-be4a-4ec0-98b4-012fabaa1ad6}">
-      <Declaration><![CDATA[METHOD PostMoveHandling
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[// update EPICS status
-THIS^.UpdateParamAndStatus();
-
-// THIS^.iMotionDriveShareData.NewMoveReq := bNewMoveReq;
-// THIS^.iMotionDriveShareData.ExecHome := bExecHome;
-// THIS^.iMotionDriveShareData.ExecMove := bExecMove;
-// THIS^.iMotionDriveShareData.DriveEnable := stMotionEpicsItf.bEnable;]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="PreMoveHandling" Id="{b70d40df-94ce-4a86-890c-8d206ac7e676}">
       <Declaration><![CDATA[METHOD PreMoveHandling
 ]]></Declaration>

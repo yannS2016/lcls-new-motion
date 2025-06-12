@@ -20,27 +20,6 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Property Name="PowerEnable" Id="{1110da7f-53f9-4d9e-acd2-6779b9ac57bb}">
-      <Declaration><![CDATA[PROPERTY PowerEnable : BOOL
-]]></Declaration>
-      <Set Name="Set" Id="{68ce8530-0b4e-49b2-b142-87874089ade1}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Set>
-    </Property>
-    <Property Name="PowerEnableNegative" Id="{f4468a5f-99c2-41ef-8494-82f11d6af19e}">
-      <Declaration><![CDATA[PROPERTY PowerEnableNegative : BOOL
-]]></Declaration>
-      <Set Name="Set" Id="{325c8bbd-cb6f-445c-bdde-af74df7c86c0}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Set>
-    </Property>
-    <Property Name="PowerEnablePositive" Id="{a7e67244-44ea-4632-8730-f811e553e6c7}">
-      <Declaration><![CDATA[PROPERTY PowerEnablePositive : BOOL
-]]></Declaration>
-      <Set Name="Set" Id="{665a290f-0612-4dd5-8ddf-d027af35e44f}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Set>
-    </Property>
     <Method Name="PowerEnables" Id="{b68894a9-114b-4772-b0bc-887ad3b3442e}">
       <Declaration><![CDATA[METHOD PowerEnables
 VAR_INPUT
@@ -68,12 +47,6 @@ END_VAR
       <Get Name="Get" Id="{f6f920c1-2a15-45fb-99e2-22914eacf6cf}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
-    </Property>
-    <Property Name="PowerOverride" Id="{05600e99-3607-4f22-b5d2-f539e7fc2cd3}">
-      <Declaration><![CDATA[PROPERTY PowerOverride : LREAL]]></Declaration>
-      <Set Name="Set" Id="{d6569857-2f15-4c83-a4a1-ba171e758562}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Set>
     </Property>
   </Itf>
 </TcPlcObject>

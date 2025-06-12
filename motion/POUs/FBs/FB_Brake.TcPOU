@@ -11,22 +11,14 @@ VAR
     nBrakeMode: E_StageBrakeMode:=E_StageBrakeMode.IF_ENABLED;
     // NC Brake Output: TRUE to release brake
     bBrakeRelease AT %Q*: BOOL;
-    eMotionState : MC_AxisStates;
-    iBrakeShareData : I_BrakeShareData;
+    eAxisState : MC_AxisStates;
+
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF iBrakeShareData = 0 THEN
-    // throw and exception
-    RETURN;
-END_IF
-
-// Read external private data
-eMotionState := iBrakeShareData.AxisState;
-
-// Handle the brake. TRUE means brake disabled/released
+      <ST><![CDATA[// Handle the brake. TRUE means brake disabled/released
 IF nBrakeMode <> E_StageBrakeMode.NO_BRAKE THEN
-    CASE eMotionState OF
+    CASE eAxisState OF
         MC_AXISSTATE_UNDEFINED,
         MC_AXISSTATE_DISABLED,
         MC_AXISSTATE_ERRORSTOP:
@@ -41,9 +33,7 @@ IF nBrakeMode <> E_StageBrakeMode.NO_BRAKE THEN
             bBrakeRelease := TRUE;
     END_CASE
 END_IF
-
-
-// update shared data]]></ST>
+]]></ST>
     </Implementation>
     <Property Name="Aborted" Id="{482212d2-7ee4-466e-9032-c3d56b476726}">
       <Declaration><![CDATA[{warning 'add property implementation'}
@@ -57,6 +47,19 @@ END_VAR
           <ST><![CDATA[]]></ST>
         </Implementation>
       </Get>
+    </Property>
+    <Property Name="AxisState" Id="{f9ae2679-2d4b-422c-bc0d-48c0bf28548e}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY AxisState : MC_AxisStates
+]]></Declaration>
+      <Set Name="Set" Id="{e59712e9-3a3c-4624-9ab4-c64e0bfb35ed}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[eAxisState := AxisState;]]></ST>
+        </Implementation>
+      </Set>
     </Property>
     <Property Name="BrakeMode" Id="{d2a89635-e044-45f2-b897-1fb228591295}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
@@ -153,7 +156,6 @@ METHOD FB_Init: BOOL
 VAR_INPUT
     bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
-    iBrakeShareData : I_BrakeShareData;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>

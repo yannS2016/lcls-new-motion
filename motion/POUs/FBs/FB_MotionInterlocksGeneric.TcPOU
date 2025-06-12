@@ -45,7 +45,7 @@ VAR
     {attribute 'hide'}
     bEnable: BOOL;
     {attribute 'hide'}
-    bExecute : BOOL;
+    bReset : BOOL;
     {attribute 'hide'}
     sMessage : STRING;
     {attribute 'hide'}
@@ -61,13 +61,13 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF ( iMotionInterlocksShareData = 0 ) OR ( iMotionLogger = 0) THEN
+      <ST><![CDATA[IF ( iMotionLogger = 0) THEN
     // throw an exception
     RETURN;
 END_IF
 
 // read share
-bPowerEnabled := iMotionInterlocksShareData.DriveEnable AND bHardwareEnable;
+bPowerEnabled := bEnable AND bHardwareEnable;
 bPowerEnabled R= NOT bUserEnable;
 // Moves are automatically allowed if no safety hooks. Otherwise, some other code will set this.
 bSafetyReady S= bPowerSelf;
@@ -130,6 +130,18 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="DriveCmd" Id="{2ba3db39-6bb1-4184-838a-ccd2197a1d93}">
+      <Declaration><![CDATA[METHOD DriveCmd
+VAR_INPUT
+    Enable	: BOOL;
+    Reset	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Enable := bEnable;
+Reset := bReset;]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="Error" Id="{21f5c9dd-d9f9-4fb7-a70a-688ad37ac74c}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY Error : BOOL

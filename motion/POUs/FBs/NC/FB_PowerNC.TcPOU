@@ -88,45 +88,6 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="PowerEnable" Id="{252a1d79-0ff2-4213-bc33-fadd45d6a3f9}">
-      <Declaration><![CDATA[{attribute 'monitoring':= 'variable'}
-PROPERTY PowerEnable : BOOL
-]]></Declaration>
-      <Set Name="Set" Id="{78f193d5-2f3f-443d-a415-e9f7293c8fc9}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[bEnable := PowerEnable;]]></ST>
-        </Implementation>
-      </Set>
-    </Property>
-    <Property Name="PowerEnableNegative" Id="{1b1794f4-4634-4791-9eb2-19477f4a1359}">
-      <Declaration><![CDATA[{attribute 'monitoring':= 'variable'}
-PROPERTY PowerEnableNegative : BOOL
-]]></Declaration>
-      <Set Name="Set" Id="{52e87bba-2185-41a9-970f-712f1c1e8cb3}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[bEnableNegative := PowerEnableNegative;]]></ST>
-        </Implementation>
-      </Set>
-    </Property>
-    <Property Name="PowerEnablePositive" Id="{df40771c-ae30-4e2c-81f2-674dc113ad0b}">
-      <Declaration><![CDATA[{attribute 'monitoring':= 'variable'}
-PROPERTY PowerEnablePositive : BOOL
-]]></Declaration>
-      <Set Name="Set" Id="{d16a9426-9bc2-4340-81e7-6d3075566544}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[bEnablePositive := PowerEnablePositive;]]></ST>
-        </Implementation>
-      </Set>
-    </Property>
     <Method Name="PowerEnables" Id="{60dea20e-362a-45d5-ab02-9c322c575503}">
       <Declaration><![CDATA[METHOD PowerEnables
 VAR_INPUT
@@ -178,19 +139,6 @@ END_VAR
           <ST><![CDATA[PowerIsEnabled := bPowerIsEnabled;]]></ST>
         </Implementation>
       </Get>
-    </Property>
-    <Property Name="PowerOverride" Id="{2e673f3b-832a-4bb6-871d-bed0fa9c802a}">
-      <Declaration><![CDATA[PROPERTY PowerOverride : LREAL
-]]></Declaration>
-      <Set Name="Set" Id="{afa16db1-d202-4686-a800-8bcbcd0d079e}">
-        <Declaration><![CDATA[
-VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[fOverride := PowerOverride;]]></ST>
-        </Implementation>
-      </Set>
     </Property>
   </POU>
 </TcPlcObject>
