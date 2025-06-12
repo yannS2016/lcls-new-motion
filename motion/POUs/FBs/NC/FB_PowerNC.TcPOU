@@ -22,9 +22,8 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[//////////////////////////////////////////////////////////////////
-// Power block depends on interlocks check in  iMotionInterlocks
-/////////////////////////////////////////////////////////////////
+      <ST><![CDATA[THIS^.AxisRef.ReadStatus();
+
 THIS^.fbMcPower(
     Axis := THIS^.AxisRef,
     Enable := THIS^.bEnable,

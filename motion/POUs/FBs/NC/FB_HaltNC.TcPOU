@@ -23,7 +23,9 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[THIS^.fbMcHalt(
+      <ST><![CDATA[THIS^.AxisRef.ReadStatus();
+
+THIS^.fbMcHalt(
     Axis := THIS^.AxisRef,
     Execute := THIS^.bExecute,
     Deceleration := THIS^.fDeceleration,

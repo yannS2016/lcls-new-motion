@@ -43,6 +43,13 @@ VAR
                                    iMotionAxis := fbMotionAxisNC
                                    ) := (Name := 'SmarAct MCS2',  EnableMode:=ENUM_StageEnableMode.DURING_MOTION );
 
+    bLimForward AT %Q*: BOOL := TRUE;
+    // NC Backward Limit Switch: TRUE if ok to move
+    bLimBackward AT %Q*: BOOL := TRUE;
+    // NO Home Switch: TRUE if at home
+    bLimHome AT %Q*: BOOL := TRUE;
+    //
+    bHardEnable AT %Q*: BOOL := TRUE;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -50,18 +57,18 @@ END_VAR
 fbLimSwStatus();
 fbMotionInterlocksLimSw();
 fbResetNC();
-fbHaltNC();
-fbPowerNC();
-fbHomeNC();
-fbBacklashCompensation();
-fbMoveAbsoluteNC();
-fbAxisParametersNC();
-fbAxisStatusNC();
+// fbHaltNC();
+// fbPowerNC();
+// fbHomeNC();
+// fbBacklashCompensation();
+// fbMoveAbsoluteNC();
+// fbAxisParametersNC();
+// fbAxisStatusNC();
 fbMotionAxisNC();
 fbMotionDrive();
-fbBrake();
-fbMotionLogger();
-fbPersistentDataStorage();
+// fbBrake();
+// fbMotionLogger();
+// fbPersistentDataStorage();
 ]]></ST>
     </Implementation>
   </POU>

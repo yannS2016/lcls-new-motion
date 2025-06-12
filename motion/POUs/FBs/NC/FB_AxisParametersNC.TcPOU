@@ -84,7 +84,9 @@ VAR PERSISTENT
     fSavedPosition: LREAL;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// Calibrate raw encoder data
+      <ST><![CDATA[THIS^.AxisRef.ReadStatus();
+
+// Calibrate raw encoder data
 THIS^.ScaleRawEncoder();
 
 // Periodic update of NC parameters

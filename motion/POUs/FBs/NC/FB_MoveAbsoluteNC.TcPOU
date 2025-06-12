@@ -27,7 +27,9 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[THIS^.fbMcMoveAbsolute(
+      <ST><![CDATA[THIS^.AxisRef.ReadStatus();
+
+THIS^.fbMcMoveAbsolute(
     Axis := THIS^.AxisRef,
     Execute := THIS^.bExecute,
     Position := THIS^.fTargetPosition,

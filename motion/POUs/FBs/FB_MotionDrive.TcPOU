@@ -235,6 +235,7 @@ THIS^.bPrepareDisable S= (eEnableMode = E_StageEnableMode.DURING_MOTION ) AND TH
 IF THIS^.stMotionEpicsItf.bReset THEN
    // Relese motion cmds
    THIS^.ClearVars(Done:=FALSE);
+   // Forward general reset event
    THIS^.iMotionAxis.Reset(Execute:= THIS^.stMotionEpicsItf.bReset);
    THIS^.stMotionEpicsItf.bReset := FALSE;
 END_IF

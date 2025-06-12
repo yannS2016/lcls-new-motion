@@ -16,7 +16,9 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[THIS^.fbMcReset(
+      <ST><![CDATA[THIS^.AxisRef.ReadStatus();
+
+THIS^.fbMcReset(
     Axis := THIS^.AxisRef,
     Execute := THIS^.bExecute (* AND Axis.Status.Error*),
     Done => THIS^.bDone,

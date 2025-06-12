@@ -953,6 +953,14 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="ReadStatus" Id="{c3cc6c8e-94a8-4d9d-bf71-d03363ccffb3}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD ReadStatus
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="RefVeloSearch" Id="{36d2b26c-bb8d-4160-a779-f7a61d6d9829}">
       <Declaration><![CDATA[PROPERTY RefVeloSearch : LREAL
 ]]></Declaration>

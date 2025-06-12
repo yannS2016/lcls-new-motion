@@ -54,7 +54,9 @@ VAR CONSTANT
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[THIS^.fbMcSetPos.Options.ClearPositionLag := TRUE;
+      <ST><![CDATA[THIS^.AxisRef.ReadStatus();
+
+THIS^.fbMcSetPos.Options.ClearPositionLag := TRUE;
 THIS^.rtExec(CLK:=THIS^.bExecute);
 THIS^.ftExec(CLK:=THIS^.bExecute);
 // an interruption can be external i.e, an halt, Reset or a local condition

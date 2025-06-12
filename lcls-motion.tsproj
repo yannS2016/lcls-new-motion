@@ -1613,7 +1613,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{DA380EE4-C409-4A84-97B8-4D1FBAEE5CC8}" Name="motion" PrjFilePath="motion\motion.plcproj" TmcFilePath="motion\motion.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{BFAD1C35-3BE0-868F-B741-0D22C47535C4}" TmcPath="motion\motion.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{E1E68990-2609-6B70-A994-C09BC38CEC29}" TmcPath="motion\motion.tmc">
 					<Name>motion Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -1624,12 +1624,35 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>MAIN.bLimForward</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>NcAxis_GVL.testAxis.PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.bLimBackward</Name>
+							<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.bLimHome</Name>
+							<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.bHardEnable</Name>
+							<Type>BOOL</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>MAIN.fbMotionInterlocksGeneric.bHardwareEnable</Name>
+							<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
 						<Var>
 							<Name>MAIN.fbLimSwStatus.bLimitForwardEnable</Name>
 							<Comment><![CDATA[ Hardware 
@@ -1669,11 +1692,6 @@ External Setpoint Generation:
 							<Name>NcAxis_GVL.testAxis.NcToPlc</Name>
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
-						<Var>
-							<Name>MAIN.fbMotionInterlocks.bHardwareEnable</Name>
-							<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
 					</Vars>
 					<Contexts>
 						<Context>
@@ -1692,5 +1710,17 @@ External Setpoint Generation:
 				</Instance>
 			</Project>
 		</Plc>
+		<Io/>
 	</Project>
+	<Mappings>
+		<MappingInfo Identifier="{00000000-2001-0850-0020-500800205008}" Id="#x02030010"/>
+		<OwnerA Name="TIPC^motion^motion Instance">
+			<OwnerB Name="TIPC^motion^motion Instance">
+				<Link VarA="PlcTask Inputs^MAIN.fbLimSwStatus.bHome" VarB="PlcTask Outputs^MAIN.bLimHome"/>
+				<Link VarA="PlcTask Inputs^MAIN.fbLimSwStatus.bLimitBackwardEnable" VarB="PlcTask Outputs^MAIN.bLimBackward"/>
+				<Link VarA="PlcTask Inputs^MAIN.fbLimSwStatus.bLimitForwardEnable" VarB="PlcTask Outputs^MAIN.bLimForward"/>
+				<Link VarA="PlcTask Inputs^MAIN.fbMotionInterlocksGeneric.bHardwareEnable" VarB="PlcTask Outputs^MAIN.bHardEnable"/>
+			</OwnerB>
+		</OwnerA>
+	</Mappings>
 </TcSmProject>

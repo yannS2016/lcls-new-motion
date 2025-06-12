@@ -60,7 +60,9 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[(*Note: Configure within the axis parameters set "position correction" to true
+      <ST><![CDATA[THIS^.AxisRef.ReadStatus();
+
+(*Note: Configure within the axis parameters set "position correction" to true
     Directional change FOR compensation
       FALSE: positive backlash:
       TRUE -> Negative backlash compensation
