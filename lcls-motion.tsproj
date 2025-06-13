@@ -1613,7 +1613,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{DA380EE4-C409-4A84-97B8-4D1FBAEE5CC8}" Name="motion" PrjFilePath="motion\motion.plcproj" TmcFilePath="motion\motion.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{0E30E8E7-B063-E3DA-7CE4-6D2F49756020}" TmcPath="motion\motion.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{9EF6D235-C74C-EAE4-EE72-C472D1BBA17F}" TmcPath="motion\motion.tmc">
 					<Name>motion Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -1649,7 +1649,7 @@ External Setpoint Generation:
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
-							<Name>MAIN.fbMotionInterlocksGeneric.bHardwareEnable</Name>
+							<Name>MAIN.fbMotionInterlocksCommon.bHardwareEnable</Name>
 							<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -1693,6 +1693,13 @@ External Setpoint Generation:
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 					</Vars>
+					<UnrestoredVarLinks ImportTime="2025-06-13T12:36:59">
+						<OwnerA Name="InputDst" Prefix="TIPC^motion^motion Instance" Type="1">
+							<OwnerB Name="TIPC^motion^motion Instance">
+								<Link VarA="MAIN.fbMotionInterlocksGeneric.bHardwareEnable" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="PlcTask Outputs^MAIN.bHardEnable" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
 					<Contexts>
 						<Context>
 							<Id>0</Id>
@@ -1724,7 +1731,7 @@ External Setpoint Generation:
 				<Link VarA="PlcTask Inputs^MAIN.fbLimSwStatus.bHome" VarB="PlcTask Outputs^MAIN.bLimHome"/>
 				<Link VarA="PlcTask Inputs^MAIN.fbLimSwStatus.bLimitBackwardEnable" VarB="PlcTask Outputs^MAIN.bLimBackward"/>
 				<Link VarA="PlcTask Inputs^MAIN.fbLimSwStatus.bLimitForwardEnable" VarB="PlcTask Outputs^MAIN.bLimForward"/>
-				<Link VarA="PlcTask Inputs^MAIN.fbMotionInterlocksGeneric.bHardwareEnable" VarB="PlcTask Outputs^MAIN.bHardEnable"/>
+				<Link VarA="PlcTask Inputs^MAIN.fbMotionInterlocksCommon.bHardwareEnable" VarB="PlcTask Outputs^MAIN.bHardEnable"/>
 			</OwnerB>
 		</OwnerA>
 	</Mappings>

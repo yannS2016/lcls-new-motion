@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_MotionInterlocksLimSw" Id="{158cbb88-3b97-40e2-97dc-4d7a82a1299f}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionInterlocksLimSw IMPLEMENTS I_MotionInterlocks
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionInterlocksLimSw IMPLEMENTS I_MotionInterlocksLimSw
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-    iMotionInterlocks : I_MotionInterlocksGeneric;
+    iMotionInterlocksCommon : I_MotionInterlocksCommon;
     iLimSwStatus : I_LimSwStatus;
     bError : BOOL;
     nErrorID:UDINT;
@@ -23,24 +23,25 @@ VAR
     bMoveBackwardEnabled : BOOL;
     bMoveForwardEnabled  : BOOL;
     bPowerEnable : BOOL;
+    Enable: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF THIS^.iMotionInterlocks.Error THEN
-    bError := THIS^.iMotionInterlocks.Error;
-    nErrorID := THIS^.iMotionInterlocks.ErrorID;
-    sMessage := THIS^.iMotionInterlocks.Message;
+      <ST><![CDATA[IF THIS^.iMotionInterlocksCommon.Error THEN
+    bError := THIS^.iMotionInterlocksCommon.Error;
+    nErrorID := THIS^.iMotionInterlocksCommon.ErrorID;
+    sMessage := THIS^.iMotionInterlocksCommon.Message;
 ELSIF THIS^.iLimSwStatus.Warning THEN
     sMessage := THIS^.iLimSwStatus.Message;
 END_IF
 // Get Generalized MoveOk, Foward and backward enable signals
-bMoveOk := THIS^.iMotionInterlocks.MoveOk;
+bMoveOk := THIS^.iMotionInterlocksCommon.MoveOk;
 bMoveBackwardEnabled := THIS^.iLimSwStatus.MoveBackwardEnabled;
 bMoveForwardEnabled := THIS^.iLimSwStatus.MoveForwardEnabled;
-bPowerEnable := THIS^.iMotionInterlocks.PowerEnabled;
+bPowerEnable := THIS^.iMotionInterlocksCommon.PowerEnabled;
 // Forward drive cmds to Generic interlocks and lim status FB
-THIS^.iMotionInterlocks.DriveCmd(Enable:=bEnable, NewMoveReq:=bNewMoveReq, Reset:=bReset);
-THIS^.iLimSwStatus.DriveCmd(Enable:=bEnable, NewMoveReq:=bNewMoveReq, Reset:=bReset);]]></ST>
+//THIS^.iMotionInterlocks.DriveCommand(Enable:=bEnable, NewMoveReq:=bNewMoveReq, Reset:=bReset);
+//THIS^.iLimSwStatus.DriveCommands(Enable:=bEnable, NewMoveReq:=bNewMoveReq, Reset:=bReset);]]></ST>
     </Implementation>
     <Property Name="Aborted" Id="{a1175752-7c2c-4d2c-b0ac-3a4f9f39a027}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
@@ -55,6 +56,21 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="AxisStatus" Id="{6d21d504-ee18-4457-abef-61e8d5df9058}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD AxisStatus
+VAR_INPUT
+    HomeBusy	: BOOL;
+    PositiveDirection	: BOOL;
+    NegativeDirection	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iLimSwStatus.AxisStatus(	HomeBusy:=HomeBusy,
+                                    PositiveDirection:=PositiveDirection,
+                                    NegativeDirection:=NegativeDirection );]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="Busy" Id="{a6daac7c-9df9-4ab9-ad3d-28aaab54bf26}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY Busy : BOOL
@@ -81,8 +97,9 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="DriveCmd" Id="{e3367cf0-cdc1-4731-8285-0f8b3c347f27}">
-      <Declaration><![CDATA[METHOD DriveCmd
+    <Method Name="DriveCommands" Id="{61a4eb92-408d-4d90-8d81-bc9594431b56}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD DriveCommands
 VAR_INPUT
     Enable	: BOOL;
     NewMoveReq	: BOOL;
@@ -90,9 +107,9 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[bNewMoveReq := NewMoveReq;
-bEnable	:=Enable;
-bReset :=Reset;]]></ST>
+        <ST><![CDATA[// Forward drive cmds to Generic interlocks and lim status FB
+THIS^.iMotionInterlocksCommon.DriveCommands(Enable:=Enable, NewMoveReq:=NewMoveReq, Reset:=Reset);
+THIS^.iLimSwStatus.DriveCommands(Enable:=Enable, NewMoveReq:=NewMoveReq, Reset:=Reset);]]></ST>
       </Implementation>
     </Method>
     <Property Name="Error" Id="{e499cdfd-969f-4051-8215-bd6b1edef6bb}">
@@ -130,11 +147,11 @@ METHOD FB_Init: BOOL
 VAR_INPUT
     bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
-    iMotionInterlocks : I_MotionInterlocksGeneric;
+    iMotionInterlocksCommon : I_MotionInterlocksCommon;
     iLimSwStatus : I_LimSwStatus;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.iMotionInterlocks  := iMotionInterlocks ;
+        <ST><![CDATA[THIS^.iMotionInterlocksCommon  := iMotionInterlocksCommon ;
 THIS^.iLimSwStatus := iLimSwStatus;]]></ST>
       </Implementation>
     </Method>
@@ -151,78 +168,6 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="LimBackward" Id="{3efe1368-408b-4a38-a126-80efaf55f686}">
-      <Declaration><![CDATA[PROPERTY LimBackward : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{47d43762-1933-4100-961b-3deb6996cc97}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="LimForward" Id="{03317f4e-fbcf-4e99-b0c9-f816dfd4de35}">
-      <Declaration><![CDATA[PROPERTY LimForward : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{a33a9dae-0469-46a1-8a1f-aafe04ffa630}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="LimHit" Id="{452e35f5-800a-4c03-922c-6304422f8f6e}">
-      <Declaration><![CDATA[PROPERTY LimHit : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{eb844dcb-7793-498c-91eb-fa22d21a4900}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="LimHitIdling" Id="{d51cc25e-d755-40e4-b660-bc72f57d96bc}">
-      <Declaration><![CDATA[PROPERTY LimHitIdling : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{efc7bd52-92e0-4b7d-a526-02267f44a345}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[LimHitIdling := THIS^.iLimSwStatus.LimHitIdling;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="LimHitMoving" Id="{b433f86d-ec1c-4acc-aa4f-3e242d8b5ea0}">
-      <Declaration><![CDATA[PROPERTY LimHitMoving : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{dac1477a-95db-4e8b-8062-a0b243994a93}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[LimHitMoving := THIS^.iLimSwStatus.LimHitMoving;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="LimHome" Id="{f0cee75d-e406-443a-a413-e60195db50de}">
-      <Declaration><![CDATA[PROPERTY LimHome : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{d346300b-4e96-4617-87d1-9a4a3ba94aa6}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
     <Property Name="Message" Id="{6b1916c5-039a-4cea-99b5-b8f805042945}">
       <Declaration><![CDATA[PROPERTY Message : T_MAXSTRING
 ]]></Declaration>
@@ -231,23 +176,10 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[Message := sMessage;]]></ST>
         </Implementation>
       </Get>
     </Property>
-    <Method Name="MotionStatus" Id="{ef7b7a45-b002-4c41-9686-413e52bf75e3}">
-      <Declaration><![CDATA[(*Not implemented for now as we directly access the interlocks in this FB*)
-METHOD MotionStatus
-VAR_INPUT
-    HomeBusy	: BOOL;
-    PositiveDirectionEnabled	: BOOL;
-    NegativeDirectionEnabled	: BOOL;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
     <Property Name="MoveBackwardEnabled" Id="{b178f46f-0443-44d6-a91f-16b15ef2cae5}">
       <Declaration><![CDATA[PROPERTY MoveBackwardEnabled : BOOL
 ]]></Declaration>
@@ -256,7 +188,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[MoveBackwardEnabled := THIS^.bMoveBackwardEnabled;]]></ST>
+          <ST><![CDATA[MoveBackwardEnabled := THIS^.iLimSwStatus.MoveBackwardEnabled;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -268,7 +200,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[MoveForwardEnabled := THIS^.bMoveForwardEnabled;]]></ST>
+          <ST><![CDATA[MoveForwardEnabled := THIS^.iLimSwStatus.MoveForwardEnabled;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -280,7 +212,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[MoveOk := bMoveOk;]]></ST>
+          <ST><![CDATA[MoveOk := THIS^.iMotionInterlocksCommon.MoveOk;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -292,7 +224,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[PowerEnabled := THIS^.iMotionInterlocksCommon.PowerEnabled;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -305,7 +237,7 @@ PROPERTY Warning : BOOL
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[Warning := THIS^.iLimSwStatus.Warning;]]></ST>
         </Implementation>
       </Get>
     </Property>

@@ -16,6 +16,7 @@ VAR
     iMotionInterlocks	: I_MotionInterlocks;
     {attribute 'hide'}
     iMotionLogger 		: I_MotionLogger;
+
    // EPICS Interface
     stMotionEpicsItf : REFERENCE TO ST_MotionEpicsItf;
     {attribute 'hide'}
@@ -101,12 +102,16 @@ VAR
     ftHaltAbort : F_TRIG;
     {attribute 'hide'}
     rtRestoreDone : R_TRIG;
+    bHaltEvent : BOOL;
+    bMoveBusy: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[IF NOT __ISVALIDREF( THIS^.stMotionEpicsItf ) THEN
    RETURN;
 END_IF
+// Restore axis parameters
+THIS^.RestoreSettings();
 
 // catch high priority message
 // an extended error message from FB_MotionLogger will display cyclic errors and warning
@@ -129,6 +134,7 @@ END_IF
 
 
 THIS^.PreMoveHandling();
+
 // Drive state Machine here
 CASE eMoveState OF
    E_MoveState.IDLING:;
@@ -220,14 +226,6 @@ CASE eMoveState OF
        END_IF
 
 END_CASE
-
-// Halt is always a user stop but not an interlock event or a reset.
-THIS^.iMotionAxis.Halt(	Execute:=ftStopExec.Q AND NOT stMotionEpicsItf.bReset AND NOT iMotionInterlocks.InterlockEvent
-                                             AND (iMotionAxis.MoveAbsoluteBusy AND (nCommandLocal=3))
-                                            OR (iMotionAxis.HomeBusy AND (nCommandLocal=10)),
-                        Deceleration:=stMotionEpicsItf.fDeceleration);
-
-
 // Move done, or aborted? prepare disable.
 // we'll wait for axis to be in standstill and this state machine to be idling.
 THIS^.bPrepareDisable S= (eEnableMode = E_StageEnableMode.DURING_MOTION ) AND THIS^.ftStopExec.Q;
@@ -242,21 +240,36 @@ END_IF
 
 // When reset is done axis is standstill
 // safe to remove power
-IF iMotionAxis.ResetDone THEN
-   THIS^.stMotionEpicsItf.bEnable := FALSE;
+THIS^.stMotionEpicsItf.bEnable := NOT iMotionAxis.ResetDone;
 
-END_IF
+// Halt is always a user stop but not an interlock event or a reset.
+bHaltEvent S= ftStopExec.Q AND NOT stMotionEpicsItf.bReset AND NOT iMotionInterlocks.InterlockEvent
+                                            AND (iMotionAxis.MoveAbsoluteBusy AND (nCommandLocal=3))
+                                            OR (iMotionAxis.HomeBusy AND (nCommandLocal=10));
+bHaltEvent R= THIS^.iMotionAxis.HaltDone OR THIS^.iMotionAxis.ResetDone;
+
+THIS^.iMotionAxis.Halt(	Execute:=bHaltEvent,
+                        Deceleration:=stMotionEpicsItf.fDeceleration);
+
+//
+THIS^.iMotionInterlocks.AxisStatus(
+                            HomeBusy:=THIS^.iMotionAxis.HomeBusy,
+                            PositiveDirection:=THIS^.iMotionAxis.PositiveMotionIsEnabled,
+                            NegativeDirection:=THIS^.iMotionAxis.NegativeMotionIsEnabled );
+
+// Forward drive commands to interlock blocks
+THIS^.iMotionInterlocks.DriveCommands(Enable:=THIS^.stMotionEpicsItf.bEnable, NewMoveReq:=THIS^.bNewMoveReq, Reset:=THIS^.iMotionAxis.ResetDone);
+// Forward Power block enable flags
+THIS^.iMotionAxis.PowerEnables(Enable:=iMotionInterlocks.PowerEnabled,
+                        Enable_Positive:=iMotionInterlocks.MoveForwardEnabled,
+                        Enable_Negative:=iMotionInterlocks.MoveBackwardEnabled );
+
+// Forward axis state to brake FB
+THIS^.iBrake.AxisState := iMotionAxis.AxisState;
 
 // update EPICS status
 THIS^.UpdateParamAndStatus();
 
-// Forward drive commands to interlock blocks
-THIS^.iMotionInterlocks.DriveCmd(	Enable:=stMotionEpicsItf.bEnable,
-                                    NewMoveReq:=THIS^.bNewMoveReq,
-                                    Reset:=iMotionAxis.ResetDone
-                                );
-// Forward axis state to brake FB
-THIS^.iBrake.AxisState := iMotionAxis.AxisState;
     ]]></ST>
     </Implementation>
     <Method Name="ClearVars" Id="{fc3a5981-a4d7-4a2d-bb30-c09c583c9e55}">
@@ -412,7 +425,7 @@ CASE eEnableMode OF
 END_CASE
 //
 // Get a definitive bEnabled reading
-THIS^.bEnableDone := iMotionAxis.AxisEnabled();
+THIS^.bEnableDone := THIS^.iMotionAxis.AxisEnabled();
 
 //
 // This is the output interlock check used to allow the requested move
@@ -443,11 +456,6 @@ rtTarget(CLK:=(iMotionAxis.Done AND bExecMove));
 rtHomed(CLK:=iMotionAxis.Done AND bExecHome);
 ftStopExec(CLK:=stMotionEpicsItf.bExecute);
 
-// Both Interlock and limSwStatus can control positive and negative enable
-// whichever is not used must set the corresponding flags.
-iMotionInterlocks.DriveCmd(	Enable:=THIS^.stMotionEpicsItf.bEnable,
-                            NewMoveReq:=THIS^.bNewMoveReq,
-                            Reset:=THIS^.stMotionEpicsItf.bReset );
 ]]></ST>
       </Implementation>
     </Method>

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="FB_MotionInterlocksGeneric" Id="{b69073ed-2a55-41fc-84a9-b8fe79332e5e}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionInterlocksGeneric IMPLEMENTS I_MotionInterlocksGeneric
+  <POU Name="FB_MotionInterlocksCommon" Id="{b69073ed-2a55-41fc-84a9-b8fe79332e5e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionInterlocksCommon IMPLEMENTS I_MotionInterlocksCommon
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
@@ -15,11 +15,12 @@ VAR
     {attribute 'hide'}
     bAllBackwardEnabled: BOOL:=FALSE;
     {attribute 'hide'}
-    {attribute 'hide'}
     bPowerEnabled: BOOL:=FALSE;
    // If TRUE, we want to enable the motor independently of PMPS or other safety systems.
+      {attribute 'hide'}
     bPowerSelf: BOOL:=FALSE;
     // TRUE if we have safety permission to move
+    {attribute 'hide'}
     bSafetyReady: BOOL;
    // NC STO Input: TRUE if ok to move
     {attribute 'pytmc' := '
@@ -59,6 +60,8 @@ VAR
     rtGlobalReset : R_TRIG;
     {attribute 'hide'}
     bInterlockEvent : BOOL;
+    bMoveForwardEnabled : BOOL := TRUE;
+    bMoveBackwardEnabled : BOOL := TRUE;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -131,12 +134,12 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="DriveCmd" Id="{2ba3db39-6bb1-4184-838a-ccd2197a1d93}">
-      <Declaration><![CDATA[METHOD DriveCmd
+    <Method Name="DriveCommands" Id="{6d01eab2-7989-4c7e-b542-03db7614d447}">
+      <Declaration><![CDATA[METHOD DriveCommands
 VAR_INPUT
-    Enable: BOOL;
-    NewMoveReq : BOOL;
-    Reset: BOOL;
+    Enable	: BOOL;
+    NewMoveReq	: BOOL;
+    Reset	: BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -188,19 +191,6 @@ END_VAR]]></Declaration>
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="InterlockEvent" Id="{8e1083ac-02c9-4b46-a759-679b00b2a867}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY InterlockEvent : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{9dcd64c3-1451-4b96-bcbf-7013a41cd9fd}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[InterlockEvent := bInterlockEvent;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
     <Property Name="Message" Id="{fff95902-de95-4707-8ab7-164e983a966f}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY Message : T_MAXSTRING
@@ -210,33 +200,31 @@ PROPERTY Message : T_MAXSTRING
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[Message := sMessage;]]></ST>
         </Implementation>
       </Get>
     </Property>
     <Property Name="MoveBackwardEnabled" Id="{73228441-2498-4cbf-b7a0-4009813e3963}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY MoveBackwardEnabled : BOOL
+      <Declaration><![CDATA[PROPERTY MoveBackwardEnabled : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{f4731fcf-cdb2-4505-9bf3-b0970507bbd1}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[MoveBackwardEnabled := bMoveBackwardEnabled;]]></ST>
         </Implementation>
       </Get>
     </Property>
     <Property Name="MoveForwardEnabled" Id="{dbd2e5c0-7ee3-4d69-bfac-0c4778db19bb}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY MoveForwardEnabled : BOOL
+      <Declaration><![CDATA[PROPERTY MoveForwardEnabled : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{b2fba177-14e5-4ae4-b487-6f6969050bec}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[MoveForwardEnabled := bMoveForwardEnabled;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -254,15 +242,14 @@ END_VAR
       </Get>
     </Property>
     <Property Name="PowerEnabled" Id="{6a435248-a266-41ef-9b9c-8e0bf7663a4b}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY PowerEnabled : BOOL
+      <Declaration><![CDATA[PROPERTY PowerEnabled : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{c27ac7b3-d93e-4dca-97d4-f9f71a18aff4}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[PowerEnabled :=bPowerEnabled;]]></ST>
         </Implementation>
       </Get>
     </Property>

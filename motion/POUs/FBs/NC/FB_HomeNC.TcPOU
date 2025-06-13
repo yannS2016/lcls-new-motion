@@ -6,8 +6,9 @@ VAR
     {attribute 'no_copy'}
     AxisRef : REFERENCE TO AXIS_REF;
     iMotionLogger : I_MotionLogger;
+    iLimSwStatus : I_LimSwStatus;
     //iHomeShareData : I_HomeShareData ;
-    bExecute  : BOOL;
+    bCommandMoveHome  : BOOL;
     bBusy			: BOOL;
     bDone			: BOOL;
     bError 			: BOOL;
@@ -57,12 +58,12 @@ END_VAR
       <ST><![CDATA[THIS^.AxisRef.ReadStatus();
 
 THIS^.fbMcSetPos.Options.ClearPositionLag := TRUE;
-THIS^.rtExec(CLK:=THIS^.bExecute);
-THIS^.ftExec(CLK:=THIS^.bExecute);
+THIS^.rtExec(CLK:=THIS^.bCommandMoveHome);
+THIS^.ftExec(CLK:=THIS^.bCommandMoveHome);
 // an interruption can be external i.e, an halt, Reset or a local condition
 THIS^.rtAborted(CLK:=THIS^.bAbort);
 //THIS^.AxisRef.Status.
-THIS^.bError R= NOT THIS^.bExecute;
+THIS^.bError R= NOT THIS^.bCommandMoveHome;
 IF NOT THIS^.bError THEN
     THIS^.nErrorID := 0;
 END_IF
@@ -70,24 +71,24 @@ END_IF
 CASE THIS^.eHomeMode OF
     E_EpicsHomeCmd.LOW_LIMIT:
         THIS^.bFirstDir := FALSE;
-        THIS^.bAtHome := NOT THIS^.bLimBackward;
-        THIS^.bMove := THIS^.bExecute;
+        THIS^.bAtHome := NOT THIS^.iLimSwStatus.LimBackward;
+        THIS^.bMove := THIS^.bCommandMoveHome;
     E_EpicsHomeCmd.HIGH_LIMIT:
         THIS^.bFirstDir := TRUE;
-        THIS^.bAtHome := NOT THIS^.bLimForward;
-        THIS^.bMove := THIS^.bExecute;
+        THIS^.bAtHome := NOT THIS^.iLimSwStatus.LimForward;
+        THIS^.bMove := THIS^.bCommandMoveHome;
     E_EpicsHomeCmd.HOME_VIA_LOW:
         THIS^.bFirstDir := FALSE;
-        THIS^.bAtHome := THIS^.bLimHome;
-        THIS^.bMove := THIS^.bExecute;
+        THIS^.bAtHome := THIS^.iLimSwStatus.LimHome;
+        THIS^.bMove := THIS^.bCommandMoveHome;
     E_EpicsHomeCmd.HOME_VIA_HIGH:
         THIS^.bFirstDir := TRUE;
-        THIS^.bAtHome := THIS^.bLimHome;
-        THIS^.bMove := THIS^.bExecute;
+        THIS^.bAtHome := THIS^.iLimSwStatus.LimHome;
+        THIS^.bMove := THIS^.bCommandMoveHome;
     E_EpicsHomeCmd.ABSOLUTE_SET:
         THIS^.fbMcSetPos(
             Axis:=AxisRef,
-            Execute:=THIS^.bExecute,
+            Execute:=THIS^.bCommandMoveHome,
             // to review, this should come from EPICS Itf
             Position:=THIS^.fPosition);
         THIS^.bBusy := THIS^.rtExec.Q;
@@ -165,7 +166,7 @@ IF THIS^.bMove THEN
                 Position:=FWD_START);
             THIS^.fbMcJog(
                 Axis:=AxisRef,
-                JogForward:=THIS^.bLimForward AND NOT bATHome,
+                JogForward:=THIS^.iLimSwStatus.LimForward AND NOT bATHome,
                 JogBackwards:=FALSE,
                 Mode:=E_JogMode.MC_JOGMODE_CONTINOUS,
                 Velocity:=THIS^.fRefVeloSearch);
@@ -190,7 +191,7 @@ IF THIS^.bMove THEN
             THIS^.fbMcJog(
                 Axis:=AxisRef,
                 JogForward:=FALSE,
-                JogBackwards:=THIS^.bLimBackward AND NOT bAtHome,
+                JogBackwards:=THIS^.iLimSwStatus.LimBackward AND NOT bAtHome,
                 Mode:=E_JogMode.MC_JOGMODE_CONTINOUS,
                 Velocity:=THIS^.fRefVeloSearch);
             IF NOT THIS^.fbMcJog.JogBackwards THEN
@@ -266,13 +267,26 @@ IF THIS^.bMove THEN
 END_IF
 
 IF  rtAborted.Q THEN
-    THIS^.bExecute := FALSE;
+    THIS^.bCommandMoveHome := FALSE;
     THIS^.bBusy := FALSE;
     THIS^.bDone := FALSE;
     THIS^.bMove := FALSE;
 END_IF
 ]]></ST>
     </Implementation>
+    <Property Name="CommandMoveHome" Id="{c1145d52-1896-4af8-b2b7-a223c1c65f11}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY CommandMoveHome : BOOL
+]]></Declaration>
+      <Set Name="Set" Id="{443e87d8-297e-4ddd-9393-eaac57dec414}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ bCommandMoveHome := CommandMoveHome;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Method Name="FB_Init" Id="{36203808-aa8e-419d-b89f-47cad560b581}">
       <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
 //The return value is not evaluated. For a specific influence, you can also declare the
@@ -284,10 +298,12 @@ VAR_INPUT
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
     AxisRef : REFERENCE TO AXIS_REF;
     iMotionLogger : I_MotionLogger;
+    iLimSwStatus : I_LimSwStatus;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.AxisRef REF= AxisRef;
-THIS^.iMotionLogger := iMotionLogger;]]></ST>
+THIS^.iMotionLogger := iMotionLogger;
+THIS^.iLimSwStatus:= iLimSwStatus;]]></ST>
       </Implementation>
     </Method>
     <Method Name="Home" Id="{bc450e32-fe3c-4fef-961a-7ec21133b561}">
@@ -299,7 +315,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.bExecute := Execute;
+        <ST><![CDATA[THIS^.bCommandMoveHome := Execute;
 THIS^.fRefVeloSearch := HomeSpeedFast;
 THIS^.fRefVeloSync := HomeSpeedSlow;
 
@@ -379,20 +395,6 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="HomeLimSw" Id="{06d1971d-cd58-4bf0-9aa9-7b760a4d83e3}">
-      <Declaration><![CDATA[METHOD HomeLimSw
-VAR_INPUT
-    LimForward	: BOOL;
-    LimBackward	: BOOL;
-    LimHome	: BOOL;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[THIS^.bLimForward	:= LimForward;
-THIS^.bLimBackward := LimBackward;
-THIS^.bLimHome := LimHome;]]></ST>
-      </Implementation>
-    </Method>
     <Property Name="HomeMode" Id="{bacfc68b-674d-49fb-a838-6a7b08d66c8b}">
       <Declaration><![CDATA[PROPERTY HomeMode : E_EpicsHomeCmd
 ]]></Declaration>

@@ -3,8 +3,17 @@
   <Itf Name="I_LimSwStatus" Id="{256e382d-89de-4efb-b391-22faa6fe67b6}">
     <Declaration><![CDATA[INTERFACE I_LimSwStatus
 ]]></Declaration>
-    <Method Name="DriveCmd" Id="{df511f30-cad4-4303-88ab-dcbcab9d3c4d}">
-      <Declaration><![CDATA[METHOD DriveCmd
+    <Method Name="AxisStatus" Id="{ad2a89e1-41ec-4053-88de-27c1f75c0736}">
+      <Declaration><![CDATA[METHOD AxisStatus
+VAR_INPUT
+	HomeBusy: BOOL;
+	PositiveDirection : BOOL;
+	NegativeDirection : BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="DriveCommands" Id="{df511f30-cad4-4303-88ab-dcbcab9d3c4d}">
+      <Declaration><![CDATA[METHOD DriveCommands
 VAR_INPUT
 	Enable: BOOL;
 	NewMoveReq : BOOL;
@@ -12,39 +21,30 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
-    <Property Name="LimBackward" Id="{936f7f31-d3e8-44eb-a938-4f1d2b772924}">
-      <Declaration><![CDATA[PROPERTY LimBackward : BOOL]]></Declaration>
-      <Get Name="Get" Id="{674a8534-77af-4482-bc88-a8057594656a}">
+    <Property Name="LimBackward" Id="{d3e174fe-8267-4de9-813d-46b0b3cd2d9c}">
+      <Declaration><![CDATA[PROPERTY LimBackward : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{a3b4afe5-0e5a-44af-aa9a-8370d1c91f06}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Property Name="LimForward" Id="{2ca1a4d8-d314-49d6-af9c-42d0cd0c5f8c}">
-      <Declaration><![CDATA[PROPERTY LimForward : BOOL]]></Declaration>
-      <Get Name="Get" Id="{1ab90dae-08a4-4861-86aa-8e864610f7ce}">
+    <Property Name="LimForward" Id="{4df30b89-8ee7-49f7-b129-3ca64eaa1735}">
+      <Declaration><![CDATA[PROPERTY LimForward : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{5e40816d-8df5-4674-a88e-d1f52596914e}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Property Name="LimHit" Id="{47b40357-a6d2-424c-8d61-6def8adf35ea}">
+    <Property Name="LimHit" Id="{dee2d2af-22a0-47af-ab9b-17dc48dde618}">
       <Declaration><![CDATA[PROPERTY LimHit : BOOL]]></Declaration>
-      <Get Name="Get" Id="{5b7da088-c907-40ff-9f45-2b91673d5738}">
+      <Get Name="Get" Id="{fc9ea001-e8c2-4858-954a-09da4fcb8eea}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Property Name="LimHitIdling" Id="{a9898372-986c-4ee4-bc98-43640fd003f2}">
-      <Declaration><![CDATA[PROPERTY LimHitIdling : BOOL]]></Declaration>
-      <Get Name="Get" Id="{d9233391-3505-4407-ade5-ca790ab05516}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
-    <Property Name="LimHitMoving" Id="{12768a8b-8e2d-462d-ac59-05ed276cdf42}">
-      <Declaration><![CDATA[PROPERTY LimHitMoving : BOOL]]></Declaration>
-      <Get Name="Get" Id="{f40fa498-6562-48ff-8455-7f34f6bbcf01}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
-    <Property Name="LimHome" Id="{e0d4fef3-e66d-4929-a418-cdbd99f66b09}">
-      <Declaration><![CDATA[PROPERTY LimHome : BOOL]]></Declaration>
-      <Get Name="Get" Id="{3d897795-ae50-410a-9c07-41dea1575429}">
+    <Property Name="LimHome" Id="{f84feb6e-7376-4267-ad4f-1dd43787e440}">
+      <Declaration><![CDATA[PROPERTY LimHome : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{19bd3ff6-6d16-4669-8dec-b80565590b18}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
@@ -54,15 +54,6 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Method Name="MotionStatus" Id="{ad2a89e1-41ec-4053-88de-27c1f75c0736}">
-      <Declaration><![CDATA[METHOD MotionStatus
-VAR_INPUT
-	HomeBusy: BOOL;
-	PositiveDirectionEnabled : BOOL;
-	NegativeDirectionEnabled : BOOL;
-END_VAR
-]]></Declaration>
-    </Method>
     <Property Name="MoveBackwardEnabled" Id="{b4e7f086-2ef8-4485-be7e-4532b5db4264}">
       <Declaration><![CDATA[PROPERTY MoveBackwardEnabled : BOOL]]></Declaration>
       <Get Name="Get" Id="{9b0ef177-2451-44cd-bad6-e27eaa34b91b}">

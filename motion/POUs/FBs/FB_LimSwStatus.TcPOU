@@ -50,6 +50,9 @@ VAR
     bNegativeDirection : BOOL;
     {attribute 'hide'}
     bHomeBusy : BOOL;
+    bLimForward : BOOL;
+    bLimBackward: BOOL;
+    bLimHome: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -86,8 +89,23 @@ ELSIF rtUserExec.Q OR rtReset.Q THEN
 END_IF
 ]]></ST>
     </Implementation>
-    <Method Name="DriveCmd" Id="{b140fe49-9bf2-4392-9913-139634acc355}">
-      <Declaration><![CDATA[METHOD DriveCmd
+    <Method Name="AxisStatus" Id="{a1a77b92-9069-4c95-afb6-6e44858fa0e1}">
+      <Declaration><![CDATA[METHOD AxisStatus
+VAR_INPUT
+    HomeBusy: BOOL;
+    PositiveDirection : BOOL;
+    NegativeDirection : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bHomeBusy :=HomeBusy;
+bPositiveDirection :=PositiveDirection;
+bNegativeDirection :=NegativeDirection;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DriveCommands" Id="{b140fe49-9bf2-4392-9913-139634acc355}">
+      <Declaration><![CDATA[METHOD DriveCommands
 VAR_INPUT
     Enable	: BOOL;
     NewMoveReq	: BOOL;
@@ -208,57 +226,39 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="MotionStatus" Id="{a1a77b92-9069-4c95-afb6-6e44858fa0e1}">
-      <Declaration><![CDATA[METHOD MotionStatus
-VAR_INPUT
-    HomeBusy: BOOL;
-    PositiveDirectionEnabled : BOOL;
-    NegativeDirectionEnabled : BOOL;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[bHomeBusy :=HomeBusy;
-bPositiveDirection :=PositiveDirectionEnabled;
-bNegativeDirection :=NegativeDirectionEnabled;
-]]></ST>
-      </Implementation>
-    </Method>
     <Property Name="MoveBackwardEnabled" Id="{89adc283-9c17-45ca-8f36-46140fc4dc4c}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY MoveBackwardEnabled : BOOL
+      <Declaration><![CDATA[PROPERTY MoveBackwardEnabled : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{3db33672-1b0d-4c45-b399-57143d800f06}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[MoveBackwardEnabled := bMoveBackwardEnabled;]]></ST>
         </Implementation>
       </Get>
     </Property>
     <Property Name="MoveForwardEnabled" Id="{5cf35d17-2e51-4927-83dd-9d0c0496a7d4}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY MoveForwardEnabled : BOOL
+      <Declaration><![CDATA[PROPERTY MoveForwardEnabled : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{157158b2-9f48-4b44-a9b9-77a750c8b408}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[MoveForwardEnabled := bMoveForwardEnabled;]]></ST>
         </Implementation>
       </Get>
     </Property>
     <Property Name="Warning" Id="{c7ddb3f1-3a2c-446a-8003-00c9756105d6}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY Warning : BOOL
+      <Declaration><![CDATA[PROPERTY Warning : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{1f972676-2f12-4b3f-adb4-9a49850d0be5}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[ Warning := bWarning;]]></ST>
         </Implementation>
       </Get>
     </Property>

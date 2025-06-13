@@ -17,7 +17,7 @@ VAR
     ftBusy : F_TRIG;
     rtDone : R_TRIG;
     rtAborted : R_TRIG;
-    bExecute : BOOL;
+    bCommandMoveAbsolute : BOOL;
     bAborted : BOOL;
     bError : BOOL;
     bBusy : BOOL;
@@ -31,7 +31,7 @@ END_VAR
 
 THIS^.fbMcMoveAbsolute(
     Axis := THIS^.AxisRef,
-    Execute := THIS^.bExecute,
+    Execute := THIS^.bCommandMoveAbsolute,
     Position := THIS^.fTargetPosition,
     Velocity := THIS^.fTargetVelocity,
     Acceleration := THIS^.fTargetAcceleration,
@@ -57,9 +57,21 @@ bDone R= rtBusy.Q;
 rtDone(CLK:=bDone);
 rtAborted(CLK:=bAborted);
 IF  rtDone.Q OR rtAborted.Q THEN
-    THIS^.bExecute := FALSE;
+    THIS^.bCommandMoveAbsolute := FALSE;
 END_IF]]></ST>
     </Implementation>
+    <Property Name="CommandMoveAbsolute" Id="{7bbe24c9-46f3-48a9-9a5a-f238ba708042}">
+      <Declaration><![CDATA[PROPERTY CommandMoveAbsolute : BOOL
+]]></Declaration>
+      <Set Name="Set" Id="{5ca86cbe-838d-4ff0-b334-f0d7b6e6a752}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bCommandMoveAbsolute := CommandMoveAbsolute;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Method Name="FB_Init" Id="{e87d7c58-75a2-4628-877e-343a902489c2}">
       <Declaration><![CDATA[METHOD FB_Init : BOOL
 VAR_INPUT
@@ -85,7 +97,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.bExecute := Execute;
+        <ST><![CDATA[THIS^.bCommandMoveAbsolute := Execute;
 THIS^.fTargetPosition := Position;
 THIS^.fTargetVelocity := Velocity;
 THIS^.fTargetAcceleration := Acceleration;

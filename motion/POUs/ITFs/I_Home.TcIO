@@ -3,6 +3,12 @@
   <Itf Name="I_Home" Id="{b2162ae7-b954-447f-934b-6cfe92c3e8fb}">
     <Declaration><![CDATA[INTERFACE I_Home
 ]]></Declaration>
+    <Property Name="CommandMoveHome" Id="{49a8eab0-258b-4524-a924-e286d9b01355}">
+      <Declaration><![CDATA[PROPERTY CommandMoveHome : BOOL]]></Declaration>
+      <Set Name="Set" Id="{8f6921a3-ee92-4d0e-8c0e-ec7e59fcc014}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
     <Method Name="Home" Id="{33465a37-8a78-445e-9579-3e71296ed69d}">
       <Declaration><![CDATA[METHOD  Home
 VAR_INPUT
@@ -55,15 +61,6 @@ PROPERTY HomeErrorID : UDINT
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Method Name="HomeLimSw" Id="{254f3893-4727-4b55-aff3-7ba82530fbf1}">
-      <Declaration><![CDATA[METHOD HomeLimSw
-VAR_INPUT
-	LimForward	:BOOL;
-	LimBackward :BOOL;
-	LimHome :BOOL;
-END_VAR
-]]></Declaration>
-    </Method>
     <Property Name="HomeMode" Id="{8fb39e56-cd88-4be6-82b3-d1c9f7887b2d}">
       <Declaration><![CDATA[PROPERTY HomeMode : E_EpicsHomeCmd
 ]]></Declaration>

@@ -10,12 +10,12 @@ VAR
     //Brakes : brake fb participate in sync comm with fbMotionDrive, fbMotionAxis and fbMotionInterlocks
     fbBrake : FB_Brake := (BrakeMode := E_StageBrakeMode.IF_MOVING);
     // common interlocks
-    fbMotionInterlocksGeneric : FB_MotionInterlocksGeneric ( iMotionLogger:=fbMotionLogger);
+    fbMotionInterlocksCommon : FB_MotionInterlocksCommon ( iMotionLogger:=fbMotionLogger);
     // stage with Limit switches
     fbLimSwStatus : FB_LimSwStatus ( iMotionLogger:=fbMotionLogger);
-    fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw ( iMotionInterlocks:=fbMotionInterlocksGeneric, iLimSwStatus:=fbLimSwStatus);
+    fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw ( iMotionInterlocksCommon:=fbMotionInterlocksCommon, iLimSwStatus:=fbLimSwStatus);
 
-    fbHomeNC : FB_HomeNC(AxisRef:=NcAxis_GVL.testAxis, iMotionLogger:=fbMotionLogger);;
+    fbHomeNC : FB_HomeNC(AxisRef:=NcAxis_GVL.testAxis, iMotionLogger:=fbMotionLogger, iLimSwStatus:=fbLimSwStatus);;
     fbHaltNC : FB_HaltNC(AxisRef:=NcAxis_GVL.testAxis);
     fbPowerNC : FB_PowerNC(AxisRef:=NcAxis_GVL.testAxis);
     fbResetNC : FB_ResetNC(AxisRef:=NcAxis_GVL.testAxis);
@@ -38,7 +38,7 @@ VAR
                                         iAxisStatus := fbAxisStatusNC,
                                         iBacklashCompensation :=fbBacklashCompensation,
                                         (*Locally capture interlocks*)
-                                        iMotionInterlocks:=fbMotionInterlocksLimSw
+                                        //iMotionInterlocks:=fbMotionInterlocksLimSw
                                     );
 
    M1 : ST_MotionEpicsItf := (sName:='Main Axis', fPosition:=10000.0, fVelocity:=50.0, fAcceleration:=50.0, fDeceleration:=50.0);
@@ -59,7 +59,7 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[fbMotionInterlocksGeneric();
+      <ST><![CDATA[fbMotionInterlocksCommon();
 fbLimSwStatus();
 fbMotionInterlocksLimSw();
 fbResetNC();
