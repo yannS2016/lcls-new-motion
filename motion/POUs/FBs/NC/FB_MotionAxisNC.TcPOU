@@ -89,7 +89,8 @@ THIS^.bBusy := THIS^.iHome.HomeBusy OR THIS^.iMoveAbsolute.MoveAbsoluteBusy;
 THIS^.bAbortDone := THIS^.iHalt.HaltDone OR THIS^.iReset.ResetDone;
 // Forward the abort event to homing block ( this is to sync the home state machine)
 THIS^.iHome.HomeAbort:=THIS^.bAbortDone;
-
+// Expose Axis Parameter
+THIS^.iAxisParameters.ExposeAxisParams(Enable:=TRUE, RefreshDelay:=T#1s);
 // Clear local execs flags after a completed move or a completed interruption
 rtAbortDone(CLK:=bAbortDone);
 rtMoveAbsoluteDoneDone(CLK:=THIS^.bMoveAbsoluteDone);
