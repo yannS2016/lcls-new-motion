@@ -162,15 +162,14 @@ END_VAR
       </Get>
     </Property>
     <Property Name="LimHit" Id="{f510c7ce-a1d2-4aed-84bc-03f1d019d2f4}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY LimHit : BOOL
+      <Declaration><![CDATA[PROPERTY LimHit : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{1e5d3be5-c543-46b8-afd6-4d69c846bbb6}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[LimHit := bLimHit;]]></ST>
         </Implementation>
       </Get>
     </Property>

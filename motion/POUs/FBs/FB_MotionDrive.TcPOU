@@ -240,7 +240,9 @@ END_IF
 
 // When reset is done axis is standstill
 // safe to remove power
-THIS^.stMotionEpicsItf.bEnable := NOT iMotionAxis.ResetDone;
+IF iMotionAxis.ResetDone THEN
+    THIS^.stMotionEpicsItf.bEnable := FALSE;
+END_IF
 
 // Halt is always a user stop but not an interlock event or a reset.
 bHaltEvent S= ftStopExec.Q AND NOT stMotionEpicsItf.bReset AND NOT iMotionInterlocks.InterlockEvent

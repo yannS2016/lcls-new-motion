@@ -648,15 +648,14 @@ END_VAR
       </Get>
     </Property>
     <Property Name="NegativeMotionIsEnabled" Id="{ab2e01ac-ef59-4eea-9e12-0071a5127d77}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY NegativeMotionIsEnabled : BOOL
+      <Declaration><![CDATA[PROPERTY NegativeMotionIsEnabled : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{bc3a8001-ea55-4bfe-9303-f0182abdfcee}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[ NegativeMotionIsEnabled := THIS^.iAxisStatus.NegativeMotionIsEnabled;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -668,7 +667,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[PositiveMotionIsEnabled := THIS^.iAxisStatus.PositiveMotionIsEnabled;]]></ST>
         </Implementation>
       </Get>
     </Property>
