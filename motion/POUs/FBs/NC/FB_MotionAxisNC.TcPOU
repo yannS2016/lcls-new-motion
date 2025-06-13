@@ -59,6 +59,8 @@ VAR
     rtHomeDone : R_TRIG;
     rtMoveAbsoluteDoneDone : R_TRIG;
     rtAbortDone : R_TRIG;
+    bMoveBackwardEnabled : BOOL;
+    bMoveForwardEnabled  : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -98,10 +100,21 @@ END_IF
 //
 THIS^.iReset.Reset(Execute:=bExecReset);
 //
-THIS^.iHalt.Halt(	Execute:=bExecHalt,
-                    Deceleration:=fHaltDeceleration,
+THIS^.iHalt.Halt( Execute:=bExecHalt,
+                     Deceleration:=fHaltDeceleration,
                     Jerk:=fHaltJerk ,
                     BufferMode:=eHaltBufferMode );
+// Get enable status for power block
+// the declaration below may be redundant, however this allows to both use
+// this object powerEnables() to pass the power status or directly
+// use the interlock interface var.
+bPowerEnable := THIS^.iMotionInterlocks.PowerEnabled;
+bMoveBackwardEnabled := THIS^.iMotionInterlocks.MoveBackwardEnabled;
+bMoveForwardEnabled  := THIS^.iMotionInterlocks.MoveForwardEnabled;
+
+THIS^.iPower.PowerEnables(	Enable:=bPowerEnable,
+                    Enable_Positive:=bPowerEnablePositive,
+                    Enable_Negative:=bPowerEnableNegative );
 // Forward motion params to MoveAbsolute block
 THIS^.iMoveAbsolute.MoveAbsolute(	Execute:=bExecMoveAbsolute,
                                     Position:=fPosition,
@@ -117,10 +130,7 @@ THIS^.iHome.Home(	Execute:=bExecHome,
 //
 THIS^.iBacklashCompensation.BacklashCompensationActive(	Active:=bBacklashCompensationActive,
                                                     RampVelocity:=fBacklashCompensationRampVelo );
-// Get enable status for power block
-THIS^.iPower.PowerEnables(	Enable:=bPowerEnable,
-                    Enable_Positive:=bPowerEnablePositive,
-                    Enable_Negative:=bPowerEnableNegative );
+
 // Home needs this for Homimg mode slection and update
 THIS^.iHome.HomeLimSw(  LimForward:=iMotionInterlocks.LimForward,
                         LimBackward:=iMotionInterlocks.LimBackward,
@@ -967,7 +977,10 @@ END_VAR
       </Get>
     </Property>
     <Method Name="PowerEnables" Id="{f639508d-8ba3-4d48-9a88-1e3b26e91255}">
-      <Declaration><![CDATA[METHOD PowerEnables
+      <Declaration><![CDATA[(*This is overriden by this object internal acess to the interlock instance
+  this is intended to pass power enable flags via the fbMotionDrive
+*)
+METHOD PowerEnables
 VAR_INPUT
     Enable	: BOOL;
     Enable_Positive	: BOOL;

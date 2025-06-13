@@ -53,7 +53,8 @@ VAR
     {attribute 'hide'}
     nErrorID : UDINT;
     {attribute 'hide'}
-    bMoveOk : BOOL;
+    // Set by default, an error condition will reset this
+    bMoveOk : BOOL := TRUE;
     {attribute 'hide'}
     rtGlobalReset : R_TRIG;
     {attribute 'hide'}
@@ -248,7 +249,7 @@ PROPERTY MoveOk : BOOL
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[MoveOk := bMoveOk;]]></ST>
         </Implementation>
       </Get>
     </Property>

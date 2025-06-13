@@ -249,31 +249,6 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="NewMoveReq" Id="{1bbe92d8-f182-4a99-a911-92fa8a628d60}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY NewMoveReq : BOOL
-]]></Declaration>
-      <Set Name="Set" Id="{6a1cd47f-fb81-4e24-8f42-299cd2cc16f5}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[bNewMoveReq := NewMoveReq;]]></ST>
-        </Implementation>
-      </Set>
-    </Property>
-    <Property Name="Reset" Id="{3b60a90b-e792-4a89-ad71-77a40e198623}">
-      <Declaration><![CDATA[PROPERTY Reset : BOOL
-]]></Declaration>
-      <Set Name="Set" Id="{cf816b26-d9a2-4800-a7d7-7970fefd968d}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[bReset := Reset;]]></ST>
-        </Implementation>
-      </Set>
-    </Property>
     <Property Name="Warning" Id="{c7ddb3f1-3a2c-446a-8003-00c9756105d6}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY Warning : BOOL

@@ -15,7 +15,7 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[THIS^.AxisRef.ReadStatus();
-]]></ST>
+//THIS^.AxisEnabled();]]></ST>
     </Implementation>
     <Method Name="AxisEnabled" Id="{2a14e841-fea3-4b30-9123-2945a0231bb1}">
       <Declaration><![CDATA[METHOD AxisEnabled : BOOL

@@ -75,18 +75,6 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Property Name="NewMoveReq" Id="{e1664c35-b93a-47b6-85f7-ea2b3cd54261}">
-      <Declaration><![CDATA[PROPERTY NewMoveReq : BOOL]]></Declaration>
-      <Set Name="Set" Id="{d91f0459-e68e-4b60-a489-d466255b8fba}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Set>
-    </Property>
-    <Property Name="Reset" Id="{ebc31ee6-9df2-4510-9c79-53ae5872697f}">
-      <Declaration><![CDATA[PROPERTY Reset : BOOL]]></Declaration>
-      <Set Name="Set" Id="{1904edbb-4602-44d3-86df-00f14ec41d1a}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Set>
-    </Property>
     <Property Name="Warning" Id="{1b98f41d-ef99-4e0f-8e76-a2ade70cd32d}">
       <Declaration><![CDATA[PROPERTY Warning : BOOL]]></Declaration>
       <Get Name="Get" Id="{25b7225f-f85c-46d5-99ff-635c5137c3d3}">

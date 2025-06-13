@@ -445,8 +445,9 @@ ftStopExec(CLK:=stMotionEpicsItf.bExecute);
 
 // Both Interlock and limSwStatus can control positive and negative enable
 // whichever is not used must set the corresponding flags.
-iMotionInterlocks.NewMoveReq := THIS^.bNewMoveReq;
-
+iMotionInterlocks.DriveCmd(	Enable:=THIS^.stMotionEpicsItf.bEnable,
+                            NewMoveReq:=THIS^.bNewMoveReq,
+                            Reset:=THIS^.stMotionEpicsItf.bReset );
 ]]></ST>
       </Implementation>
     </Method>
