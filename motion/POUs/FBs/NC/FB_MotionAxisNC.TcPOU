@@ -15,83 +15,20 @@ VAR
     iAxisParameters: I_AxisParameters;
     iAxisStatus : I_AxisStatus;
     iBacklashCompensation : I_BacklashCompensation;
-    //iMotionInterlocks:I_MotionInterlocks;
-    bBusy : BOOL;
-    bDone : BOOL;
-    bError: BOOL;
-    bAbortDone : BOOL;
-    nErrorID: UDINT;
-    sMessage : T_MAXSTRING;
-    bExecute:BOOL;
-    fPosition:LREAL;
-    fVelocity:LREAL;
-    fAcceleration:LREAL;
-    fDeceleration:LREAL;
-    fJerk:LREAL;
-    eBufferMode:MC_BufferMode;
-    bAxisEnabled : BOOL;
-    eAxisState   : MC_AxisStates;
-    bBacklashCompensationActive : BOOL;
-    fBacklashCompensationRampVelo : LREAL;
-    bExecHalt : BOOL;
-    fHaltDeceleration : LREAL;
-    fHaltJerk :LREAL;
-    eHaltBufferMode : MC_BufferMode := MC_BufferMode.MC_Aborting;
-    bExecHome : BOOL;
-    fHomeSpeedFast:LREAL;
-    fHomeSpeedSlow:LREAL;
-    bHomeBusy : BOOL;
-    bHomeDone : BOOL;
-    eHomeMode : E_EpicsHomeCmd;
-    bExecMoveAbsolute : BOOL;
-    bMoveAbsoluteAborted : BOOL;
-    fRefVeloSearch : LREAL;
-    fRefVeloSync : LREAL;
-    bExecReset : BOOL;
-    bResetDone : BOOL;
-    bMoveAbsoluteBusy : BOOL;
-    bStandStill : BOOL;
-    bPowerEnable	: BOOL;
-    bPowerEnablePositive	: BOOL;
-    bPowerEnableNegative	: BOOL;
-    bHaltDone : BOOL;
-    bMoveAbsoluteDone : BOOL;
-    rtHomeDone : R_TRIG;
-    rtMoveAbsoluteDoneDone : R_TRIG;
-    rtAbortDone : R_TRIG;
-    bMoveBackwardEnabled : BOOL;
-    bMoveForwardEnabled  : BOOL;
-    fTargetPosition	: LREAL;
-    fTargetVelocity	: LREAL;
-    fTargetAcceleration	: LREAL := 0.0;
-    fTargetDeceleration	: LREAL := 0.0;
-    fTargetJerk	: LREAL := 0.0;
+
+     bError: BOOL;
+     nErrorID: UDINT;
+     sMessage : T_MAXSTRING;
+     rtAbortDone : R_TRIG;
+
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[/////////////////////////////////////////////////
-// Readback for Drive synchronization
-/////////////////////////////////////////////////
-THIS^.bAxisEnabled:=THIS^.iAxisStatus.AxisEnabled();
-THIS^.eAxisState := THIS^.iAxisStatus.AxisState;
-THIS^.bHomeBusy := THIS^.iHome.Busy;
-THIS^.bHomeDone := THIS^.iHome.Done;
-THIS^.bHaltDone := THIS^.iHalt.Done;
-THIS^.bResetDone := THIS^.iReset.Done;
-THIS^.bStandStill := THIS^.iAxisStatus.StandStill;
-THIS^.bMoveAbsoluteDone := THIS^.iMoveAbsolute.Done;
-THIS^.eHomeMode := THIS^.iHome.Mode;
-THIS^.bMoveAbsoluteAborted := THIS^.iMoveAbsolute.Aborted;
-THIS^.bMoveAbsoluteBusy := THIS^.iMoveAbsolute.Busy;
-THIS^.bDone := THIS^.iHome.Done OR THIS^.iMoveAbsolute.Done;
-THIS^.bBusy := THIS^.iHome.Busy OR THIS^.iMoveAbsolute.Busy;
-// Generalized abort event
-THIS^.bAbortDone := THIS^.iHalt.Done OR THIS^.iReset.Done;
-// Expose Axis Parameter
+      <ST><![CDATA[// Expose Axis Parameter
 THIS^.iAxisParameters.ExposeAxisParams(Enable:=TRUE, RefreshDelay:=T#1S);
 // Forward the abort event to homing block ( this is to sync the home state machine)
 // Clear local execs flags after a completed move or a completed interruption
-rtAbortDone(CLK:=bAbortDone);
+rtAbortDone(CLK:=(THIS^.iHalt.Done OR THIS^.iReset.Done));
 IF  rtAbortDone.Q THEN
     THIS^.iMoveAbsolute.CommandMoveAbsolute := FALSE;
     THIS^.iHome.CommandMoveHome := FALSE;
@@ -111,7 +48,7 @@ THIS^.ErrorHandling();
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[AbortDone := THIS^.bAbortDone;]]></ST>
+          <ST><![CDATA[AbortDone := THIS^.iHalt.Done OR THIS^.iReset.Done;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -132,8 +69,7 @@ END_VAR
       <Declaration><![CDATA[METHOD AxisEnabled : BOOL
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[//AxisEnabled:=THIS^.iAxisStatus.AxisEnabled();
-AxisEnabled:=bAxisEnabled;]]></ST>
+        <ST><![CDATA[AxisEnabled:=THIS^.iAxisStatus.AxisEnabled();]]></ST>
       </Implementation>
     </Method>
     <Property Name="AxisParamsInit" Id="{b8e5c5bb-b0b6-40eb-b5b6-dd5fb35ee51c}">
@@ -157,7 +93,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[AxisState := eAxisState;]]></ST>
+          <ST><![CDATA[AxisState := THIS^.iAxisStatus.AxisState;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -234,7 +170,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[Busy := THIS^.bBusy;]]></ST>
+          <ST><![CDATA[Busy := THIS^.iHome.Busy OR THIS^.iMoveAbsolute.Busy;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -246,7 +182,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[Done := bDone;]]></ST>
+          <ST><![CDATA[Done := THIS^.iHome.Done OR THIS^.iMoveAbsolute.Done;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -416,7 +352,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[HaltDone := bHaltDone;]]></ST>
+          <ST><![CDATA[HaltDone := THIS^.iHalt.Done;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -443,7 +379,7 @@ THIS^.iHome.Home( Execute:=Execute,
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[HomeBusy := bHomeBusy;]]></ST>
+          <ST><![CDATA[HomeBusy := THIS^.iHome.Busy;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -455,7 +391,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[HomeDone := bHomeDone;]]></ST>
+          <ST><![CDATA[HomeDone := THIS^.iHome.Done;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -569,12 +505,12 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.iMoveAbsolute.MoveAbsolute( Execute:=Execute,
+        <ST><![CDATA[THIS^.iMoveAbsolute.MoveAbsolute( 	Execute:=Execute,
                                     Position:=Position,
                                        Velocity := Velocity,
                                     Acceleration := Acceleration,
-                                      Deceleration := Deceleration,
-                                       Jerk := fJerk,
+                                    Deceleration := Deceleration,
+                                    Jerk := Jerk,
                                     BufferMode := BufferMode);
 ]]></ST>
       </Implementation>
@@ -588,7 +524,7 @@ PROPERTY MoveAbsoluteAborted : BOOL
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[MoveAbsoluteAborted := THIS^.iMoveAbsolute.Aborted;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -613,7 +549,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[MoveAbsoluteBusy := THIS^.bMoveAbsoluteBusy;]]></ST>
+          <ST><![CDATA[MoveAbsoluteBusy := THIS^.iMoveAbsolute.Busy;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -626,7 +562,7 @@ PROPERTY MoveAbsoluteDone : BOOL
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[MoveAbsoluteDone := THIS^.iMoveAbsolute.Done;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -761,7 +697,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[ResetDone := bResetDone;]]></ST>
+          <ST><![CDATA[ResetDone := THIS^.iReset.Done;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -810,7 +746,7 @@ PROPERTY StandStill : BOOL
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[StandStill := bStandStill;]]></ST>
+          <ST><![CDATA[StandStill := THIS^.iAxisStatus.StandStill;]]></ST>
         </Implementation>
       </Get>
     </Property>

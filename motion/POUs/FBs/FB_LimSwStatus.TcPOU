@@ -68,9 +68,8 @@ rtUserExec (CLK:=bNewMoveReq);
 ftForwardEnabled(CLK:=bMoveForwardEnabled);
 ftBackwardEnabled (CLK:=bMoveBackwardEnabled);
 
-IF (ftForwardEnabled.Q AND THIS^.bPositiveDirection)
-        OR (ftBackwardEnabled.Q AND THIS^.bNegativeDirection)
-        AND NOT THIS^.bHomeBusy  THEN
+IF NOT THIS^.bHomeBusy AND ((ftForwardEnabled.Q AND THIS^.bPositiveDirection)
+        OR (ftBackwardEnabled.Q AND THIS^.bNegativeDirection))THEN
     // Not an error, just a warning
     IF NOT bMoveForwardEnabled THEN
             THIS^.sMessage:='Cannot move past Positive limit.';

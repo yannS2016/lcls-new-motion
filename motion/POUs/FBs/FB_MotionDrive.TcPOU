@@ -8,6 +8,9 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
+   // EPICS Interface
+    {attribute 'no_copy'}
+    stMotionEpicsItf : REFERENCE TO ST_MotionEpicsItf;
     {attribute 'hide'}
     iMotionAxis: I_MotionAxis;
     {attribute 'hide'}
@@ -16,9 +19,6 @@ VAR
     iMotionInterlocks	: I_MotionInterlocks;
     {attribute 'hide'}
     iMotionLogger 		: I_MotionLogger;
-
-   // EPICS Interface
-    stMotionEpicsItf : REFERENCE TO ST_MotionEpicsItf;
     {attribute 'hide'}
     eMoveMode : E_EpicsMotorCmd := E_EpicsMotorCmd.MOVE_ABSOLUTE;
     // Determines when we automatically enable the motor
@@ -102,8 +102,8 @@ VAR
     ftHaltAbort : F_TRIG;
     {attribute 'hide'}
     rtRestoreDone : R_TRIG;
+    {attribute 'hide'}
     bHaltEvent : BOOL;
-    bMoveBusy: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -267,6 +267,10 @@ IF iMotionAxis.ResetDone THEN
     THIS^.stMotionEpicsItf.bEnable := FALSE;
 END_IF
 
+// Default is move absolute for state psotioner
+IF THIS^.rtHomed.Q THEN
+       stMotionEpicsItf.nCommand:=E_EpicsMotorCmd.MOVE_ABSOLUTE;
+END_IF
 // Halt is always a user stop but not an interlock event or a reset.
 // bHaltEvent S= ftStopExec.Q AND NOT stMotionEpicsItf.bReset AND NOT iMotionInterlocks.InterlockEvent
 //                                             AND (iMotionAxis.MoveAbsoluteBusy AND (nCommandLocal=3))
@@ -392,8 +396,8 @@ METHOD StateMachine
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[ftError(CLK:=stMotionEpicsItf.bError);
-rtTarget(CLK:=(iMotionAxis.Done AND bExecMove));
-rtHomed(CLK:=iMotionAxis.Done AND bExecHome);
+rtTarget(CLK:=(iMotionAxis.MoveAbsoluteDone AND bExecMove));
+rtHomed(CLK:=iMotionAxis.HomeDone (* AND bExecHome*));
 ftStopExec(CLK:=stMotionEpicsItf.bExecute);
 //
 rtInterlockEvent(CLK:=iMotionInterlocks.InterlockEvent);
