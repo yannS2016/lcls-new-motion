@@ -11,12 +11,39 @@ VAR
     AxisRef : REFERENCE TO AXIS_REF;
     bDone : BOOL;
     bBusy    : BOOL;
+    sMessage : T_MAXSTRING;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[THIS^.AxisRef.ReadStatus();
 //THIS^.AxisEnabled();]]></ST>
     </Implementation>
+    <Property Name="Aborted" Id="{493fe813-f38c-4a72-a412-d39deeb9c5a8}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Aborted : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{1469fb36-fb54-4a19-a86a-8276cc2e65dd}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Active" Id="{939ccabc-9e0d-4a0d-b758-5bd11eddc86f}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Active : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{1342317a-ef44-4c94-8f98-1f69b4df0f97}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="AxisEnabled" Id="{2a14e841-fea3-4b30-9123-2945a0231bb1}">
       <Declaration><![CDATA[METHOD AxisEnabled : BOOL
 ]]></Declaration>
@@ -31,32 +58,6 @@ CASE THIS^.AxisRef.Status.MotionState OF
 END_CASE]]></ST>
       </Implementation>
     </Method>
-    <Property Name="AxisError" Id="{548a6916-d1a2-4d00-87ab-a00f5b019e53}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY AxisError : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{74afa849-d130-475a-8341-04da63542fc9}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[AxisError := THIS^.AxisRef.Status.Error;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="AxisErrorID" Id="{368d990c-4118-41ef-8dc7-2a94afb0a374}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY AxisErrorID : UDINT
-]]></Declaration>
-      <Get Name="Get" Id="{d4abb0c7-70be-4b55-8227-7b88913acfef}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[AxisErrorID := THIS^.AxisRef.Status.ErrorID;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
     <Property Name="AxisID" Id="{b55ca9d1-a2f2-480e-8cbb-a4c4afcd2415}">
       <Declaration><![CDATA[{warning 'add property implementation'}
 PROPERTY AxisID : UDINT
@@ -80,6 +81,58 @@ END_VAR
 ]]></Declaration>
         <Implementation>
           <ST><![CDATA[AxisState := THIS^.AxisRef.Status.MotionState;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Busy" Id="{865da216-968d-4f1e-ad29-35664527e8ff}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Busy : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{b659bc87-af56-4ae3-9e7f-736619183db5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Done" Id="{6add5887-aab0-48e7-b663-80d51fb4c416}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Done : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{0cf24b3a-2956-42c5-b678-cce9393578b9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Error" Id="{548a6916-d1a2-4d00-87ab-a00f5b019e53}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY Error : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{74afa849-d130-475a-8341-04da63542fc9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Error := THIS^.AxisRef.Status.Error;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ErrorID" Id="{368d990c-4118-41ef-8dc7-2a94afb0a374}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY ErrorID : UDINT
+]]></Declaration>
+      <Get Name="Get" Id="{d4abb0c7-70be-4b55-8227-7b88913acfef}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ErrorID := THIS^.AxisRef.Status.ErrorID;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -176,7 +229,7 @@ MeasuredVelocity:=THIS^.AxisRef.NcToPlc.ActVelo;]]></ST>
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[Message := sMessage;]]></ST>
         </Implementation>
       </Get>
     </Property>

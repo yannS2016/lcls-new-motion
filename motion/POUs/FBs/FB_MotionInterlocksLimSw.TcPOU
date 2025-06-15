@@ -56,6 +56,19 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Property Name="Active" Id="{3b34c057-b1ec-4bc7-83b1-4a80ec87a88b}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Active : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{0ccb4185-7643-4a8c-bdd0-04e775e1ac39}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="AxisStatus" Id="{6d21d504-ee18-4457-abef-61e8d5df9058}">
       <Declaration><![CDATA[{warning 'Add method implementation '}
 METHOD AxisStatus

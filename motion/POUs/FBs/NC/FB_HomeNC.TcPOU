@@ -13,7 +13,7 @@ VAR
     bDone			: BOOL;
     bError 			: BOOL;
     bAbort       : BOOL;
-    bLocalAbort       : BOOL;
+    bAborted       : BOOL;
     nErrorID 		: UDINT;
     fRefVeloSearch	: LREAL;
     fRefVeloSync	: LREAL;
@@ -38,7 +38,9 @@ VAR
     bLimForward : BOOL;
     bLimBackward : BOOL;
     bLimHome : BOOL;
-
+    rtReset : R_TRIG;
+    bHalted: BOOL;
+    bReset : BOOL;
 END_VAR
 
 VAR CONSTANT
@@ -56,35 +58,28 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[THIS^.AxisRef.ReadStatus();
-
+// Test all homing mode for sync with drive statemachine.
 THIS^.fbMcSetPos.Options.ClearPositionLag := TRUE;
 THIS^.rtExec(CLK:=THIS^.bCommandMoveHome);
 THIS^.ftExec(CLK:=THIS^.bCommandMoveHome);
-// an interruption can be external i.e, an halt, Reset or a local condition
-THIS^.rtAborted(CLK:=THIS^.bAbort);
-//THIS^.AxisRef.Status.
-THIS^.bError R= NOT THIS^.bCommandMoveHome;
-IF NOT THIS^.bError THEN
-    THIS^.nErrorID := 0;
-END_IF
 
 CASE THIS^.eHomeMode OF
     E_EpicsHomeCmd.LOW_LIMIT:
         THIS^.bFirstDir := FALSE;
         THIS^.bAtHome := NOT THIS^.iLimSwStatus.LimBackward;
-        THIS^.bMove := THIS^.bCommandMoveHome;
+        THIS^.bMove := TRUE;
     E_EpicsHomeCmd.HIGH_LIMIT:
         THIS^.bFirstDir := TRUE;
         THIS^.bAtHome := NOT THIS^.iLimSwStatus.LimForward;
-        THIS^.bMove := THIS^.bCommandMoveHome;
+        THIS^.bMove := TRUE;
     E_EpicsHomeCmd.HOME_VIA_LOW:
         THIS^.bFirstDir := FALSE;
         THIS^.bAtHome := THIS^.iLimSwStatus.LimHome;
-        THIS^.bMove := THIS^.bCommandMoveHome;
+        THIS^.bMove := TRUE;
     E_EpicsHomeCmd.HOME_VIA_HIGH:
         THIS^.bFirstDir := TRUE;
         THIS^.bAtHome := THIS^.iLimSwStatus.LimHome;
-        THIS^.bMove := THIS^.bCommandMoveHome;
+        THIS^.bMove := TRUE;
     E_EpicsHomeCmd.ABSOLUTE_SET:
         THIS^.fbMcSetPos(
             Axis:=AxisRef,
@@ -103,9 +98,9 @@ CASE THIS^.eHomeMode OF
 END_CASE
 
 IF THIS^.bMove THEN
-    IF THIS^.bBusy AND THIS^.rtAborted.Q THEN
+    IF THIS^.bBusy AND THIS^.ftExec.Q THEN
         THIS^.nStateMachine := E_HomeStates.ERROR;
-        THIS^.bLocalAbort := TRUE;
+        THIS^.bAborted := TRUE;
     END_IF
     CASE THIS^.nStateMachine OF
         // Wait for a rising edge
@@ -126,7 +121,7 @@ IF THIS^.bMove THEN
                 THIS^.bBusy := TRUE;
                 THIS^.bError := FALSE;
                 THIS^.nErrorID := 0;
-                THIS^.bLocalAbort := FALSE;
+                THIS^.bAborted := FALSE;
             END_IF
         // Figure out whether to move forward, move backward, or give up
         E_HomeStates.NEXT_MOVE:
@@ -254,7 +249,7 @@ IF THIS^.bMove THEN
             THIS^.fbMcSetPos(
                 Axis:=AxisRef,
                 Execute:=FALSE);
-            IF bLocalAbort THEN
+            IF bAborted THEN
                 THIS^.sMessage := 'Homing interrupted';
             ELSE
                THIS^.sMessage := 'Homing failure';
@@ -266,14 +261,54 @@ IF THIS^.bMove THEN
     END_CASE
 END_IF
 
-IF  rtAborted.Q THEN
-    THIS^.bCommandMoveHome := FALSE;
-    THIS^.bBusy := FALSE;
-    THIS^.bDone := FALSE;
-    THIS^.bMove := FALSE;
+// an interruption can be external i.e, an halt, Reset or a local condition
+THIS^.rtReset(CLK:=bReset);
+IF THIS^.rtReset.Q THEN
+    THIS^.bError := FALSE;
+    THIS^.nErrorID := 0;
+    THIS^.bAborted := FALSE;
+    THIS^.sMessage := '';
 END_IF
 ]]></ST>
     </Implementation>
+    <Property Name="Aborted" Id="{b3440598-2192-4aa3-bd94-648810782f1d}">
+      <Declaration><![CDATA[PROPERTY Aborted : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{6a45fc91-d1f8-4045-827a-687d21932173}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Aborted := bAborted;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Active" Id="{4386ac45-3e88-4c79-8d18-81c7e83c1e8e}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Active : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{bdd5f606-f201-4f1a-9491-5ed9fc2ed98d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Busy" Id="{c7e43be2-48b0-438b-8ceb-465d60425bfc}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY Busy : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{cb0740bd-cd32-462e-8d30-3401b18588d5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Busy := THIS^.bBusy;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="CommandMoveHome" Id="{c1145d52-1896-4af8-b2b7-a223c1c65f11}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY CommandMoveHome : BOOL
@@ -286,6 +321,45 @@ END_VAR
           <ST><![CDATA[ bCommandMoveHome := CommandMoveHome;]]></ST>
         </Implementation>
       </Set>
+    </Property>
+    <Property Name="Done" Id="{a400b97e-6245-4667-8036-7fb53f8ce97f}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY Done : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{aef52b53-9bff-4703-970f-52b560ffba73}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Done := THIS^.bDone;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Error" Id="{d9029227-7d8c-4426-821a-d46327fbfa6d}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY Error : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{4884c9e1-0ab0-469e-aae8-b83b96b6f583}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Error := THIS^.bError;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ErrorID" Id="{cf64e9b6-c8bf-4aa1-9fa1-b62063c78b03}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY ErrorID : UDINT
+]]></Declaration>
+      <Get Name="Get" Id="{e14def51-9c37-4182-ba09-611583cf679e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ErrorID := THIS^.nErrorID;]]></ST>
+        </Implementation>
+      </Get>
     </Property>
     <Method Name="FB_Init" Id="{36203808-aa8e-419d-b89f-47cad560b581}">
       <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
@@ -306,6 +380,19 @@ THIS^.iMotionLogger := iMotionLogger;
 THIS^.iLimSwStatus:= iLimSwStatus;]]></ST>
       </Implementation>
     </Method>
+    <Property Name="GlobalReset" Id="{00f8b067-c919-41e0-b13e-0ee4b8e73fa7}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY GlobalReset : BOOL
+]]></Declaration>
+      <Set Name="Set" Id="{c71b201c-0b06-41a3-a0b3-32975c4371c2}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bReset := GlobalReset;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Method Name="Home" Id="{bc450e32-fe3c-4fef-961a-7ec21133b561}">
       <Declaration><![CDATA[METHOD  Home
 VAR_INPUT
@@ -322,88 +409,27 @@ THIS^.fRefVeloSync := HomeSpeedSlow;
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="HomeAbort" Id="{5b48ce4f-5275-4275-a0c7-70d88ce48921}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY HomeAbort : BOOL
+    <Property Name="Message" Id="{50dd0817-9d23-4b27-bd5b-fe17ea82eb6e}">
+      <Declaration><![CDATA[PROPERTY Message : T_MAXSTRING
 ]]></Declaration>
-      <Get Name="Get" Id="{700601ba-4b23-4098-9de7-2a87356db0a3}">
+      <Get Name="Get" Id="{5582f213-525c-49f8-9472-dcc0e7068f61}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[HomeAbort := bAbort;]]></ST>
-        </Implementation>
-      </Get>
-      <Set Name="Set" Id="{079e557a-cd88-4103-aeb4-b5eb7ae90639}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[bAbort := HomeAbort;]]></ST>
-        </Implementation>
-      </Set>
-    </Property>
-    <Property Name="HomeBusy" Id="{c7e43be2-48b0-438b-8ceb-465d60425bfc}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY HomeBusy : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{cb0740bd-cd32-462e-8d30-3401b18588d5}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[HomeBusy := THIS^.bBusy;]]></ST>
+          <ST><![CDATA[Message := sMessage;]]></ST>
         </Implementation>
       </Get>
     </Property>
-    <Property Name="HomeDone" Id="{a400b97e-6245-4667-8036-7fb53f8ce97f}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY HomeDone : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{aef52b53-9bff-4703-970f-52b560ffba73}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[HomeDone := THIS^.bDone;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="HomeError" Id="{d9029227-7d8c-4426-821a-d46327fbfa6d}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY HomeError : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{4884c9e1-0ab0-469e-aae8-b83b96b6f583}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[HomeError := THIS^.bError;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="HomeErrorID" Id="{cf64e9b6-c8bf-4aa1-9fa1-b62063c78b03}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY HomeErrorID : UDINT
-]]></Declaration>
-      <Get Name="Get" Id="{e14def51-9c37-4182-ba09-611583cf679e}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[HomeErrorID := THIS^.nErrorID;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="HomeMode" Id="{bacfc68b-674d-49fb-a838-6a7b08d66c8b}">
-      <Declaration><![CDATA[PROPERTY HomeMode : E_EpicsHomeCmd
+    <Property Name="Mode" Id="{bacfc68b-674d-49fb-a838-6a7b08d66c8b}">
+      <Declaration><![CDATA[PROPERTY Mode : E_EpicsHomeCmd
 ]]></Declaration>
       <Get Name="Get" Id="{018ebc11-483b-4d91-b1ca-54274e9fa554}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[HomeMode := eHomeMode;]]></ST>
+          <ST><![CDATA[Mode := eHomeMode;]]></ST>
         </Implementation>
       </Get>
       <Set Name="Set" Id="{d7a9685a-e050-4fa2-92a8-d25079a18728}">
@@ -411,33 +437,33 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[eHomeMode := HomeMode;]]></ST>
+          <ST><![CDATA[eHomeMode := Mode;]]></ST>
         </Implementation>
       </Set>
     </Property>
-    <Property Name="HomeOffset" Id="{48496da5-ced9-4c7a-88b4-656a32aa685b}">
+    <Property Name="Offset" Id="{48496da5-ced9-4c7a-88b4-656a32aa685b}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY HomeOffset : LREAL
+PROPERTY Offset : LREAL
 ]]></Declaration>
       <Set Name="Set" Id="{0ef7a418-62f9-4e76-9f2c-837b987f3900}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[fOffset := HomeOffset;]]></ST>
+          <ST><![CDATA[fOffset := Offset;]]></ST>
         </Implementation>
       </Set>
     </Property>
-    <Property Name="HomePosition" Id="{afef80c7-a1a3-4197-a7a0-d9553542477a}">
+    <Property Name="Position" Id="{afef80c7-a1a3-4197-a7a0-d9553542477a}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY HomePosition : LREAL
+PROPERTY Position : LREAL
 ]]></Declaration>
       <Set Name="Set" Id="{6ac419d4-6add-4703-8089-625e0296877b}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[fPosition := HomePosition;]]></ST>
+          <ST><![CDATA[fPosition := Position;]]></ST>
         </Implementation>
       </Set>
     </Property>

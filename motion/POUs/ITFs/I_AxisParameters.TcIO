@@ -1,20 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <Itf Name="I_AxisParameters" Id="{f91fa392-42b9-4cf5-a843-28456ed2820b}">
-    <Declaration><![CDATA[INTERFACE I_AxisParameters
+    <Declaration><![CDATA[INTERFACE I_AxisParameters EXTENDS I_Output
 ]]></Declaration>
-    <Property Name="AxisParamsError" Id="{e9e077a6-6930-4649-85af-c395ca806531}">
-      <Declaration><![CDATA[PROPERTY AxisParamsError : BOOL]]></Declaration>
-      <Get Name="Get" Id="{a63dffe9-b0a4-48a7-a237-0a9129339422}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
-    <Property Name="AxisParamsErrorID" Id="{0f4330bf-83b2-422b-8828-706ab87543cd}">
-      <Declaration><![CDATA[PROPERTY AxisParamsErrorID : UDINT]]></Declaration>
-      <Get Name="Get" Id="{9780000b-60a0-4a5c-8cf0-365a7339a4b4}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
     <Property Name="AxisParamsInit" Id="{0aff11b7-df26-41a4-b267-6edbd4c57328}">
       <Declaration><![CDATA[PROPERTY AxisParamsInit : BOOL]]></Declaration>
       <Get Name="Get" Id="{79d5f5f5-86e1-4e26-b4c1-b2fd6f35a037}">

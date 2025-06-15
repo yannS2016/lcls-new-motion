@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <Itf Name="I_AxisStatus" Id="{ced1141c-4936-4e2b-89cc-52f3e59358c7}">
-    <Declaration><![CDATA[INTERFACE I_AxisStatus
+    <Declaration><![CDATA[INTERFACE I_AxisStatus EXTENDS I_Output
 ]]></Declaration>
     <Method Name="AxisEnabled" Id="{630e5032-35fd-49af-8171-ae8c288f92dd}">
       <Declaration><![CDATA[METHOD AxisEnabled : BOOL
@@ -9,18 +9,6 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
-    <Property Name="AxisError" Id="{4f66faac-3428-4bd7-ae75-730e1b1b65b6}">
-      <Declaration><![CDATA[PROPERTY AxisError : BOOL]]></Declaration>
-      <Get Name="Get" Id="{e8173ce7-10cb-4a86-883b-46aeb9016e93}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
-    <Property Name="AxisErrorID" Id="{564aa453-660a-4f4f-9e66-0b119519c851}">
-      <Declaration><![CDATA[PROPERTY AxisErrorID : UDINT]]></Declaration>
-      <Get Name="Get" Id="{0ae7267c-1e9c-4055-b11d-43448599c32d}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
     <Property Name="AxisID" Id="{6a98b3ff-e49f-4c85-a391-34f0ab3ea669}">
       <Declaration><![CDATA[PROPERTY AxisID : UDINT]]></Declaration>
       <Get Name="Get" Id="{73635cf1-f38d-42c4-8ee7-552213d89b40}">

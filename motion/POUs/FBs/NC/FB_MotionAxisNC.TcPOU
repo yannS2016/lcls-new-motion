@@ -74,35 +74,31 @@ END_VAR
 /////////////////////////////////////////////////
 THIS^.bAxisEnabled:=THIS^.iAxisStatus.AxisEnabled();
 THIS^.eAxisState := THIS^.iAxisStatus.AxisState;
-THIS^.bHomeBusy := THIS^.iHome.HomeBusy;
-THIS^.bHomeDone := THIS^.iHome.HomeDone;
-THIS^.bHaltDone := THIS^.iHalt.HaltDone;
-THIS^.bResetDone := THIS^.iReset.ResetDone;
+THIS^.bHomeBusy := THIS^.iHome.Busy;
+THIS^.bHomeDone := THIS^.iHome.Done;
+THIS^.bHaltDone := THIS^.iHalt.Done;
+THIS^.bResetDone := THIS^.iReset.Done;
 THIS^.bStandStill := THIS^.iAxisStatus.StandStill;
-THIS^.bMoveAbsoluteDone := THIS^.iMoveAbsolute.MoveAbsoluteDone;
-THIS^.eHomeMode := THIS^.iHome.HomeMode;
-THIS^.bMoveAbsoluteAborted := THIS^.iMoveAbsolute.MoveAbsoluteAborted;
-THIS^.bMoveAbsoluteBusy := THIS^.iMoveAbsolute.MoveAbsoluteBusy;
-THIS^.bDone := THIS^.iHome.HomeDone OR THIS^.iMoveAbsolute.MoveAbsoluteDone;
-THIS^.bBusy := THIS^.iHome.HomeBusy OR THIS^.iMoveAbsolute.MoveAbsoluteBusy;
+THIS^.bMoveAbsoluteDone := THIS^.iMoveAbsolute.Done;
+THIS^.eHomeMode := THIS^.iHome.Mode;
+THIS^.bMoveAbsoluteAborted := THIS^.iMoveAbsolute.Aborted;
+THIS^.bMoveAbsoluteBusy := THIS^.iMoveAbsolute.Busy;
+THIS^.bDone := THIS^.iHome.Done OR THIS^.iMoveAbsolute.Done;
+THIS^.bBusy := THIS^.iHome.Busy OR THIS^.iMoveAbsolute.Busy;
 // Generalized abort event
-THIS^.bAbortDone := THIS^.iHalt.HaltDone OR THIS^.iReset.ResetDone;
-// Forward the abort event to homing block ( this is to sync the home state machine)
-THIS^.iHome.HomeAbort:=THIS^.bAbortDone;
+THIS^.bAbortDone := THIS^.iHalt.Done OR THIS^.iReset.Done;
 // Expose Axis Parameter
-THIS^.iAxisParameters.ExposeAxisParams(Enable:=TRUE, RefreshDelay:=T#1s);
+THIS^.iAxisParameters.ExposeAxisParams(Enable:=TRUE, RefreshDelay:=T#1S);
+// Forward the abort event to homing block ( this is to sync the home state machine)
 // Clear local execs flags after a completed move or a completed interruption
 rtAbortDone(CLK:=bAbortDone);
-rtMoveAbsoluteDoneDone(CLK:=THIS^.bMoveAbsoluteDone);
-// HomeDone is latched by default when no Homing mode is set.
-rtHomeDone(CLK:=THIS^.bHomeDone);
-IF  rtAbortDone.Q OR rtMoveAbsoluteDoneDone.Q OR rtHomeDone.Q THEN
-    THIS^.bExecReset := FALSE;
-    THIS^.bExecHalt := FALSE;
-    THIS^.bExecHome := FALSE;
-    THIS^.bExecMoveAbsolute := FALSE;
+IF  rtAbortDone.Q THEN
+    THIS^.iMoveAbsolute.CommandMoveAbsolute := FALSE;
+    THIS^.iHome.CommandMoveHome := FALSE;
+    // forward global reset done event;
+    THIS^.iHome.GlobalReset := THIS^.iReset.Done;
 END_IF
-//
+
 // handle combined Errors conditions
 THIS^.ErrorHandling();
 ]]></ST>
@@ -127,7 +123,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[ABorted := THIS^.iMoveAbsolute.MoveAbsoluteAborted;
+          <ST><![CDATA[ABorted := THIS^.iMoveAbsolute.Aborted;
 ]]></ST>
         </Implementation>
       </Get>
@@ -182,7 +178,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.iBacklashCompensation.BacklashCompensation(	Active:=Active,
+        <ST><![CDATA[THIS^.iBacklashCompensation.BacklashCompensation(	Activate:=Active,
                                                     Compensation:=Compensation,
                                                     RampVelocity:=RampVelocity,
                                                     DisableMode:=DisableMode
@@ -226,7 +222,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[THIS^.iBacklashCompensation.BacklashCompUserEn:=BacklashCompUserEn;]]></ST>
+          <ST><![CDATA[THIS^.iBacklashCompensation.UserEnable:=BacklashCompUserEn;]]></ST>
         </Implementation>
       </Set>
     </Property>
@@ -275,30 +271,38 @@ END_VAR
     The error will send to EPICS interface based on predifined
     priority: axis, power, backlash, absoluteMove, etc...
 *)
-IF THIS^.iAxisStatus.AxisError  THEN
-    bError:=THIS^.iAxisStatus.AxisError;
-    nErrorId:=THIS^.iAxisStatus.AxisErrorID;
-ELSIF THIS^.iPower.PowerError AND THIS^.iPower.PowerIsEnabled THEN
-    bError:=THIS^.iPower.PowerError;
-    nErrorId:=THIS^.iPower.PowerErrorID;
-ELSIF THIS^.iBacklashCompensation.BacklashCompError THEN
-    bError:=THIS^.iBacklashCompensation.BacklashCompError;
-    nErrorId:=THIS^.iBacklashCompensation.BacklashCompErrorID;
-ELSIF THIS^.iMoveAbsolute.MoveAbsoluteError (*fbMcMoveAbsolute.Active*) THEN
-    bError:=THIS^.iMoveAbsolute.MoveAbsoluteError;
-    nErrorId:=THIS^.iMoveAbsolute.MoveAbsoluteErrorID;
-ELSIF THIS^.iHome.HomeError (*Homing error*) THEN
-    bError:=THIS^.iHome.HomeError;
-    nErrorId:=THIS^.iHome.HomeErrorID;
-ELSIF THIS^.iHalt.HaltError AND THIS^.iHalt.HaltActive THEN
-    bError:=THIS^.iHalt.HaltError;
-    nErrorId:=THIS^.iHalt.HaltErrorID;
-ELSIF THIS^.iReset.ResetError  THEN
-    bError:=THIS^.iReset.ResetError;
-    nErrorId:=THIS^.iReset.ResetErrorID;
-ELSIF THIS^.iAxisParameters.AxisParamsError THEN
-    bError := THIS^.iAxisParameters.AxisParamsError;
-    nErrorId := THIS^.iAxisParameters.AxisParamsErrorID;
+IF THIS^.iAxisStatus.Error  THEN
+    bError:=THIS^.iAxisStatus.Error;
+    nErrorId:=THIS^.iAxisStatus.ErrorID;
+    sMessage := THIS^.iAxisStatus.Message;
+ELSIF THIS^.iPower.Error AND THIS^.iPower.IsEnabled THEN
+    bError:=THIS^.iPower.Error;
+    nErrorId:=THIS^.iPower.ErrorID;
+    sMessage := THIS^.iPower.Message;
+ELSIF THIS^.iBacklashCompensation.Error THEN
+    bError:=THIS^.iBacklashCompensation.Error;
+    nErrorId:=THIS^.iBacklashCompensation.ErrorID;
+    sMessage := THIS^.iBacklashCompensation.Message;
+ELSIF THIS^.iMoveAbsolute.Error AND THIS^.iMoveAbsolute.Active THEN
+    bError:=THIS^.iMoveAbsolute.Error;
+    nErrorId:=THIS^.iMoveAbsolute.ErrorID;
+    sMessage := THIS^.iMoveAbsolute.Message;
+ELSIF THIS^.iHome.Error (*Homing error*) THEN
+    bError:=THIS^.iHome.Error;
+    nErrorId:=THIS^.iHome.ErrorID;
+    sMessage := THIS^.iHome.Message;
+ELSIF THIS^.iHalt.Error AND THIS^.iHalt.Active THEN
+    bError:=THIS^.iHalt.Error;
+    nErrorId:=THIS^.iHalt.ErrorID;
+    sMessage := THIS^.iHalt.Message;
+ELSIF THIS^.iReset.Error  THEN
+    bError:=THIS^.iReset.Error;
+    nErrorId:=THIS^.iReset.ErrorID;
+    sMessage := THIS^.iReset.Message;
+ELSIF THIS^.iAxisParameters.Error THEN
+    bError := THIS^.iAxisParameters.Error;
+    nErrorId := THIS^.iAxisParameters.ErrorID;
+    sMessage := THIS^.iAxisParameters.Message;
 ELSE
     bError:=FALSE;
     nErrorId:=0;
@@ -464,17 +468,9 @@ PROPERTY HomeMode : E_EpicsHomeCmd
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[HomeMode := THIS^.iHome.Mode;]]></ST>
         </Implementation>
       </Get>
-      <Set Name="Set" Id="{f34a285c-bc56-413e-be76-e2cff45fbed7}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[]]></ST>
-        </Implementation>
-      </Set>
     </Property>
     <Property Name="InTargetPosition" Id="{c6f2b7e3-9865-497d-bb4f-27e1a950a6e2}">
       <Declaration><![CDATA[PROPERTY InTargetPosition : BOOL
@@ -754,7 +750,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[ResetBusy := THIS^.iReset.ResetBusy;]]></ST>
+          <ST><![CDATA[ResetBusy := THIS^.iReset.Busy;]]></ST>
         </Implementation>
       </Get>
     </Property>

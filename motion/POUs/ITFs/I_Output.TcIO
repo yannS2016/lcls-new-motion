@@ -9,6 +9,12 @@
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
+    <Property Name="Active" Id="{b8e0ebd3-4783-42dd-ade6-373caa01462f}">
+      <Declaration><![CDATA[PROPERTY Active : BOOL]]></Declaration>
+      <Get Name="Get" Id="{ced8300b-f2e0-4413-a5ea-4c20ce855ab3}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Property Name="Busy" Id="{c3c95d1c-7c19-4d8e-a4a9-4bb4931f0727}">
       <Declaration><![CDATA[PROPERTY Busy : BOOL]]></Declaration>
       <Get Name="Get" Id="{7bb99d57-2923-4853-8d34-7f45854346c7}">

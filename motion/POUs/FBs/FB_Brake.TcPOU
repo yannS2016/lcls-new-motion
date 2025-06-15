@@ -48,6 +48,19 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Property Name="Active" Id="{1c7b44c5-a744-4915-9af4-e89e1fcc5f05}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Active : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{d56f7a66-3316-44cc-a5ae-25ab5d314095}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="AxisState" Id="{f9ae2679-2d4b-422c-bc0d-48c0bf28548e}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY AxisState : MC_AxisStates

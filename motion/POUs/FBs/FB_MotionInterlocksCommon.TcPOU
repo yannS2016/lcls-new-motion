@@ -108,6 +108,19 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Property Name="Active" Id="{0ec9f620-3c52-4313-bfdc-2541e072922e}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Active : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{f5a858c4-a143-4ecb-ad84-e2ce0084fb28}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="Busy" Id="{d55880b8-fe7b-4ef7-86fb-317562726a5e}">
       <Declaration><![CDATA[{warning 'add property implementation'}
 PROPERTY Busy : BOOL

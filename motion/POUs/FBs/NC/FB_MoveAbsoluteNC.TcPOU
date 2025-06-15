@@ -22,6 +22,7 @@ VAR
     bError : BOOL;
     bBusy : BOOL;
     bDone : BOOL;
+    bActive : BOOL;
     nErrorID : UDINT;
     sMessage : T_MAXSTRING;
 END_VAR
@@ -60,6 +61,45 @@ IF  rtDone.Q OR rtAborted.Q THEN
     THIS^.bCommandMoveAbsolute := FALSE;
 END_IF]]></ST>
     </Implementation>
+    <Property Name="Aborted" Id="{e282a52e-140a-4032-b49e-bebd36434e55}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Aborted : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{d29e9ff4-92f9-427a-9ec7-fa6fbbe474b3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Aborted := THIS^.bAborted;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Active" Id="{dd75b655-9142-4732-8a04-757a4f64e51a}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Active : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{a477c2f4-fc88-4b80-b4f4-7805da1fb7a8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Active := bActive;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Busy" Id="{1ae87be5-03cb-4a25-b603-7a901b104320}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY Busy : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{9d197ce2-8fd9-4bc1-99a9-01c16a01edb5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Busy := THIS^.bBusy;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="CommandMoveAbsolute" Id="{7bbe24c9-46f3-48a9-9a5a-f238ba708042}">
       <Declaration><![CDATA[PROPERTY CommandMoveAbsolute : BOOL
 ]]></Declaration>
@@ -71,6 +111,45 @@ END_VAR
           <ST><![CDATA[bCommandMoveAbsolute := CommandMoveAbsolute;]]></ST>
         </Implementation>
       </Set>
+    </Property>
+    <Property Name="Done" Id="{a764e9fb-e6d3-4787-bb5e-f18a571f3537}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY Done : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{50c96990-1ca2-4598-9b3c-4ce1d489107b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Done := THIS^.bDone;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Error" Id="{0185f2b2-2e6f-442f-b749-2bbd8da7d055}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY Error : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{1e0b343f-fb19-4817-9dd8-a79547d284ae}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Error := THIS^.bError;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ErrorID" Id="{765d4df4-ef37-4baf-a5b2-0caf395dd3d5}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY ErrorID : UDINT
+]]></Declaration>
+      <Get Name="Get" Id="{616d42e5-15ca-457d-9573-bf6beb7c1f43}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ErrorID := THIS^.nErrorID;]]></ST>
+        </Implementation>
+      </Get>
     </Property>
     <Method Name="FB_Init" Id="{e87d7c58-75a2-4628-877e-343a902489c2}">
       <Declaration><![CDATA[METHOD FB_Init : BOOL
@@ -84,6 +163,18 @@ END_VAR
         <ST><![CDATA[THIS^.AxisRef REF= AxisRef;]]></ST>
       </Implementation>
     </Method>
+    <Property Name="Message" Id="{13938688-fe04-4182-8021-54fdd58e055d}">
+      <Declaration><![CDATA[PROPERTY Message : T_MAXSTRING
+]]></Declaration>
+      <Get Name="Get" Id="{59125684-2209-4efb-a11e-261b597d4642}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Message := sMessage;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="MoveAbsolute" Id="{ec9e8694-906a-4f94-b53d-2b2ff2681c1a}">
       <Declaration><![CDATA[METHOD MoveAbsolute
 VAR_INPUT
@@ -106,83 +197,5 @@ THIS^.fTargetJerk := Jerk;
 THIS^.eBufferMode := BufferMode;]]></ST>
       </Implementation>
     </Method>
-    <Property Name="MoveAbsoluteAborted" Id="{e282a52e-140a-4032-b49e-bebd36434e55}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY MoveAbsoluteAborted : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{d29e9ff4-92f9-427a-9ec7-fa6fbbe474b3}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[MoveAbsoluteAborted := THIS^.bAborted;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="MoveAbsoluteActive" Id="{dd75b655-9142-4732-8a04-757a4f64e51a}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY MoveAbsoluteActive : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{a477c2f4-fc88-4b80-b4f4-7805da1fb7a8}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="MoveAbsoluteBusy" Id="{1ae87be5-03cb-4a25-b603-7a901b104320}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY MoveAbsoluteBusy : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{9d197ce2-8fd9-4bc1-99a9-01c16a01edb5}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[MoveAbsoluteBusy := THIS^.bBusy;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="MoveAbsoluteDone" Id="{a764e9fb-e6d3-4787-bb5e-f18a571f3537}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY MoveAbsoluteDone : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{50c96990-1ca2-4598-9b3c-4ce1d489107b}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[MoveAbsoluteDone := THIS^.bDone;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="MoveAbsoluteError" Id="{0185f2b2-2e6f-442f-b749-2bbd8da7d055}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY MoveAbsoluteError : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{1e0b343f-fb19-4817-9dd8-a79547d284ae}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[MoveAbsoluteError := THIS^.bError;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="MoveAbsoluteErrorID" Id="{765d4df4-ef37-4baf-a5b2-0caf395dd3d5}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY MoveAbsoluteErrorID : UDINT
-]]></Declaration>
-      <Get Name="Get" Id="{616d42e5-15ca-457d-9573-bf6beb7c1f43}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[MoveAbsoluteErrorID := THIS^.nErrorID;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
   </POU>
 </TcPlcObject>

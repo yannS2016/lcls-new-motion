@@ -144,12 +144,12 @@ CASE eMoveState OF
            THIS^.bPrepareDisable := FALSE;
            THIS^.stMotionEpicsItf.bEnable := FALSE;
        ELSIF bExecMove OR bExecHome THEN
-           eMoveState := E_MoveState.INIT_MOVE;
+           eMoveState := E_MoveState.PREPARE_MOVE;
        ELSIF stMotionEpicsItf.bError THEN
            eMoveState := E_MoveState.MOVE_ERROR;
        END_IF
 
-   E_MoveState.INIT_MOVE:
+   E_MoveState.PREPARE_MOVE:
        // When we start, set the busy/done appropriately
        stMotionEpicsItf.bBusy := TRUE;
        stMotionEpicsItf.bDone := FALSE;
@@ -179,13 +179,13 @@ CASE eMoveState OF
        END_IF
        // configure and start move.
        IF iMotionAxis.StartMove( eMoveMode, bCmdExecute ) THEN
-           eMoveState := E_MoveState.MOVE_IN_PROGRESS;
+           eMoveState := E_MoveState.MOVE_STARTED;
        END_IF
 
-   E_MoveState.START_MOVE:
+   E_MoveState.MOVE_STARTED:
        IF stMotionEpicsItf.bError THEN
            eMoveState := E_MoveState.MOVE_ERROR;
-       // Move Started.
+       // Move Started. use a timer to force quit this state if no response from axis
        ELSIF iMotionAxis.Busy THEN
            eMoveState := E_MoveState.MOVE_IN_PROGRESS;
        END_IF
@@ -245,9 +245,11 @@ IF iMotionAxis.ResetDone THEN
 END_IF
 
 // Halt is always a user stop but not an interlock event or a reset.
-bHaltEvent S= ftStopExec.Q AND NOT stMotionEpicsItf.bReset AND NOT iMotionInterlocks.InterlockEvent
-                                            AND (iMotionAxis.MoveAbsoluteBusy AND (nCommandLocal=3))
-                                            OR (iMotionAxis.HomeBusy AND (nCommandLocal=10));
+// bHaltEvent S= ftStopExec.Q AND NOT stMotionEpicsItf.bReset AND NOT iMotionInterlocks.InterlockEvent
+//                                             AND (iMotionAxis.MoveAbsoluteBusy AND (nCommandLocal=3))
+//                                             OR (iMotionAxis.HomeBusy AND (nCommandLocal=10));
+bHaltEvent S= ftStopExec.Q AND ((iMotionAxis.HomeBusy AND (nCommandLocal=10))
+                            OR(iMotionAxis.MoveAbsoluteBusy AND (nCommandLocal=3)));
 bHaltEvent R= THIS^.iMotionAxis.HaltDone OR THIS^.iMotionAxis.ResetDone;
 
 THIS^.iMotionAxis.Halt(	Execute:=bHaltEvent,
@@ -398,10 +400,14 @@ IF rtMoveCmdShortcut.Q AND NOT stMotionEpicsItf.bExecute THEN
        stMotionEpicsItf.sErrorMessage:='Axis homing mode set, but homing routine pending';
    END_IF
 ELSIF rtHomeCmdShortcut.Q AND NOT stMotionEpicsItf.bExecute THEN
-   stMotionEpicsItf.bExecute:= NOT ( stMotionEpicsItf.nCmdData = E_EpicsHomeCmd.ABSOLUTE_SET ) OR NOT ( stMotionEpicsItf.nCmdData = E_EpicsHomeCmd.NONE);
-   stMotionEpicsItf.nCommand:=E_EpicsMotorCmd.HOME;
-   // Automatically fill the correct nCmdData for homing
-   stMotionEpicsItf.nCmdData:=iMotionAxis.HomeMode;
+       stMotionEpicsItf.nCommand:=E_EpicsMotorCmd.HOME;
+       // Automatically fill the correct nCmdData for homing
+       stMotionEpicsItf.nCmdData:=iMotionAxis.HomeMode;
+       IF ( stMotionEpicsItf.nCmdData = E_EpicsHomeCmd.ABSOLUTE_SET )  OR ( stMotionEpicsItf.nCmdData = E_EpicsHomeCmd.NONE) THEN
+       stMotionEpicsItf.bExecute:= FALSE;
+    ELSE
+        stMotionEpicsItf.bExecute:= TRUE;
+    END_IF
 END_IF
 
 rtUserExec(CLK:=stMotionEpicsItf.bExecute);
@@ -444,6 +450,13 @@ IF rtValidExec.Q THEN
  nCmdDataLocal:=INT_TO_UINT(stMotionEpicsItf.nCmdData);
  nCommandLocal:=INT_TO_UINT(stMotionEpicsItf.nCommand);
 END_IF
+
+
+ftError(CLK:=stMotionEpicsItf.bError);
+rtTarget(CLK:=(iMotionAxis.Done AND bExecMove));
+rtHomed(CLK:=iMotionAxis.Done AND bExecHome);
+ftStopExec(CLK:=stMotionEpicsItf.bExecute);
+
 //
 // //  Abort while moving if:
 // // 1- Reset, 2-Halt/UserStop, 3-Limit hit
@@ -452,11 +465,6 @@ rtReset(CLK:=stMotionEpicsItf.bReset);
 IF rtReset.Q OR rtInterlockEvent.Q THEN
    stMotionEpicsItf.bExecute := FALSE;
 END_IF
-
-ftError(CLK:=stMotionEpicsItf.bError);
-rtTarget(CLK:=(iMotionAxis.Done AND bExecMove));
-rtHomed(CLK:=iMotionAxis.Done AND bExecHome);
-ftStopExec(CLK:=stMotionEpicsItf.bExecute);
 
 ]]></ST>
       </Implementation>
