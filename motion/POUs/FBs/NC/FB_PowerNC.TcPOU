@@ -172,6 +172,18 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Property Name="Override" Id="{a7a1e83f-16ea-4038-8048-9acd1171492b}">
+      <Declaration><![CDATA[PROPERTY Override : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{c098132b-e311-41da-b640-f143b09d83d2}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Override := THIS^.fOverride;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="Power" Id="{b859403c-f315-4c59-bb46-554245f47326}">
       <Declaration><![CDATA[METHOD Power
 VAR_INPUT

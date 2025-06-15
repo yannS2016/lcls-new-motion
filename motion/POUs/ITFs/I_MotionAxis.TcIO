@@ -189,14 +189,6 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Property Name="MeasureBacklash" Id="{defc67e7-efe7-46f6-b8ce-29d0a4f80c6e}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY MeasureBacklash : LREAL
-]]></Declaration>
-      <Get Name="Get" Id="{24364a45-433a-47cd-9268-48134bfc2788}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
     <Property Name="MeasuredAcceleration" Id="{0c6642fb-9a0b-4f3a-b081-4227aa2d097e}">
       <Declaration><![CDATA[PROPERTY MeasuredAcceleration : LREAL
 ]]></Declaration>
@@ -204,9 +196,9 @@ PROPERTY MeasureBacklash : LREAL
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Property Name="MeasuredBacklashComp" Id="{5f7b3ef2-d684-40e2-8f28-03dcd8bedbe8}">
+    <Property Name="MeasuredCompensation" Id="{5f7b3ef2-d684-40e2-8f28-03dcd8bedbe8}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY MeasuredBacklashComp : LREAL
+PROPERTY MeasuredCompensation : LREAL
 ]]></Declaration>
       <Get Name="Get" Id="{09fa3778-3e2b-46cd-a257-b54304b0d376}">
         <Declaration><![CDATA[]]></Declaration>
@@ -318,6 +310,12 @@ END_VAR
       <Declaration><![CDATA[PROPERTY PowerIsEnabled : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{57bed3b6-a321-453c-9048-0b175f992ca6}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="PowerOverride" Id="{a06ebcb7-0c3c-4eb4-b8bc-b40f67c54d37}">
+      <Declaration><![CDATA[PROPERTY PowerOverride : LREAL]]></Declaration>
+      <Get Name="Get" Id="{88741dbe-127b-46de-9b85-64365f10ca1f}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>

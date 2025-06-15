@@ -28,6 +28,12 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
+    <Property Name="LimHome" Id="{afb29fce-e002-4581-b44c-7cdfce3976d7}">
+      <Declaration><![CDATA[PROPERTY LimHome : BOOL]]></Declaration>
+      <Get Name="Get" Id="{c5ce7826-2bcf-4ef7-a3c3-f2af2474caae}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Property Name="MoveBackwardEnabled" Id="{437d5026-d3d2-451f-aaec-a79f11811b76}">
       <Declaration><![CDATA[PROPERTY MoveBackwardEnabled : BOOL]]></Declaration>
       <Get Name="Get" Id="{7c34fb6f-f131-4c32-8007-32b5760134e0}">

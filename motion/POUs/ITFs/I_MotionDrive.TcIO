@@ -28,14 +28,26 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Set>
     </Property>
-    <Method Name="PreMoveHandling" Id="{9d2919b9-444e-4c31-9bbe-e53274fd277d}">
-      <Declaration><![CDATA[METHOD PreMoveHandling
+    <Method Name="PostHandling" Id="{1707b880-d78c-447d-a930-a5f66cafd46e}">
+      <Declaration><![CDATA[METHOD PostHandling
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="PreHandling" Id="{9d2919b9-444e-4c31-9bbe-e53274fd277d}">
+      <Declaration><![CDATA[METHOD PreHandling
 VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
     <Method Name="RestoreSettings" Id="{14eecb93-a536-495b-8a81-ca4fbc68ea55}">
       <Declaration><![CDATA[METHOD RestoreSettings
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="StateMachine" Id="{93fc740e-b2b7-469a-a0da-642eea420f36}">
+      <Declaration><![CDATA[METHOD StateMachine
 VAR_INPUT
 END_VAR
 ]]></Declaration>

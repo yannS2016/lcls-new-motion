@@ -181,6 +181,19 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Property Name="LimHome" Id="{6c566142-67f9-43df-8e4b-bb59f6a41f69}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY LimHome : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{094be525-7bad-4a92-b899-3a12a85229d6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[LimHome := THIS^.iLimSwStatus.LimHome;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="Message" Id="{6b1916c5-039a-4cea-99b5-b8f805042945}">
       <Declaration><![CDATA[PROPERTY Message : T_MAXSTRING
 ]]></Declaration>

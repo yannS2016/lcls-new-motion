@@ -283,7 +283,7 @@ ELSIF THIS^.iBacklashCompensation.Error THEN
     bError:=THIS^.iBacklashCompensation.Error;
     nErrorId:=THIS^.iBacklashCompensation.ErrorID;
     sMessage := THIS^.iBacklashCompensation.Message;
-ELSIF THIS^.iMoveAbsolute.Error AND THIS^.iMoveAbsolute.Active THEN
+ELSIF THIS^.iMoveAbsolute.Error THEN
     bError:=THIS^.iMoveAbsolute.Error;
     nErrorId:=THIS^.iMoveAbsolute.ErrorID;
     sMessage := THIS^.iMoveAbsolute.Message;
@@ -484,19 +484,6 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="MeasureBacklash" Id="{99841873-7f3e-4002-8b63-6c281fd224a5}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY MeasureBacklash : LREAL
-]]></Declaration>
-      <Get Name="Get" Id="{ea3f0181-5fb4-4e97-9290-fe3d178c56e9}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
     <Property Name="MeasuredAcceleration" Id="{7b279ce7-b390-4d74-b3ab-77fa9ef1e309}">
       <Declaration><![CDATA[PROPERTY MeasuredAcceleration : LREAL
 ]]></Declaration>
@@ -509,16 +496,15 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="MeasuredBacklashComp" Id="{92b62868-424e-4808-b20d-c6e6f7857102}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY MeasuredBacklashComp : LREAL
+    <Property Name="MeasuredCompensation" Id="{92b62868-424e-4808-b20d-c6e6f7857102}">
+      <Declaration><![CDATA[PROPERTY MeasuredCompensation : LREAL
 ]]></Declaration>
       <Get Name="Get" Id="{dcff7040-9f93-42c7-bdab-ae8397de98c8}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[MeasuredCompensation := THIS^.iBacklashCompensation.ActCompensation;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -729,6 +715,19 @@ END_VAR
 ]]></Declaration>
         <Implementation>
           <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="PowerOverride" Id="{d996a2b4-35d6-4aa1-a9b5-8663398d418e}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY PowerOverride : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{348e3b06-e009-4fce-acc9-9c0b4c2e7893}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[PowerOverride := THIS^.iPower.Override;]]></ST>
         </Implementation>
       </Get>
     </Property>

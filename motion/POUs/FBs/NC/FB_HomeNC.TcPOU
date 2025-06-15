@@ -261,6 +261,13 @@ IF THIS^.bMove THEN
     END_CASE
 END_IF
 
+// Reset execute after when done successfull or after abort reset
+// this way the done and error condition is latched till next move or global reset.
+rtDone(CLK:=bDone);
+IF  rtDone.Q  THEN
+    THIS^.bCommandMoveHome := FALSE;
+END_IF
+
 // an interruption can be external i.e, an halt, Reset or a local condition
 THIS^.rtReset(CLK:=bReset);
 IF THIS^.rtReset.Q THEN

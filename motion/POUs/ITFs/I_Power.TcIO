@@ -19,6 +19,12 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
+    <Property Name="Override" Id="{961843bf-f471-4df9-93bb-5367e5ad1298}">
+      <Declaration><![CDATA[PROPERTY Override : LREAL]]></Declaration>
+      <Get Name="Get" Id="{680fd513-de2f-4508-bf7e-cee66bf848d5}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Method Name="Power" Id="{6ec5953f-7853-4ae8-b7bf-ca6c5f20defd}">
       <Declaration><![CDATA[METHOD Power
 VAR_INPUT

@@ -132,149 +132,13 @@ ELSE
    stMotionEpicsItf.sErrorMessage := '';
 END_IF
 
-
-THIS^.PreMoveHandling();
-
-// Drive state Machine here
-CASE eMoveState OF
-   E_MoveState.IDLING:;
-       // Delay the disable until axis reach standstill
-       // and this state machine is idling
-       IF THIS^.bPrepareDisable AND THIS^.iMotionAxis.StandStill THEN
-           THIS^.bPrepareDisable := FALSE;
-           THIS^.stMotionEpicsItf.bEnable := FALSE;
-       ELSIF bExecMove OR bExecHome THEN
-           eMoveState := E_MoveState.PREPARE_MOVE;
-       ELSIF stMotionEpicsItf.bError THEN
-           eMoveState := E_MoveState.MOVE_ERROR;
-       END_IF
-
-   E_MoveState.PREPARE_MOVE:
-       // When we start, set the busy/done appropriately
-       stMotionEpicsItf.bBusy := TRUE;
-       stMotionEpicsItf.bDone := FALSE;
-       // reset error flag
-       stMotionEpicsItf.sErrorMessage := '';
-       CASE stMotionEpicsItf.nCommand OF
-           E_EpicsMotorCmd.MOVE_ABSOLUTE:
-               eMoveMode := E_EpicsMotorCmd.MOVE_ABSOLUTE;
-               bCmdExecute := bExecMove AND (nCommandLocal=3);
-           E_EpicsMotorCmd.HOME:
-               eMoveMode := E_EpicsMotorCmd.HOME;
-               bCmdExecute := nCommandLocal=10 AND bExecHome;
-       END_CASE
-
-       IF bExecMove THEN
-            THIS^.iMotionAxis.MoveAbsolute(	Execute:=FALSE,
-                       Position:=THIS^.stMotionEpicsItf.fPosition,
-                       Velocity := THIS^.stMotionEpicsItf.fVelocity,
-                       Acceleration := THIS^.stMotionEpicsItf.fAcceleration,
-                       Deceleration := THIS^.stMotionEpicsItf.fDeceleration
-                );
-            // Activate backlash compensation
-            THIS^.iMotionAxis.BacklashCompensationActive(Active:=TRUE, RampVelocity:=THIS^.stMotionEpicsItf.fVelocity/10.0);
-       ELSIF bExecHome THEN
-            // Deactivate backlash compensation
-            THIS^.iMotionAxis.BacklashCompensationActive(Active:=FALSE, RampVelocity:=0.0);
-       END_IF
-       // configure and start move.
-       IF iMotionAxis.StartMove( eMoveMode, bCmdExecute ) THEN
-           eMoveState := E_MoveState.MOVE_STARTED;
-       END_IF
-
-   E_MoveState.MOVE_STARTED:
-       IF stMotionEpicsItf.bError THEN
-           eMoveState := E_MoveState.MOVE_ERROR;
-       // Move Started. use a timer to force quit this state if no response from axis
-       ELSIF iMotionAxis.Busy THEN
-           eMoveState := E_MoveState.MOVE_IN_PROGRESS;
-       END_IF
-
-   E_MoveState.MOVE_IN_PROGRESS :
-
-       IF 	stMotionEpicsItf.bError THEN
-           eMoveState := E_MoveState.MOVE_ERROR;
-
-       // Move interupted
-       ELSIF ftStopExec.Q OR iMotionAxis.Aborted THEN
-           eMoveState := E_MoveState.MOVE_INTERRUPTED;
-
-       ELSIF  rtTarget.Q OR rtHomed.Q  THEN
-           eMoveState := E_MoveState.TARGET_REACHED;
-       END_IF
-
-   E_MoveState.MOVE_INTERRUPTED:
-
-       IF THIS^.iMotionInterlocks.InterlockEvent THEN
-           eMoveState := E_MoveState.TARGET_REACHED;
-       END_IF
-       // Wait here for halt or reset done or clearing limit state to be restored
-       IF iMotionAxis.AbortDone THEN
-           THIS^.ClearVars(Done:=TRUE);
-           eMoveState := E_MoveState.IDLING;;
-       END_IF
-
-   E_MoveState.TARGET_REACHED:
-       THIS^.ClearVars(Done:=TRUE);
-       eMoveState := E_MoveState.IDLING;
-
-   E_MoveState.MOVE_ERROR:
-       THIS^.ClearVars(Done:=FALSE);
-       THIS^.stMotionEpicsItf.bEnable := FALSE;
-       IF ftError.Q THEN
-           eMoveState := E_MoveState.IDLING;
-       END_IF
-
-END_CASE
-// Move done, or aborted? prepare disable.
-// we'll wait for axis to be in standstill and this state machine to be idling.
-THIS^.bPrepareDisable S= (eEnableMode = E_StageEnableMode.DURING_MOTION ) AND THIS^.ftStopExec.Q;
-
-IF THIS^.stMotionEpicsItf.bReset THEN
-   // Relese motion cmds
-   THIS^.ClearVars(Done:=FALSE);
-   // Forward general reset event
-   THIS^.iMotionAxis.Reset(Execute:= THIS^.stMotionEpicsItf.bReset);
-   THIS^.stMotionEpicsItf.bReset := FALSE;
-END_IF
-
-// When reset is done axis is standstill
-// safe to remove power
-IF iMotionAxis.ResetDone THEN
-    THIS^.stMotionEpicsItf.bEnable := FALSE;
-END_IF
-
-// Halt is always a user stop but not an interlock event or a reset.
-// bHaltEvent S= ftStopExec.Q AND NOT stMotionEpicsItf.bReset AND NOT iMotionInterlocks.InterlockEvent
-//                                             AND (iMotionAxis.MoveAbsoluteBusy AND (nCommandLocal=3))
-//                                             OR (iMotionAxis.HomeBusy AND (nCommandLocal=10));
-bHaltEvent S= ftStopExec.Q AND ((iMotionAxis.HomeBusy AND (nCommandLocal=10))
-                            OR(iMotionAxis.MoveAbsoluteBusy AND (nCommandLocal=3)));
-bHaltEvent R= THIS^.iMotionAxis.HaltDone OR THIS^.iMotionAxis.ResetDone;
-
-THIS^.iMotionAxis.Halt(	Execute:=bHaltEvent,
-                        Deceleration:=stMotionEpicsItf.fDeceleration);
-
+THIS^.PreHandling();
+// Drive state machine
+THIS^.StateMachine();
 //
-THIS^.iMotionInterlocks.AxisStatus(
-                            HomeBusy:=THIS^.iMotionAxis.HomeBusy,
-                            PositiveDirection:=THIS^.iMotionAxis.PositiveMotionIsEnabled,
-                            NegativeDirection:=THIS^.iMotionAxis.NegativeMotionIsEnabled );
-
-// Forward drive commands to interlock blocks
-THIS^.iMotionInterlocks.DriveCommands(Enable:=THIS^.stMotionEpicsItf.bEnable, NewMoveReq:=THIS^.bNewMoveReq, Reset:=THIS^.iMotionAxis.ResetDone);
-// Forward Power block enable flags
-THIS^.iMotionAxis.PowerEnables(Enable:=iMotionInterlocks.PowerEnabled,
-                        Enable_Positive:=iMotionInterlocks.MoveForwardEnabled,
-                        Enable_Negative:=iMotionInterlocks.MoveBackwardEnabled );
-
-// Forward axis state to brake FB
-THIS^.iBrake.AxisState := iMotionAxis.AxisState;
-
+THIS^.PostHandling();
 // update EPICS status
-THIS^.UpdateParamAndStatus();
-
-    ]]></ST>
+THIS^.UpdateParamAndStatus();]]></ST>
     </Implementation>
     <Method Name="ClearVars" Id="{fc3a5981-a4d7-4a2d-bb30-c09c583c9e55}">
       <Declaration><![CDATA[METHOD ClearVars
@@ -380,8 +244,61 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Method Name="PreMoveHandling" Id="{b70d40df-94ce-4a86-890c-8d206ac7e676}">
-      <Declaration><![CDATA[METHOD PreMoveHandling
+    <Method Name="PostHandling" Id="{c18eec9d-05c9-4186-8155-d464e6e1ef71}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD PostHandling
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Move done, or aborted? prepare disable.
+// we'll wait for axis to be in standstill and this state machine to be idling.
+THIS^.bPrepareDisable S= (eEnableMode = E_StageEnableMode.DURING_MOTION ) AND THIS^.ftStopExec.Q;
+
+IF THIS^.stMotionEpicsItf.bReset THEN
+   // Relese motion cmds
+   THIS^.ClearVars(Done:=FALSE);
+   // Forward general reset event
+   THIS^.iMotionAxis.Reset(Execute:= THIS^.stMotionEpicsItf.bReset);
+   THIS^.stMotionEpicsItf.bReset := FALSE;
+END_IF
+
+// When reset is done axis is standstill
+// safe to remove power
+IF iMotionAxis.ResetDone THEN
+    THIS^.stMotionEpicsItf.bEnable := FALSE;
+END_IF
+
+// Halt is always a user stop but not an interlock event or a reset.
+// bHaltEvent S= ftStopExec.Q AND NOT stMotionEpicsItf.bReset AND NOT iMotionInterlocks.InterlockEvent
+//                                             AND (iMotionAxis.MoveAbsoluteBusy AND (nCommandLocal=3))
+//                                             OR (iMotionAxis.HomeBusy AND (nCommandLocal=10));
+bHaltEvent S= ftStopExec.Q AND ((iMotionAxis.HomeBusy AND (nCommandLocal=10))
+                            OR(iMotionAxis.MoveAbsoluteBusy AND (nCommandLocal=3)));
+bHaltEvent R= THIS^.iMotionAxis.HaltDone OR THIS^.iMotionAxis.ResetDone;
+
+THIS^.iMotionAxis.Halt(	Execute:=bHaltEvent,
+                        Deceleration:=stMotionEpicsItf.fDeceleration);
+
+//
+THIS^.iMotionInterlocks.AxisStatus(
+                            HomeBusy:=THIS^.iMotionAxis.HomeBusy,
+                            PositiveDirection:=THIS^.iMotionAxis.PositiveMotionIsEnabled,
+                            NegativeDirection:=THIS^.iMotionAxis.NegativeMotionIsEnabled );
+
+// Forward drive commands to interlock blocks
+THIS^.iMotionInterlocks.DriveCommands(Enable:=THIS^.stMotionEpicsItf.bEnable, NewMoveReq:=THIS^.bNewMoveReq, Reset:=THIS^.iMotionAxis.ResetDone);
+// Forward Power block enable flags
+THIS^.iMotionAxis.PowerEnables(Enable:=iMotionInterlocks.PowerEnabled,
+                        Enable_Positive:=iMotionInterlocks.MoveForwardEnabled,
+                        Enable_Negative:=iMotionInterlocks.MoveBackwardEnabled );
+
+// Forward axis state to brake FB
+THIS^.iBrake.AxisState := iMotionAxis.AxisState;
+
+    ]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PreHandling" Id="{b70d40df-94ce-4a86-890c-8d206ac7e676}">
+      <Declaration><![CDATA[METHOD PreHandling
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[(*
@@ -405,6 +322,7 @@ ELSIF rtHomeCmdShortcut.Q AND NOT stMotionEpicsItf.bExecute THEN
        stMotionEpicsItf.nCmdData:=iMotionAxis.HomeMode;
        IF ( stMotionEpicsItf.nCmdData = E_EpicsHomeCmd.ABSOLUTE_SET )  OR ( stMotionEpicsItf.nCmdData = E_EpicsHomeCmd.NONE) THEN
        stMotionEpicsItf.bExecute:= FALSE;
+       THIS^.bHomeCmd := FALSE;
     ELSE
         stMotionEpicsItf.bExecute:= TRUE;
     END_IF
@@ -435,7 +353,6 @@ END_CASE
 // Get a definitive bEnabled reading
 THIS^.bEnableDone := THIS^.iMotionAxis.AxisEnabled();
 
-//
 // This is the output interlock check used to allow the requested move
 bLocalExec:= stMotionEpicsItf.bExecute AND iMotionInterlocks.PowerEnabled AND THIS^.bEnableDone (*AND iMotionInterlocks.SafetyReady*);
 
@@ -449,21 +366,6 @@ IF rtValidExec.Q THEN
  // used for jog, modulo, GearIn which are not implemented here
  nCmdDataLocal:=INT_TO_UINT(stMotionEpicsItf.nCmdData);
  nCommandLocal:=INT_TO_UINT(stMotionEpicsItf.nCommand);
-END_IF
-
-
-ftError(CLK:=stMotionEpicsItf.bError);
-rtTarget(CLK:=(iMotionAxis.Done AND bExecMove));
-rtHomed(CLK:=iMotionAxis.Done AND bExecHome);
-ftStopExec(CLK:=stMotionEpicsItf.bExecute);
-
-//
-// //  Abort while moving if:
-// // 1- Reset, 2-Halt/UserStop, 3-Limit hit
-rtInterlockEvent(CLK:=iMotionInterlocks.InterlockEvent);
-rtReset(CLK:=stMotionEpicsItf.bReset);
-IF rtReset.Q OR rtInterlockEvent.Q THEN
-   stMotionEpicsItf.bExecute := FALSE;
 END_IF
 
 ]]></ST>
@@ -484,37 +386,146 @@ IF rtRestoreDone.Q THEN
 END_IF]]></ST>
       </Implementation>
     </Method>
+    <Method Name="StateMachine" Id="{7234df4d-6700-4cf9-89b9-9798d5355b81}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD StateMachine
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ftError(CLK:=stMotionEpicsItf.bError);
+rtTarget(CLK:=(iMotionAxis.Done AND bExecMove));
+rtHomed(CLK:=iMotionAxis.Done AND bExecHome);
+ftStopExec(CLK:=stMotionEpicsItf.bExecute);
+//
+rtInterlockEvent(CLK:=iMotionInterlocks.InterlockEvent);
+rtReset(CLK:=stMotionEpicsItf.bReset);
+IF rtReset.Q OR rtInterlockEvent.Q THEN
+   stMotionEpicsItf.bExecute := FALSE;
+END_IF
+
+// Drive state Machine here
+CASE eMoveState OF
+   E_MoveState.IDLING:;
+       // Delay the disable until axis reach standstill
+       // and this state machine is idling
+       IF THIS^.bPrepareDisable AND THIS^.iMotionAxis.StandStill THEN
+           THIS^.bPrepareDisable := FALSE;
+           THIS^.stMotionEpicsItf.bEnable := FALSE;
+       ELSIF bExecMove OR bExecHome THEN
+           eMoveState := E_MoveState.PREPARE_MOVE;
+       ELSIF stMotionEpicsItf.bError THEN
+           eMoveState := E_MoveState.MOVE_ERROR;
+       END_IF
+
+   E_MoveState.PREPARE_MOVE:
+       // When we start, set the busy/done appropriately
+       stMotionEpicsItf.bBusy := TRUE;
+       stMotionEpicsItf.bDone := FALSE;
+       // reset error flag
+       stMotionEpicsItf.sErrorMessage := '';
+       CASE stMotionEpicsItf.nCommand OF
+           E_EpicsMotorCmd.MOVE_ABSOLUTE:
+               eMoveMode := E_EpicsMotorCmd.MOVE_ABSOLUTE;
+               bCmdExecute := bExecMove AND (nCommandLocal=3);
+           E_EpicsMotorCmd.HOME:
+               eMoveMode := E_EpicsMotorCmd.HOME;
+               bCmdExecute := nCommandLocal=10 AND bExecHome;
+       END_CASE
+
+       IF bExecMove THEN
+            THIS^.iMotionAxis.MoveAbsolute(	Execute:=FALSE,
+                       Position:=THIS^.stMotionEpicsItf.fPosition,
+                       Velocity := THIS^.stMotionEpicsItf.fVelocity,
+                       Acceleration := THIS^.stMotionEpicsItf.fAcceleration,
+                       Deceleration := THIS^.stMotionEpicsItf.fDeceleration
+                );
+            // Activate backlash compensation
+            THIS^.iMotionAxis.BacklashCompensationActive(Active:=TRUE, RampVelocity:=THIS^.stMotionEpicsItf.fVelocity/10.0);
+       ELSIF bExecHome THEN
+            // Deactivate backlash compensation
+            THIS^.iMotionAxis.BacklashCompensationActive(Active:=FALSE, RampVelocity:=0.0);
+       END_IF
+       // configure and start move.
+       IF iMotionAxis.StartMove( eMoveMode, bCmdExecute ) THEN
+           eMoveState := E_MoveState.MOVE_STARTED;
+       END_IF
+
+   E_MoveState.MOVE_STARTED:
+       IF stMotionEpicsItf.bError THEN
+           eMoveState := E_MoveState.MOVE_ERROR;
+       // Move Started. use a timer to force quit this state if no response from axis
+       ELSIF iMotionAxis.Busy THEN
+           eMoveState := E_MoveState.MOVE_IN_PROGRESS;
+       END_IF
+
+   E_MoveState.MOVE_IN_PROGRESS :
+
+       IF 	stMotionEpicsItf.bError THEN
+           eMoveState := E_MoveState.MOVE_ERROR;
+
+       // Move interupted
+       ELSIF ftStopExec.Q OR iMotionAxis.Aborted THEN
+           eMoveState := E_MoveState.MOVE_INTERRUPTED;
+
+       ELSIF  rtTarget.Q OR rtHomed.Q  THEN
+           eMoveState := E_MoveState.TARGET_REACHED;
+       END_IF
+
+   E_MoveState.MOVE_INTERRUPTED:
+
+       IF THIS^.iMotionInterlocks.InterlockEvent THEN
+           eMoveState := E_MoveState.TARGET_REACHED;
+       END_IF
+       // Wait here for halt or reset done or clearing limit state to be restored
+       IF iMotionAxis.AbortDone THEN
+           THIS^.ClearVars(Done:=TRUE);
+           eMoveState := E_MoveState.IDLING;;
+       END_IF
+
+   E_MoveState.TARGET_REACHED:
+       THIS^.ClearVars(Done:=TRUE);
+       eMoveState := E_MoveState.IDLING;
+
+   E_MoveState.MOVE_ERROR:
+       THIS^.ClearVars(Done:=FALSE);
+       THIS^.stMotionEpicsItf.bEnable := FALSE;
+       IF ftError.Q THEN
+           eMoveState := E_MoveState.IDLING;
+       END_IF
+
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="UpdateParamAndStatus" Id="{bec7d97e-d393-4df3-816c-df000a420230}">
       <Declaration><![CDATA[METHOD UpdateParamAndStatus]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-////////////////////////////////////////////////////////////////////
-//// Transfer NC parameter status to EPICS
-////////////////////////////////////////////////////////////////////
-//stMotionEpicsItf.stAxisStatus.bEnable:=iMotionInterlocks.PowerEnabled;
-//stMotionEpicsItf.stAxisStatus.bEnabled:=iMotionAxisCommon.IsEnabled;
-//stMotionEpicsItf.stAxisStatus.bExecute:=THIS^.bLocalExec;
-//stMotionEpicsItf.stAxisStatus.bHomeSensor:=iMotionDriveShareData.LimHome;
+//////////////////////////////////////////////////////////////////
+// Transfer NC parameter status to EPICS
+//////////////////////////////////////////////////////////////////
+stMotionEpicsItf.stAxisStatus.bEnable:=iMotionInterlocks.PowerEnabled;
+stMotionEpicsItf.stAxisStatus.bEnabled:=iMotionAxis.PowerIsEnabled;
+stMotionEpicsItf.stAxisStatus.bExecute:=THIS^.bLocalExec;
+stMotionEpicsItf.stAxisStatus.bHomeSensor:=iMotionInterlocks.LimHome;
 
-//stMotionEpicsItf.stAxisStatus.bLimitBwd:=(iMotionInterlocks.MoveBackwardEnabled AND iLimSwStatus.MoveBackwardEnabled);
-//stMotionEpicsItf.stAxisStatus.bLimitFwd:= (iMotionInterlocks.MoveForwardEnabled AND iLimSwStatus.MoveForwardEnabled);
-//stMotionEpicsItf.stAxisStatus.fActDiff:=iMotionAxisCommon.MeasuredPositionDiff;
-//stMotionEpicsItf.stAxisStatus.fActPosition:=iMotionAxisCommon.MeasuredPosition;
-//stMotionEpicsItf.stAxisStatus.fActVelocity:=iMotionAxisCommon.MeasuredVelocity;
-//stMotionEpicsItf.stAxisStatus.fOverride:=iMotionAxisCommon.Override;
-//stMotionEpicsItf.stAxisStatus.bBusy:=iMotionAxisCommon.MoveBusy;
-//stMotionEpicsItf.stAxisStatus.bHomed:=iMotionAxisCommon.HomeDone;
-////stMotionEpicsInterface.stAxisStatus.bJogBwd:=bJogBwd;
-////stMotionEpicsInterface.stAxisStatus.bJogFwd:=bJogFwd;
-//stMotionEpicsItf.stAxisStatus.bReset:=stMotionEpicsItf.bReset;
-//stMotionEpicsItf.stAxisStatus.bError:=stMotionEpicsItf.bError;
-//stMotionEpicsItf.stAxisStatus.fAcceleration:=stMotionEpicsItf.fAcceleration;
-//stMotionEpicsItf.stAxisStatus.fDeceleration:=stMotionEpicsItf.fDeceleration;
-//stMotionEpicsItf.stAxisStatus.fPosition:=stMotionEpicsItf.fPosition;
-//stMotionEpicsItf.stAxisStatus.fVelocity:=stMotionEpicsItf.fVelocity;
-//stMotionEpicsItf.stAxisStatus.nCmdData:=INT_TO_UINT(stMotionEpicsItf.nCmdData);  //Or nCmdDataLocal
-//stMotionEpicsItf.stAxisStatus.nCommand:=INT_TO_UINT(stMotionEpicsItf.nCommand);  //Or nCommandLocal
-//stMotionEpicsItf.stAxisStatus.nErrorId:=stMotionEpicsItf.nErrorId;]]></ST>
+stMotionEpicsItf.stAxisStatus.bLimitBwd:= iMotionInterlocks.MoveBackwardEnabled;
+stMotionEpicsItf.stAxisStatus.bLimitFwd:= iMotionInterlocks.MoveForwardEnabled;
+stMotionEpicsItf.stAxisStatus.fActDiff:=iMotionAxis.MeasuredPositionDiff;
+stMotionEpicsItf.stAxisStatus.fActPosition:=iMotionAxis.MeasuredPosition;
+stMotionEpicsItf.stAxisStatus.fActVelocity:=iMotionAxis.MeasuredVelocity;
+stMotionEpicsItf.stAxisStatus.fOverride:=iMotionAxis.PowerOverride;
+stMotionEpicsItf.stAxisStatus.bBusy:=iMotionAxis.Busy;
+stMotionEpicsItf.stAxisStatus.bHomed:=iMotionAxis.HomeDone;
+//stMotionEpicsInterface.stAxisStatus.bJogBwd:=bJogBwd;
+//stMotionEpicsInterface.stAxisStatus.bJogFwd:=bJogFwd;
+stMotionEpicsItf.stAxisStatus.bReset:=stMotionEpicsItf.bReset;
+stMotionEpicsItf.stAxisStatus.bError:=stMotionEpicsItf.bError;
+stMotionEpicsItf.stAxisStatus.fAcceleration:=stMotionEpicsItf.fAcceleration;
+stMotionEpicsItf.stAxisStatus.fDeceleration:=stMotionEpicsItf.fDeceleration;
+stMotionEpicsItf.stAxisStatus.fPosition:=stMotionEpicsItf.fPosition;
+stMotionEpicsItf.stAxisStatus.fVelocity:=stMotionEpicsItf.fVelocity;
+stMotionEpicsItf.stAxisStatus.nCmdData:=INT_TO_UINT(stMotionEpicsItf.nCmdData);  //Or nCmdDataLocal
+stMotionEpicsItf.stAxisStatus.nCommand:=INT_TO_UINT(stMotionEpicsItf.nCommand);  //Or nCommandLocal
+stMotionEpicsItf.stAxisStatus.nErrorId:=stMotionEpicsItf.nErrorId;]]></ST>
       </Implementation>
     </Method>
   </POU>
