@@ -7,14 +7,13 @@
 TYPE E_MoveState :
 (
     IDLING:=0,
-    PREPARE_MOVE:=10,
-    MOVE_STARTED:=20,
-    MOVE_IN_PROGRESS :=30,
-    TARGET_REACHED:=40,
-    MOVE_INTERRUPTED:=50,
-    MOVE_ABORTED:=60,
-    MOVE_DONE:=70,
-    MOVE_ERROR:=-99
+    INIT:=10,
+    STARTED:=20,
+    IN_PROGRESS :=30,
+    REACHED:=40,
+    INTERRUPTED:=50,
+    DONE:=60,
+    ERROR:=-99
 );
 END_TYPE
 ]]></Declaration>

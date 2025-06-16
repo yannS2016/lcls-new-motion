@@ -2,15 +2,6 @@
 <TcPlcObject Version="1.1.0.1">
   <Itf Name="I_MotionAxis" Id="{31a902d0-0933-4477-af85-d5a81bbd2467}">
     <Declaration><![CDATA[INTERFACE I_MotionAxis EXTENDS __SYSTEM.IQueryInterface, 
-// 						I_AxisParameters, 
-// 						I_AxisStatus, 
-// 						I_Home,
-// 						I_Halt, 
-// 						I_Power, 
-// 						I_Reset,
-// 						I_Output
-// 						I_MoveAbsolute,
-// 						I_BacklashCompensation
 ]]></Declaration>
     <Property Name="AbortDone" Id="{5c7662f1-9d2d-42f7-8e24-51d5866c86b3}">
       <Declaration><![CDATA[PROPERTY AbortDone : BOOL

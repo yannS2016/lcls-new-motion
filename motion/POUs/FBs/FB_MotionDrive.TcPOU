@@ -415,12 +415,12 @@ CASE eMoveState OF
            THIS^.bPrepareDisable := FALSE;
            THIS^.stMotionEpicsItf.bEnable := FALSE;
        ELSIF bExecMove OR bExecHome THEN
-           eMoveState := E_MoveState.PREPARE_MOVE;
+           eMoveState := E_MoveState.INIT;
        ELSIF stMotionEpicsItf.bError THEN
-           eMoveState := E_MoveState.MOVE_ERROR;
+           eMoveState := E_MoveState.ERROR;
        END_IF
 
-   E_MoveState.PREPARE_MOVE:
+   E_MoveState.INIT:
        // When we start, set the busy/done appropriately
        stMotionEpicsItf.bBusy := TRUE;
        stMotionEpicsItf.bDone := FALSE;
@@ -450,34 +450,34 @@ CASE eMoveState OF
        END_IF
        // configure and start move.
        IF iMotionAxis.StartMove( eMoveMode, bCmdExecute ) THEN
-           eMoveState := E_MoveState.MOVE_STARTED;
+           eMoveState := E_MoveState.STARTED;
        END_IF
 
-   E_MoveState.MOVE_STARTED:
+   E_MoveState.STARTED:
        IF stMotionEpicsItf.bError THEN
-           eMoveState := E_MoveState.MOVE_ERROR;
+           eMoveState := E_MoveState.ERROR;
        // Move Started. use a timer to force quit this state if no response from axis
        ELSIF iMotionAxis.Busy THEN
-           eMoveState := E_MoveState.MOVE_IN_PROGRESS;
+           eMoveState := E_MoveState.IN_PROGRESS;
        END_IF
 
-   E_MoveState.MOVE_IN_PROGRESS :
+   E_MoveState.IN_PROGRESS :
 
        IF 	stMotionEpicsItf.bError THEN
-           eMoveState := E_MoveState.MOVE_ERROR;
+           eMoveState := E_MoveState.ERROR;
 
        // Move interupted
        ELSIF ftStopExec.Q OR iMotionAxis.Aborted THEN
-           eMoveState := E_MoveState.MOVE_INTERRUPTED;
+           eMoveState := E_MoveState.INTERRUPTED;
 
        ELSIF  rtTarget.Q OR rtHomed.Q  THEN
-           eMoveState := E_MoveState.TARGET_REACHED;
+           eMoveState := E_MoveState.REACHED;
        END_IF
 
-   E_MoveState.MOVE_INTERRUPTED:
+   E_MoveState.INTERRUPTED:
 
        IF THIS^.iMotionInterlocks.InterlockEvent THEN
-           eMoveState := E_MoveState.TARGET_REACHED;
+           eMoveState := E_MoveState.REACHED;
        END_IF
        // Wait here for halt or reset done or clearing limit state to be restored
        IF iMotionAxis.AbortDone THEN
@@ -485,11 +485,11 @@ CASE eMoveState OF
            eMoveState := E_MoveState.IDLING;;
        END_IF
 
-   E_MoveState.TARGET_REACHED:
+   E_MoveState.REACHED:
        THIS^.ClearVars(Done:=TRUE);
        eMoveState := E_MoveState.IDLING;
 
-   E_MoveState.MOVE_ERROR:
+   E_MoveState.ERROR:
        THIS^.ClearVars(Done:=FALSE);
        THIS^.stMotionEpicsItf.bEnable := FALSE;
        IF ftError.Q THEN

@@ -4,7 +4,7 @@
     <Declaration><![CDATA[TYPE ST_DS402Drive:
 STRUCT
     (* Global variables for the TPDO data from the drive. Each one is linked to the respective TPDO channel. *)
-    stDS402DriveStatus 		AT %I*	: 	ST_DS402DriveStatus;
+    stDriveStatus 		AT %I*	: 	ST_DS402DriveStatus;
     nModeOfOperationDisplay AT %I*	: 	SINT;
     //nActualPosition 		AT %I*	: 	DINT;
     (*CSP drive mode*)
