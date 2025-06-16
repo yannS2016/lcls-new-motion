@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_LimSwStatusMCS2" Id="{e82c472b-4e09-459d-83c5-e6524de07cc9}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_LimSwStatusMCS2 IMPLEMENTS I_LimSwStatusMCS2
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+    iLimSwStatus : I_LimSwStatus;
+    bPositiveDirection : BOOL;
+    bNegativeDirection : BOOL;
+    bMoveBackwardEnabled : BOOL;
+    bMoveForwardEnabled : BOOL;
+    bInternalLimitActive : BOOL;
+    bWarningCondition : BOOL;
+bLimOverride : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Read Limits status and update shared space
+bMoveBackwardEnabled := bLimOverride OR NOT(THIS^.bNegativeDirection AND ( THIS^.bInternalLimitActive OR THIS^.bWarningCondition ));
+bMoveForwardEnabled := bLimOverride OR NOT(THIS^.bPositiveDirection AND ( THIS^.bInternalLimitActive OR THIS^.bWarningCondition ));
+
+]]></ST>
+    </Implementation>
+    <Method Name="AxisStatus" Id="{8d8010d4-3720-40be-b4c8-2bb58a48555e}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD AxisStatus
+VAR_INPUT
+    HomeBusy	: BOOL;
+    PositiveDirection	: BOOL;
+    NegativeDirection	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DriveCommands" Id="{c0c3e1f8-6f60-42ca-9d48-91b241f8e613}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD DriveCommands
+VAR_INPUT
+    Enable	: BOOL;
+    NewMoveReq	: BOOL;
+    Reset	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="InternalLimitActive" Id="{9785faa9-6e22-4b72-879f-74f38349c993}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY InternalLimitActive : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{d5fc83b0-3602-4b79-b305-31cda962b007}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{3ae2133f-fa8c-4126-95ec-f568abc28cb6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="LimBackward" Id="{2a3288ff-327c-4bab-bb73-9d0bed979630}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY LimBackward : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{751b8932-c8f5-4a81-88df-14cf345b3fa7}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="LimForward" Id="{775b7d3d-6dee-42c6-80aa-ebbeb56001ed}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY LimForward : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{481e1446-c941-4558-b806-46dd3233c38e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="LimHit" Id="{b087aaca-dca5-483c-b699-3967062e035a}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY LimHit : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{9d06facd-46c6-4d29-8251-f9e3de5fbbeb}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="LimHome" Id="{eb0461b4-7201-44a4-8435-9a8b5dce3210}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY LimHome : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{5c168e52-d17c-40d3-95f0-c5e468a2cf59}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="LimOverride" Id="{ceedabb0-daa0-442b-8e15-dce5027b9271}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY LimOverride : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{3a655c80-5eaf-46a0-819e-54f24c5af205}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{9f94dc7d-e710-4f23-bc6d-cad3a3c0a365}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Message" Id="{ddf51977-3b1f-4d77-8259-cfd682a43ca9}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Message : T_MAXSTRING
+]]></Declaration>
+      <Get Name="Get" Id="{48f52d80-d74c-4c2e-b057-e2e80629a9b4}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MoveBackwardEnabled" Id="{eccf17a9-719a-4c3e-be00-13d2ff40a848}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY MoveBackwardEnabled : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{90fc8736-3356-4c91-ad5a-653e31d1f3c7}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MoveForwardEnabled" Id="{34a229a6-baa1-4b86-a121-499909debdce}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY MoveForwardEnabled : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{66284a56-ab30-4db4-a044-8207c4c32f35}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Warning" Id="{830ae7b7-19fb-4c95-9237-babb88296ebb}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Warning : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{e08f499b-4a63-46e7-81e8-3aaacf469ca5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="WarningCondition" Id="{5cf554e9-711d-44d7-9224-89ae7d59504b}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY WarningCondition : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{e4342f9b-0b2d-458c-8725-a74b200c3d69}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{25d14368-41f7-4479-8859-3fe91648a99e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+  </POU>
+</TcPlcObject>

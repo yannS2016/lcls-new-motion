@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_LimSwStatusMCS2" Id="{7af97861-54c2-446c-8935-c4e0b207e519}">
+    <Declaration><![CDATA[INTERFACE I_LimSwStatusMCS2 EXTENDS I_LimSwStatus
+]]></Declaration>
+    <Property Name="InternalLimitActive" Id="{aac82614-7e4e-4729-8fbe-2613d8825bf8}">
+      <Declaration><![CDATA[PROPERTY InternalLimitActive : BOOL]]></Declaration>
+      <Get Name="Get" Id="{f2a06f00-b918-4808-96e8-1b2dd4a9ffef}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{b847d996-efbc-43e7-b79e-792df835eed5}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="LimOverride" Id="{c2b7a081-8622-4513-a352-40676732ddd4}">
+      <Declaration><![CDATA[PROPERTY LimOverride : BOOL]]></Declaration>
+      <Get Name="Get" Id="{92b682c9-0ed3-485f-b512-98fdd46e0b06}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{8cce1dba-985c-4025-a1be-c4f8cd661fe0}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="WarningCondition" Id="{b7bf2183-6b6f-4275-a585-bb63c58bc293}">
+      <Declaration><![CDATA[PROPERTY WarningCondition : BOOL]]></Declaration>
+      <Get Name="Get" Id="{9ffd8b02-f22d-4839-9e05-58e7a2f50269}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{b7028200-0560-43f2-bf68-2d01168da6b8}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+  </Itf>
+</TcPlcObject>

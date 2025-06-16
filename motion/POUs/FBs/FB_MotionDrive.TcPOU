@@ -272,9 +272,6 @@ IF THIS^.rtHomed.Q THEN
        stMotionEpicsItf.nCommand:=E_EpicsMotorCmd.MOVE_ABSOLUTE;
 END_IF
 // Halt is always a user stop but not an interlock event or a reset.
-// bHaltEvent S= ftStopExec.Q AND NOT stMotionEpicsItf.bReset AND NOT iMotionInterlocks.InterlockEvent
-//                                             AND (iMotionAxis.MoveAbsoluteBusy AND (nCommandLocal=3))
-//                                             OR (iMotionAxis.HomeBusy AND (nCommandLocal=10));
 bHaltEvent S= ftStopExec.Q AND ((iMotionAxis.HomeBusy AND (nCommandLocal=10))
                             OR(iMotionAxis.MoveAbsoluteBusy AND (nCommandLocal=3)));
 bHaltEvent R= THIS^.iMotionAxis.HaltDone OR THIS^.iMotionAxis.ResetDone;

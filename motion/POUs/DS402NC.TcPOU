@@ -29,7 +29,7 @@ VAR
       the powerenables() is provided in case the interlock status were passed via the drive
       nonetheless passing via this object is more flexible
     *)
-    fbMotionAxisNC : FB_MotionAxisNC( 	iHome := fbHomeDS402,
+    fbMotionAxisDS402NC : FB_MotionAxisDS402NC( 	iHome := fbHomeDS402,
                                         iHalt := fbHaltNC,
                                         iPower := fbPowerNC,
                                         iReset := fbResetNC,
@@ -37,8 +37,6 @@ VAR
                                         iAxisParameters:= fbAxisParametersNC,
                                         iAxisStatus := fbAxisStatusNC,
                                         iBacklashCompensation :=fbBacklashCompensation,
-                                        (*Locally capture interlocks*)
-                                        //iMotionInterlocks:=fbMotionInterlocksLimSw
                                     );
 
    M1 : ST_MotionEpicsItf := (sName:='Main Axis', fPosition:=10000.0, fVelocity:=50.0, fAcceleration:=50.0, fDeceleration:=50.0);
@@ -46,7 +44,7 @@ VAR
                                    iBrake:=fbBrake,
                                    iMotionLogger:=fbMotionLogger,
                                    iMotionInterlocks:=fbMotionInterlocksLimSw,
-                                   iMotionAxis := fbMotionAxisNC
+                                   iMotionAxis := fbMotionAxisDS402NC
                                    ) := (Name := 'SmarAct MCS2',  EnableMode:=ENUM_StageEnableMode.DURING_MOTION );
 
     bLimForward AT %Q*: BOOL := TRUE;

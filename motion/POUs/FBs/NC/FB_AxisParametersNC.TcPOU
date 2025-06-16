@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_AxisParametersNC" Id="{7f8d36cc-18a1-4d6c-99dd-bd0795394dcd}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_AxisParametersNC IMPLEMENTS I_AxisParameters
+    <Declaration><![CDATA[{attribute 'call_after_init'}
+FUNCTION_BLOCK FB_AxisParametersNC IMPLEMENTS I_AxisParameters
 VAR_INPUT
 END_VAR
 VAR_OUTPUT

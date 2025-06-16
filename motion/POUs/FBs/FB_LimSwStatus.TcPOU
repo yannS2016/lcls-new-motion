@@ -60,9 +60,6 @@ END_VAR
 bMoveBackwardEnabled := bLimitBackwardEnable;
 bMoveForwardEnabled := bLimitForwardEnable;
 
-// Todo: axis idling, critical limit disable faillure
-// clear previous warning and limit hit events with each new request
-// wait for global reset event to complete
 rtReset(CLK:=bReset);
 rtUserExec (CLK:=bNewMoveReq);
 ftForwardEnabled(CLK:=bMoveForwardEnabled);
