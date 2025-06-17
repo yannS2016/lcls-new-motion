@@ -3,63 +3,21 @@
   <POU Name="MAIN" Id="{61c6dfbc-a7dc-4c03-9ea3-aa217d748554}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-    fbMotionLogger : FB_MotionLogger;
+    fbMotionLogger : FB_MotionLogger; // Shared resource
     // Persistant storage
-    fbPersistentDataStorage : FB_PersistentDataStorage;
-
-    //Brakes : brake fb participate in sync comm with fbMotionDrive, fbMotionAxis and fbMotionInterlocks
-    fbBrake : FB_Brake := (BrakeMode := E_StageBrakeMode.IF_MOVING);
-    // common interlocks
-    fbMotionInterlocksCommon : FB_MotionInterlocksCommon ( iMotionLogger:=fbMotionLogger);
-    // stage with Limit switches
-    fbLimSwStatus : FB_LimSwStatus ( iMotionLogger:=fbMotionLogger);
-    fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw ( iMotionInterlocksCommon:=fbMotionInterlocksCommon, iLimSwStatus:=fbLimSwStatus);
-
-    fbHomeNC : FB_HomeNC(AxisRef:=NcAxis_GVL.testAxis, iMotionLogger:=fbMotionLogger, iLimSwStatus:=fbLimSwStatus);;
-    fbHaltNC : FB_HaltNC(AxisRef:=NcAxis_GVL.testAxis);
-    fbPowerNC : FB_PowerNC(AxisRef:=NcAxis_GVL.testAxis);
-    fbResetNC : FB_ResetNC(AxisRef:=NcAxis_GVL.testAxis);
-    fbMoveAbsoluteNC : FB_MoveAbsoluteNC(AxisRef:=NcAxis_GVL.testAxis);
-    fbAxisParametersNC: FB_AxisParametersNC(AxisRef:=NcAxis_GVL.testAxis, iPersistentDataStorage := fbPersistentDataStorage);
-    fbAxisStatusNC : FB_AxisStatusNC(AxisRef:=NcAxis_GVL.testAxis);
-
-    fbBacklashCompensation : FB_BacklashCompensation(AxisRef:=NcAxis_GVL.testAxis);
-    (*The axis object has a interlock reference in this instance: this would make calling method
-      to transfer power status from interlock interface override the internal passing of power enable status
-      the powerenables() is provided in case the interlock status were passed via the drive
-      nonetheless passing via this object is more flexible
-    *)
-    fbMotionAxisNC : FB_MotionAxisNC( 	iHome := fbHomeNC,
-                                        iHalt := fbHaltNC,
-                                        iPower := fbPowerNC,
-                                        iReset := fbResetNC,
-                                        iMoveAbsolute := fbMoveAbsoluteNC,
-                                        iAxisParameters:= fbAxisParametersNC,
-                                        iAxisStatus := fbAxisStatusNC,
-                                        iBacklashCompensation :=fbBacklashCompensation,
-                                        (*Locally capture interlocks*)
-                                        //iMotionInterlocks:=fbMotionInterlocksLimSw
-                                    );
-
-   M1 : ST_MotionEpicsItf := (sName:='Main Axis', fPosition:=10000.0, fVelocity:=50.0, fAcceleration:=50.0, fDeceleration:=50.0);
-   fbMotionDrive: FB_MotionDrive ( stMotionEpicsItf := M1,
-                                   iBrake:=fbBrake,
-                                   iMotionLogger:=fbMotionLogger,
-                                   iMotionInterlocks:=fbMotionInterlocksLimSw,
-                                   iMotionAxis := fbMotionAxisNC
-                                   ) := (Name := 'SmarAct MCS2',  EnableMode:=ENUM_StageEnableMode.DURING_MOTION );
-
-    bLimForward AT %Q*: BOOL := TRUE;
-    // NC Backward Limit Switch: TRUE if ok to move
-    bLimBackward AT %Q*: BOOL := TRUE;
-    // NO Home Switch: TRUE if at home
-    bLimHome AT %Q*: BOOL := TRUE;
-    //
-    bHardEnable AT %Q*: BOOL := TRUE;
+    fbPersistentDataStorage : FB_PersistentDataStorage; // Shared resource
+ 	fbMotionStageX1 : FB_MotionStage(iMotionLogger := fbMotionLogger, iPersistentDataStorage := fbPersistentDataStorage);
+	fbMotionStageX2 : FB_MotionStage(iMotionLogger := fbMotionLogger, iPersistentDataStorage := fbPersistentDataStorage);
+	
+	
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[fbMotionInterlocksCommon();
+      <ST><![CDATA[fbMotionLogger();
+fbPersistentDataStorage();
+fbMotionStageX1();
+
+(*fbMotionInterlocksCommon();
 fbLimSwStatus();
 fbMotionInterlocksLimSw();
 fbResetNC();
@@ -73,7 +31,7 @@ fbAxisStatusNC();
 fbMotionAxisNC();
 fbAxisParametersNC();
 fbAxisStatusNC();
-fbMotionDrive();
+fbMotionDrive();*)
 // fbBrake();
 // fbMotionLogger();
 // fbPersistentDataStorage();

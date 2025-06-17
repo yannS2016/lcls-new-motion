@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_MotionStage" Id="{27a9489d-ed3b-4885-89cd-bbc7b70f9440}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'call_after_init'}
+FUNCTION_BLOCK FB_MotionStage
+VAR
+	iMotionLogger : I_MotionLogger; 
+	fbAxisRef : REFERENCE TO AXIS_REF;
+	iPersistentDataStorage : I_PersistentDataStorage;
+	sName : T_MaxString;
+	
+	
+    //Brakes : brake fb participate in sync comm with fbMotionDrive, fbMotionAxis and fbMotionInterlocks
+    fbBrake : FB_Brake := (BrakeMode := E_StageBrakeMode.IF_MOVING);
+    // common interlocks
+    fbMotionInterlocksCommon : FB_MotionInterlocksCommon(iMotionLogger := iMotionLogger);
+    // stage with Limit switches
+    fbLimSwStatus : FB_LimSwStatus(iMotionLogger := iMotionLogger);
+    fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw ( iMotionInterlocksCommon:=fbMotionInterlocksCommon, iLimSwStatus:=fbLimSwStatus);
+
+    fbHomeNC : FB_HomeNC(AxisRef:=fbAxisRef, iMotionLogger:=iMotionLogger, iLimSwStatus:=fbLimSwStatus);;
+    fbHaltNC : FB_HaltNC(AxisRef:=fbAxisRef);
+    fbPowerNC : FB_PowerNC(AxisRef:=fbAxisRef);
+    fbResetNC : FB_ResetNC(AxisRef:=fbAxisRef);
+    fbMoveAbsoluteNC : FB_MoveAbsoluteNC(AxisRef:=fbAxisRef);
+    fbAxisParametersNC: FB_AxisParametersNC(AxisRef:=fbAxisRef, iPersistentDataStorage := iPersistentDataStorage);
+    fbAxisStatusNC : FB_AxisStatusNC(AxisRef:=fbAxisRef);
+
+    fbBacklashCompensation : FB_BacklashCompensation(AxisRef:=fbAxisRef);
+    (*The axis object has a interlock reference in this instance: this would make calling method
+      to transfer power status from interlock interface override the internal passing of power enable status
+      the powerenables() is provided in case the interlock status were passed via the drive
+      nonetheless passing via this object is more flexible
+    *)
+    fbMotionAxisNC : FB_MotionAxisNC( 	iHome := fbHomeNC,
+                                        iHalt := fbHaltNC,
+                                        iPower := fbPowerNC,
+                                        iReset := fbResetNC,
+                                        iMoveAbsolute := fbMoveAbsoluteNC,
+                                        iAxisParameters:= fbAxisParametersNC,
+                                        iAxisStatus := fbAxisStatusNC,
+                                        iBacklashCompensation :=fbBacklashCompensation,
+                                        (*Locally capture interlocks*)
+                                        //iMotionInterlocks:=fbMotionInterlocksLimSw
+                                    );
+
+   M1 : ST_MotionEpicsItf;
+   fbMotionDrive: FB_MotionDrive ( stMotionEpicsItf := M1,
+                                   iBrake:=fbBrake,
+                                   iMotionLogger:=iMotionLogger,
+                                   iMotionInterlocks:=fbMotionInterlocksLimSw,
+                                   iMotionAxis := fbMotionAxisNC
+                                   ) := (Name := 'SmarAct MCS2',  EnableMode:=ENUM_StageEnableMode.DURING_MOTION );
+
+    bLimForward AT %Q*: BOOL := TRUE;
+    // NC Backward Limit Switch: TRUE if ok to move
+    bLimBackward AT %Q*: BOOL := TRUE;
+    // NO Home Switch: TRUE if at home
+    bLimHome AT %Q*: BOOL := TRUE;
+    //
+    bHardEnable AT %Q*: BOOL := TRUE;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="BrakeMode" Id="{7b563b76-fecc-4885-824b-f91a0bc21af3}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY BrakeMode : E_StageBrakeMode
+]]></Declaration>
+      <Get Name="Get" Id="{0f26607f-cf71-44b1-9984-79929f233e16}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[BrakeMode := fbBrake.BrakeMode;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{15a41f16-798f-4b50-9250-e347873647b8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[fbBrake.BrakeMode := BrakeMode;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="CallAfterInit" Id="{e7a5e1c3-8324-4257-a302-ab714cb009e4}">
+      <Declaration><![CDATA[{attribute 'call_after_init'}
+METHOD PRIVATE CallAfterInit]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbMotionInterlocksCommon.CallAfterInit(iMotionLogger := THIS^.iMotionLogger);
+fbLimSwStatus.CallAfterInit(iMotionLogger := THIS^.iMotionLogger);
+fbMotionInterlocksLimSw.CallAfterInit(iMotionInterlocksCommon := THIS^.fbMotionInterlocksCommon,
+									  iLimSwStatus := THIS^.fbLimSwStatus);
+fbHomeNC.CallAfterInit(AxisRef := THIS^.fbAxisRef,
+					   iMotionLogger := THIS^.iMotionLogger,
+					   iLimSwStatus := THIS^.fbLimSwStatus);
+fbHaltNC.CallAfterInit(AxisRef := THIS^.fbAxisRef);
+fbPowerNC.CallAfterInit(AxisRef := THIS^.fbAxisRef);
+fbResetNC.CallAfterInit(AxisRef := THIS^.fbAxisRef);
+fbMoveAbsoluteNC.CallAfterInit(AxisRef := THIS^.fbAxisRef);
+fbAxisParametersNC.CallAfterInit(AxisRef := THIS^.fbAxisRef,
+								 iPersistentDataStorage := THIS^.iPersistentDataStorage);
+fbAxisStatusNC.CallAfterInit(AxisRef := THIS^.fbAxisRef);
+fbBacklashCompensation.CallAfterInit(AxisRef := THIS^.fbAxisRef);
+fbMotionAxisNC.CallAfterInit(iHome := THIS^.fbHomeNC,
+                             iHalt := THIS^.fbHaltNC,
+                             iPower := THIS^.fbPowerNC,
+                             iReset := THIS^.fbResetNC,
+                             iMoveAbsolute := THIS^.fbMoveAbsoluteNC,
+                             iAxisParameters:= THIS^.fbAxisParametersNC,
+                             iAxisStatus := THIS^.fbAxisStatusNC,
+                             iBacklashCompensation := THIS^.fbBacklashCompensation);
+THIS^.M1.sName := THIS^.sName;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_Init" Id="{fe4c9de1-abf0-4550-ae13-2cd56df378be}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
+	iMotionLogger : I_MotionLogger;
+	fbAxisRef : REFERENCE TO AXIS_REF;
+	iPersistentDataStorage : I_PersistentDataStorage;
+	sName : T_MaxString;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iMotionLogger := iMotionLogger;
+THIS^.fbAxisRef REF= fbAxisRef;
+THIS^.iPersistentDataStorage := iPersistentDataStorage;
+THIS^.sName := sName;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

@@ -9,7 +9,7 @@
     <WriteProductVersion>false</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
     <Name>motion</Name>
-    <ProgramVersion>3.1.4026.13</ProgramVersion>
+    <ProgramVersion>3.1.4026.15</ProgramVersion>
     <Application>{33d664b0-6516-4278-a609-945dc6212735}</Application>
     <TypeSystem>{c65f0172-be58-4007-8d8b-64ba0ae68ce0}</TypeSystem>
     <Implicit_Task_Info>{0e3edc62-cc3b-47a4-b014-ded5a500659f}</Implicit_Task_Info>
@@ -71,7 +71,7 @@
     </Compile>
     <Compile Include="POUs\DS402NC.TcPOU">
       <SubType>Code</SubType>
-      <ExcludeFromBuild>true</ExcludeFromBuild>
+      <ExcludeFromBuild>false</ExcludeFromBuild>
     </Compile>
     <Compile Include="POUs\FBs\DS402\FB_HomeDS402.TcPOU">
       <SubType>Code</SubType>
@@ -137,6 +137,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FBs\NC\FB_ResetNC.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FB_MotionStage.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\ITFs\I_AxisStatus.TcIO">
@@ -207,7 +210,7 @@
     </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
-      <ExcludeFromBuild>false</ExcludeFromBuild>
+      <ExcludeFromBuild>true</ExcludeFromBuild>
     </Compile>
     <Compile Include="VISUs\motion.TcCD">
       <SubType>Code</SubType>

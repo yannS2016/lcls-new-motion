@@ -2,10 +2,6 @@
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_LimSwStatus" Id="{322e8186-deb9-4a53-b303-d1d3662306db}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_LimSwStatus IMPLEMENTS I_LimSwStatus
-VAR_INPUT
-END_VAR
-VAR_OUTPUT
-END_VAR
 VAR
     {attribute 'hide'}
     iMotionLogger	: I_MotionLogger;
@@ -100,6 +96,16 @@ bNegativeDirection :=NegativeDirection;
 ]]></ST>
       </Implementation>
     </Method>
+    <Method Name="CallAfterInit" Id="{bb1b507a-5d26-480b-964c-803f6e2c2caf}">
+      <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
+VAR_INPUT
+	iMotionLogger : I_MotionLogger;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iMotionLogger := iMotionLogger;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="DriveCommands" Id="{b140fe49-9bf2-4392-9913-139634acc355}">
       <Declaration><![CDATA[METHOD DriveCommands
 VAR_INPUT
@@ -123,10 +129,10 @@ METHOD FB_Init: BOOL
 VAR_INPUT
     bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
-    iMotionLogger	: I_MotionLogger;
+    iMotionLogger : I_MotionLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[THIS^.iMotionLogger := iMotionLogger;]]></ST>
       </Implementation>
     </Method>
     <Property Name="LimBackward" Id="{aa63489c-6e6a-4b3c-98b7-5f6f7e3fb754}">

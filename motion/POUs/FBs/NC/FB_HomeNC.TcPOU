@@ -316,6 +316,20 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="CallAfterInit" Id="{bf0efffc-cb26-4144-93d7-4a53b23636d4}">
+      <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
+VAR_INPUT
+	AxisRef : REFERENCE TO AXIS_REF;
+    iMotionLogger : I_MotionLogger;
+    iLimSwStatus : I_LimSwStatus;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;
+THIS^.iMotionLogger := iMotionLogger;
+THIS^.iLimSwStatus:= iLimSwStatus;]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="CommandMoveHome" Id="{c1145d52-1896-4af8-b2b7-a223c1c65f11}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY CommandMoveHome : BOOL

@@ -12,14 +12,16 @@ VAR
     // common interlocks
     fbMotionInterlocksCommon : FB_MotionInterlocksCommon ( iMotionLogger:=fbMotionLogger);
     // stage with Limit switches
-    fbLimSwStatus : FB_LimSwStatus ( iMotionLogger:=fbMotionLogger);
-    fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw ( iMotionInterlocksCommon:=fbMotionInterlocksCommon, iLimSwStatus:=fbLimSwStatus);
+    fbLimSwStatusMCS2 : FB_LimSwStatusMCS2 ( );
+    fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw ( iMotionInterlocksCommon:=fbMotionInterlocksCommon, iLimSwStatus:=fbLimSwStatusMCS2);
 
     fbHomeDS402 : FB_HomeDS402(iMotionLogger:=fbMotionLogger);
     fbHaltNC : FB_HaltNC(AxisRef:=NcAxis_GVL.testAxis);
     fbPowerNC : FB_PowerNC(AxisRef:=NcAxis_GVL.testAxis);
     fbResetNC : FB_ResetNC(AxisRef:=NcAxis_GVL.testAxis);
     fbMoveAbsoluteNC : FB_MoveAbsoluteNC(AxisRef:=NcAxis_GVL.testAxis);
+   {attribute 'pytmc':='pv: TST:SmartAct:MCS2-3C'}
+    {attribute 'TcLinkTo' := '.nRawEncoderDINT :=TIID^Master_EtherCAT^MCS2-3C^Module 1 (MCS2M-D-3C)^mode/status/pos/fError TxPDO^Position Actual Value'}
     fbAxisParametersNC: FB_AxisParametersNC(AxisRef:=NcAxis_GVL.testAxis, iPersistentDataStorage := fbPersistentDataStorage);
     fbAxisStatusNC : FB_AxisStatusNC(AxisRef:=NcAxis_GVL.testAxis);
 
@@ -29,6 +31,15 @@ VAR
       the powerenables() is provided in case the interlock status were passed via the drive
       nonetheless passing via this object is more flexible
     *)
+	{attribute 'pytmc':='pv: TST:SmartAct:MCS2-3C'}
+    {attribute 'TcLinkTo' := '
+        .stDS402Drive.stDriveStatus	:=TIID^Master_EtherCAT^MCS2-3C^Module 1 (MCS2M-D-3C)^mode/status/pos/fError TxPDO^Status Word;
+        .stDS402Drive.nFollowingError		:=TIID^Master_EtherCAT^MCS2-3C^Module 1 (MCS2M-D-3C)^mode/status/pos/fError TxPDO^Following Error Actual Value;
+        .stDS402Drive.nModeOfOperationDisplay:=TIID^Master_EtherCAT^MCS2-3C^Module 1 (MCS2M-D-3C)^mode/status/pos/fError TxPDO^Modes of Operation Display;
+        .stDS402Drive.nDS402DriveControl	:=TIID^Master_EtherCAT^MCS2-3C^Module 1 (MCS2M-D-3C)^ctl/mode/pos/vel/acc RxPDO^Control Word;
+        .stDS402Drive.nModeOfOperation		:=TIID^Master_EtherCAT^MCS2-3C^Module 1 (MCS2M-D-3C)^ctl/mode/pos/vel/acc RxPDO^Modes of Operation;
+        .stDS402Drive.nTargetPosition		:=TIID^Master_EtherCAT^MCS2-3C^Module 1 (MCS2M-D-3C)^ctl/mode/pos/vel/acc RxPDO^Target Position;
+    '}
     fbMotionAxisDS402NC : FB_MotionAxisDS402NC( 	iHome := fbHomeDS402,
                                         iHalt := fbHaltNC,
                                         iPower := fbPowerNC,
@@ -47,12 +58,7 @@ VAR
                                    iMotionAxis := fbMotionAxisDS402NC
                                    ) := (Name := 'SmarAct MCS2',  EnableMode:=ENUM_StageEnableMode.DURING_MOTION );
 
-    bLimForward AT %Q*: BOOL := TRUE;
-    // NC Backward Limit Switch: TRUE if ok to move
-    bLimBackward AT %Q*: BOOL := TRUE;
-    // NO Home Switch: TRUE if at home
-    bLimHome AT %Q*: BOOL := TRUE;
-    //
+
     bHardEnable AT %Q*: BOOL := TRUE;
 END_VAR
 ]]></Declaration>

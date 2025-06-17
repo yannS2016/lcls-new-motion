@@ -5,7 +5,7 @@
     <CycleTime>10000</CycleTime>
     <Priority>20</Priority>
     <PouCall>
-      <Name>MAIN</Name>
+      <Name>DS402NC</Name>
     </PouCall>
     <TaskFBGuid>{f5451832-e5c1-4a64-9134-5f668bf04dc6}</TaskFBGuid>
     <Fb_init>{c9491fc7-71fb-4629-b3e5-5a5a84071d16}</Fb_init>

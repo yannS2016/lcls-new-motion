@@ -2,10 +2,6 @@
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_MotionInterlocksLimSw" Id="{158cbb88-3b97-40e2-97dc-4d7a82a1299f}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionInterlocksLimSw IMPLEMENTS I_MotionInterlocksLimSw
-VAR_INPUT
-END_VAR
-VAR_OUTPUT
-END_VAR
 VAR
     iMotionInterlocksCommon : I_MotionInterlocksCommon;
     iLimSwStatus : I_LimSwStatus;
@@ -96,6 +92,18 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="CallAfterInit" Id="{45c8027d-e1da-4d2e-ad22-2f2db9730c5f}">
+      <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
+VAR_INPUT
+	iMotionInterlocksCommon : I_MotionInterlocksCommon;
+    iLimSwStatus : I_LimSwStatus;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iMotionInterlocksCommon := iMotionInterlocksCommon;
+THIS^.iLimSwStatus := iLimSwStatus;]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="Done" Id="{f89b31f3-ca38-4979-a504-0096d2187a3b}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY Done : BOOL
@@ -162,7 +170,7 @@ VAR_INPUT
     iLimSwStatus : I_LimSwStatus;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.iMotionInterlocksCommon  := iMotionInterlocksCommon ;
+        <ST><![CDATA[THIS^.iMotionInterlocksCommon := iMotionInterlocksCommon;
 THIS^.iLimSwStatus := iLimSwStatus;]]></ST>
       </Implementation>
     </Method>

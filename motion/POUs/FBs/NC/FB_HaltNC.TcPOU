@@ -83,6 +83,16 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="CallAfterInit" Id="{7068fa57-7e79-4554-a691-c8e89ace2f96}">
+      <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
+VAR_INPUT
+	AxisRef : REFERENCE TO AXIS_REF;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="CommandHalt" Id="{bbacc6b5-2150-42a2-9054-67af9aca1473}">
       <Declaration><![CDATA[PROPERTY CommandHalt : BOOL
 ]]></Declaration>

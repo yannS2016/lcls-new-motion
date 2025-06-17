@@ -97,6 +97,16 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="CallAfterInit" Id="{6e051d1f-04b5-4dd5-9dad-cf07d281461d}">
+      <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
+VAR_INPUT
+	AxisRef : REFERENCE TO AXIS_REF;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="Done" Id="{6add5887-aab0-48e7-b663-80d51fb4c416}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY Done : BOOL

@@ -196,6 +196,19 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="CallAfterInit" Id="{1d48b6b6-5d18-47cf-8816-5058ff3a06eb}">
+      <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
+VAR_INPUT
+	AxisRef : REFERENCE TO AXIS_REF;
+    iPersistentDataStorage : I_PersistentDataStorage;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;
+THIS^.iPersistentDataStorage := iPersistentDataStorage;
+]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="Done" Id="{a3a56a42-9da7-40a8-925f-55df107c55cd}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY Done : BOOL

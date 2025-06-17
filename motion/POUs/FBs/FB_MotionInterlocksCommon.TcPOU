@@ -2,10 +2,6 @@
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_MotionInterlocksCommon" Id="{b69073ed-2a55-41fc-84a9-b8fe79332e5e}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionInterlocksCommon IMPLEMENTS I_MotionInterlocksCommon
-VAR_INPUT
-END_VAR
-VAR_OUTPUT
-END_VAR
 VAR
     {attribute 'hide'}
     iMotionLogger 		: I_MotionLogger;
@@ -134,6 +130,16 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="CallAfterInit" Id="{bb25ce30-2def-4497-bead-4e7295fc730f}">
+      <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
+VAR_INPUT
+	iMotionLogger : I_MotionLogger;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iMotionLogger := iMotionLogger;]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="Done" Id="{19e5f483-e0b9-42ff-9068-b5fa5e63917b}">
       <Declaration><![CDATA[{warning 'add property implementation'}
 PROPERTY Done : BOOL
