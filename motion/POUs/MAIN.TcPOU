@@ -6,10 +6,30 @@ VAR
     fbMotionLogger : FB_MotionLogger; // Shared resource
     // Persistant storage
     fbPersistentDataStorage : FB_PersistentDataStorage; // Shared resource
- 	fbMotionStageX1 : FB_MotionStage(iMotionLogger := fbMotionLogger, iPersistentDataStorage := fbPersistentDataStorage);
-	fbMotionStageX2 : FB_MotionStage(iMotionLogger := fbMotionLogger, iPersistentDataStorage := fbPersistentDataStorage);
-	
-	
+    M1 : ST_MotionEpicsItf; // shared ressource
+     fbMotionStageX1 : FB_MotionStage(	sName := 'MCS2',
+                                        stMotionEpicsItf := M1,
+                                        fbAxisRef := NcAxis_GVL.MCS2,
+                                        iMotionLogger := fbMotionLogger,
+                                        iPersistentDataStorage := fbPersistentDataStorage
+                                    ) := (BrakeMode := E_StageBrakeMode.IF_MOVING, EnableMode:=ENUM_StageEnableMode.DURING_MOTION, HomeMode:=E_EpicsHomeCmd.LOW_LIMIT);
+    //
+    M2 : ST_MotionEpicsItf; // shared ressource
+    fbMotionStageX2 : FB_MotionStage(	sName := 'E-727',
+                                        stMotionEpicsItf := M2,
+                                        fbAxisRef := NcAxis_GVL.E727,
+                                        iMotionLogger := fbMotionLogger,
+                                        iPersistentDataStorage := fbPersistentDataStorage
+                                    ) := (BrakeMode := E_StageBrakeMode.IF_MOVING, EnableMode:=ENUM_StageEnableMode.DURING_MOTION, HomeMode:=E_EpicsHomeCmd.LOW_LIMIT);
+
+    bLimForward AT %Q*: BOOL := TRUE;
+    // NC Backward Limit Switch: TRUE if ok to move
+    bLimBackward AT %Q*: BOOL := TRUE;
+    // NO Home Switch: TRUE if at home
+    bLimHome AT %Q*: BOOL := TRUE;
+    //
+    bHardEnable AT %Q*: BOOL := TRUE;
+
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -17,24 +37,6 @@ END_VAR
 fbPersistentDataStorage();
 fbMotionStageX1();
 
-(*fbMotionInterlocksCommon();
-fbLimSwStatus();
-fbMotionInterlocksLimSw();
-fbResetNC();
-fbHaltNC();
-fbPowerNC();
-fbHomeNC();
-fbBacklashCompensation();
-fbMoveAbsoluteNC();
-fbAxisParametersNC();
-fbAxisStatusNC();
-fbMotionAxisNC();
-fbAxisParametersNC();
-fbAxisStatusNC();
-fbMotionDrive();*)
-// fbBrake();
-// fbMotionLogger();
-// fbPersistentDataStorage();
 ]]></ST>
     </Implementation>
   </POU>

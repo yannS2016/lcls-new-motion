@@ -2,32 +2,5 @@
 <TcPlcObject Version="1.1.0.1">
   <Itf Name="I_MotionInterlocksLimSw" Id="{fcbaac2d-99c6-4ac2-b5e1-5ff84c410a2f}">
     <Declaration><![CDATA[INTERFACE I_MotionInterlocksLimSw EXTENDS I_MotionInterlocks]]></Declaration>
-    <Property Name="LimBackward" Id="{2807d274-57ee-4def-aa2c-a4009714578f}">
-      <Declaration><![CDATA[PROPERTY LimBackward : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{d208d1a7-9806-43e1-8e2f-7288b40acaa5}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
-    <Property Name="LimForward" Id="{e79f6301-4e3a-4eab-b902-67acdad25510}">
-      <Declaration><![CDATA[PROPERTY LimForward : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{8badcb02-fc87-42e4-a2df-404bc435e727}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
-    <Property Name="LimHit" Id="{1763a576-b499-4aac-8d8d-d0aea4443572}">
-      <Declaration><![CDATA[PROPERTY LimHit : BOOL]]></Declaration>
-      <Get Name="Get" Id="{2aee2531-a38b-4683-926f-c704bbfba6bf}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
-    <Property Name="LimHome" Id="{f1091ee1-7ad9-4701-b7f4-4d555e824f8f}">
-      <Declaration><![CDATA[PROPERTY LimHome : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{7f567519-3c5d-4ad4-a495-e4ce557429ef}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
   </Itf>
 </TcPlcObject>

@@ -3,7 +3,8 @@
   <GVL Name="NcAxis_GVL" Id="{20959dfc-4621-4990-a644-86123eb1a246}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
-    testAxis : AXIS_REF;
+    MCS2 : AXIS_REF;
+    E727 : AXIS_REF;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

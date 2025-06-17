@@ -3,54 +3,36 @@
   <Itf Name="I_LimSwStatus" Id="{256e382d-89de-4efb-b391-22faa6fe67b6}">
     <Declaration><![CDATA[INTERFACE I_LimSwStatus
 ]]></Declaration>
-    <Method Name="AxisStatus" Id="{ad2a89e1-41ec-4053-88de-27c1f75c0736}">
+    <Method Name="AxisStatus" Id="{afcd9290-b3e1-49bf-8d19-11b94586fa43}">
       <Declaration><![CDATA[METHOD AxisStatus
 VAR_INPUT
-	HomeBusy: BOOL;
-	PositiveDirection : BOOL;
-	NegativeDirection : BOOL;
+    //HomeBusy	: BOOL;
+    PositiveDirection	: BOOL;
+    NegativeDirection	: BOOL;
 END_VAR
 ]]></Declaration>
     </Method>
-    <Method Name="DriveCommands" Id="{df511f30-cad4-4303-88ab-dcbcab9d3c4d}">
-      <Declaration><![CDATA[METHOD DriveCommands
-VAR_INPUT
-	Enable: BOOL;
-	NewMoveReq : BOOL;
-	Reset: BOOL;
-END_VAR
+    <Property Name="LimBackward" Id="{68b52e9f-1d3c-4df6-85ee-1ebe2f49d852}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY LimBackward : BOOL
 ]]></Declaration>
-    </Method>
-    <Property Name="LimBackward" Id="{d3e174fe-8267-4de9-813d-46b0b3cd2d9c}">
-      <Declaration><![CDATA[PROPERTY LimBackward : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{a3b4afe5-0e5a-44af-aa9a-8370d1c91f06}">
+      <Get Name="Get" Id="{4c7c79fc-0544-43b9-8d7a-5c3a42781093}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Property Name="LimForward" Id="{4df30b89-8ee7-49f7-b129-3ca64eaa1735}">
-      <Declaration><![CDATA[PROPERTY LimForward : BOOL
+    <Property Name="LimForward" Id="{f99a068d-d094-4bba-9373-2cc78b4facdc}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY LimForward : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{5e40816d-8df5-4674-a88e-d1f52596914e}">
+      <Get Name="Get" Id="{eb8ad37e-7bb6-42e3-8c99-52bef6ee8db0}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Property Name="LimHit" Id="{dee2d2af-22a0-47af-ab9b-17dc48dde618}">
-      <Declaration><![CDATA[PROPERTY LimHit : BOOL]]></Declaration>
-      <Get Name="Get" Id="{fc9ea001-e8c2-4858-954a-09da4fcb8eea}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
-    <Property Name="LimHome" Id="{f84feb6e-7376-4267-ad4f-1dd43787e440}">
-      <Declaration><![CDATA[PROPERTY LimHome : BOOL
+    <Property Name="LimHome" Id="{f4f52156-2af5-4624-9556-441d2ccf866e}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY LimHome : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{19bd3ff6-6d16-4669-8dec-b80565590b18}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
-    <Property Name="Message" Id="{e8b10816-08b9-43cf-a44e-3e2b5c9d0ccf}">
-      <Declaration><![CDATA[PROPERTY Message : T_MAXSTRING]]></Declaration>
-      <Get Name="Get" Id="{1ea16d51-c727-4125-a99b-38bd676d8335}">
+      <Get Name="Get" Id="{b851cfcd-dff8-43f8-8b4b-a29d1e05e648}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
@@ -63,12 +45,6 @@ END_VAR
     <Property Name="MoveForwardEnabled" Id="{c448b972-f646-4f09-a55d-f335dff878cb}">
       <Declaration><![CDATA[PROPERTY MoveForwardEnabled : BOOL]]></Declaration>
       <Get Name="Get" Id="{63539f14-b019-40ce-9a44-701a06eafced}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
-    <Property Name="Warning" Id="{1b98f41d-ef99-4e0f-8e76-a2ade70cd32d}">
-      <Declaration><![CDATA[PROPERTY Warning : BOOL]]></Declaration>
-      <Get Name="Get" Id="{25b7225f-f85c-46d5-99ff-635c5137c3d3}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>

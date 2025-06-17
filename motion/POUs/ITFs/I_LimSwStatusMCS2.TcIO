@@ -12,6 +12,14 @@
         <Declaration><![CDATA[]]></Declaration>
       </Set>
     </Property>
+    <Method Name="InternalLimits" Id="{35299885-28e2-415e-b733-185e9142885c}">
+      <Declaration><![CDATA[METHOD InternalLimits
+VAR_INPUT
+	InternalLimitActive : BOOL;
+	WarningCondition : BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
     <Property Name="LimOverride" Id="{c2b7a081-8622-4513-a352-40676732ddd4}">
       <Declaration><![CDATA[PROPERTY LimOverride : BOOL]]></Declaration>
       <Get Name="Get" Id="{92b682c9-0ed3-485f-b512-98fdd46e0b06}">
@@ -20,6 +28,18 @@
       <Set Name="Set" Id="{8cce1dba-985c-4025-a1be-c4f8cd661fe0}">
         <Declaration><![CDATA[]]></Declaration>
       </Set>
+    </Property>
+    <Property Name="MoveBackwardEnabled" Id="{de572613-9d45-4994-b1ca-1a9cc33027ab}">
+      <Declaration><![CDATA[PROPERTY MoveBackwardEnabled : BOOL]]></Declaration>
+      <Get Name="Get" Id="{fe29607c-fa72-4713-949d-b854b4bbd148}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="MoveForwardEnabled" Id="{fb7daac9-08b3-40e8-ba2b-252151fa276c}">
+      <Declaration><![CDATA[PROPERTY MoveForwardEnabled : BOOL]]></Declaration>
+      <Get Name="Get" Id="{f693efb7-a5a4-47bf-9045-f12740bf961e}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
     </Property>
     <Property Name="WarningCondition" Id="{b7bf2183-6b6f-4275-a585-bb63c58bc293}">
       <Declaration><![CDATA[PROPERTY WarningCondition : BOOL]]></Declaration>

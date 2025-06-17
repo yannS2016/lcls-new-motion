@@ -140,6 +140,24 @@ THIS^.PostHandling();
 // update EPICS status
 THIS^.UpdateParamAndStatus();]]></ST>
     </Implementation>
+    <Method Name="CallAfterInit" Id="{f39ddf47-4815-43e7-8049-e534fb9f6092}">
+      <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
+VAR_INPUT
+    stMotionEpicsItf : REFERENCE TO ST_MotionEpicsItf;
+    iBrake : I_Brake;
+    iMotionInterlocks : I_MotionInterlocks;
+    iMotionLogger : I_MotionLogger;
+    iMotionAxis: I_MotionAxis;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.stMotionEpicsItf REF=stMotionEpicsItf;
+THIS^.iMotionAxis := iMotionAxis;
+THIS^.iMotionLogger:=iMotionLogger;
+THIS^.iBrake:=iBrake;
+THIS^.iMotionInterlocks:=iMotionInterlocks;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="ClearVars" Id="{fc3a5981-a4d7-4a2d-bb30-c09c583c9e55}">
       <Declaration><![CDATA[METHOD ClearVars
 VAR_INPUT

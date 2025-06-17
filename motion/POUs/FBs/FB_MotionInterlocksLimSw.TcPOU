@@ -2,6 +2,10 @@
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_MotionInterlocksLimSw" Id="{158cbb88-3b97-40e2-97dc-4d7a82a1299f}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionInterlocksLimSw IMPLEMENTS I_MotionInterlocksLimSw
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
 VAR
     iMotionInterlocksCommon : I_MotionInterlocksCommon;
     iLimSwStatus : I_LimSwStatus;
@@ -20,24 +24,66 @@ VAR
     bMoveForwardEnabled  : BOOL;
     bPowerEnable : BOOL;
     Enable: BOOL;
+    {attribute 'hide'}
+    bLimHit : BOOL;
+    {attribute 'hide'}
+    ftForwardEnabled : F_TRIG;
+    {attribute 'hide'}
+    ftBackwardEnabled : F_TRIG;
+    {attribute 'hide'}
+    rtUserExec : R_TRIG;
+    {attribute 'hide'}
+    rtReset : R_TRIG;
+    {attribute 'hide'}
+    bLimHitIdling : BOOL;
+    {attribute 'hide'}
+    bLimHitMoving : BOOL;
+    {attribute 'hide'}
+    bWarning: BOOL;
+    {attribute 'hide'}
+    bPositiveDirection : BOOL;
+    {attribute 'hide'}
+    bNegativeDirection : BOOL;
+    {attribute 'hide'}
+    bHomeBusy : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF THIS^.iMotionInterlocksCommon.Error THEN
+      <ST><![CDATA[// Read Limits status and update shared space
+bMoveBackwardEnabled := THIS^.iLimSwStatus.MoveBackwardEnabled;
+bMoveForwardEnabled := THIS^.iLimSwStatus.MoveForwardEnabled;
+
+rtReset(CLK:=bReset);
+rtUserExec (CLK:=bNewMoveReq);
+ftForwardEnabled(CLK:=bMoveForwardEnabled);
+ftBackwardEnabled (CLK:=bMoveBackwardEnabled);
+
+IF NOT THIS^.bHomeBusy AND ((ftForwardEnabled.Q AND THIS^.bPositiveDirection)
+        OR (ftBackwardEnabled.Q AND THIS^.bNegativeDirection))THEN
+    // Not an error, just a warning
+    IF NOT bMoveForwardEnabled THEN
+            THIS^.sMessage:='Cannot move past Positive limit.';
+    ELSIF NOT bMoveBackwardEnabled THEN
+            THIS^.sMessage:='Cannot move past Negative limit.';
+    END_IF
+    THIS^.bWarning:=TRUE;
+    THIS^.bLimHit := TRUE;
+    THIS^.bLimHitMoving:=TRUE;
+ELSIF rtUserExec.Q OR rtReset.Q THEN
+    THIS^.bLimHit := FALSE;
+    THIS^.bLimHitMoving := bLimHit;
+    THIS^.bLimHitIdling := bLimHit;
+    THIS^.sMessage := '';
+    THIS^.bWarning := FALSE;
+END_IF
+
+
+IF THIS^.iMotionInterlocksCommon.Error THEN
     bError := THIS^.iMotionInterlocksCommon.Error;
     nErrorID := THIS^.iMotionInterlocksCommon.ErrorID;
     sMessage := THIS^.iMotionInterlocksCommon.Message;
-ELSIF THIS^.iLimSwStatus.Warning THEN
-    sMessage := THIS^.iLimSwStatus.Message;
 END_IF
-// Get Generalized MoveOk, Foward and backward enable signals
-bMoveOk := THIS^.iMotionInterlocksCommon.MoveOk;
-bMoveBackwardEnabled := THIS^.iLimSwStatus.MoveBackwardEnabled;
-bMoveForwardEnabled := THIS^.iLimSwStatus.MoveForwardEnabled;
-bPowerEnable := THIS^.iMotionInterlocksCommon.PowerEnabled;
-// Forward drive cmds to Generic interlocks and lim status FB
-//THIS^.iMotionInterlocks.DriveCommand(Enable:=bEnable, NewMoveReq:=bNewMoveReq, Reset:=bReset);
-//THIS^.iLimSwStatus.DriveCommands(Enable:=bEnable, NewMoveReq:=bNewMoveReq, Reset:=bReset);]]></ST>
+]]></ST>
     </Implementation>
     <Property Name="Aborted" Id="{a1175752-7c2c-4d2c-b0ac-3a4f9f39a027}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
@@ -74,9 +120,10 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.iLimSwStatus.AxisStatus(	HomeBusy:=HomeBusy,
-                                   PositiveDirection:=PositiveDirection,
-                                   NegativeDirection:=NegativeDirection );]]></ST>
+        <ST><![CDATA[bPositiveDirection := PositiveDirection;
+bNegativeDirection := NegativeDirection;
+bHomeBusy := HomeBusy;
+//THIS^.iLimSwStatus.AxisStatus(	PositiveDirection:=PositiveDirection,NegativeDirection:=NegativeDirection );]]></ST>
       </Implementation>
     </Method>
     <Property Name="Busy" Id="{a6daac7c-9df9-4ab9-ad3d-28aaab54bf26}">
@@ -92,10 +139,10 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="CallAfterInit" Id="{45c8027d-e1da-4d2e-ad22-2f2db9730c5f}">
+    <Method Name="CallAfterInit" Id="{04046040-41be-4ab4-ade8-8cbc22051e82}">
       <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
 VAR_INPUT
-	iMotionInterlocksCommon : I_MotionInterlocksCommon;
+    iMotionInterlocksCommon : I_MotionInterlocksCommon;
     iLimSwStatus : I_LimSwStatus;
 END_VAR
 ]]></Declaration>
@@ -126,9 +173,10 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[// Forward drive cmds to Generic interlocks and lim status FB
+        <ST><![CDATA[bReset :=  Reset;
+// Forward drive cmds to Generic interlocks and lim status FB
 THIS^.iMotionInterlocksCommon.DriveCommands(Enable:=Enable, NewMoveReq:=NewMoveReq, Reset:=Reset);
-THIS^.iLimSwStatus.DriveCommands(Enable:=Enable, NewMoveReq:=NewMoveReq, Reset:=Reset);]]></ST>
+]]></ST>
       </Implementation>
     </Method>
     <Property Name="Error" Id="{e499cdfd-969f-4051-8215-bd6b1edef6bb}">
@@ -170,7 +218,7 @@ VAR_INPUT
     iLimSwStatus : I_LimSwStatus;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.iMotionInterlocksCommon := iMotionInterlocksCommon;
+        <ST><![CDATA[THIS^.iMotionInterlocksCommon  := iMotionInterlocksCommon ;
 THIS^.iLimSwStatus := iLimSwStatus;]]></ST>
       </Implementation>
     </Method>
@@ -183,7 +231,7 @@ VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[InterlockEvent := THIS^.iLimSwStatus.LimHit;]]></ST>
+          <ST><![CDATA[InterlockEvent := THIS^.bLimHit;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -308,7 +356,7 @@ PROPERTY Warning : BOOL
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[Warning := THIS^.iLimSwStatus.Warning;]]></ST>
+          <ST><![CDATA[Warning := THIS^.bWarning;]]></ST>
         </Implementation>
       </Get>
     </Property>
