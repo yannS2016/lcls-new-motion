@@ -69,52 +69,51 @@
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\DS402NC.TcPOU">
+    <Compile Include="POUs\FBs\Common\FB_Brake.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FBs\Common\FB_DS402Common.TcPOU">
       <SubType>Code</SubType>
       <ExcludeFromBuild>true</ExcludeFromBuild>
+    </Compile>
+    <Compile Include="POUs\FBs\Common\FB_LimSwStatus.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FBs\Common\FB_LimSwStatusMCS2.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FBs\Common\FB_MotionAxisCommonDS402Old.TcPOU">
+      <SubType>Code</SubType>
+      <ExcludeFromBuild>true</ExcludeFromBuild>
+    </Compile>
+    <Compile Include="POUs\FBs\Common\FB_MotionDrive.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FBs\Common\FB_MotionInterlocksCommon.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FBs\Common\FB_MotionInterlocksLimSw.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FBs\Common\FB_MotionLogger.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FBs\Common\FB_PersistentDataStorage.TcPOU">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FBs\DS402\FB_HomeDS402.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\FB_Brake.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FBs\FB_DS402Common.TcPOU">
-      <SubType>Code</SubType>
-      <ExcludeFromBuild>true</ExcludeFromBuild>
-    </Compile>
-    <Compile Include="POUs\FBs\FB_LimSwStatus.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FBs\FB_LimSwStatusMCS2.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FBs\FB_MotionAxisCommonDS402Old.TcPOU">
-      <SubType>Code</SubType>
-      <ExcludeFromBuild>true</ExcludeFromBuild>
-    </Compile>
-    <Compile Include="POUs\FBs\FB_MotionDrive.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FBs\FB_MotionInterlocksCommon.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FBs\FB_MotionInterlocksLimSw.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FBs\FB_MotionLogger.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FBs\FB_PersistentDataStorage.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FBs\NC\FB_AxisParametersNC.TcPOU">
+    <Compile Include="POUs\FBs\NC\FB_ParamsSaveRestoreNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FBs\NC\FB_AxisStatusNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_BacklashCompensation.TcPOU">
+    <Compile Include="POUs\FBs\NC\FB_BacklashCompensationNC.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FBs\NC\FB_EncoderScaling.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FBs\NC\FB_HaltNC.TcPOU">
@@ -123,7 +122,7 @@
     <Compile Include="POUs\FBs\NC\FB_HomeNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_MotionAxisDS402NC.TcPOU">
+    <Compile Include="POUs\FBs\NC\FB_MotionAxisMCS2.TcPOU">
       <SubType>Code</SubType>
       <ExcludeFromBuild>false</ExcludeFromBuild>
     </Compile>
@@ -136,19 +135,34 @@
     <Compile Include="POUs\FBs\NC\FB_PowerNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FBs\NC\FB_ReadParameterNC.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\FBs\NC\FB_ResetNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FB_MotionStage.TcPOU">
+    <Compile Include="POUs\FBs\NC\FB_WriteParameterNC.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FBs\Samples\FB_MotionStage.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FBs\Samples\FB_MotionStageMCS2.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FBs\Samples\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\ITFs\I_AxisStatus.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_AxisParameters.TcIO">
+    <Compile Include="POUs\ITFs\I_ParamSaveRestore.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\ITFs\I_BacklashCompensation.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\ITFs\I_EncoderScaling.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\ITFs\I_Halt.TcIO">
@@ -181,9 +195,6 @@
     <Compile Include="POUs\ITFs\I_MotionInterlocksLimSw.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_MotionInterlocks_1.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\ITFs\I_Output.TcIO">
       <SubType>Code</SubType>
     </Compile>
@@ -208,12 +219,14 @@
     <Compile Include="POUs\ITFs\I_Power.TcIO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\ITFs\I_ReadParameter.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\ITFs\I_Reset.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\MAIN.TcPOU">
+    <Compile Include="POUs\ITFs\I_WriteParameter.TcIO">
       <SubType>Code</SubType>
-      <ExcludeFromBuild>false</ExcludeFromBuild>
     </Compile>
     <Compile Include="VISUs\motion.TcCD">
       <SubType>Code</SubType>
@@ -224,6 +237,8 @@
     <Folder Include="GVLs" />
     <Folder Include="POUs\FBs\DS402" />
     <Folder Include="POUs\FBs\NC" />
+    <Folder Include="POUs\FBs\Common" />
+    <Folder Include="POUs\FBs\Samples" />
     <Folder Include="POUs\ITFs" />
     <Folder Include="POUs\FBs" />
     <Folder Include="VISUs" />
@@ -284,6 +299,12 @@
         <o>
           <v n="Name">"{29BD8D0C-3586-4548-BB48-497B9A01693F}"</v>
           <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
+            <v>NamingConventions</v>
+            <o>
+              <v n="Name">"NamingConventions"</v>
+              <d n="SubKeys" t="Hashtable" />
+              <d n="Values" t="Hashtable" />
+            </o>
             <v>Rules</v>
             <o>
               <v n="Name">"Rules"</v>

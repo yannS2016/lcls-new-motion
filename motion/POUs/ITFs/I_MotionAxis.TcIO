@@ -24,8 +24,8 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
-    <Property Name="AxisParamsInit" Id="{0ac6452c-b5e1-4e22-865e-3cb2fa5bdfa5}">
-      <Declaration><![CDATA[PROPERTY AxisParamsInit : BOOL
+    <Property Name="AxisReadParamsInit" Id="{0ac6452c-b5e1-4e22-865e-3cb2fa5bdfa5}">
+      <Declaration><![CDATA[PROPERTY AxisReadParamsInit : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{cf5c8d62-269a-4b22-88e4-cc443108703c}">
         <Declaration><![CDATA[]]></Declaration>
@@ -310,6 +310,14 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
+    <Method Name="ReadAxisParams" Id="{b5d9cce7-3070-4803-8761-49f7954b0935}">
+      <Declaration><![CDATA[METHOD ReadAxisParams
+VAR_INPUT
+    Enable: BOOL;
+    RefreshDelay: TIME;
+END_VAR
+]]></Declaration>
+    </Method>
     <Method Name="Reset" Id="{45e1cd61-ad60-413b-ade5-3a5bb31fcab7}">
       <Declaration><![CDATA[METHOD Reset
 VAR_INPUT
@@ -336,6 +344,13 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
+    <Method Name="SaveAxisParams" Id="{e977ad32-fe70-4309-aa66-573f71717a0b}">
+      <Declaration><![CDATA[METHOD SaveAxisParams
+VAR_INPUT
+    Enable	: BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
     <Property Name="SavedPosition" Id="{9d2164dd-1e19-43d4-a6a1-ece31fd9adcb}">
       <Declaration><![CDATA[PROPERTY SavedPosition : LREAL
 ]]></Declaration>

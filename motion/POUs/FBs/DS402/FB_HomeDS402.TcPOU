@@ -29,7 +29,7 @@ VAR
     nModeOfOperation : SINT;
     nModeOfOperationDisplay : SINT;
     nMostRecentModeOfOperation : SINT;
-    eHomeMode: E_EpicsHomeCmd :=E_EpicsHomeCmd.NONE;
+    eHomeMode: E_EpicsHomeCmd :=E_EpicsHomeCmd.AUTOZERO;
     rtExec: R_TRIG;
     ftExec: F_TRIG;
     bMove  : BOOL;
@@ -46,15 +46,10 @@ END_VAR
 THIS^.rtExec(CLK:=THIS^.bCommandMoveHome);
 THIS^.ftExec(CLK:=THIS^.bCommandMoveHome);
 
-tonSyncHoming(PT:=T#500MS);
+tonSyncHoming(PT:=T#50MS);
 CASE THIS^.eHomeMode OF
     E_EpicsHomeCmd.AUTOZERO:
         THIS^.bMove := TRUE;
-    E_EpicsHomeCmd.ABSOLUTE_SET:
-        THIS^.fPosition:=0.0;
-        THIS^.bBusy := THIS^.rtExec.Q;
-        THIS^.bDone := NOT THIS^.rtExec.Q;
-        THIS^.bMove := FALSE;
     E_EpicsHomeCmd.NONE:
         THIS^.bMove := FALSE;
         THIS^.bBusy := THIS^.rtExec.Q;
@@ -70,7 +65,7 @@ IF THIS^.bMove THEN
     END_IF
     CASE eHomeState OF
         // Wait for a rising edge
-        E_HomeStates.IDLE:
+        E_MoveState.IDLING:
             IF THIS^.rtExec.Q THEN
                 THIS^.bDone := FALSE;
                 THIS^.bBusy := TRUE;
@@ -78,13 +73,16 @@ IF THIS^.bMove THEN
                 THIS^.nErrorID := 0;
                 THIS^.bAborted := FALSE;
                 THIS^.eHomeState := E_MoveState.INIT;
+                // make sure the run flag is clear, this would be the case
+                // in EnableMode ->ALWAYS and ModeofOperation ->CSP
+                nDriveControl:=15;
+                THIS^.tonSyncHoming.IN := TRUE;
             END_IF
         E_MoveState.INIT:
             // sdo write homing paramters;
             // This mode will be restore after homing
             THIS^.nMostRecentModeOfOperation := nModeOfOperationDisplay;
-            nDriveControl.4:=TRUE;
-            THIS^.tonSyncHoming.IN := TRUE;
+            nDriveControl:=31;
             // take some time for drive to register above commad and start
             // homming routine.
             IF tonSyncHoming.Q THEN
@@ -113,6 +111,10 @@ IF THIS^.bMove THEN
         E_MoveState.REACHED:
             bBusy:=FALSE;
             bDone:=TRUE;
+            //prepare next move
+            nDriveControl:=15;
+            // Restore default mode
+            nModeOfOperation:=THIS^.nMostRecentModeOfOperation;
             tonSyncHoming.IN := FALSE;
         E_MoveState.ERROR:
             bError:= TRUE;
@@ -121,13 +123,6 @@ IF THIS^.bMove THEN
             // HomeErrorID
             bBusy:= FALSE;
     END_CASE
-END_IF
-
-IF bDone THEN
-    //prepare next move
-    nDriveControl.4:=FALSE;
-    // Restore default mode
-    nModeOfOperation:=THIS^.nMostRecentModeOfOperation;
 END_IF
 
 //NB: The calling must forward control register for i/o update.
@@ -185,6 +180,17 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="CallAfterInit" Id="{fe9db625-490b-485d-a2d4-bb34c240c290}">
+      <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
+VAR_INPUT
+    iMotionLogger : I_MotionLogger;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iMotionLogger := iMotionLogger;
+]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="CommandMoveHome" Id="{ee03e6b2-d0a1-4de6-8b3b-367209048f73}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY CommandMoveHome : BOOL
@@ -218,7 +224,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[DS402Control := nDriveControl;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -229,7 +235,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[DS402ModeOfOperation  := nModeOfOperation;]]></ST>
         </Implementation>
       </Get>
     </Property>

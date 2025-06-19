@@ -12,7 +12,10 @@ VAR
     iPower : I_Power;
     iReset : I_Reset;
     iMoveAbsolute : I_MoveAbsolute;
-    iAxisParameters: I_AxisParameters;
+    iReadParameter : I_ReadParameter;
+    iWriteParameter  : I_WriteParameter;
+    iParamSaveRestore: I_ParamSaveRestore;
+    iEncoderScaling : I_EncoderScaling;
     iAxisStatus : I_AxisStatus;
     iBacklashCompensation : I_BacklashCompensation;
 
@@ -24,9 +27,7 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// Expose Axis Parameter
-THIS^.iAxisParameters.ExposeAxisParams(Enable:=TRUE, RefreshDelay:=T#1S);
-// Forward the abort event to homing block ( this is to sync the home state machine)
+      <ST><![CDATA[// Forward the abort event to homing block ( this is to sync the home state machine)
 // Clear local execs flags after a completed move or a completed interruption
 rtAbortDone(CLK:=(THIS^.iHalt.Done OR THIS^.iReset.Done));
 IF  rtAbortDone.Q THEN
@@ -72,15 +73,15 @@ END_VAR
         <ST><![CDATA[AxisEnabled:=THIS^.iAxisStatus.AxisEnabled();]]></ST>
       </Implementation>
     </Method>
-    <Property Name="AxisParamsInit" Id="{b8e5c5bb-b0b6-40eb-b5b6-dd5fb35ee51c}">
-      <Declaration><![CDATA[PROPERTY AxisParamsInit : BOOL
+    <Property Name="AxisReadParamsInit" Id="{b8e5c5bb-b0b6-40eb-b5b6-dd5fb35ee51c}">
+      <Declaration><![CDATA[PROPERTY AxisReadParamsInit : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{d8cc725d-08d5-44c2-b484-3f51796096a7}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[AxisParamsInit := THIS^.iAxisParameters.AxisParamsInit;
+          <ST><![CDATA[AxisReadParamsInit := THIS^.iReadParameter.AxisReadParamsInit;
 ]]></ST>
         </Implementation>
       </Get>
@@ -177,12 +178,15 @@ END_VAR
     <Method Name="CallAfterInit" Id="{8a27238f-4890-4bb4-988b-8be7a7ea7777}">
       <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
 VAR_INPUT
-	iHome : I_Home;
+    iHome : I_Home;
     iHalt : I_Halt;
     iPower : I_Power;
     iReset : I_Reset;
     iMoveAbsolute : I_MoveAbsolute;
-    iAxisParameters: I_AxisParameters;
+    iReadParameter : I_ReadParameter;
+    iWriteParameter  : I_WriteParameter;
+    iParamSaveRestore: I_ParamSaveRestore;
+    iEncoderScaling : I_EncoderScaling;
     iAxisStatus : I_AxisStatus;
     iBacklashCompensation : I_BacklashCompensation;
 END_VAR
@@ -193,9 +197,12 @@ THIS^.iHalt := iHalt;
 THIS^.iPower := iPower;
 THIS^.iReset := iReset;
 THIS^.iMoveAbsolute := iMoveAbsolute;
-THIS^.iAxisParameters:= iAxisParameters;
+THIS^.iReadParameter := iReadParameter ;
+THIS^.iWriteParameter  := iWriteParameter;
+THIS^.iParamSaveRestore:= iParamSaveRestore;
+THIS^.iEncoderScaling := iEncoderScaling;
 THIS^.iAxisStatus := iAxisStatus;
-THIS^.iBacklashCompensation := iBacklashCompensation;]]></ST>
+THIS^.iBacklashCompensation  := iBacklashCompensation ;]]></ST>
       </Implementation>
     </Method>
     <Property Name="Done" Id="{e427a588-061f-4aa9-9222-7199e3e5682b}">
@@ -259,10 +266,18 @@ ELSIF THIS^.iReset.Error  THEN
     bError:=THIS^.iReset.Error;
     nErrorId:=THIS^.iReset.ErrorID;
     sMessage := THIS^.iReset.Message;
-ELSIF THIS^.iAxisParameters.Error THEN
-    bError := THIS^.iAxisParameters.Error;
-    nErrorId := THIS^.iAxisParameters.ErrorID;
-    sMessage := THIS^.iAxisParameters.Message;
+ELSIF THIS^.iReadParameter.Error THEN
+    bError := THIS^.iReadParameter.Error;
+    nErrorId := THIS^.iReadParameter.ErrorID;
+    sMessage := THIS^.iReadParameter.Message;
+ELSIF THIS^.iWriteParameter.Error THEN
+    bError := THIS^.iWriteParameter.Error;
+    nErrorId := THIS^.iWriteParameter.ErrorID;
+    sMessage := THIS^.iWriteParameter.Message;
+ELSIF THIS^.iParamSaveRestore.Error THEN
+    bError := THIS^.iParamSaveRestore.Error;
+    nErrorId := THIS^.iParamSaveRestore.ErrorID;
+    sMessage := THIS^.iParamSaveRestore.Message;
 ELSE
     bError:=FALSE;
     nErrorId:=0;
@@ -282,17 +297,6 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="ExposeAxisParams" Id="{1abbea0a-4cf3-46ba-a85a-a7fcd0846d62}">
-      <Declaration><![CDATA[METHOD ExposeAxisParams
-VAR_INPUT
-    Enable	: BOOL;
-    RefreshDelay	: TIME;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[THIS^.iAxisParameters.ExposeAxisParams(Enable:=Enable, RefreshDelay:=RefreshDelay);]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="FB_Init" Id="{3a0215de-bf6a-4c80-80c1-3b20f275bf2c}">
       <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
 //The return value is not evaluated. For a specific influence, you can also declare the
@@ -308,11 +312,12 @@ VAR_INPUT
     iPower : I_Power;
     iReset : I_Reset;
     iMoveAbsolute : I_MoveAbsolute;
-    iAxisParameters: I_AxisParameters;
+    iReadParameter : I_ReadParameter;
+    iWriteParameter  : I_WriteParameter;
+    iParamSaveRestore: I_ParamSaveRestore;
+    iEncoderScaling : I_EncoderScaling;
     iAxisStatus : I_AxisStatus;
     iBacklashCompensation : I_BacklashCompensation;
-    //iMotionInterlocks: I_MotionInterlocks;
-
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.iHome := iHome;
@@ -320,10 +325,14 @@ THIS^.iHalt := iHalt;
 THIS^.iPower := iPower;
 THIS^.iReset := iReset;
 THIS^.iMoveAbsolute := iMoveAbsolute;
-THIS^.iAxisParameters:= iAxisParameters;
+THIS^.iReadParameter := iReadParameter ;
+THIS^.iWriteParameter  := iWriteParameter;
+THIS^.iParamSaveRestore:= iParamSaveRestore;
+THIS^.iEncoderScaling := iEncoderScaling;
 THIS^.iAxisStatus := iAxisStatus;
 THIS^.iBacklashCompensation  := iBacklashCompensation ;
-//THIS^.iMotionInterlocks := iMotionInterlocks;]]></ST>
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="Halt" Id="{8e589b74-150e-4146-8760-2ce7cd4c1a23}">
@@ -691,6 +700,17 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="ReadAxisParams" Id="{b4a17d98-327e-4fb3-91be-6ffbdb27eed3}">
+      <Declaration><![CDATA[METHOD ReadAxisParams
+VAR_INPUT
+    Enable	: BOOL;
+    RefreshDelay	: TIME;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iReadParameter.ReadParameters(Enable:=Enable, RefreshDelay:=RefreshDelay);]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="Reset" Id="{cd94c4b8-6191-42de-a670-30cee1e2d839}">
       <Declaration><![CDATA[METHOD Reset
 VAR_INPUT
@@ -733,10 +753,20 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[RestoreDone := THIS^.iAxisParameters.RestoreDone;]]></ST>
+          <ST><![CDATA[RestoreDone := THIS^.iParamSaveRestore.RestoreDone;]]></ST>
         </Implementation>
       </Get>
     </Property>
+    <Method Name="SaveAxisParams" Id="{b26155c4-7a52-4273-aab1-7b50f7613bd0}">
+      <Declaration><![CDATA[METHOD SaveAxisParams
+VAR_INPUT
+    Enable	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iParamSaveRestore.SaveAxisParams(Enable:=Enable);]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="SavedPosition" Id="{71101af8-1425-4601-8920-d5c3208896e2}">
       <Declaration><![CDATA[PROPERTY SavedPosition : LREAL
 ]]></Declaration>
@@ -745,7 +775,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[SavedPosition := THIS^.iAxisParameters.SavedPosition;]]></ST>
+          <ST><![CDATA[SavedPosition := THIS^.iParamSaveRestore.SavedPosition;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -757,7 +787,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[ScaledEncoderCount := THIS^.iAxisParameters.ScaledEncoderCount;]]></ST>
+          <ST><![CDATA[ScaledEncoderCount := THIS^.iEncoderScaling.EncoderCount;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -793,8 +823,8 @@ END_VAR
        THIS^.iMoveAbsolute.CommandMoveAbsolute := CmdExecute;
     E_EpicsMotorCmd.HOME:
         THIS^.iHome.Home( Execute:=CmdExecute,
-                            HomeSpeedFast:=THIS^.iAxisParameters.RefVeloSearch,
-                            HomeSpeedSlow:=THIS^.iAxisParameters.RefVeloSync );
+                            HomeSpeedFast:=THIS^.iReadParameter.RefVeloSearch,
+                            HomeSpeedSlow:=THIS^.iReadParameter.RefVeloSync );
 END_CASE
 // for typical NC axis no further tests needed
 StartMove := CmdExecute;]]></ST>

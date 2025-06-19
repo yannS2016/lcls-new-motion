@@ -57,7 +57,11 @@ VAR CONSTANT
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[THIS^.AxisRef.ReadStatus();
+      <ST><![CDATA[IF NOT __ISVALIDREF(THIS^.AxisRef) THEN
+    RETURN;
+END_IF
+
+THIS^.AxisRef.ReadStatus();
 // Test all homing mode for sync with drive statemachine.
 THIS^.fbMcSetPos.Options.ClearPositionLag := TRUE;
 THIS^.rtExec(CLK:=THIS^.bCommandMoveHome);
@@ -104,7 +108,7 @@ IF THIS^.bMove THEN
     END_IF
     CASE THIS^.nStateMachine OF
         // Wait for a rising edge
-        E_HomeStates.IDLE:
+        E_HomeStates.IDLING:
             THIS^.bBusy := FALSE;
             THIS^.nErrCount := 0;
             THIS^.fbMcSetPos(
@@ -239,7 +243,7 @@ IF THIS^.bMove THEN
                 Axis:=AxisRef,
                 Execute:=TRUE,
                 Position:=THIS^.fPosition);
-            THIS^.nStateMachine := E_HomeStates.IDLE;
+            THIS^.nStateMachine := E_HomeStates.IDLING;
             THIS^.bBusy := FALSE;
             THIS^.bDone := TRUE;
         E_HomeStates.ERROR:
@@ -319,7 +323,7 @@ END_VAR
     <Method Name="CallAfterInit" Id="{bf0efffc-cb26-4144-93d7-4a53b23636d4}">
       <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
 VAR_INPUT
-	AxisRef : REFERENCE TO AXIS_REF;
+    AxisRef : REFERENCE TO AXIS_REF;
     iMotionLogger : I_MotionLogger;
     iLimSwStatus : I_LimSwStatus;
 END_VAR

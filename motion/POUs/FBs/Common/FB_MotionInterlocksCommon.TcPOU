@@ -133,7 +133,7 @@ END_VAR
     <Method Name="CallAfterInit" Id="{bb25ce30-2def-4497-bead-4e7295fc730f}">
       <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
 VAR_INPUT
-	iMotionLogger : I_MotionLogger;
+    iMotionLogger : I_MotionLogger;
 END_VAR
 ]]></Declaration>
       <Implementation>

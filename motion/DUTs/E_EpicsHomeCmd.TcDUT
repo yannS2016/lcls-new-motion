@@ -11,8 +11,9 @@ TYPE E_EpicsHomeCmd :
     HOME_VIA_LOW := 3, // Home switch via low switch
     HOME_VIA_HIGH := 4, // Home switch via high switch
     ABSOLUTE_SET := 15, // Set here to be fHomePosition
-    // Piezo drives
+    // MCS2
     AUTOZERO := -1,
+	CURRENT_POSITION_METHOD := 37,
     NONE := -99 // Do not home, ever
 ) := NONE;
 END_TYPE

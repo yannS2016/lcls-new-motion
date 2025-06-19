@@ -16,7 +16,11 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[THIS^.AxisRef.ReadStatus();
+      <ST><![CDATA[IF NOT __ISVALIDREF(THIS^.AxisRef) THEN
+    RETURN;
+END_IF
+
+THIS^.AxisRef.ReadStatus();
 
 THIS^.fbMcReset(
     Axis := THIS^.AxisRef,
@@ -73,7 +77,7 @@ END_VAR
     <Method Name="CallAfterInit" Id="{771e705c-7d5a-4ab1-a753-7d7642187d6b}">
       <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
 VAR_INPUT
-	AxisRef : REFERENCE TO AXIS_REF;
+    AxisRef : REFERENCE TO AXIS_REF;
 END_VAR
 ]]></Declaration>
       <Implementation>

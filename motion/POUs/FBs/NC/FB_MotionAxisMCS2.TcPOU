@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="FB_MotionAxisDS402NC" Id="{0e4f30c7-9701-46fd-b9a3-891c9877e9a0}" SpecialFunc="None">
+  <POU Name="FB_MotionAxisMCS2" Id="{0e4f30c7-9701-46fd-b9a3-891c9877e9a0}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'call_after_init'}
-FUNCTION_BLOCK FB_MotionAxisDS402NC IMPLEMENTS I_MotionAxisDS402
+FUNCTION_BLOCK FB_MotionAxisMCS2 IMPLEMENTS I_MotionAxisDS402
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
@@ -15,10 +15,15 @@ VAR
     iPower : I_Power;
     iReset : I_Reset;
     iMoveAbsolute : I_MoveAbsolute;
-    iAxisParameters: I_AxisParameters;
+    iReadParameter : I_ReadParameter;
+    iWriteParameter  : I_WriteParameter;
+    iParamSaveRestore: I_ParamSaveRestore;
+    iEncoderScaling : I_EncoderScaling;
     iAxisStatus : I_AxisStatus;
     iBacklashCompensation : I_BacklashCompensation;
+    iLimSwStatus : I_LimSwStatusMCS2;
     stDS402Drive : ST_DS402Drive;
+
     bError: BOOL;
     bBusy : BOOL;
     bDone : BOOL;
@@ -27,10 +32,16 @@ VAR
     sMessage : T_MAXSTRING;
     rtAbortDone : R_TRIG;
     rtDone : R_TRIG;
-    nModeOfOperation : SINT;
+    // Default is CSP
+    nModeOfOperation : SINT := 8;
     nModeOfOperationDisplay : SINT;
     bStartMove : BOOL;
     bOperational: BOOL;
+    nDS402DriveControl :	UINT := 15;
+    rtNCModeUpdate : R_TRIG;
+    rtGenericModeUpdate : R_TRIG;
+    rtHomeDone : R_TRIG;
+    bReportOnce : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -45,11 +56,11 @@ IF stDS402Drive.stDriveStatus.ReadyToSwitchOn
     bOperational := TRUE;
 END_IF
 
-// IF NOT bOperational THEN
-//     //  Disclose loop operations
-//     stDS402Drive.nDS402DriveControl:=16#0F;
-// END_IF
-
+// We Forwwarding internal MCS2 limits, that's soft limits or end stop status locally, to keep
+// fbMotionDrive implmentation generic
+THIS^.iLimSwStatus.InternalLimits(	InternalLimitActive:=stDS402Drive.stDriveStatus.InternalLimitActive,
+                                    WarningCondition:=stDS402Drive.stDriveStatus.WarningCondition
+                                 );
 // NB: Homing is stDS402Drive agnostice thus, these status must be passed cyclicly
 // the status are hardware I/O provided, thus must be link to drive registers
 THIS^.iHome.DS402Status(	ModeOfOperationDisplay:=THIS^.stDS402Drive.nModeOfOperationDisplay,
@@ -57,10 +68,44 @@ THIS^.iHome.DS402Status(	ModeOfOperationDisplay:=THIS^.stDS402Drive.nModeOfOpera
                             Bit12OpModeSpecific:=THIS^.stDS402Drive.stDriveStatus.Bit12_OpModeSpecific,
                             TargetReached:=THIS^.stDS402Drive.stDriveStatus.TargetReached );
 
-// Homing routine must update the drive control and modeofoperation registers
+// Critical : do not remove
+rtHomeDone(CLK:=THIS^.iHome.Done);
+IF rtHomeDone.Q THEN
+    THIS^.nModeOfOperation := THIS^.iHome.DS402ModeOfOperation;
+    THIS^.nDS402DriveControl:=THIS^.nDS402DriveControl;
+END_IF
+
 IF THIS^.iHome.Busy THEN
-    THIS^.stDS402Drive.nModeOfOperation := THIS^.iHome.DS402ModeOfOperation;
-    THIS^.stDS402Drive.nDS402DriveControl:=THIS^.iHome.DS402Control;
+    THIS^.nDS402DriveControl:= THIS^.iHome.DS402Control;
+END_IF
+
+rtNCModeUpdate(CLK:=THIS^.stDS402Drive.nModeOfOperationNC = nModeOfOperation);
+rtGenericModeUpdate(CLK:=nModeOfOperation <> THIS^.stDS402Drive.nModeOfOperationNC);
+IF rtNCModeUpdate.Q THEN
+    THIS^.stDS402Drive.nModeOfOperation := THIS^.stDS402Drive.nModeOfOperationNC;
+END_IF
+
+IF rtGenericModeUpdate.Q THEN
+    THIS^.stDS402Drive.nModeOfOperation := nModeOfOperation;
+END_IF
+
+// Generic NC write
+//THIS^.nDS402DriveControl := THIS^.nDS402DriveControl OR THIS^.stDS402Drive.nDS402DriveControlNC;
+
+// IF THIS^.nDS402DriveControl <> THIS^.stDS402Drive.nDS402DriveControl THEN
+// 	THIS^.stDS402Drive.nDS402DriveControl:= THIS^.nDS402DriveControl;
+// END_IF
+
+IF THIS^.stDS402Drive.nModeOfOperationDisplay = 8 THEN
+    IF THIS^.stDS402Drive.nDS402DriveControl <> THIS^.stDS402Drive.nDS402DriveControlNC THEN
+        THIS^.stDS402Drive.nDS402DriveControl := THIS^.stDS402Drive.nDS402DriveControlNC;
+    END_IF
+
+ELSIF THIS^.stDS402Drive.nModeOfOperationDisplay = 6 THEN
+    IF THIS^.stDS402Drive.nDS402DriveControl <> THIS^.nDS402DriveControl THEN
+        THIS^.stDS402Drive.nDS402DriveControl:= THIS^.nDS402DriveControl;
+    END_IF
+
 END_IF
 
 bBusy :=	THIS^.iHome.Busy;
@@ -68,8 +113,6 @@ bDone:=	THIS^.iHome.Done;
 bError:=	THIS^.iHome.Error;
 nErrorID:=	THIS^.iHome.ErrorID;
 
-// Expose Axis Parameter
-THIS^.iAxisParameters.ExposeAxisParams(Enable:=TRUE, RefreshDelay:=T#1S);
 // Forward the abort event to homing block ( this is to sync the home state machine)
 // Clear local execs flags after a completed move or a completed interruption
 rtAbortDone(CLK:=(THIS^.iHalt.Done OR THIS^.iReset.Done));
@@ -118,15 +161,15 @@ END_VAR
         <ST><![CDATA[AxisEnabled:=THIS^.iAxisStatus.AxisEnabled();]]></ST>
       </Implementation>
     </Method>
-    <Property Name="AxisParamsInit" Id="{32334eb8-10f2-4d07-ab5b-86ebcd5e11a9}">
-      <Declaration><![CDATA[PROPERTY AxisParamsInit : BOOL
+    <Property Name="AxisReadParamsInit" Id="{32334eb8-10f2-4d07-ab5b-86ebcd5e11a9}">
+      <Declaration><![CDATA[PROPERTY AxisReadParamsInit : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{c98ae9f4-6b0e-43dd-855d-ea9149414625}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[AxisParamsInit := THIS^.iAxisParameters.AxisParamsInit;
+          <ST><![CDATA[AxisReadParamsInit := THIS^.iReadParameter.AxisReadParamsInit;
 ]]></ST>
         </Implementation>
       </Get>
@@ -220,6 +263,38 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="CallAfterInit" Id="{392e76f7-a514-4532-ba7d-f983b4d0999b}">
+      <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
+VAR_INPUT
+    iHome : I_HomeDS402;
+    iHalt : I_Halt;
+    iPower : I_Power;
+    iReset : I_Reset;
+    iMoveAbsolute : I_MoveAbsolute;
+    iReadParameter : I_ReadParameter;
+    iWriteParameter  : I_WriteParameter;
+    iParamSaveRestore: I_ParamSaveRestore;
+    iEncoderScaling : I_EncoderScaling;
+    iAxisStatus : I_AxisStatus;
+    iBacklashCompensation : I_BacklashCompensation;
+    iLimSwStatus : I_LimSwStatusMCS2;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iHome := iHome;
+THIS^.iHalt := iHalt;
+THIS^.iPower := iPower;
+THIS^.iReset := iReset;
+THIS^.iMoveAbsolute := iMoveAbsolute;
+THIS^.iReadParameter := iReadParameter ;
+THIS^.iWriteParameter  := iWriteParameter;
+THIS^.iParamSaveRestore:= iParamSaveRestore;
+THIS^.iEncoderScaling := iEncoderScaling;
+THIS^.iAxisStatus := iAxisStatus;
+THIS^.iBacklashCompensation  := iBacklashCompensation ;
+THIS^.iLimSwStatus := iLimSwStatus;]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="Done" Id="{981479f9-c694-4d1a-be9a-1752e6deb595}">
       <Declaration><![CDATA[PROPERTY Done : BOOL
 ]]></Declaration>
@@ -281,10 +356,18 @@ ELSIF THIS^.iReset.Error  THEN
     bError:=THIS^.iReset.Error;
     nErrorId:=THIS^.iReset.ErrorID;
     sMessage := THIS^.iReset.Message;
-ELSIF THIS^.iAxisParameters.Error THEN
-    bError := THIS^.iAxisParameters.Error;
-    nErrorId := THIS^.iAxisParameters.ErrorID;
-    sMessage := THIS^.iAxisParameters.Message;
+ELSIF THIS^.iReadParameter.Error THEN
+    bError := THIS^.iReadParameter.Error;
+    nErrorId := THIS^.iReadParameter.ErrorID;
+    sMessage := THIS^.iReadParameter.Message;
+ELSIF THIS^.iWriteParameter.Error THEN
+    bError := THIS^.iWriteParameter.Error;
+    nErrorId := THIS^.iWriteParameter.ErrorID;
+    sMessage := THIS^.iWriteParameter.Message;
+ELSIF THIS^.iParamSaveRestore.Error THEN
+    bError := THIS^.iParamSaveRestore.Error;
+    nErrorId := THIS^.iParamSaveRestore.ErrorID;
+    sMessage := THIS^.iParamSaveRestore.Message;
 ELSE
     bError:=FALSE;
     nErrorId:=0;
@@ -304,17 +387,6 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="ExposeAxisParams" Id="{a632f118-6207-4571-87e6-5c8ea26bb9ec}">
-      <Declaration><![CDATA[METHOD ExposeAxisParams
-VAR_INPUT
-    Enable	: BOOL;
-    RefreshDelay	: TIME;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[THIS^.iAxisParameters.ExposeAxisParams(Enable:=Enable, RefreshDelay:=RefreshDelay);]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="FB_Init" Id="{1dac3e04-3581-442d-91f0-9c2dc1b453ee}">
       <Declaration><![CDATA[(*FB_Init is always available implicitly and it is used primarily for initialization.
 The return value is not evaluated. For a specific influence, you can also declare the
@@ -331,9 +403,13 @@ VAR_INPUT
     iPower : I_Power;
     iReset : I_Reset;
     iMoveAbsolute : I_MoveAbsolute;
-    iAxisParameters: I_AxisParameters;
+    iReadParameter : I_ReadParameter;
+    iWriteParameter  : I_WriteParameter;
+    iParamSaveRestore: I_ParamSaveRestore;
+    iEncoderScaling : I_EncoderScaling;
     iAxisStatus : I_AxisStatus;
     iBacklashCompensation : I_BacklashCompensation;
+    iLimSwStatus : I_LimSwStatusMCS2;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -342,9 +418,13 @@ THIS^.iHalt := iHalt;
 THIS^.iPower := iPower;
 THIS^.iReset := iReset;
 THIS^.iMoveAbsolute := iMoveAbsolute;
-THIS^.iAxisParameters:= iAxisParameters;
+THIS^.iReadParameter := iReadParameter ;
+THIS^.iWriteParameter  := iWriteParameter;
+THIS^.iParamSaveRestore:= iParamSaveRestore;
+THIS^.iEncoderScaling := iEncoderScaling;
 THIS^.iAxisStatus := iAxisStatus;
 THIS^.iBacklashCompensation  := iBacklashCompensation ;
+THIS^.iLimSwStatus := iLimSwStatus;
 ]]></ST>
       </Implementation>
     </Method>
@@ -548,7 +628,7 @@ END_VAR
       <Implementation>
         <ST><![CDATA[THIS^.bModeSet := FALSE;
 IF THIS^.stDS402Drive.nModeOfOperationDisplay <> RecentModeOfOperation THEN
-    THIS^.stDS402Drive.nModeOfOperation := RecentModeOfOperation;
+    THIS^.nModeOfOperation := RecentModeOfOperation;
     THIS^.bModeSet := FALSE;
 ELSE
     THIS^.bModeSet := TRUE;
@@ -732,6 +812,17 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="ReadAxisParams" Id="{81a84f3a-84cf-4254-9954-3fdb1516b1d4}">
+      <Declaration><![CDATA[METHOD ReadAxisParams
+VAR_INPUT
+    Enable	: BOOL;
+    RefreshDelay	: TIME;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iReadParameter.ReadParameters(Enable:=Enable, RefreshDelay:=RefreshDelay);]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="Reset" Id="{4d4369f8-943f-4a1c-a1c1-d8b2bbc9be87}">
       <Declaration><![CDATA[METHOD Reset
 VAR_INPUT
@@ -774,10 +865,21 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[RestoreDone := THIS^.iAxisParameters.RestoreDone;]]></ST>
+          <ST><![CDATA[RestoreDone := THIS^.iParamSaveRestore.RestoreDone;]]></ST>
         </Implementation>
       </Get>
     </Property>
+    <Method Name="SaveAxisParams" Id="{03c2e33a-52c1-47ec-94f3-f539fcae2c3c}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD SaveAxisParams
+VAR_INPUT
+    Enable	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iParamSaveRestore.SaveAxisParams(Enable:=Enable);]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="SavedPosition" Id="{aa926740-9773-4290-acbd-1ab4f19e25fa}">
       <Declaration><![CDATA[PROPERTY SavedPosition : LREAL
 ]]></Declaration>
@@ -786,7 +888,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[SavedPosition := THIS^.iAxisParameters.SavedPosition;]]></ST>
+          <ST><![CDATA[SavedPosition := THIS^.iParamSaveRestore.SavedPosition;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -798,7 +900,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[ScaledEncoderCount := THIS^.iAxisParameters.ScaledEncoderCount;]]></ST>
+          <ST><![CDATA[//ScaledEncoderCount := THIS^.iAxisParameters.ScaledEncoderCount;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -840,8 +942,8 @@ CASE MoveMode  OF
     E_EpicsMotorCmd.HOME:
         IF THIS^.ModeOfOperation(RecentModeOfOperation:=6) THEN
             THIS^.iHome.Home( Execute:=CmdExecute AND bOperational,
-                                HomeSpeedFast:=THIS^.iAxisParameters.RefVeloSearch,
-                                HomeSpeedSlow:=THIS^.iAxisParameters.RefVeloSync );
+                                HomeSpeedFast:=THIS^.iReadParameter.RefVeloSearch,
+                                HomeSpeedSlow:=THIS^.iReadParameter.RefVeloSync );
             THIS^.bStartMove := TRUE;
         END_IF
 

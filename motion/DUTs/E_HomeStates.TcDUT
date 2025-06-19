@@ -6,7 +6,7 @@
 {attribute 'to_string'}
 TYPE E_HomeStates :
 (
-    IDLE:= 0,
+    IDLING:= 0,
     NEXT_MOVE:= 1,
     CHECK_FWD:= 2,
     CHECK_BWD:= 3,

@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="FB_AxisParametersNC" Id="{7f8d36cc-18a1-4d6c-99dd-bd0795394dcd}" SpecialFunc="None">
+  <POU Name="FB_ParamsSaveRestoreNC" Id="{7f8d36cc-18a1-4d6c-99dd-bd0795394dcd}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'call_after_init'}
-FUNCTION_BLOCK FB_AxisParametersNC IMPLEMENTS I_AxisParameters
+FUNCTION_BLOCK FB_ParamsSaveRestoreNC IMPLEMENTS I_ParamSaveRestore
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
@@ -85,43 +85,11 @@ VAR PERSISTENT
     fSavedPosition: LREAL;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[THIS^.AxisRef.ReadStatus();
-
-// Calibrate raw encoder data
-THIS^.ScaleRawEncoder();
-
-// Periodic update of NC parameters
-NCParamsTimer( IN:=bUpdateEnable AND NOT bExecute, PT:=tRefreshDelay);
-bExecute S= NCParamsTimer.Q;
-mcReadParams(
-    Parameter:=THIS^.stAxisParameters,
-    Axis:=THIS^.AxisRef,
-    Execute:=bUpdateEnable AND bExecute,
-    Error=>bError,
-    ErrorID=>nErrorID,
-    Busy=>bBusy,
-    Done => bDone);
-
-// Copy axis parameters that we want to expose to the EPICS layer.
-THIS^.stAxisParametersExposed.bCtrlEnablePosDiffControl     := THIS^.stAxisParameters.bCtrlEnablePosDiffControl;
-THIS^.stAxisParametersExposed.bEncEnableSoftEndMaxControl   := THIS^.stAxisParameters.bEncEnableSoftEndMaxControl;
-THIS^.stAxisParametersExposed.bEncEnableSoftEndMinControl   := THIS^.stAxisParameters.bEncEnableSoftEndMinControl;
-THIS^.stAxisParametersExposed.fAccelerationMax              := THIS^.stAxisParameters.fAccelerationMax;
-THIS^.stAxisParametersExposed.fCtrlPosDiffMax               := THIS^.stAxisParameters.fCtrlPosDiffMax;
-THIS^.stAxisParametersExposed.fCtrlPosDiffMaxTime           := THIS^.stAxisParameters.fCtrlPosDiffMaxTime;
-THIS^.stAxisParametersExposed.fDecelerationMax              := THIS^.stAxisParameters.fDecelerationMax;
-THIS^.stAxisParametersExposed.fEncSoftEndMax                := THIS^.stAxisParameters.fEncSoftEndMax;
-THIS^.stAxisParametersExposed.fEncSoftEndMin                := THIS^.stAxisParameters.fEncSoftEndMin;
-THIS^.stAxisParametersExposed.fVeloMaximum                  := THIS^.stAxisParameters.fVeloMaximum;
-THIS^.stAxisParametersExposed.fEncOffset               		:= THIS^.stAxisParameters.fEncOffset;
-THIS^.stAxisParametersExposed.fEncScaleFactorInternal       := THIS^.stAxisParameters.fEncScaleFactorInternal;
-
-IF mcReadParams.ErrorID <> 0 THEN
-    nLatchErrId := 0;
+      <ST><![CDATA[IF NOT __ISVALIDREF(THIS^.AxisRef) THEN
+    RETURN;
 END_IF
-bExecute R= mcReadParams.Done OR mcReadParams.Error;
-THIS^.bAxisParamsInit S= mcReadParams.Done;
 
+THIS^.AxisRef.ReadStatus();
 
 // Save Encoder position
 // needs some pre-conditions to use persistent storage
@@ -170,19 +138,6 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="AxisParamsInit" Id="{a0575603-f379-443c-8fcf-402542f903ce}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY AxisParamsInit : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{2ef7b70d-e8b5-4a7c-b6d9-8882f4c8d790}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[AxisParamsInit := bAxisParamsInit;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
     <Property Name="Busy" Id="{e5dec030-d598-46fd-afca-22fd9bde3a46}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY Busy : BOOL
@@ -199,7 +154,7 @@ END_VAR
     <Method Name="CallAfterInit" Id="{1d48b6b6-5d18-47cf-8816-5058ff3a06eb}">
       <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
 VAR_INPUT
-	AxisRef : REFERENCE TO AXIS_REF;
+    AxisRef : REFERENCE TO AXIS_REF;
     iPersistentDataStorage : I_PersistentDataStorage;
 END_VAR
 ]]></Declaration>
@@ -222,17 +177,6 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="EncoderParamsSave" Id="{29eaeb35-c218-4604-adff-fca8f06a68eb}">
-      <Declaration><![CDATA[METHOD EncoderParamsSave
-VAR_INPUT
-    Enable	: BOOL;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[THIS^.bSaveEnabled := Enable;
-]]></ST>
-      </Implementation>
-    </Method>
     <Property Name="Error" Id="{239ac2b3-3c2a-4399-a932-e6c718d2e1bb}">
       <Declaration><![CDATA[{warning 'add property implementation'}
 PROPERTY Error : BOOL
@@ -259,17 +203,6 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="ExposeAxisParams" Id="{d1c3b848-a85c-4697-aa4e-a392a6f23769}">
-      <Declaration><![CDATA[METHOD ExposeAxisParams
-VAR_INPUT
-    Enable: BOOL;
-    RefreshDelay: TIME;
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[THIS^.bUpdateEnable:= Enable;
-THIS^.tRefreshDelay:= RefreshDelay;]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="FB_Init" Id="{6c116c09-ef45-432c-8e07-3fe37fad5966}">
       <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
 //The return value is not evaluated. For a specific influence, you can also declare the
@@ -297,32 +230,6 @@ END_VAR
 ]]></Declaration>
         <Implementation>
           <ST><![CDATA[Message := sMessage;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="RefVeloSearch" Id="{5735fb85-0be0-4a0c-80a8-b61350b0c2d1}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY RefVeloSearch : LREAL
-]]></Declaration>
-      <Get Name="Get" Id="{af40d57e-8351-45be-9af1-5d364693fb2b}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[RefVeloSearch := THIS^.stAxisParameters.fRefVeloSearch;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="RefVeloSync" Id="{a6e12d44-9094-4586-b6c6-065562b64be3}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY RefVeloSync : LREAL
-]]></Declaration>
-      <Get Name="Get" Id="{dfa185c9-0e75-4040-80b1-2e94d9447652}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[RefVeloSync:= THIS^.stAxisParameters.fRefVeloSync;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -381,6 +288,17 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="SaveAxisParams" Id="{29eaeb35-c218-4604-adff-fca8f06a68eb}">
+      <Declaration><![CDATA[METHOD SaveAxisParams
+VAR_INPUT
+    Enable	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.bSaveEnabled := Enable;
+]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="SavedPosition" Id="{4a2e7fd2-dff9-49f3-8bb0-6e6d2bbd5bd1}">
       <Declaration><![CDATA[{warning 'add property implementation'}
 PROPERTY SavedPosition : LREAL
@@ -394,41 +312,5 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="ScaledEncoderCount" Id="{d81c0e55-4ea7-4a05-869f-d72e8a4ea95e}">
-      <Declaration><![CDATA[{warning 'add property implementation'}
-PROPERTY ScaledEncoderCount : UDINT
-]]></Declaration>
-      <Get Name="Get" Id="{3c473915-1f59-45dd-90cc-be2e45b56ba4}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Method Name="ScaleRawEncoder" Id="{eb3341cc-367a-44d0-8a42-35c37667da1b}">
-      <Declaration><![CDATA[METHOD ScaleRawEncoder : UDINT
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[IF nRawEncoderULINT <> 0 THEN
-    IF nRawEncoderULINT < 4294967296 THEN
-        nEncoderCount := ULINT_TO_UDINT(nRawEncoderULINT);
-    ELSE
-        nEncoderCount := ULINT_TO_UDINT(18446744073709551615 - nRawEncoderULINT);
-    END_IF
-ELSIF nRawEncoderUINT <> 0 THEN
-    nEncoderCount := UINT_TO_UDINT(nRawEncoderUINT);
-ELSIF nRawEncoderINT <> 0 THEN
-    nEncoderCount := INT_TO_UDINT(nRawEncoderINT);
-ELSIF nRawEncoderDINT <> 0 THEN
-    nEncoderCount := DINT_TO_UDINT(nRawEncoderDINT);
-ELSE
-    nEncoderCount := 0;
-END_IF
-
-ScaleRawEncoder := nEncoderCount ;]]></ST>
-      </Implementation>
-    </Method>
   </POU>
 </TcPlcObject>

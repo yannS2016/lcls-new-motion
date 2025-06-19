@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="FB_BacklashCompensation" Id="{15421978-726d-43ca-8e30-d33510c30e01}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_BacklashCompensation IMPLEMENTS I_BacklashCompensation
+  <POU Name="FB_BacklashCompensationNC" Id="{15421978-726d-43ca-8e30-d33510c30e01}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_BacklashCompensationNC IMPLEMENTS I_BacklashCompensation
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
@@ -61,7 +61,11 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[THIS^.AxisRef.ReadStatus();
+      <ST><![CDATA[IF NOT __ISVALIDREF(THIS^.AxisRef) THEN
+    RETURN;
+END_IF
+
+THIS^.AxisRef.ReadStatus();
 
 (*Note: Configure within the axis parameters set "position correction" to true
     Directional change FOR compensation
@@ -178,7 +182,7 @@ END_VAR
     <Method Name="CallAfterInit" Id="{59b21a6b-3d1b-46f2-866a-5384398ac207}">
       <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
 VAR_INPUT
-	AxisRef : REFERENCE TO AXIS_REF;
+    AxisRef : REFERENCE TO AXIS_REF;
 END_VAR
 ]]></Declaration>
       <Implementation>

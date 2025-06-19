@@ -129,28 +129,26 @@ END_VAR
       </Set>
     </Property>
     <Property Name="MoveBackwardEnabled" Id="{eccf17a9-719a-4c3e-be00-13d2ff40a848}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY MoveBackwardEnabled : BOOL
+      <Declaration><![CDATA[PROPERTY MoveBackwardEnabled : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{90fc8736-3356-4c91-ad5a-653e31d1f3c7}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[ MoveBackwardEnabled := bMoveBackwardEnabled;]]></ST>
         </Implementation>
       </Get>
     </Property>
     <Property Name="MoveForwardEnabled" Id="{34a229a6-baa1-4b86-a121-499909debdce}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY MoveForwardEnabled : BOOL
+      <Declaration><![CDATA[PROPERTY MoveForwardEnabled : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{66284a56-ab30-4db4-a044-8207c4c32f35}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[MoveForwardEnabled := bMoveForwardEnabled;]]></ST>
         </Implementation>
       </Get>
     </Property>

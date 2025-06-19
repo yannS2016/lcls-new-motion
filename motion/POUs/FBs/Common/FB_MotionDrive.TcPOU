@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_MotionDrive" Id="{60d91316-04e3-4af1-aaa1-6a890af932f7}" SpecialFunc="None">
-    <Declaration><![CDATA[{attribute 'call_after_init'}
-FUNCTION_BLOCK FB_MotionDrive IMPLEMENTS I_MotionDrive
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionDrive IMPLEMENTS I_MotionDrive
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
@@ -22,7 +21,7 @@ VAR
     {attribute 'hide'}
     eMoveMode : E_EpicsMotorCmd := E_EpicsMotorCmd.MOVE_ABSOLUTE;
     // Determines when we automatically enable the motor
-    {attribute 'hide'}
+    //{attribute 'hide'}
     eEnableMode: E_StageEnableMode:=E_StageEnableMode.DURING_MOTION;
 
     (* Shortcut Commands *)
@@ -312,6 +311,12 @@ THIS^.iMotionAxis.PowerEnables(Enable:=iMotionInterlocks.PowerEnabled,
 
 // Forward axis state to brake FB
 THIS^.iBrake.AxisState := iMotionAxis.AxisState;
+
+// Read Axis Parameter
+THIS^.iMotionAxis.ReadAxisParams(Enable:=TRUE, RefreshDelay:=T#1S);
+
+// Save and Restore
+THIS^.iMotionAxis.SaveAxisParams(Enable:=TRUE);
 
     ]]></ST>
       </Implementation>
