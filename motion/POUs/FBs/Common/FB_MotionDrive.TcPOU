@@ -103,6 +103,12 @@ VAR
     rtRestoreDone : R_TRIG;
     {attribute 'hide'}
     bHaltEvent : BOOL;
+	// move state machine to error state in case a move command gets stuck after 
+	// the corresponding start signal was forwarded. the start signal should yeild a busy true response.
+	// the move processing block may get stuck and return no errors. this is a contingency to make sure that reset would reinit all state machines.
+	tonSyncTimer : TON;
+	bLocalError : BOOL;
+	bLocalMessage : T_MAXSTRING;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -122,13 +128,17 @@ ELSIF iMotionInterlocks.Error THEN
    stMotionEpicsItf.bError := iMotionInterlocks.Error;
    stMotionEpicsItf.nErrorId := iMotionInterlocks.ErrorID;
    stMotionEpicsItf.sErrorMessage := iMotionInterlocks.Message;
+ELSIF bLocalError THEN
+   stMotionEpicsItf.bError := bLocalError;
+   stMotionEpicsItf.sErrorMessage := bLocalMessage;
 // Warnings have lowest priority
 ELSIF iMotionInterlocks.Warning THEN
    stMotionEpicsItf.sErrorMessage := iMotionInterlocks.Message;
 ELSE
-   stMotionEpicsItf.bError := FALSE;
-   stMotionEpicsItf.nErrorId := 0;
-   stMotionEpicsItf.sErrorMessage := '';
+   	stMotionEpicsItf.bError := FALSE;
+   	stMotionEpicsItf.nErrorId := 0;
+   	stMotionEpicsItf.sErrorMessage := '';
+   
 END_IF
 
 THIS^.PreHandling();
@@ -172,7 +182,9 @@ THIS^.bLocalExec := FALSE;
 THIS^.bHomeCmd:=FALSE;
 THIS^.bMoveCmd:=FALSE;
 THIS^.binitStart := FALSE;
-THIS^.bCmdExecute := FALSE;]]></ST>
+THIS^.bCmdExecute := FALSE;
+THIS^.tonSyncTimer.IN:=FALSE;
+]]></ST>
       </Implementation>
     </Method>
     <Property Name="EnableMode" Id="{b16f2630-6990-4b39-b9f8-520a45141d0c}">
@@ -273,6 +285,8 @@ THIS^.bPrepareDisable S= (eEnableMode = E_StageEnableMode.DURING_MOTION ) AND TH
 IF THIS^.stMotionEpicsItf.bReset THEN
    // Relese motion cmds
    THIS^.ClearVars(Done:=FALSE);
+ 			THIS^.bLocalError := FALSE;
+			THIS^.bLocalMessage := '';
    // Forward general reset event
    THIS^.iMotionAxis.Reset(Execute:= THIS^.stMotionEpicsItf.bReset);
    THIS^.stMotionEpicsItf.bReset := FALSE;
@@ -470,13 +484,18 @@ CASE eMoveState OF
        END_IF
        // configure and start move.
        IF iMotionAxis.StartMove( eMoveMode, bCmdExecute ) THEN
+		   tonSyncTimer.IN:=TRUE;
            eMoveState := E_MoveState.STARTED;
        END_IF
 
    E_MoveState.STARTED:
        IF stMotionEpicsItf.bError THEN
            eMoveState := E_MoveState.ERROR;
-       // Move Started. use a timer to force quit this state if no response from axis
+        // Move Started? use a timer to force quit this state if no response from axis
+       ELSIF tonSyncTimer.Q THEN
+		   bLocalError := TRUE;
+		   bLocalMessage := 'No Response from Axis';
+           eMoveState := E_MoveState.ERROR;
        ELSIF iMotionAxis.Busy THEN
            eMoveState := E_MoveState.IN_PROGRESS;
        END_IF
@@ -512,11 +531,14 @@ CASE eMoveState OF
    E_MoveState.ERROR:
        THIS^.ClearVars(Done:=FALSE);
        THIS^.stMotionEpicsItf.bEnable := FALSE;
+
        IF ftError.Q THEN
            eMoveState := E_MoveState.IDLING;
        END_IF
 
-END_CASE]]></ST>
+END_CASE
+// the wait time is about 5 plc task cycle
+ tonSyncTimer(PT:=T#5S);]]></ST>
       </Implementation>
     </Method>
     <Method Name="UpdateParamAndStatus" Id="{bec7d97e-d393-4df3-816c-df000a420230}">
