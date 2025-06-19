@@ -1,0 +1,412 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_MotionAxisCommonDS402Old" Id="{da599580-4fae-4a91-a98c-8fb0225e058f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionAxisCommonDS402Old IMPLEMENTS I_MotionAxisCommonDS402
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+
+END_VAR
+
+
+VAR CONSTANT
+    nScaleOffsetBase	: WORD := 16#2007;
+    nScaleInvBase		: WORD := 16#2008;
+    nMotorLoadbase		: WORD := 16#200d;
+    nSoftLimBase		: WORD := 16#200e;
+    nHomeOffsetBase		: WORD := 16#607C;
+    nHomingMethodBase	: WORD := 16#6098;
+    nHomingSpeedBase	: WORD := 16#6099;
+    nhomingAccBase		: WORD := 16#609A;
+    nErrorCodeBase		: WORD := 16#603f;
+    nFErrWinBase		: WORD := 16#6065;
+    nOlStepBase			: WORD := 16#2022;
+    nOlStepAmpBase		: WORD := 16#2023;
+    nOlStepFreqBase		: WORD := 16#2024;
+    // True for SmartAct MCS2 and E-727.
+    nChanOfsBase		: WORD := 16#800;
+    // DS 402 Motor encoder defective code : this is needed for save and restore.
+    nEncErrorCode		: WORD := 16#7300;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="DefaultScalingFactor" Id="{391daf08-359f-4b01-be08-be1bb56a215d}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY DefaultScalingFactor : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{782744e1-79a4-49f9-a47d-0c71c2ac1999}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{6d2a7b4d-3c99-4c97-9bc2-5ab1b71e048c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="DS402DriveStateMachine" Id="{456054c4-135a-4c6b-bfdc-3cf49d86877f}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD DS402DriveStateMachine
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[rtFault(CLK:=bFault	);
+
+IF eDriveState<>E_DS402DriveState.OPERATION_ENABLED THEN
+    bOperational:=FALSE;
+END_IF
+
+(*switch on disable*)
+IF NOT stPiezoStage.stPiezoDriveStatus.ReadyToSwitchOn
+    AND NOT stPiezoStage.stPiezoDriveStatus.SwitchedOn
+    AND NOT stPiezoStage.stPiezoDriveStatus.OperationEnabled
+    AND NOT stPiezoStage.stPiezoDriveStatus.Fault
+    AND stPiezoStage.stPiezoDriveStatus.VoltageEnabled
+    AND NOT stPiezoStage.stPiezoDriveStatus.QuickStopActive
+    AND  stPiezoStage.stPiezoDriveStatus.SwitchOnDisabled THEN
+
+    eDriveState :=E_DS402DriveState.SWITCH_ON_DISABLED;
+END_IF
+
+(*Ready to switch*)
+IF stPiezoStage.stPiezoDriveStatus.ReadyToSwitchOn
+    AND NOT stPiezoStage.stPiezoDriveStatus.SwitchedOn
+    AND NOT stPiezoStage.stPiezoDriveStatus.OperationEnabled
+    AND NOT stPiezoStage.stPiezoDriveStatus.Fault
+    AND stPiezoStage.stPiezoDriveStatus.VoltageEnabled
+    AND stPiezoStage.stPiezoDriveStatus.QuickStopActive
+    AND NOT stPiezoStage.stPiezoDriveStatus.SwitchOnDisabled THEN
+
+    bFault := FALSE;
+    eDriveState :=E_DS402DriveState.SWITCH_ON_READY;
+END_IF
+
+(*Switch on*)
+IF stPiezoStage.stPiezoDriveStatus.ReadyToSwitchOn
+    AND  stPiezoStage.stPiezoDriveStatus.SwitchedOn
+    AND NOT stPiezoStage.stPiezoDriveStatus.OperationEnabled
+    AND NOT stPiezoStage.stPiezoDriveStatus.Fault
+    AND stPiezoStage.stPiezoDriveStatus.VoltageEnabled
+    AND stPiezoStage.stPiezoDriveStatus.QuickStopActive
+    AND NOT stPiezoStage.stPiezoDriveStatus.SwitchOnDisabled THEN
+
+    eDriveState :=E_DS402DriveState.SWITCH_ON;
+END_IF
+
+(*Operation enbaled*)
+IF stPiezoStage.stPiezoDriveStatus.ReadyToSwitchOn
+    AND stPiezoStage.stPiezoDriveStatus.SwitchedOn
+    AND stPiezoStage.stPiezoDriveStatus.OperationEnabled
+    AND NOT stPiezoStage.stPiezoDriveStatus.Fault
+    AND stPiezoStage.stPiezoDriveStatus.VoltageEnabled
+    AND stPiezoStage.stPiezoDriveStatus.QuickStopActive
+    AND NOT stPiezoStage.stPiezoDriveStatus.SwitchOnDisabled THEN
+
+    eDriveState :=E_DS402DriveState.OPERATION_ENABLED;
+END_IF
+
+(*Quick Stop: Note used for MCS2*)
+IF stPiezoStage.stPiezoDriveStatus.ReadyToSwitchOn
+    AND stPiezoStage.stPiezoDriveStatus.SwitchedOn
+    AND stPiezoStage.stPiezoDriveStatus.OperationEnabled
+    AND NOT stPiezoStage.stPiezoDriveStatus.Fault
+    AND stPiezoStage.stPiezoDriveStatus.VoltageEnabled
+    AND NOT stPiezoStage.stPiezoDriveStatus.QuickStopActive
+    AND NOT stPiezoStage.stPiezoDriveStatus.SwitchOnDisabled THEN
+
+    eDriveState :=E_DS402DriveState.QUICK_STOP_ACTIVE;
+END_IF
+
+(*Fault*)
+IF  NOT stPiezoStage.stPiezoDriveStatus.ReadyToSwitchOn
+    AND NOT stPiezoStage.stPiezoDriveStatus.SwitchedOn
+    AND NOT stPiezoStage.stPiezoDriveStatus.OperationEnabled
+    AND stPiezoStage.stPiezoDriveStatus.Fault
+    AND stPiezoStage.stPiezoDriveStatus.VoltageEnabled
+    AND NOT stPiezoStage.stPiezoDriveStatus.QuickStopActive
+    AND NOT stPiezoStage.stPiezoDriveStatus.SwitchOnDisabled THEN
+    bFault := TRUE;
+    eDriveState :=E_DS402DriveState.FAULT;
+END_IF
+
+
+
+CASE eDriveState  OF
+
+    E_DS402DriveState.SWITCH_ON_DISABLED:;
+        bFault := FALSE;
+    E_DS402DriveState.SWITCH_ON_READY:;
+        bFault := FALSE;
+    E_DS402DriveState.SWITCH_ON:;
+        // catch most recent motion error
+        IF Error THEN
+            McAxisState:=MC_AxisStates.MC_AXISSTATE_ERRORSTOP;
+        ELSE
+            McAxisState:=MC_AxisStates.MC_AXISSTATE_DISABLED;
+        END_IF
+
+    E_DS402DriveState.OPERATION_ENABLED:;
+        IF (bServoOffMode OR bServoOnMode) AND NOT THIS^.MoveBusy THEN
+            bOperational := TRUE;
+            McAxisState:=MC_AxisStates.MC_AXISSTATE_STANDSTILL;
+        END_IF
+
+    E_DS402DriveState.FAULT:;
+        (* This is not a motion fault but rather a hardware, lost of enabled, wc or loss of calibration issue
+            The condition will set bit 3 'fault' but not bit 13 'error' so waiting in the error state would won't  clear this condition *)
+        IF rtFault.Q THEN
+            Error := TRUE;
+            McAxisState:=MC_AxisStates.MC_AXISSTATE_UNDEFINED;
+        END_IF
+        // Catch the drive errors code
+        ReadDriveErrors();
+
+    E_DS402DriveState.QUICK_STOP_ACTIVE:;
+
+
+END_CASE
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="HomeBusy" Id="{374ea3ee-a5f9-43a8-8218-dbd1513f1387}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY HomeBusy : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{b77a2b63-9ac0-4b02-85c4-cebd16051a9e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="HomeDone" Id="{d6071802-7680-4d00-84a1-e0be1c9444cb}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY HomeDone : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{548205db-1426-42f5-9b6b-e58f0f9122ac}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{7add27b9-e893-4962-bac0-12b14929b707}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="HomeDS402" Id="{326bfaed-11e8-475f-9e97-245b187b56ff}">
+      <Declaration><![CDATA[METHOD HomeDS402
+VAR_INPUT
+    Enable: BOOL;
+    HomingMethod : E_DS402HomingMethod;
+    HomingSpeedsFast : LREAL;
+    HomingSpeedsSlow : LREAL;
+    HomingAcceleration : LREAL;
+    HomeOffset : LREAL;
+    fHomePosition : LREAL :=0.0;
+    UserAbort : BOOL;
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(*Operation enbaled*)
+IF stDS402Drive.stDS402DriveStatus.ReadyToSwitchOn
+    AND stDS402Drive.stDS402DriveStatus.SwitchedOn
+    AND stDS402Drive.stDS402DriveStatus.OperationEnabled
+    AND NOT stDS402Drive.stDS402DriveStatus.Fault
+    AND stDS402Drive.stDS402DriveStatus.VoltageEnabled
+    AND stDS402Drive.stDS402DriveStatus.QuickStopActive
+    AND NOT stDS402Drive.stDS402DriveStatus.SwitchOnDisabled THEN
+    bOperational := TRUE;
+END_IF
+// catch the MostRecentModeOfOperation before starting the homing sequence
+// restore it after homeDone.
+
+IF NOT bOperational THEN
+    // Enabled the drive Voltage on, close loop operations
+    stDS402Drive.nDS402DriveControl:=16#0F;
+ELSE
+
+     tonSyncHoming(PT:=T#500MS);
+
+     CASE eMoveState OF
+
+        E_MoveState.INIT_MOVE:
+            tonSyncHoming.IN := TRUE;
+            // sdo write homing paramters;
+            // This mode will be restore after homing
+            // THIS^.eMostRecentModeOfOperation := MostRecentModeOfOperation;
+            eMoveState:=E_MoveState.START_MOVE;
+
+        E_MoveState.START_MOVE:
+            stDS402Drive.nDS402DriveControl.4:=TRUE;
+            // take some time for drive to register above commad and start
+            // homming routine.
+            IF tonSyncHoming.Q THEN
+                eMoveState:=E_MoveState.MOVE_IN_PROGRESS;
+            END_IF
+
+        E_MoveState.MOVE_IN_PROGRESS :
+            // this is a comfirmation that routine is ongoing
+            IF NOT stDS402Drive.stDS402DriveStatus.TargetReached
+               AND NOT stDS402Drive.stDS402DriveStatus.Bit13_OpModeSpecific THEN
+                bHomeBusy:=TRUE;
+                bHomeDone:=FALSE;
+
+            // Interrupted ( halt or reset )
+            ELSIF UserAbort THEN
+                eMoveState:=E_MoveState.MOVE_INTERRUPTED;
+
+            // Genral Motion error i.e Following error ?
+            ELSIF stDS402Drive.stDS402DriveStatus.Bit13_OpModeSpecific THEN
+                eMoveState:=E_MoveState.MOVE_ERROR;
+
+            // Reached
+            ELSIF stDS402Drive.stDS402DriveStatus.TargetReached
+                AND stDS402Drive.stDS402DriveStatus.Bit12_OpModeSpecific
+                AND NOT stDS402Drive.stDS402DriveStatus.Bit13_OpModeSpecific THEN
+                eMoveState:=E_MoveState.TARGET_REACHED;
+            END_IF
+        E_MoveState.MOVE_INTERRUPTED:
+            bHomeBusy:=FALSE;
+            bHomeDone:=FALSE;
+            bHomeInterrupted := TRUE;
+        E_MoveState.TARGET_REACHED:
+            bHomeBusy:=FALSE;
+            bHomeDone:=TRUE;
+            tonSyncHoming.IN := FALSE;
+            bReadyToHold  := TRUE;
+
+        E_MoveState.MOVE_ERROR:
+            bHomeError:= TRUE;
+            bHomeDone:=FALSE;
+            // sdo read in case of error
+            // HomeErrorID
+            bHomeBusy:= FALSE;
+    END_CASE
+END_IF
+
+IF bHomeDone THEN
+    //prepare next move
+    stDS402Drive.nDS402DriveControl.4:=FALSE;
+    // Restore default mode
+    stDS402Drive.nModeOfOperation:=THIS^.eMostRecentModeOfOperation;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="HomeError" Id="{6a09909f-090b-480d-8458-2bc67a99ae00}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY HomeError : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{ba2b2e77-7b71-450c-8850-5799771d126c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{82cae618-0e66-4ceb-9a10-b291de22038a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="HomeErrorID" Id="{6cc1cfcb-c937-4ea7-94a5-c9bd48670d89}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY HomeErrorID : UDINT
+]]></Declaration>
+      <Get Name="Get" Id="{64913720-c690-4394-96ee-2f5e4735807c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="HomeInterrupted" Id="{4ffc192c-e07f-4f7e-9b40-4e442ec3c9e7}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY HomeInterrupted : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{b2091895-f226-4033-81d5-d620545b3d1c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{92ff1e91-734f-4d9c-9984-ee1a562a1d90}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="ModeOfOperation" Id="{8347dd35-227e-45b9-9ecd-2c39668f1f7c}">
+      <Declaration><![CDATA[PROPERTY ModeOfOperation : E_DS402OpMode]]></Declaration>
+      <Get Name="Get" Id="{c20dccad-eb17-4853-81c6-4744e6ba6985}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{985eb604-11ba-453a-892b-63fc6e6354ed}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Operational" Id="{309b730b-2fc9-4c71-9994-c86a6edd3f47}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Operational : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{b14d148a-84bb-4a8d-9d71-9c79f2a7bd52}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{a386ef15-adbb-469e-bedd-c7b4b8763da3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+  </POU>
+</TcPlcObject>
