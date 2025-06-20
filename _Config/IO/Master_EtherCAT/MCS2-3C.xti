@@ -1,0 +1,630 @@
+<?xml version="1.0"?>
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.15" ClassName="CFlbTermDef" SubType="9099">
+	<DataTypes>
+		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-002000000008}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..0] OF BYTE</Name>
+			<BitSize>8</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>1</Elements>
+			</ArrayInfo>
+		</DataType>
+	</DataTypes>
+	<ImageDatas>
+		<ImageData Id="1000">424de6000000000000007600000028000000100000000e00000001000400000000007000000000000000000000001000000000000000ffffff00e8f0ec00d5d8d600c3c3c300bfc5c200b7b7b6008eb99f0096969500807f7f0043986f00138951000082440075757400486656003b3734000000000088888888255321003333335952255710333336abb9127d5078736abbbb21cd668e739bbba638d799ced3bbba47cc56aaded3bb9ccc549bb9ded3a98d826abbb6ded3eddd14bbbb92ded3eed8219bb9208ed335c8522641007c73be5c3552100078733338000000003333333800000000</ImageData>
+		<ImageData Id="1001">424de2000000000000007200000028000000100000000e00000001000400000000007000000000000000000000000f00000000000000fafafa00f2f2f200e2e2e200d0d0d000b6b6b500b1b1b100b1b1b000a3a3a2008a8a8a007d7d7c006b6b6a005b5b5a005959580057575600ff00ff00eeeeeeddddeeeeeeeeeeddd97dddeeeeeeedddd608dddeeeeeddddd621adddeeeeddddd6662bddeeedddddd66c34dddee6669dd66da1466ee6641ad66dd9666eeddd52b66ddddddeeeddc3566dddddeeeeddda126dddddeeeeeddd806ddddeeeeeeeddd79dddeeeeeeeeeeddddeeeeee</ImageData>
+	</ImageDatas>
+	<Box Id="1" BoxType="9099" BoxFlags="#x00000020">
+		<Name>__FILENAME__</Name>
+		<ImageId>1000</ImageId>
+		<EtherCAT SlaveType="2" PdiType="#x0e80" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="39" VendorId="#x00536d61" ProductCode="#x00020d08" RevisionNo="#x00010005" InfoDataAddr="true" InfoDataSoeDS401="true" TimeoutStateChange1="2000" TimeoutStateChange2="3000" TimeoutStateChange3="2000" TimeoutMailbox2="100" CheckRevisionNoType="6" PortPhys="17" SlotPdoIncrement="64" SlotIndexIncrement="2048" Type="MCS2-3C" Desc="MCS2">
+			<SyncMan>001080002600010001000000240080008000001026010000</SyncMan>
+			<SyncMan>801080002200010002000000240080008000801022010000</SyncMan>
+			<SyncMan>001110006400010003000000000000000000001164000000</SyncMan>
+			<SyncMan>00140c002000010004000000000000000000001420000000</SyncMan>
+			<Fmmu>0000000000000000001100020100000001000000000000000000000000000000</Fmmu>
+			<Fmmu>0000000000000000001400010100000002000000000000000000000000000000</Fmmu>
+			<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
+			<DcMode>4672656572756e000000000000000000467265652052756e2f534d2053796e6368726f6e6f7573000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000</DcMode>
+			<DcMode>446353796e633000000000000000000044432053796e6368726f6e6f7573000000000000000000000000000000000000000000000000000040420f00000000070100000000000000000000000000000000000000000000000000000000000000</DcMode>
+			<Pdo Name="mode/status/pos TxPDO" Index="#x1a01" Flags="#x0290">
+				<ExcludePdo>#x9a10</ExcludePdo>
+				<Entry Name="Modes of Operation Display" Index="#x6061" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6061:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Status Word" Index="#x6041" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6041:0]]></Comment>
+				</Entry>
+				<Entry Name="Position Actual Value" Index="#x6064" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x6064:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="mode/status/pos/fError TxPDO" Index="#x1a10" Flags="#x0290" SyncMan="3">
+				<ExcludePdo>#x9a01</ExcludePdo>
+				<Entry Name="Modes of Operation Display" Index="#x6061" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6061:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Status Word" Index="#x6041" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6041:0]]></Comment>
+				</Entry>
+				<Entry Name="Position Actual Value" Index="#x6064" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x6064:0]]></Comment>
+				</Entry>
+				<Entry Name="Following Error Actual Value" Index="#x60f4" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x60F4:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="ctl RxPDO" Index="#x1600" InOut="1" Flags="#x0290">
+				<Entry Name="Control Word" Index="#x6040" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6040:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="ctl/mode/pos RxPDO" Index="#x1601" InOut="1" Flags="#x0290">
+				<Entry Name="Control Word" Index="#x6040" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6040:0]]></Comment>
+				</Entry>
+				<Entry Name="Modes of Operation" Index="#x6060" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6060:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Target Position" Index="#x607a" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x607A:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="ctl/mode/pos/vel/acc RxPDO" Index="#x1610" InOut="1" Flags="#x0290" SyncMan="2">
+				<Entry Name="Control Word" Index="#x6040" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6040:0]]></Comment>
+				</Entry>
+				<Entry Name="Modes of Operation" Index="#x6060" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6060:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Target Position" Index="#x607a" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x607A:0]]></Comment>
+				</Entry>
+				<Entry Name="Profile Velocity" Index="#x6081" Flags="#x00001000">
+					<Type>UDINT</Type>
+					<Comment><![CDATA[object 0x6081:0]]></Comment>
+				</Entry>
+				<Entry Name="Profile Acceleration" Index="#x6083" Flags="#x00001000">
+					<Type>UDINT</Type>
+					<Comment><![CDATA[object 0x6083:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="ctl/mode/tar RxPDO" Index="#x1611" InOut="1" Flags="#x0290">
+				<Entry Name="Control Word" Index="#x6040" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6040:0]]></Comment>
+				</Entry>
+				<Entry Name="Modes of Operation" Index="#x6060" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6060:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Open Loop Scan Target" Index="#x2020" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x2020:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="ctl/mode/tar/vel RxPDO" Index="#x1612" InOut="1" Flags="#x0290">
+				<Entry Name="Control Word" Index="#x6040" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6040:0]]></Comment>
+				</Entry>
+				<Entry Name="Modes of Operation" Index="#x6060" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6060:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Open Loop Scan Target" Index="#x2020" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x2020:0]]></Comment>
+				</Entry>
+				<Entry Name="Open Loop Scan Velocity" Index="#x2021" Flags="#x00001000">
+					<Type>ULINT</Type>
+					<Comment><![CDATA[object 0x2021:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="ctl/mode/pos/tar RxPDO" Index="#x1613" InOut="1" Flags="#x0290">
+				<Entry Name="Control Word" Index="#x6040" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6040:0]]></Comment>
+				</Entry>
+				<Entry Name="Modes of Operation" Index="#x6060" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6060:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Target Position" Index="#x607a" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x607A:0]]></Comment>
+				</Entry>
+				<Entry Name="Open Loop Scan Target" Index="#x2020" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x2020:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="ctl/mode/pos/vel/acc/tar/vel RxPDO" Index="#x1614" InOut="1" Flags="#x0290">
+				<Entry Name="Control Word" Index="#x6040" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6040:0]]></Comment>
+				</Entry>
+				<Entry Name="Modes of Operation" Index="#x6060" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6060:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Target Position" Index="#x607a" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x607A:0]]></Comment>
+				</Entry>
+				<Entry Name="Profile Velocity" Index="#x6081" Flags="#x00001000">
+					<Type>UDINT</Type>
+					<Comment><![CDATA[object 0x6081:0]]></Comment>
+				</Entry>
+				<Entry Name="Profile Acceleration" Index="#x6083" Flags="#x00001000">
+					<Type>UDINT</Type>
+					<Comment><![CDATA[object 0x6083:0]]></Comment>
+				</Entry>
+				<Entry Name="Open Loop Scan Target" Index="#x2020" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x2020:0]]></Comment>
+				</Entry>
+				<Entry Name="Open Loop Scan Velocity" Index="#x2021" Flags="#x00001000">
+					<Type>ULINT</Type>
+					<Comment><![CDATA[object 0x2021:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="mode/status/pos TxPDO" Index="#x1a41" Flags="#x0290">
+				<ExcludePdo>#x9a50</ExcludePdo>
+				<Entry Name="Modes of Operation Display" Index="#x6861" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6061:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Status Word" Index="#x6841" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6041:0]]></Comment>
+				</Entry>
+				<Entry Name="Position Actual Value" Index="#x6864" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x6064:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="mode/status/pos/fError TxPDO" Index="#x1a50" Flags="#x0290">
+				<ExcludePdo>#x9a41</ExcludePdo>
+				<Entry Name="Modes of Operation Display" Index="#x6861" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6061:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Status Word" Index="#x6841" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6041:0]]></Comment>
+				</Entry>
+				<Entry Name="Position Actual Value" Index="#x6864" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x6064:0]]></Comment>
+				</Entry>
+				<Entry Name="Following Error Actual Value" Index="#x68f4" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x60F4:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="ctl RxPDO" Index="#x1640" InOut="1" Flags="#x0290">
+				<Entry Name="Control Word" Index="#x6840" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6040:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="ctl/mode/pos RxPDO" Index="#x1641" InOut="1" Flags="#x0290">
+				<Entry Name="Control Word" Index="#x6840" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6040:0]]></Comment>
+				</Entry>
+				<Entry Name="Modes of Operation" Index="#x6860" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6060:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Target Position" Index="#x687a" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x607A:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="ctl/mode/pos/vel/acc RxPDO" Index="#x1650" InOut="1" Flags="#x0290">
+				<Entry Name="Control Word" Index="#x6840" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6040:0]]></Comment>
+				</Entry>
+				<Entry Name="Modes of Operation" Index="#x6860" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6060:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Target Position" Index="#x687a" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x607A:0]]></Comment>
+				</Entry>
+				<Entry Name="Profile Velocity" Index="#x6881" Flags="#x00001000">
+					<Type>UDINT</Type>
+					<Comment><![CDATA[object 0x6081:0]]></Comment>
+				</Entry>
+				<Entry Name="Profile Acceleration" Index="#x6883" Flags="#x00001000">
+					<Type>UDINT</Type>
+					<Comment><![CDATA[object 0x6083:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="ctl/mode/tar RxPDO" Index="#x1651" InOut="1" Flags="#x0290">
+				<Entry Name="Control Word" Index="#x6840" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6040:0]]></Comment>
+				</Entry>
+				<Entry Name="Modes of Operation" Index="#x6860" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6060:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Open Loop Scan Target" Index="#x2820" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x2020:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="ctl/mode/tar/vel RxPDO" Index="#x1652" InOut="1" Flags="#x0290">
+				<Entry Name="Control Word" Index="#x6840" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6040:0]]></Comment>
+				</Entry>
+				<Entry Name="Modes of Operation" Index="#x6860" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6060:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Open Loop Scan Target" Index="#x2820" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x2020:0]]></Comment>
+				</Entry>
+				<Entry Name="Open Loop Scan Velocity" Index="#x2821" Flags="#x00001000">
+					<Type>ULINT</Type>
+					<Comment><![CDATA[object 0x2021:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="ctl/mode/pos/tar RxPDO" Index="#x1653" InOut="1" Flags="#x0290">
+				<Entry Name="Control Word" Index="#x6840" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6040:0]]></Comment>
+				</Entry>
+				<Entry Name="Modes of Operation" Index="#x6860" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6060:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Target Position" Index="#x687a" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x607A:0]]></Comment>
+				</Entry>
+				<Entry Name="Open Loop Scan Target" Index="#x2820" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x2020:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="ctl/mode/pos/vel/acc/tar/vel RxPDO" Index="#x1654" InOut="1" Flags="#x0290">
+				<Entry Name="Control Word" Index="#x6840" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6040:0]]></Comment>
+				</Entry>
+				<Entry Name="Modes of Operation" Index="#x6860" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6060:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Target Position" Index="#x687a" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x607A:0]]></Comment>
+				</Entry>
+				<Entry Name="Profile Velocity" Index="#x6881" Flags="#x00001000">
+					<Type>UDINT</Type>
+					<Comment><![CDATA[object 0x6081:0]]></Comment>
+				</Entry>
+				<Entry Name="Profile Acceleration" Index="#x6883" Flags="#x00001000">
+					<Type>UDINT</Type>
+					<Comment><![CDATA[object 0x6083:0]]></Comment>
+				</Entry>
+				<Entry Name="Open Loop Scan Target" Index="#x2820" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x2020:0]]></Comment>
+				</Entry>
+				<Entry Name="Open Loop Scan Velocity" Index="#x2821" Flags="#x00001000">
+					<Type>ULINT</Type>
+					<Comment><![CDATA[object 0x2021:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="mode/status/pos TxPDO" Index="#x1a81" Flags="#x0290">
+				<ExcludePdo>#x9a90</ExcludePdo>
+				<Entry Name="Modes of Operation Display" Index="#x7061" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6061:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Status Word" Index="#x7041" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6041:0]]></Comment>
+				</Entry>
+				<Entry Name="Position Actual Value" Index="#x7064" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x6064:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="mode/status/pos/fError TxPDO" Index="#x1a90" Flags="#x0290">
+				<ExcludePdo>#x9a81</ExcludePdo>
+				<Entry Name="Modes of Operation Display" Index="#x7061" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6061:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Status Word" Index="#x7041" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6041:0]]></Comment>
+				</Entry>
+				<Entry Name="Position Actual Value" Index="#x7064" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x6064:0]]></Comment>
+				</Entry>
+				<Entry Name="Following Error Actual Value" Index="#x70f4" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x60F4:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="ctl RxPDO" Index="#x1680" InOut="1" Flags="#x0290">
+				<Entry Name="Control Word" Index="#x7040" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6040:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="ctl/mode/pos RxPDO" Index="#x1681" InOut="1" Flags="#x0290">
+				<Entry Name="Control Word" Index="#x7040" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6040:0]]></Comment>
+				</Entry>
+				<Entry Name="Modes of Operation" Index="#x7060" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6060:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Target Position" Index="#x707a" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x607A:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="ctl/mode/pos/vel/acc RxPDO" Index="#x1690" InOut="1" Flags="#x0290">
+				<Entry Name="Control Word" Index="#x7040" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6040:0]]></Comment>
+				</Entry>
+				<Entry Name="Modes of Operation" Index="#x7060" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6060:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Target Position" Index="#x707a" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x607A:0]]></Comment>
+				</Entry>
+				<Entry Name="Profile Velocity" Index="#x7081" Flags="#x00001000">
+					<Type>UDINT</Type>
+					<Comment><![CDATA[object 0x6081:0]]></Comment>
+				</Entry>
+				<Entry Name="Profile Acceleration" Index="#x7083" Flags="#x00001000">
+					<Type>UDINT</Type>
+					<Comment><![CDATA[object 0x6083:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="ctl/mode/tar RxPDO" Index="#x1691" InOut="1" Flags="#x0290">
+				<Entry Name="Control Word" Index="#x7040" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6040:0]]></Comment>
+				</Entry>
+				<Entry Name="Modes of Operation" Index="#x7060" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6060:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Open Loop Scan Target" Index="#x3020" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x2020:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="ctl/mode/tar/vel RxPDO" Index="#x1692" InOut="1" Flags="#x0290">
+				<Entry Name="Control Word" Index="#x7040" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6040:0]]></Comment>
+				</Entry>
+				<Entry Name="Modes of Operation" Index="#x7060" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6060:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Open Loop Scan Target" Index="#x3020" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x2020:0]]></Comment>
+				</Entry>
+				<Entry Name="Open Loop Scan Velocity" Index="#x3021" Flags="#x00001000">
+					<Type>ULINT</Type>
+					<Comment><![CDATA[object 0x2021:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="ctl/mode/pos/tar RxPDO" Index="#x1693" InOut="1" Flags="#x0290">
+				<Entry Name="Control Word" Index="#x7040" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6040:0]]></Comment>
+				</Entry>
+				<Entry Name="Modes of Operation" Index="#x7060" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6060:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Target Position" Index="#x707a" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x607A:0]]></Comment>
+				</Entry>
+				<Entry Name="Open Loop Scan Target" Index="#x3020" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x2020:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Pdo Name="ctl/mode/pos/vel/acc/tar/vel RxPDO" Index="#x1694" InOut="1" Flags="#x0290">
+				<Entry Name="Control Word" Index="#x7040" Flags="#x00001000">
+					<Type>UINT</Type>
+					<Comment><![CDATA[object 0x6040:0]]></Comment>
+				</Entry>
+				<Entry Name="Modes of Operation" Index="#x7060" Flags="#x00001000">
+					<Type>SINT</Type>
+					<Comment><![CDATA[object 0x6060:0]]></Comment>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+				</Entry>
+				<Entry Name="Target Position" Index="#x707a" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x607A:0]]></Comment>
+				</Entry>
+				<Entry Name="Profile Velocity" Index="#x7081" Flags="#x00001000">
+					<Type>UDINT</Type>
+					<Comment><![CDATA[object 0x6081:0]]></Comment>
+				</Entry>
+				<Entry Name="Profile Acceleration" Index="#x7083" Flags="#x00001000">
+					<Type>UDINT</Type>
+					<Comment><![CDATA[object 0x6083:0]]></Comment>
+				</Entry>
+				<Entry Name="Open Loop Scan Target" Index="#x3020" Flags="#x00001000">
+					<Type>DINT</Type>
+					<Comment><![CDATA[object 0x2020:0]]></Comment>
+				</Entry>
+				<Entry Name="Open Loop Scan Velocity" Index="#x3021" Flags="#x00001000">
+					<Type>ULINT</Type>
+					<Comment><![CDATA[object 0x2021:0]]></Comment>
+				</Entry>
+			</Pdo>
+			<Slot Name="Channel 1">
+				<SlotData>0000010001000400400000000008000000000000000000000000000000000000</SlotData>
+				<ModuleIdent>262144</ModuleIdent>
+				<Module Id="#x03090001" Type="MCS2M-D-3C" Class="">
+					<Name>Module 1 (MCS2M-D-3C)</Name>
+					<ImageId>1001</ImageId>
+					<ModuleData>616d530000000400000000000000000000000000000000000000000000000000</ModuleData>
+					<PdoIndex>6657</PdoIndex>
+					<PdoIndex>6672</PdoIndex>
+					<PdoIndex>5632</PdoIndex>
+					<PdoIndex>5633</PdoIndex>
+					<PdoIndex>5648</PdoIndex>
+					<PdoIndex>5649</PdoIndex>
+					<PdoIndex>5650</PdoIndex>
+					<PdoIndex>5651</PdoIndex>
+					<PdoIndex>5652</PdoIndex>
+					<CoeProfile ProfileNo="#x00020192"/>
+				</Module>
+			</Slot>
+			<Slot Name="Channel 2">
+				<SlotData>0000010001000400400000000008000000000000000000000000000000000000</SlotData>
+				<ModuleIdent>262144</ModuleIdent>
+				<Module Id="#x03090002" Type="MCS2M-D-3C" Class="">
+					<Name>Module 2 (MCS2M-D-3C)</Name>
+					<ImageId>1001</ImageId>
+					<ModuleData>616d530000000400000000000000000000000000000000000000000000000000</ModuleData>
+					<PdoIndex>6721</PdoIndex>
+					<PdoIndex>6736</PdoIndex>
+					<PdoIndex>5696</PdoIndex>
+					<PdoIndex>5697</PdoIndex>
+					<PdoIndex>5712</PdoIndex>
+					<PdoIndex>5713</PdoIndex>
+					<PdoIndex>5714</PdoIndex>
+					<PdoIndex>5715</PdoIndex>
+					<PdoIndex>5716</PdoIndex>
+					<CoeProfile ProfileNo="#x00020192"/>
+				</Module>
+			</Slot>
+			<Slot Name="Channel 3">
+				<SlotData>0000010001000400400000000008000000000000000000000000000000000000</SlotData>
+				<ModuleIdent>262144</ModuleIdent>
+				<Module Id="#x03090003" Type="MCS2M-D-3C" Class="">
+					<Name>Module 3 (MCS2M-D-3C)</Name>
+					<ImageId>1001</ImageId>
+					<ModuleData>616d530000000400000000000000000000000000000000000000000000000000</ModuleData>
+					<PdoIndex>6785</PdoIndex>
+					<PdoIndex>6800</PdoIndex>
+					<PdoIndex>5760</PdoIndex>
+					<PdoIndex>5761</PdoIndex>
+					<PdoIndex>5776</PdoIndex>
+					<PdoIndex>5777</PdoIndex>
+					<PdoIndex>5778</PdoIndex>
+					<PdoIndex>5779</PdoIndex>
+					<PdoIndex>5780</PdoIndex>
+					<CoeProfile ProfileNo="#x00020192"/>
+				</Module>
+			</Slot>
+		</EtherCAT>
+	</Box>
+</TcSmItem>

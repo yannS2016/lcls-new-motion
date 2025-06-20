@@ -12,44 +12,10 @@ VAR
     AxisRef : REFERENCE TO AXIS_REF;
     iPersistentDataStorage : I_PersistentDataStorage;
 
-    nRawEncoderULINT AT %I*: ULINT;
-    // Raw encoder IO for UINT (Relative Encoders)
-    nRawEncoderUINT AT %I*: UINT;
-    // Raw encoder IO for INT (LVDT)
-    nRawEncoderINT AT %I*: INT;
-    // Raw encoder IO for INT (EL5072 LVDT)
-    nRawEncoderDINT AT %I*: DINT;
-    // Encoder count summary, if linked above
-    {attribute 'pytmc' := '
-        pv: PLC:nEncoderCount
-        io: i
-        field: DESC Count from encoder hardware
-    '}
-    nEncoderCount: UDINT;
-    // Position lag difference
-    {attribute 'pytmc' := '
-        pv: PLC:fPosDiff
-        io: i
-        field: DESC Position lag difference
-    '}
-    fPosDiff: LREAL;
-    // NC parameters that are exposed with pytmc pragmas
-    {attribute 'pytmc' := '
-        pv: PLC:AxisPar
-        io: i
-        field: DESC Axis configuration parameters in the numerical controller.
-    '}
-    stAxisParametersExposed : ST_AxisParameterSetExposed;
-    // MC_ReadParameterSet Output
-    mcReadParams: MC_ReadParameterSet;
-    //{attribute 'hide'}
-    stAxisParameters: ST_AxisParameterSet;
-    bNcParamsReadInit   : BOOL;
     // save and restore
     fbSetPos: MC_SetPosition;
     bClearPositionLag : BOOL := TRUE;
-    NCParamsTimer : TON;
-    bAxisParamsInit : BOOL;
+
     nLatchErrId : BOOL;
     bRestoreDone 	: BOOL;
     bRestoreError 	: BOOL;

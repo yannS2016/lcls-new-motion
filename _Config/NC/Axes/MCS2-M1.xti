@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.13" ClassName="CNcAxisDef" SubType="1">
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.15" ClassName="CNcAxisDef" SubType="1">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-000000000035}" TcBaseType="true" HideType="true">UINTARR2</Name>
@@ -1424,12 +1424,21 @@ External Setpoint Generation:
 			</Relations>
 		</DataType>
 	</DataTypes>
-	<Axis Id="1" CreateSymbols="true" AxisType="1">
+	<Axis Id="2" CreateSymbols="true" AxisType="1">
 		<Name>__FILENAME__</Name>
 		<AxisPara>
-			<OtherSettings AllowMotionCmdToSlave="true"/>
+			<General UnitFlags="#x00000002"/>
+			<Dynamic AccelerationMaximum="10" DecelerationMaximum="10" Acceleration="2.08292" Deceleration="2.08292" Jerk="11.1245"/>
+			<Velo RefSearch="0.5" RefSync="0.5" SlowManual="0.1" FastManual="0.5" Maximum="1"/>
+			<PositionAreaControl Range="0.0002"/>
+			<TargetPosControl Range="0.0001"/>
+			<PEHControl Enable="true"/>
+			<OtherSettings AllowMotionCmdToSlave="true" PulseDistancePos="0.0005" PulseDistanceNeg="0.0005"/>
 		</AxisPara>
-		<Encoder Name="Enc" EncType="1">
+		<Encoder Name="Enc" EncType="19">
+			<EncPara ScaleFactorNumerator="1e-06" MaxCount="#xffffffff">
+				<FilterTime TPos="0.02"/>
+			</EncPara>
 			<Vars VarGrpType="1">
 				<Name>Inputs</Name>
 				<Var>
@@ -1486,9 +1495,9 @@ External Setpoint Generation:
 				</Var>
 			</Vars>
 		</Encoder>
-		<Drive Name="Drive" DrvType="5">
-			<DrvPara>
-				<Analog TorqueSetpointScale="10" ScaleFactorActTorque="0.1"/>
+		<Drive Name="Drive" DrvType="16">
+			<DrvPara MaxCount="#xffffffff" DriveControlDWord="#x00020100">
+				<Analog VeloReferenz="1" TorqueSetpointScale="10" ScaleFactorActTorque="0.1"/>
 				<TimeComp TaskDelayCycles="1"/>
 			</DrvPara>
 			<Vars VarGrpType="1">
@@ -1527,22 +1536,6 @@ External Setpoint Generation:
 					<SubVar TypeFormatIndex="2">
 						<Name>nDataOut2</Name>
 					</SubVar>
-					<SubVar>
-						<Name>nCtrl2</Name>
-						<Comment><![CDATA[Digital Outputs Setpoint Generator:
-0x41 (0100 0001) = Minus (0x42 for inverse motor polarity)
-0x42 (0100 0010) = Plus (0x41 for inverse motor polarity)
-0x80 (1000 0000) = Stop
-]]></Comment>
-					</SubVar>
-					<SubVar>
-						<Name>nCtrl3</Name>
-						<Comment><![CDATA[Digital Outputs (Setpoint Generator + Position Controller):
-0x41 (0100 0001) = Minus (0x42 for inverse motor polarity)
-0x42 (0100 0010) = Plus (0x41 for inverse motor polarity)
-0x80 (1000 0000) = Stop
-]]></Comment>
-					</SubVar>
 					<SubVar TypeFormatIndex="2">
 						<Name>nDataOut3</Name>
 					</SubVar>
@@ -1560,6 +1553,8 @@ External Setpoint Generation:
 		</Drive>
 		<Controller Name="Ctrl" CtrType="1">
 			<CtrPara PriorControlFactor="1">
+				<PosDiffControl Range="0.05"/>
+				<PID PosKp="10"/>
 				<Observer BandWidth="20"/>
 			</CtrPara>
 		</Controller>
@@ -1578,4 +1573,20 @@ External Setpoint Generation:
 			</Var>
 		</Vars>
 	</Axis>
+	<Mappings>
+		<OwnerA>
+			<OwnerB Name="TIID^Master_EtherCAT^MCS2-3C">
+				<Link VarA="Drive^Inputs^In^nDataIn1" VarB="Module 1 (MCS2M-D-3C)^mode/status/pos/fError TxPDO^Following Error Actual Value"/>
+				<Link VarA="Drive^Inputs^In^nState1" VarB="Module 1 (MCS2M-D-3C)^mode/status/pos/fError TxPDO^Status Word" Size="8"/>
+				<Link VarA="Drive^Inputs^In^nState2" VarB="Module 1 (MCS2M-D-3C)^mode/status/pos/fError TxPDO^Status Word" Size="8" OffsB="8"/>
+				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
+				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^WcState" Size="1"/>
+				<Link VarA="Drive^Inputs^In^nState5" VarB="Module 1 (MCS2M-D-3C)^mode/status/pos/fError TxPDO^Modes of Operation Display"/>
+				<Link VarA="Drive^Outputs^Out^nDataOut1" VarB="Module 1 (MCS2M-D-3C)^ctl/mode/pos/vel/acc RxPDO^Target Position"/>
+				<Link VarA="Enc^Inputs^In^nDataIn1" VarB="Module 1 (MCS2M-D-3C)^mode/status/pos/fError TxPDO^Position Actual Value"/>
+				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
+				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^WcState" Size="1"/>
+			</OwnerB>
+		</OwnerA>
+	</Mappings>
 </TcSmItem>

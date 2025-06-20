@@ -538,7 +538,7 @@ CASE eMoveState OF
 
 END_CASE
 // the wait time is about 5 plc task cycle
- tonSyncTimer(PT:=T#5S);]]></ST>
+ tonSyncTimer(PT:=T#10S);]]></ST>
       </Implementation>
     </Method>
     <Method Name="UpdateParamAndStatus" Id="{bec7d97e-d393-4df3-816c-df000a420230}">

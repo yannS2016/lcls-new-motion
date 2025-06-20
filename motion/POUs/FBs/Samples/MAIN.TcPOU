@@ -8,20 +8,27 @@ VAR
     fbPersistentDataStorage : FB_PersistentDataStorage; // Shared resource
     M1 : ST_MotionEpicsItf; // shared ressource
 
-
-    fbMotionStage : FB_MotionStage(	sName := 'NC',
+	{attribute 'pytmc':='pv: TST:SmartAct:MCS2-3C'}
+    {attribute 'TcLinkTo' := '
+		.fbEncoderScaling.nRawEncoderDINT :=TIID^Master_EtherCAT^MCS2-3C^Module 1 (MCS2M-D-3C)^mode/status/pos/fError TxPDO^Position Actual Value;
+        .fbMotionAxis.stDS402Drive.stDriveStatus	:=TIID^Master_EtherCAT^MCS2-3C^Module 1 (MCS2M-D-3C)^mode/status/pos/fError TxPDO^Status Word;
+        .fbMotionAxis.stDS402Drive.nFollowingError		:=TIID^Master_EtherCAT^MCS2-3C^Module 1 (MCS2M-D-3C)^mode/status/pos/fError TxPDO^Following Error Actual Value;
+        .fbMotionAxis.stDS402Drive.nModeOfOperation		:=TIID^Master_EtherCAT^MCS2-3C^Module 1 (MCS2M-D-3C)^ctl/mode/pos/vel/acc RxPDO^Modes of Operation;     
+		.fbMotionAxis.stDS402Drive.nModeOfOperationDisplay:=TIID^Master_EtherCAT^MCS2-3C^Module 1 (MCS2M-D-3C)^mode/status/pos/fError TxPDO^Modes of Operation Display;
+		.fbMotionAxis.stDS402Drive.nDS402DriveControl	:=TIID^Master_EtherCAT^MCS2-3C^Module 1 (MCS2M-D-3C)^ctl/mode/pos/vel/acc RxPDO^Control Word;
+    '}
+   {attribute 'TcLinkToOSO' := '
+        .fbMotionAxis.stDS402Drive.nModeOfOperationNC	:=<0,8,0>TINC^NC-Task 1 SAF^Axes^MCS2-M1^Drive^Outputs^Out^nCtrl5;   
+        .fbMotionAxis.stDS402Drive.nDS402DriveControlNC := <0,8,0>TINC^NC-Task 1 SAF^Axes^MCS2-M1^Drive^Outputs^Out^nCtrl1;
+        .fbMotionAxis.stDS402Drive.nDS402DriveControlNC := <8,8,0>TINC^NC-Task 1 SAF^Axes^MCS2-M1^Drive^Outputs^Out^nCtrl2;
+    '}
+    fbMotionStage : FB_MotionStageMCS2(	sName := 'MCS2',
                                         stMotionEpicsItf := M1,
-                                        AxisRef := NcAxis_GVL.NC,
+                                        AxisRef := NcAxis_GVL.MCS2,
                                         iMotionLogger := fbMotionLogger,
                                         iPersistentDataStorage := fbPersistentDataStorage
                                     ) := (BrakeMode := E_StageBrakeMode.IF_MOVING, EnableMode:=ENUM_StageEnableMode.DURING_MOTION, HomeMode:=E_EpicsHomeCmd.AUTOZERO);
-    //
-    bLimForward AT %Q*: BOOL := TRUE;
-    // NC Backward Limit Switch: TRUE if ok to move
-    bLimBackward AT %Q*: BOOL := TRUE;
-    // NO Home Switch: TRUE if at home
-    bLimHome AT %Q*: BOOL := TRUE;
-    //
+    
     bHardEnable AT %Q*: BOOL := TRUE;
 END_VAR
 ]]></Declaration>

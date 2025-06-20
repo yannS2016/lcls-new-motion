@@ -140,6 +140,7 @@ IF THIS^.rtReset.Q THEN
     THIS^.nErrorID := 0;
     THIS^.bAborted := FALSE;
     THIS^.sMessage := '';
+	THIS^.bReset := FALSE;
 END_IF]]></ST>
     </Implementation>
     <Property Name="Aborted" Id="{f628076d-da64-46a3-9b2e-51ef77ba2849}">

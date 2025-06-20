@@ -42,6 +42,8 @@ VAR
     rtGenericModeUpdate : R_TRIG;
     rtHomeDone : R_TRIG;
     bReportOnce : BOOL;
+	btestReset : BOOL;
+	bAbortInProgress : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -67,6 +69,10 @@ THIS^.iHome.DS402Status(	ModeOfOperationDisplay:=THIS^.stDS402Drive.nModeOfOpera
                             Bit13OpModeSpecific:=THIS^.stDS402Drive.stDriveStatus.Bit13_OpModeSpecific,
                             Bit12OpModeSpecific:=THIS^.stDS402Drive.stDriveStatus.Bit12_OpModeSpecific,
                             TargetReached:=THIS^.stDS402Drive.stDriveStatus.TargetReached );
+bBusy :=	THIS^.iHome.Busy;
+bDone:=	THIS^.iHome.Done;
+bError:=	THIS^.iHome.Error;
+nErrorID:=	THIS^.iHome.ErrorID;
 
 // Critical : do not remove
 rtHomeDone(CLK:=THIS^.iHome.Done);
@@ -95,23 +101,38 @@ END_IF
 // IF THIS^.nDS402DriveControl <> THIS^.stDS402Drive.nDS402DriveControl THEN
 // 	THIS^.stDS402Drive.nDS402DriveControl:= THIS^.nDS402DriveControl;
 // END_IF
-
+IF THIS^.stDS402Drive.nDS402DriveControlNC >= 128 THEN
+	btestReset := TRUE;
+END_IF
+// IF THIS^.stDS402Drive.nModeOfOperationDisplay = 8 THEN
+// 	THIS^.stDS402Drive.nDS402DriveControl := THIS^.stDS402Drive.nDS402DriveControlNC;
+// //     IF THIS^.stDS402Drive.nDS402DriveControl <> THIS^.stDS402Drive.nDS402DriveControlNC THEN
+// //         THIS^.stDS402Drive.nDS402DriveControl := THIS^.stDS402Drive.nDS402DriveControlNC;
+// //     END_IF
+// // 
+// // ELSIF THIS^.stDS402Drive.nModeOfOperationDisplay = 6 THEN
+// //     IF THIS^.stDS402Drive.nDS402DriveControl <> THIS^.nDS402DriveControl THEN
+// //         THIS^.stDS402Drive.nDS402DriveControl:= THIS^.nDS402DriveControl;
+// // 	// Fetch reset comand from MC_Reset
+// // 	ELSIF THIS^.iReset.Done THEN
+// // 		IF THIS^.stDS402Drive.nDS402DriveControl <> THIS^.stDS402Drive.nDS402DriveControlNC THEN
+// // 			THIS^.stDS402Drive.nDS402DriveControl := THIS^.stDS402Drive.nDS402DriveControlNC;
+// // 		END_IF
+// //     END_IF
+// 
+// END_IF
+bAbortInProgress  S= THIS^.iHalt.Busy OR THIS^.iReset.Busy;
 IF THIS^.stDS402Drive.nModeOfOperationDisplay = 8 THEN
-    IF THIS^.stDS402Drive.nDS402DriveControl <> THIS^.stDS402Drive.nDS402DriveControlNC THEN
-        THIS^.stDS402Drive.nDS402DriveControl := THIS^.stDS402Drive.nDS402DriveControlNC;
-    END_IF
-
+	THIS^.stDS402Drive.nDS402DriveControl := THIS^.stDS402Drive.nDS402DriveControlNC;
 ELSIF THIS^.stDS402Drive.nModeOfOperationDisplay = 6 THEN
-    IF THIS^.stDS402Drive.nDS402DriveControl <> THIS^.nDS402DriveControl THEN
-        THIS^.stDS402Drive.nDS402DriveControl:= THIS^.nDS402DriveControl;
-    END_IF
-
+	IF THIS^.bAbortInProgress THEN
+			THIS^.nDS402DriveControl := THIS^.stDS402Drive.nDS402DriveControlNC;
+	END_IF
+	IF THIS^.stDS402Drive.nDS402DriveControl<>THIS^.nDS402DriveControl THEN
+			THIS^.stDS402Drive.nDS402DriveControl:= THIS^.nDS402DriveControl;
+	END_IF
 END_IF
 
-bBusy :=	THIS^.iHome.Busy;
-bDone:=	THIS^.iHome.Done;
-bError:=	THIS^.iHome.Error;
-nErrorID:=	THIS^.iHome.ErrorID;
 
 // Forward the abort event to homing block ( this is to sync the home state machine)
 // Clear local execs flags after a completed move or a completed interruption
@@ -120,6 +141,7 @@ IF  rtAbortDone.Q THEN
     THIS^.iMoveAbsolute.CommandMoveAbsolute := FALSE;
     THIS^.iHome.CommandMoveHome := FALSE;
     THIS^.bStartMove := FALSE;
+bAbortInProgress  := FALSE;
     // forward global reset done event;
 
     THIS^.iHome.GlobalReset := THIS^.iReset.Done;
