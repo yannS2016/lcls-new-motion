@@ -25,7 +25,7 @@ VAR
     bBit13OpModeSpecific	: BOOL;
     bBit12OpModeSpecific	: BOOL;
     bTargetReached	: BOOL;
-    nDriveControl : UINT;
+    nDriveControl : UINT := 15;
     nModeOfOperation : SINT;
     nModeOfOperationDisplay : SINT;
     nMostRecentModeOfOperation : SINT;
@@ -45,7 +45,8 @@ END_VAR
       <ST><![CDATA[//NB: The calling must pass drive status register.
 THIS^.rtExec(CLK:=THIS^.bCommandMoveHome);
 THIS^.ftExec(CLK:=THIS^.bCommandMoveHome);
-
+// an interruption can be external i.e, an halt, Reset or a local condition
+THIS^.rtReset(CLK:=bReset);
 tonSyncHoming(PT:=T#50MS);
 CASE THIS^.eHomeMode OF
     E_EpicsHomeCmd.AUTOZERO:
@@ -75,7 +76,7 @@ IF THIS^.bMove THEN
                 THIS^.eHomeState := E_MoveState.INIT;
                 // make sure the run flag is clear, this would be the case
                 // in EnableMode ->ALWAYS and ModeofOperation ->CSP
-                nDriveControl:=15;
+                //nDriveControl:=15;
                 THIS^.tonSyncHoming.IN := TRUE;
             END_IF
         E_MoveState.INIT:
@@ -114,17 +115,26 @@ IF THIS^.bMove THEN
             //prepare next move
             nDriveControl:=15;
             // Restore default mode
-            nModeOfOperation:=THIS^.nMostRecentModeOfOperation;
+            //nModeOfOperation:=THIS^.nMostRecentModeOfOperation;
             tonSyncHoming.IN := FALSE;
+            eHomeState:=E_MoveState.IDLING;
         E_MoveState.ERROR:
             bError:= TRUE;
             bDone:=FALSE;
             // sdo read in case of error
-            // HomeErrorID
             bBusy:= FALSE;
+
     END_CASE
 END_IF
 
+IF THIS^.rtReset.Q THEN
+    THIS^.bError := FALSE;
+    THIS^.nErrorID := 0;
+    THIS^.bAborted := FALSE;
+    THIS^.sMessage := '';
+    THIS^.bReset := FALSE;
+    THIS^.eHomeState := E_MoveState.IDLING;
+END_IF
 //NB: The calling must forward control register for i/o update.
 // Reset execute after when done successfull or after abort reset
 // this way the done and error condition is latched till next move or global reset.
@@ -132,16 +142,7 @@ rtDone(CLK:=bDone);
 IF  rtDone.Q  THEN
     THIS^.bCommandMoveHome := FALSE;
 END_IF
-
-// an interruption can be external i.e, an halt, Reset or a local condition
-THIS^.rtReset(CLK:=bReset);
-IF THIS^.rtReset.Q THEN
-    THIS^.bError := FALSE;
-    THIS^.nErrorID := 0;
-    THIS^.bAborted := FALSE;
-    THIS^.sMessage := '';
-	THIS^.bReset := FALSE;
-END_IF]]></ST>
+]]></ST>
     </Implementation>
     <Property Name="Aborted" Id="{f628076d-da64-46a3-9b2e-51ef77ba2849}">
       <Declaration><![CDATA[PROPERTY Aborted : BOOL

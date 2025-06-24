@@ -13,8 +13,8 @@ VAR
     nErrorID : UDINT;
     sMessage : T_MAXSTRING;
     rtDone : R_TRIG;
-	rtBusy : R_TRIG;
-	btest : BOOL;
+    rtBusy : R_TRIG;
+    btest : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -34,7 +34,7 @@ THIS^.fbMcReset(
 );
 rtBusy(CLK:=THIS^.bBusy);
 IF rtBusy.Q THEN
-	btest := TRUE;
+    btest := TRUE;
 END_IF
 rtDone(CLK:=bDone);
 IF  rtDone.Q THEN

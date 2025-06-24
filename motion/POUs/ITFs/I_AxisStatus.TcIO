@@ -5,8 +5,6 @@
 ]]></Declaration>
     <Method Name="AxisEnabled" Id="{630e5032-35fd-49af-8171-ae8c288f92dd}">
       <Declaration><![CDATA[METHOD AxisEnabled : BOOL
-VAR_INPUT
-END_VAR
 ]]></Declaration>
     </Method>
     <Property Name="AxisID" Id="{6a98b3ff-e49f-4c85-a391-34f0ab3ea669}">

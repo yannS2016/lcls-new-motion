@@ -66,7 +66,7 @@ PROPERTY Active : BOOL
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[Active := THIS^.bPowerIsEnabled;]]></ST>
         </Implementation>
       </Get>
     </Property>

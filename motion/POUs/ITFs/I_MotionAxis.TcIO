@@ -21,6 +21,7 @@ PROPERTY Aborted : BOOL
     <Method Name="AxisEnabled" Id="{65dbd00d-2aae-4126-bb1b-b72ba759e223}">
       <Declaration><![CDATA[METHOD AxisEnabled : BOOL
 VAR_INPUT
+	HomeCmd : BOOL;
 END_VAR
 ]]></Declaration>
     </Method>
@@ -380,7 +381,7 @@ PROPERTY StandStill : BOOL
     DS402 NC/Direct axis : Implementation need to check that the drive is in the correct mode before initaiting the move then set bCommandedMoveAbsolute
     MP NC axis : will immediately write to bCommandedMoveAbsolute
 *)
-METHOD StartMove : BOOL
+METHOD StartMove
 VAR_INPUT
     MoveMode	: E_EpicsMotorCmd;
     CmdExecute	: BOOL;

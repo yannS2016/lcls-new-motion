@@ -103,12 +103,12 @@ VAR
     rtRestoreDone : R_TRIG;
     {attribute 'hide'}
     bHaltEvent : BOOL;
-	// move state machine to error state in case a move command gets stuck after 
-	// the corresponding start signal was forwarded. the start signal should yeild a busy true response.
-	// the move processing block may get stuck and return no errors. this is a contingency to make sure that reset would reinit all state machines.
-	tonSyncTimer : TON;
-	bLocalError : BOOL;
-	bLocalMessage : T_MAXSTRING;
+    // move state machine to error state in case a move command gets stuck after
+    // the corresponding start signal was forwarded. the start signal should yeild a busy true response.
+    // the move processing block may get stuck and return no errors. this is a contingency to make sure that reset would reinit all state machines.
+    tonSyncTimer : TON;
+    bLocalError : BOOL;
+    bLocalMessage : T_MAXSTRING;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -135,13 +135,12 @@ ELSIF bLocalError THEN
 ELSIF iMotionInterlocks.Warning THEN
    stMotionEpicsItf.sErrorMessage := iMotionInterlocks.Message;
 ELSE
-   	stMotionEpicsItf.bError := FALSE;
-   	stMotionEpicsItf.nErrorId := 0;
-   	stMotionEpicsItf.sErrorMessage := '';
-   
+       stMotionEpicsItf.bError := FALSE;
+       stMotionEpicsItf.nErrorId := 0;
+       stMotionEpicsItf.sErrorMessage := '';
+
 END_IF
 
-THIS^.PreHandling();
 // Drive state machine
 THIS^.StateMachine();
 //
@@ -176,6 +175,7 @@ END_VAR
       <Implementation>
         <ST><![CDATA[stMotionEpicsItf.bDone := Done;
 stMotionEpicsItf.bBusy := FALSE;
+// falling edge here when target is reached, move halted
 stMotionEpicsItf.bExecute := FALSE;
 THIS^.bLocalExec := FALSE;
 // release the cmds
@@ -281,16 +281,16 @@ METHOD PostHandling
         <ST><![CDATA[// Move done, or aborted? prepare disable.
 // we'll wait for axis to be in standstill and this state machine to be idling.
 THIS^.bPrepareDisable S= (eEnableMode = E_StageEnableMode.DURING_MOTION ) AND THIS^.ftStopExec.Q;
-
-IF THIS^.stMotionEpicsItf.bReset THEN
-   // Relese motion cmds
-   THIS^.ClearVars(Done:=FALSE);
- 			THIS^.bLocalError := FALSE;
-			THIS^.bLocalMessage := '';
-   // Forward general reset event
-   THIS^.iMotionAxis.Reset(Execute:= THIS^.stMotionEpicsItf.bReset);
-   THIS^.stMotionEpicsItf.bReset := FALSE;
-END_IF
+//
+// IF THIS^.stMotionEpicsItf.bReset THEN
+//    // Relese motion cmds
+//    THIS^.ClearVars(Done:=FALSE);
+//  			THIS^.bLocalError := FALSE;
+// 			THIS^.bLocalMessage := '';
+//    // Forward general reset event
+//    THIS^.iMotionAxis.Reset(Execute:= THIS^.stMotionEpicsItf.bReset);
+//    THIS^.stMotionEpicsItf.bReset := FALSE;
+// END_IF
 
 // When reset is done axis is standstill
 // safe to remove power
@@ -389,7 +389,7 @@ CASE eEnableMode OF
 END_CASE
 //
 // Get a definitive bEnabled reading
-THIS^.bEnableDone := THIS^.iMotionAxis.AxisEnabled();
+THIS^.bEnableDone := THIS^.iMotionAxis.AxisEnabled(HomeCmd:=THIS^.bHomeCmd);
 
 // This is the output interlock check used to allow the requested move
 bLocalExec:= stMotionEpicsItf.bExecute AND iMotionInterlocks.PowerEnabled AND THIS^.bEnableDone (*AND iMotionInterlocks.SafetyReady*);
@@ -437,22 +437,32 @@ ftStopExec(CLK:=stMotionEpicsItf.bExecute);
 rtInterlockEvent(CLK:=iMotionInterlocks.InterlockEvent);
 rtReset(CLK:=stMotionEpicsItf.bReset);
 IF rtReset.Q OR rtInterlockEvent.Q THEN
-   stMotionEpicsItf.bExecute := FALSE;
+    IF THIS^.stMotionEpicsItf.bReset THEN
+        // Relese motion cmds
+        THIS^.ClearVars(Done:=FALSE);
+        THIS^.bLocalError := FALSE;
+        THIS^.bLocalMessage := '';
+        // Forward general reset event
+        THIS^.iMotionAxis.Reset(Execute:= THIS^.stMotionEpicsItf.bReset);
+        THIS^.stMotionEpicsItf.bReset := FALSE;
+    END_IF
+    stMotionEpicsItf.bExecute := FALSE;
 END_IF
 
 // Drive state Machine here
 CASE eMoveState OF
-   E_MoveState.IDLING:;
-       // Delay the disable until axis reach standstill
-       // and this state machine is idling
-       IF THIS^.bPrepareDisable AND THIS^.iMotionAxis.StandStill THEN
-           THIS^.bPrepareDisable := FALSE;
-           THIS^.stMotionEpicsItf.bEnable := FALSE;
-       ELSIF bExecMove OR bExecHome THEN
-           eMoveState := E_MoveState.INIT;
-       ELSIF stMotionEpicsItf.bError THEN
-           eMoveState := E_MoveState.ERROR;
-       END_IF
+   E_MoveState.IDLING:
+        THIS^.PreHandling();
+        // Delay the disable until axis reach standstill
+        // and this state machine is idling
+        IF THIS^.bPrepareDisable AND THIS^.iMotionAxis.StandStill THEN
+            THIS^.bPrepareDisable := FALSE;
+            THIS^.stMotionEpicsItf.bEnable := FALSE;
+        ELSIF bExecMove OR bExecHome THEN
+               eMoveState := E_MoveState.INIT;
+        ELSIF stMotionEpicsItf.bError THEN
+               eMoveState := E_MoveState.ERROR;
+        END_IF
 
    E_MoveState.INIT:
        // When we start, set the busy/done appropriately
@@ -482,19 +492,18 @@ CASE eMoveState OF
             // Deactivate backlash compensation
             THIS^.iMotionAxis.BacklashCompensationActive(Active:=FALSE, RampVelocity:=0.0);
        END_IF
-       // configure and start move.
-       IF iMotionAxis.StartMove( eMoveMode, bCmdExecute ) THEN
-		   tonSyncTimer.IN:=TRUE;
-           eMoveState := E_MoveState.STARTED;
-       END_IF
 
+       iMotionAxis.StartMove( eMoveMode, bCmdExecute );
+       // configure and start move.
+       tonSyncTimer.IN:=TRUE;
+        eMoveState := E_MoveState.STARTED;
    E_MoveState.STARTED:
        IF stMotionEpicsItf.bError THEN
            eMoveState := E_MoveState.ERROR;
         // Move Started? use a timer to force quit this state if no response from axis
        ELSIF tonSyncTimer.Q THEN
-		   bLocalError := TRUE;
-		   bLocalMessage := 'No Response from Axis';
+           bLocalError := TRUE;
+           bLocalMessage := 'No Response from Axis';
            eMoveState := E_MoveState.ERROR;
        ELSIF iMotionAxis.Busy THEN
            eMoveState := E_MoveState.IN_PROGRESS;
@@ -538,7 +547,7 @@ CASE eMoveState OF
 
 END_CASE
 // the wait time is about 5 plc task cycle
- tonSyncTimer(PT:=T#10S);]]></ST>
+ tonSyncTimer(PT:=T#60S);]]></ST>
       </Implementation>
     </Method>
     <Method Name="UpdateParamAndStatus" Id="{bec7d97e-d393-4df3-816c-df000a420230}">

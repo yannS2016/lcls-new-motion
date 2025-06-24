@@ -68,6 +68,9 @@ END_VAR
     </Property>
     <Method Name="AxisEnabled" Id="{e5e0c9e8-b45f-482d-9ef1-83edfb55d132}">
       <Declaration><![CDATA[METHOD AxisEnabled : BOOL
+VAR_INPUT
+    HomeCmd : BOOL;
+END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[AxisEnabled:=THIS^.iAxisStatus.AxisEnabled();]]></ST>
@@ -811,7 +814,7 @@ END_VAR
     DS402 NC/Direct axis : Implementation need to check that the drive is in the correct mode before initaiting the move then set bCommandedMoveAbsolute
     MP NC axis : will immediately write to bCommandedMoveAbsolute
 *)
-METHOD StartMove : BOOL
+METHOD StartMove
 VAR_INPUT
     MoveMode	: E_EpicsMotorCmd;
     CmdExecute	: BOOL;
@@ -827,7 +830,7 @@ END_VAR
                             HomeSpeedSlow:=THIS^.iReadParameter.RefVeloSync );
 END_CASE
 // for typical NC axis no further tests needed
-StartMove := CmdExecute;]]></ST>
+//StartMove := CmdExecute;]]></ST>
       </Implementation>
     </Method>
     <Property Name="Stopped" Id="{627971e5-8a4a-4a11-800c-3f489522ec58}">

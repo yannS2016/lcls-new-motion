@@ -46,6 +46,7 @@ END_VAR
     </Property>
     <Method Name="AxisEnabled" Id="{2a14e841-fea3-4b30-9123-2945a0231bb1}">
       <Declaration><![CDATA[METHOD AxisEnabled : BOOL
+
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[// Get a definitive bEnabled reading
@@ -100,7 +101,7 @@ END_VAR
     <Method Name="CallAfterInit" Id="{6e051d1f-04b5-4dd5-9dad-cf07d281461d}">
       <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
 VAR_INPUT
-	AxisRef : REFERENCE TO AXIS_REF;
+    AxisRef : REFERENCE TO AXIS_REF;
 END_VAR
 ]]></Declaration>
       <Implementation>

@@ -23,7 +23,12 @@ VAR
     iBacklashCompensation : I_BacklashCompensation;
     iLimSwStatus : I_LimSwStatusMCS2;
     stDS402Drive : ST_DS402Drive;
+    eMoveMode : E_EpicsMotorCmd := E_EpicsMotorCmd.MOVE_ABSOLUTE;
+    bPositionHolding : BOOL;
 
+
+rtExec : R_TRIG;
+    bCmdExecute : BOOL;
     bError: BOOL;
     bBusy : BOOL;
     bDone : BOOL;
@@ -31,31 +36,44 @@ VAR
     nErrorID: UDINT;
     sMessage : T_MAXSTRING;
     rtAbortDone : R_TRIG;
-    rtDone : R_TRIG;
+    rtMoveAbsoluteDone : R_TRIG;
+    rtOperational : R_TRIG;
+    bHomeMove : BOOL;
     // Default is CSP
     nModeOfOperation : SINT := 8;
     nModeOfOperationDisplay : SINT;
     bStartMove : BOOL;
     bOperational: BOOL;
-    nDS402DriveControl :	UINT := 15;
+    bReadyToSwitchOn : BOOL;
+    nDS402DriveControl :	UINT := 6;
+    nRecentDS402DriveControl :	UINT;
     rtNCModeUpdate : R_TRIG;
     rtGenericModeUpdate : R_TRIG;
     rtHomeDone : R_TRIG;
     bReportOnce : BOOL;
-	btestReset : BOOL;
-	bAbortInProgress : BOOL;
+    btestReset : BOOL;
+    bAbortInProgress : BOOL;
+    bDiscreteMove : BOOL := TRUE;;
+    bModeSwitchReady : BOOL;
+    rtStartMove : R_TRIG;
+    tonHomeDone : TON;
+    SyncTimer : TIME := T#5000MS;
+    bTransition : BOOL;
+    bHomeInit : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[(*Operation enbaled*)
-IF stDS402Drive.stDriveStatus.ReadyToSwitchOn
+      <ST><![CDATA[IF stDS402Drive.stDriveStatus.ReadyToSwitchOn
     AND stDS402Drive.stDriveStatus.SwitchedOn
     AND stDS402Drive.stDriveStatus.OperationEnabled
     AND NOT stDS402Drive.stDriveStatus.Fault
     AND stDS402Drive.stDriveStatus.VoltageEnabled
     AND stDS402Drive.stDriveStatus.QuickStopActive
     AND NOT stDS402Drive.stDriveStatus.SwitchOnDisabled THEN
+    bReadyToSwitchOn := FALSE;
     bOperational := TRUE;
+ELSE
+        bOperational := FALSE;
 END_IF
 
 // We Forwwarding internal MCS2 limits, that's soft limits or end stop status locally, to keep
@@ -69,69 +87,76 @@ THIS^.iHome.DS402Status(	ModeOfOperationDisplay:=THIS^.stDS402Drive.nModeOfOpera
                             Bit13OpModeSpecific:=THIS^.stDS402Drive.stDriveStatus.Bit13_OpModeSpecific,
                             Bit12OpModeSpecific:=THIS^.stDS402Drive.stDriveStatus.Bit12_OpModeSpecific,
                             TargetReached:=THIS^.stDS402Drive.stDriveStatus.TargetReached );
-bBusy :=	THIS^.iHome.Busy;
-bDone:=	THIS^.iHome.Done;
-bError:=	THIS^.iHome.Error;
-nErrorID:=	THIS^.iHome.ErrorID;
+// handle combined Errors conditions
+THIS^.ErrorHandling();
 
-// Critical : do not remove
-rtHomeDone(CLK:=THIS^.iHome.Done);
-IF rtHomeDone.Q THEN
-    THIS^.nModeOfOperation := THIS^.iHome.DS402ModeOfOperation;
-    THIS^.nDS402DriveControl:=THIS^.nDS402DriveControl;
-END_IF
+rtExec (CLK:=THIS^.bCmdExecute);
 
-IF THIS^.iHome.Busy THEN
-    THIS^.nDS402DriveControl:= THIS^.iHome.DS402Control;
-END_IF
-
-rtNCModeUpdate(CLK:=THIS^.stDS402Drive.nModeOfOperationNC = nModeOfOperation);
-rtGenericModeUpdate(CLK:=nModeOfOperation <> THIS^.stDS402Drive.nModeOfOperationNC);
-IF rtNCModeUpdate.Q THEN
-    THIS^.stDS402Drive.nModeOfOperation := THIS^.stDS402Drive.nModeOfOperationNC;
-END_IF
-
+// Home Move Power override
+rtGenericModeUpdate (CLK:=THIS^.bHomeMove);
 IF rtGenericModeUpdate.Q THEN
-    THIS^.stDS402Drive.nModeOfOperation := nModeOfOperation;
+    THIS^.nDS402DriveControl  := 15;
 END_IF
 
-// Generic NC write
-//THIS^.nDS402DriveControl := THIS^.nDS402DriveControl OR THIS^.stDS402Drive.nDS402DriveControlNC;
+        IF NOT THIS^.bHomeMove THEN
+            THIS^.nDS402DriveControl := THIS^.stDS402Drive.nDS402DriveControlNC;
+            IF ModeOfOperation(RecentModeOfOperation:=8) THEN
 
-// IF THIS^.nDS402DriveControl <> THIS^.stDS402Drive.nDS402DriveControl THEN
-// 	THIS^.stDS402Drive.nDS402DriveControl:= THIS^.nDS402DriveControl;
-// END_IF
-IF THIS^.stDS402Drive.nDS402DriveControlNC >= 128 THEN
-	btestReset := TRUE;
+                IF THIS^.bOperational AND THIS^.iPower.Active(*AND rtExec.Q *) THEN
+                    IF THIS^.bCmdExecute THEN
+                        THIS^.iMoveAbsolute.CommandMoveAbsolute := bCmdExecute;
+                        THIS^.bStartMove := THIS^.iPower.Active;
+                        THIS^.bCmdExecute := FALSE;
+                    END_IF
+                END_IF
+            END_IF
+        END_IF
+
+IF THIS^.bHomeMove THEN
+        IF THIS^.bError THEN
+            THIS^.nDS402DriveControl := THIS^.stDS402Drive.nDS402DriveControlNC;
+        END_IF
+        IF THIS^.bOperational THEN
+
+            IF  THIS^.ModeOfOperation(RecentModeOfOperation:=6) THEN
+            // override NC while homing
+            IF NOT bPositionHolding AND THIS^.nDS402DriveControl <> THIS^.iHome.DS402Control THEN
+                THIS^.nDS402DriveControl := THIS^.iHome.DS402Control;
+            END_IF
+                IF THIS^.bOperational AND THIS^.iPower.Active(*AND rtExec.Q *) THEN
+                    IF THIS^.bCmdExecute THEN
+                        THIS^.iHome.Home( Execute:=bCmdExecute AND bOperational,
+                                            HomeSpeedFast:=THIS^.iReadParameter.RefVeloSearch,
+                                            HomeSpeedSlow:=THIS^.iReadParameter.RefVeloSync );
+                        THIS^.bCmdExecute := FALSE;
+                    END_IF
+                END_IF
+            END_IF
+        END_IF
 END_IF
-// IF THIS^.stDS402Drive.nModeOfOperationDisplay = 8 THEN
-// 	THIS^.stDS402Drive.nDS402DriveControl := THIS^.stDS402Drive.nDS402DriveControlNC;
-// //     IF THIS^.stDS402Drive.nDS402DriveControl <> THIS^.stDS402Drive.nDS402DriveControlNC THEN
-// //         THIS^.stDS402Drive.nDS402DriveControl := THIS^.stDS402Drive.nDS402DriveControlNC;
-// //     END_IF
-// // 
-// // ELSIF THIS^.stDS402Drive.nModeOfOperationDisplay = 6 THEN
-// //     IF THIS^.stDS402Drive.nDS402DriveControl <> THIS^.nDS402DriveControl THEN
-// //         THIS^.stDS402Drive.nDS402DriveControl:= THIS^.nDS402DriveControl;
-// // 	// Fetch reset comand from MC_Reset
-// // 	ELSIF THIS^.iReset.Done THEN
-// // 		IF THIS^.stDS402Drive.nDS402DriveControl <> THIS^.stDS402Drive.nDS402DriveControlNC THEN
-// // 			THIS^.stDS402Drive.nDS402DriveControl := THIS^.stDS402Drive.nDS402DriveControlNC;
-// // 		END_IF
-// //     END_IF
-// 
-// END_IF
-bAbortInProgress  S= THIS^.iHalt.Busy OR THIS^.iReset.Busy;
-IF THIS^.stDS402Drive.nModeOfOperationDisplay = 8 THEN
-	THIS^.stDS402Drive.nDS402DriveControl := THIS^.stDS402Drive.nDS402DriveControlNC;
-ELSIF THIS^.stDS402Drive.nModeOfOperationDisplay = 6 THEN
-	IF THIS^.bAbortInProgress THEN
-			THIS^.nDS402DriveControl := THIS^.stDS402Drive.nDS402DriveControlNC;
-	END_IF
-	IF THIS^.stDS402Drive.nDS402DriveControl<>THIS^.nDS402DriveControl THEN
-			THIS^.stDS402Drive.nDS402DriveControl:= THIS^.nDS402DriveControl;
-	END_IF
+
+// catch home done here to and start position holding
+rtMoveAbsoluteDone(CLK:=THIS^.iMoveAbsolute.Done);
+rtHomeDone(CLK:=THIS^.iHome.Done);
+
+IF rtHomeDone.Q OR rtMoveAbsoluteDone.Q THEN
+    tonHomeDone.IN := TRUE;
+    bPositionHolding := TRUE;
 END_IF
+
+IF tonHomeDone.Q THEN
+    tonHomeDone.IN := FALSE;
+    bPositionHolding := FALSE;
+    bHomeMove := FALSE;
+    THIS^.nDS402DriveControl := THIS^.stDS402Drive.nDS402DriveControlNC;
+END_IF
+
+IF THIS^.nDS402DriveControl <> THIS^.stDS402Drive.nDS402DriveControl THEN
+    THIS^.stDS402Drive.nDS402DriveControl := THIS^.nDS402DriveControl;
+END_IF
+
+// use to set the operation mode some time after clearing run flag.
+tonHomeDone(PT:=SyncTimer);
 
 
 // Forward the abort event to homing block ( this is to sync the home state machine)
@@ -146,8 +171,7 @@ bAbortInProgress  := FALSE;
 
     THIS^.iHome.GlobalReset := THIS^.iReset.Done;
 END_IF
-// handle combined Errors conditions
-THIS^.ErrorHandling();
+
 
 ]]></ST>
     </Implementation>
@@ -178,9 +202,25 @@ END_VAR
     </Property>
     <Method Name="AxisEnabled" Id="{ca10feff-4ca4-4f00-8af9-2ad21dbd4fe1}">
       <Declaration><![CDATA[METHOD AxisEnabled : BOOL
+VAR_INPUT
+    HomeCmd : BOOL;
+END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[AxisEnabled:=THIS^.iAxisStatus.AxisEnabled();]]></ST>
+        <ST><![CDATA[(*	Power enable is expected to place the axis in standstill mode and ready state
+     this latches the drive in run mode control word  set to 31 as expected for CSP operation before a set point is issued
+    for homing, the  drive mustonly be in operation enable mode, controlwrod is set to 15, the homing routine will be activate run mode
+*)
+// the drive is still in CSP mode when a Homimg move is reqested.
+// mode stwitching take a couple fo cycle, thuse we need to inhibit the CSP section.
+THIS^.bHomeMove S= HomeCmd;
+// IF HomeCmd THEN
+// 	AxisEnabled := THIS^.bOperational;
+// ELSE
+// 	AxisEnabled:=THIS^.iAxisStatus.AxisEnabled();
+// END_IF
+AxisEnabled:=THIS^.iAxisStatus.AxisEnabled();
+]]></ST>
       </Implementation>
     </Method>
     <Property Name="AxisReadParamsInit" Id="{32334eb8-10f2-4d07-ab5b-86ebcd5e11a9}">
@@ -650,7 +690,7 @@ END_VAR
       <Implementation>
         <ST><![CDATA[THIS^.bModeSet := FALSE;
 IF THIS^.stDS402Drive.nModeOfOperationDisplay <> RecentModeOfOperation THEN
-    THIS^.nModeOfOperation := RecentModeOfOperation;
+    THIS^.stDS402Drive.nModeOfOperation := RecentModeOfOperation;
     THIS^.bModeSet := FALSE;
 ELSE
     THIS^.bModeSet := TRUE;
@@ -946,32 +986,14 @@ END_VAR
     DS402 NC/Direct axis : Implementation need to check that the drive is in the correct mode before initaiting the move then set bCommandedMoveAbsolute
     MP NC axis : will immediately write to bCommandedMoveAbsolute
 *)
-METHOD StartMove : BOOL
+METHOD StartMove
 VAR_INPUT
     MoveMode	: E_EpicsMotorCmd;
     CmdExecute	: BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.bStartMove := FALSE;
-CASE MoveMode  OF
-    E_EpicsMotorCmd.MOVE_ABSOLUTE:
-        IF THIS^.ModeOfOperation(RecentModeOfOperation:=8) THEN
-            THIS^.iMoveAbsolute.CommandMoveAbsolute := CmdExecute AND bOperational;
-            THIS^.bStartMove := TRUE;
-        END_IF
-
-    E_EpicsMotorCmd.HOME:
-        IF THIS^.ModeOfOperation(RecentModeOfOperation:=6) THEN
-            THIS^.iHome.Home( Execute:=CmdExecute AND bOperational,
-                                HomeSpeedFast:=THIS^.iReadParameter.RefVeloSearch,
-                                HomeSpeedSlow:=THIS^.iReadParameter.RefVeloSync );
-            THIS^.bStartMove := TRUE;
-        END_IF
-
-END_CASE
-// for typical NC axis no further tests needed
-StartMove := THIS^.bStartMove;
+        <ST><![CDATA[THIS^.bCmdExecute :=CmdExecute;
 ]]></ST>
       </Implementation>
     </Method>
