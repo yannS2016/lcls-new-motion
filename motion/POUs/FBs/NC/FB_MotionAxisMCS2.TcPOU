@@ -25,8 +25,8 @@ VAR
     stDS402Drive : ST_DS402Drive;
     eMoveMode : E_EpicsMotorCmd := E_EpicsMotorCmd.MOVE_ABSOLUTE;
     bPositionHolding : BOOL;
-
-
+    rtNewReq : R_TRIG;
+    bNewReq: BOOL;
 rtExec : R_TRIG;
     bCmdExecute : BOOL;
     bError: BOOL;
@@ -48,7 +48,7 @@ rtExec : R_TRIG;
     nDS402DriveControl :	UINT := 6;
     nRecentDS402DriveControl :	UINT;
     rtNCModeUpdate : R_TRIG;
-    rtGenericModeUpdate : R_TRIG;
+    rtHomeMove : R_TRIG;
     rtHomeDone : R_TRIG;
     bReportOnce : BOOL;
     btestReset : BOOL;
@@ -57,7 +57,13 @@ rtExec : R_TRIG;
     bModeSwitchReady : BOOL;
     rtStartMove : R_TRIG;
     tonHomeDone : TON;
-    SyncTimer : TIME := T#5000MS;
+    {attribute 'pytmc' := '
+        pv: PLC:nPositionHoldTime
+        io: io
+        field: DESC Set Position Holding time
+    '}
+    nPositionHoldTime : UDINT;
+    tPositionHoldTime : TIME := T#150000MS;
     bTransition : BOOL;
     bHomeInit : BOOL;
 END_VAR
@@ -93,13 +99,17 @@ THIS^.ErrorHandling();
 rtExec (CLK:=THIS^.bCmdExecute);
 
 // Home Move Power override
-rtGenericModeUpdate (CLK:=THIS^.bHomeMove);
-IF rtGenericModeUpdate.Q THEN
+rtNewReq (CLK:=THIS^.bNewReq);
+rtHomeMove (CLK:=THIS^.bHomeMove);
+IF rtHomeMove.Q THEN
     THIS^.nDS402DriveControl  := 15;
 END_IF
 
         IF NOT THIS^.bHomeMove THEN
-            THIS^.nDS402DriveControl := THIS^.stDS402Drive.nDS402DriveControlNC;
+            IF  NOT bPositionHolding OR THIS^.bError THEN
+                THIS^.nDS402DriveControl := THIS^.stDS402Drive.nDS402DriveControlNC;
+            END_IF
+
             IF ModeOfOperation(RecentModeOfOperation:=8) THEN
 
                 IF THIS^.bOperational AND THIS^.iPower.Active(*AND rtExec.Q *) THEN
@@ -144,7 +154,7 @@ IF rtHomeDone.Q OR rtMoveAbsoluteDone.Q THEN
     bPositionHolding := TRUE;
 END_IF
 
-IF tonHomeDone.Q THEN
+IF tonHomeDone.Q OR THIS^.rtNewReq.Q THEN
     tonHomeDone.IN := FALSE;
     bPositionHolding := FALSE;
     bHomeMove := FALSE;
@@ -156,7 +166,7 @@ IF THIS^.nDS402DriveControl <> THIS^.stDS402Drive.nDS402DriveControl THEN
 END_IF
 
 // use to set the operation mode some time after clearing run flag.
-tonHomeDone(PT:=SyncTimer);
+tonHomeDone(PT:=UDINT_TO_TIME(nPositionHoldTime));
 
 
 // Forward the abort event to homing block ( this is to sync the home state machine)
@@ -166,9 +176,10 @@ IF  rtAbortDone.Q THEN
     THIS^.iMoveAbsolute.CommandMoveAbsolute := FALSE;
     THIS^.iHome.CommandMoveHome := FALSE;
     THIS^.bStartMove := FALSE;
-bAbortInProgress  := FALSE;
+    tonHomeDone.IN := FALSE;
+    bPositionHolding := FALSE;
+    bHomeMove := FALSE;
     // forward global reset done event;
-
     THIS^.iHome.GlobalReset := THIS^.iReset.Done;
 END_IF
 
@@ -204,6 +215,7 @@ END_VAR
       <Declaration><![CDATA[METHOD AxisEnabled : BOOL
 VAR_INPUT
     HomeCmd : BOOL;
+    NewMoveReq : BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -214,6 +226,7 @@ END_VAR
 // the drive is still in CSP mode when a Homimg move is reqested.
 // mode stwitching take a couple fo cycle, thuse we need to inhibit the CSP section.
 THIS^.bHomeMove S= HomeCmd;
+THIS^.bNewReq := NewMoveReq;
 // IF HomeCmd THEN
 // 	AxisEnabled := THIS^.bOperational;
 // ELSE

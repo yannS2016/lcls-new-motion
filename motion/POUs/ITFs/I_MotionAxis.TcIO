@@ -22,6 +22,7 @@ PROPERTY Aborted : BOOL
       <Declaration><![CDATA[METHOD AxisEnabled : BOOL
 VAR_INPUT
 	HomeCmd : BOOL;
+	NewMoveReq : BOOL; 
 END_VAR
 ]]></Declaration>
     </Method>

@@ -104,6 +104,9 @@
     <Compile Include="POUs\FBs\DS402\FB_HomeDS402.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FBs\NC\FB_MotionAxisMCS2.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\FBs\NC\FB_ParamsSaveRestoreNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -121,10 +124,6 @@
     </Compile>
     <Compile Include="POUs\FBs\NC\FB_HomeNC.TcPOU">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FBs\NC\FB_MotionAxisMCS2.TcPOU">
-      <SubType>Code</SubType>
-      <ExcludeFromBuild>false</ExcludeFromBuild>
     </Compile>
     <Compile Include="POUs\FBs\NC\FB_MotionAxisNC.TcPOU">
       <SubType>Code</SubType>

@@ -389,7 +389,7 @@ CASE eEnableMode OF
 END_CASE
 //
 // Get a definitive bEnabled reading
-THIS^.bEnableDone := THIS^.iMotionAxis.AxisEnabled(HomeCmd:=THIS^.bHomeCmd);
+THIS^.bEnableDone := THIS^.iMotionAxis.AxisEnabled(HomeCmd:=THIS^.bHomeCmd, NewMoveReq:=THIS^.bNewMoveReq);
 
 // This is the output interlock check used to allow the requested move
 bLocalExec:= stMotionEpicsItf.bExecute AND iMotionInterlocks.PowerEnabled AND THIS^.bEnableDone (*AND iMotionInterlocks.SafetyReady*);
