@@ -169,9 +169,9 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[bExecute := bExecute;
-nParameterNumber := ParameterNumber;
-fParameterValue	:= ParameterValue;]]></ST>
+        <ST><![CDATA[THIS^.bExecute := Execute;
+THIS^.nParameterNumber := ParameterNumber;
+THIS^.fParameterValue	:= ParameterValue;]]></ST>
       </Implementation>
     </Method>
   </POU>

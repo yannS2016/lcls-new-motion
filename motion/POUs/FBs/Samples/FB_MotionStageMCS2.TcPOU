@@ -46,17 +46,19 @@ VAR
                                         iEncoderScaling := fbEncoderScaling,
                                         iAxisStatus := fbAxisStatus,
                                         iBacklashCompensation :=fbBacklashCompensation,
-                                        iLimSwStatus:=fbLimSwStatus
+                                        iLimSwStatus:=fbLimSwStatus,
+                                        eModule := eModule
                                     );
   //
-   fbMotionDrive: FB_MotionDrive ( stMotionEpicsItf := stMotionEpicsItf,
-                                   iBrake:=fbBrake,
-                                   iMotionLogger:=iMotionLogger,
-                                   iMotionInterlocks:=fbMotionInterlocksLimSw,
-                                   iMotionAxis := fbMotionAxis
+   fbMotionDrive: FB_MotionDrive (	stMotionEpicsItf := stMotionEpicsItf,
+                                       iBrake:=fbBrake,
+                                       iMotionLogger:=iMotionLogger,
+                                       iMotionInterlocks:=fbMotionInterlocksLimSw,
+                                       iMotionAxis := fbMotionAxis
                                    ) ;
     // Drive Name
     sName : T_MaxString;
+    eModule : E_Module;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -117,6 +119,10 @@ fbReset.CallAfterInit(AxisRef := THIS^.AxisRef);
 fbMoveAbsolute.CallAfterInit(AxisRef := THIS^.AxisRef);
 fbParamsSaveRestore.CallAfterInit(AxisRef := THIS^.AxisRef,iPersistentDataStorage := THIS^.iPersistentDataStorage);
 fbAxisStatus.CallAfterInit(AxisRef := THIS^.AxisRef);
+fbReadParameter.CallAfterInit(AxisRef:=THIS^.AxisRef);
+fbWriteParameter.CallAfterInit(AxisRef:=THIS^.AxisRef);
+fbParamsSaveRestore.CallAfterInit(	AxisRef := THIS^.AxisRef,
+                                     iPersistentDataStorage := THIS^.iPersistentDataStorage);
 fbBacklashCompensation.CallAfterInit(AxisRef := THIS^.AxisRef);
 
 fbMotionAxis.CallAfterInit(iHome := THIS^.fbHome,
@@ -130,7 +136,8 @@ fbMotionAxis.CallAfterInit(iHome := THIS^.fbHome,
                              iEncoderScaling := THIS^.fbEncoderScaling,
                              iAxisStatus := THIS^.fbAxisStatus,
                              iBacklashCompensation := THIS^.fbBacklashCompensation,
-                             iLimSwStatus := THIS^.fbLimSwStatus);
+                             iLimSwStatus := THIS^.fbLimSwStatus,
+                             eModule := eModule);
 
 fbMotionDrive.CallAfterInit( stMotionEpicsItf:= THIS^.stMotionEpicsItf,
                              iBrake:=THIS^.fbBrake,
@@ -175,13 +182,15 @@ VAR_INPUT
     stMotionEpicsItf : REFERENCE TO ST_MotionEpicsItf;
     iPersistentDataStorage : I_PersistentDataStorage;
     sName : T_MaxString;
+    eModule : E_Module;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.iMotionLogger := iMotionLogger;
 THIS^.AxisRef REF= AxisRef;
 THIS^.iPersistentDataStorage := iPersistentDataStorage;
 THIS^.stMotionEpicsItf REF=stMotionEpicsItf;
-THIS^.sName := sName;]]></ST>
+THIS^.sName := sName;
+THIS^.eModule := eModule;]]></ST>
       </Implementation>
     </Method>
     <Property Name="HomeMode" Id="{4292331e-f2e7-4389-9c71-a8c481548aa0}">

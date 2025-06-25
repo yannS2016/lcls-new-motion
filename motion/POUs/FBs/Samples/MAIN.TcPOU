@@ -23,6 +23,7 @@ VAR
         .fbMotionAxis.stDS402Drive.nDS402DriveControlNC := <8,8,0>TINC^NC-Task 1 SAF^Axes^MCS2-M1^Drive^Outputs^Out^nCtrl2;
     '}
     fbMotionStage : FB_MotionStageMCS2(	sName := 'MCS2',
+                                        eModule :=E_Module.CHAN1,
                                         stMotionEpicsItf := M1,
                                         AxisRef := NcAxis_GVL.MCS2,
                                         iMotionLogger := fbMotionLogger,

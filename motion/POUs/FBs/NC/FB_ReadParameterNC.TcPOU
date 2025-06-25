@@ -3,7 +3,7 @@
   <POU Name="FB_ReadParameterNC" Id="{0a080461-8875-4b57-a673-44abaad03a9d}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_ReadParameterNC IMPLEMENTS I_ReadParameter
 (*
-    Read and refresh axis parameters struct on ST_MotionStage
+    Read and refresh axis parameters
 *)
 VAR
     {attribute 'no_copy'}
@@ -24,7 +24,7 @@ VAR
     NCParamsTimer : TON;
     bAxisParametersInit : BOOL;
     tRefreshDelay: TIME := T#1S;
-    bUpdateEnable : BOOL;
+    bEnable : BOOL;
     bExecute : BOOL;
     bError				: BOOL;
     nErrorId			: UDINT:=0;
@@ -40,12 +40,12 @@ END_IF
 
 THIS^.AxisRef.ReadStatus();
 // Periodic update of NC parameters
-NCParamsTimer( IN:=bUpdateEnable AND NOT bExecute, PT:=tRefreshDelay);
+NCParamsTimer( IN:=bEnable AND NOT bExecute, PT:=tRefreshDelay);
 bExecute S= NCParamsTimer.Q;
 fbMcReadParams(
     Parameter:=THIS^.stAxisParameters,
     Axis:=THIS^.AxisRef,
-    Execute:=bUpdateEnable AND bExecute,
+    Execute:= bExecute,
     Error=>bError,
     ErrorID=>nErrorID,
     Busy=>bBusy,
@@ -91,6 +91,19 @@ END_VAR
 ]]></Declaration>
         <Implementation>
           <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="AmsNetID" Id="{79cec594-74b3-4c58-9634-32ff2e3930e8}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY AmsNetID : T_AmsNetId
+]]></Declaration>
+      <Get Name="Get" Id="{26a88863-17bb-47a9-a2bd-19cbf4755392}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[AmsNetID := THIS^.stAxisParameters.sAmsNetId;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -145,6 +158,91 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Property Name="EnInTargetTimeout" Id="{cb614f62-92c0-4ff8-b236-945144e388d5}">
+      <Declaration><![CDATA[PROPERTY EnInTargetTimeout : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{e76567d5-05fc-4d20-b5e3-13501c35b76c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[EnInTargetTimeout := THIS^.stAxisParameters.bEnablePEHTimeControl.0;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="EnMaxSoftPosLimit" Id="{3c3b7f0e-0e4c-4285-8283-374d54e7aebe}">
+      <Declaration><![CDATA[PROPERTY EnMaxSoftPosLimit : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{5bf87a4b-90bb-42bd-aa83-7f5af523ba2e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[EnMaxSoftPosLimit := THIS^.stAxisParameters.bEncEnableSoftEndMaxControl.0;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="EnMinSoftPosLimit" Id="{bb2ca3a8-8fc7-44bd-bb8b-f57f80462214}">
+      <Declaration><![CDATA[PROPERTY EnMinSoftPosLimit : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{2bde1d8a-8373-4f56-af76-c94a528845e6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[EnMinSoftPosLimit := THIS^.stAxisParameters.bEncEnableSoftEndMinControl.0;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="EnPositionLagMonitoring" Id="{29f614c8-318b-43a9-8822-edab8f52e92e}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY EnPositionLagMonitoring : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{a531602a-dfcd-412c-be97-8fd45db94be1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[EnPositionLagMonitoring := THIS^.stAxisParameters.bCtrlEnablePosDiffControl.0;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="EnPositionRangeMonitoring" Id="{f8605e66-e221-4fcd-9b0f-84d9ba4e2637}">
+      <Declaration><![CDATA[PROPERTY EnPositionRangeMonitoring : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{57d74d2c-0ebe-4765-965f-ec15ea6e2adc}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="EnScaleFactorInternal" Id="{96b925d2-167e-491a-8875-bd75d9890a67}">
+      <Declaration><![CDATA[PROPERTY EnScaleFactorInternal : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{0b20ae66-5839-48f1-b958-6e8d6608e6e3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[EnScaleFactorInternal := THIS^.stAxisParameters.fEncScaleFactorInternal;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="EnTargetPositionMonitoring" Id="{3579721b-0625-4781-83f8-4617310d0f0c}">
+      <Declaration><![CDATA[PROPERTY EnTargetPositionMonitoring : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{06fd4c5e-7b2b-4004-898a-fbf20b3937b1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[EnTargetPositionMonitoring := THIS^.stAxisParameters.bEnableTargetPosControl.0;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="Error" Id="{9c9b784c-64ad-45f6-9c7e-0135e01c740f}">
       <Declaration><![CDATA[{warning 'add property implementation'}
 PROPERTY Error : BOOL
@@ -187,6 +285,57 @@ END_VAR]]></Declaration>
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="InTargetTimeout" Id="{3f12d2a6-41fc-4962-a67a-6325c2241f2e}">
+      <Declaration><![CDATA[PROPERTY InTargetTimeout : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{9e1e4a5e-97db-4ea8-9aca-15c2d5b81320}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[InTargetTimeout := THIS^.stAxisParameters.fPEHControlTime;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MaxPosLagFilterTime" Id="{1feeb96a-18f8-4ecf-9c69-fb4f8bfd7dbe}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY MaxPosLagFilterTime : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{64ba684b-07d9-4327-9788-034ad75501f1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MaxPosLagFilterTime := THIS^.stAxisParameters.fCtrlPosDiffMaxTime;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MaxPosLagValue" Id="{843bf621-4ed1-478c-9c6c-f985742062a8}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY MaxPosLagValue : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{8a9ca48f-156e-4613-87a3-f910f9ec0e0b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MaxPosLagValue := THIS^.stAxisParameters.fCtrlPosDiffMax;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MaxSoftPosLimit" Id="{7744fb96-6717-48b6-a170-01beef3e12c1}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY MaxSoftPosLimit : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{8efc13a2-8787-4a6f-af46-e11f1d25d992}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MaxSoftPosLimit := THIS^.stAxisParameters.fEncSoftEndMax;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="Message" Id="{5a724cf4-bb87-4860-9c8b-1548832af991}">
       <Declaration><![CDATA[PROPERTY Message : T_MAXSTRING
 ]]></Declaration>
@@ -199,6 +348,44 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Property Name="MinSoftPosLimit" Id="{ae44b4d0-7941-4537-a170-677565224641}">
+      <Declaration><![CDATA[PROPERTY MinSoftPosLimit : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{a1d48c0a-3f6a-4cab-b8e6-43da7538de47}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MinSoftPosLimit := THIS^.stAxisParameters.fEncSoftEndMin;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Port" Id="{c338a91a-3ae5-4a47-941b-0449f157640f}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Port : WORD
+]]></Declaration>
+      <Get Name="Get" Id="{9af1eadb-d648-4a5e-8241-ff6553a4a709}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Port := THIS^.stAxisParameters.nPort;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="PositionRangeWindow" Id="{1dd8cb74-3cd9-4b43-9ddb-21cd3c83088d}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY PositionRangeWindow : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{e182bb73-32dd-43f1-baa8-64f5fd1417df}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="ReadParameters" Id="{7e1988df-13bf-409f-9bba-5c8975b3fe8b}">
       <Declaration><![CDATA[METHOD ReadParameters
 VAR_INPUT
@@ -206,7 +393,7 @@ VAR_INPUT
     RefreshDelay: TIME;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.bUpdateEnable:= Enable;
+        <ST><![CDATA[THIS^.bEnable:= Enable;
 THIS^.tRefreshDelay:= RefreshDelay;]]></ST>
       </Implementation>
     </Method>
@@ -233,6 +420,30 @@ END_VAR
 ]]></Declaration>
         <Implementation>
           <ST><![CDATA[RefVeloSync:= THIS^.stAxisParameters.fRefVeloSync;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="TargetPositionMonitoringTime" Id="{e3fcf39b-d48d-452b-acdd-8281cb10837a}">
+      <Declaration><![CDATA[PROPERTY TargetPositionMonitoringTime : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{a626b81c-5dfd-4cab-adb5-aa6cb8402380}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[TargetPositionMonitoringTime := THIS^.stAxisParameters.fTargetPosControlTime;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="TargetPositionWindow" Id="{0f7050ba-57af-4a1f-8073-9d5358da6478}">
+      <Declaration><![CDATA[PROPERTY TargetPositionWindow : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{61318993-34b7-4456-9141-97cc30829e83}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[TargetPositionWindow := THIS^.stAxisParameters.fTargetPosControlRange;]]></ST>
         </Implementation>
       </Get>
     </Property>
