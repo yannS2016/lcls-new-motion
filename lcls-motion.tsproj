@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.15">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.15" TcProjectVariant="UnitTesting">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{CBC83B73-B816-4597-A9E5-2B03263CA131}" Namespace="MC" TcBaseType="true" HideType="true" IecDeclaration="DWORD;">NCTOPLC_AXIS_REF_STATE</Name>
@@ -1102,19 +1102,66 @@ External Setpoint Generation:
 			</Relations>
 		</DataType>
 	</DataTypes>
-	<Project ProjectGUID="{61907616-FB73-4229-B6ED-B8F1E64CE806}" TargetNetId="172.21.148.154.1.1" Target64Bit="true" ShowHideConfigurations="#x6">
+	<Project ProjectGUID="{61907616-FB73-4229-B6ED-B8F1E64CE806}" TargetNetId="199.4.42.250.1.1" Target64Bit="true" ShowHideConfigurations="#x3c6">
 		<System>
 			<Settings MaxCpus="4">
 				<Cpu CpuId="3"/>
+				<ProjectVariant PvUseParameter="true">
+					<Variant>
+						<Name>HardwareTesting</Name>
+						<Name>UnitTesting</Name>
+						<Parameters RouterMemory="32" CoresPerPkg="0" MaxWinCpus="4" MaxNonWinCpus="0">
+							<Cpu Id="3" Percent="80" BaseTime="10000"/>
+							<Affinity ObjId="#x02010030"/>
+							<Affinity ObjId="#x05000010"/>
+							<Affinity ObjId="#x08500010"/>
+							<Affinity ObjId="#x03000011"/>
+							<Affinity ObjId="#x02010060"/>
+						</Parameters>
+					</Variant>
+				</ProjectVariant>
 			</Settings>
 			<Tasks>
-				<Task Id="3" Priority="20" CycleTime="100000" AmsPort="350" AdtTasks="true">
+				<Task Id="3" Disabled="true" Priority="20" CycleTime="100000" AmsPort="350" AdtTasks="true">
 					<Name>PlcTask</Name>
+					<ProjectVariant PvUseDisable="true">
+						<Variant>
+							<Name>HardwareTesting</Name>
+							<Disable>false</Disable>
+						</Variant>
+						<Variant>
+							<Name>UnitTesting</Name>
+							<Disable>true</Disable>
+						</Variant>
+					</ProjectVariant>
+				</Task>
+				<Task Id="6" Priority="1" CycleTime="100000" AmsPort="351" AdtTasks="true">
+					<Name>UnitTestTask</Name>
+					<ProjectVariant PvUseDisable="true">
+						<Variant>
+							<Name>HardwareTesting</Name>
+							<Disable>true</Disable>
+						</Variant>
+						<Variant>
+							<Name>UnitTesting</Name>
+							<Disable>false</Disable>
+						</Variant>
+					</ProjectVariant>
 				</Task>
 			</Tasks>
 			<TypeSystem>
 				<AdditionalTmcFile Name="LCLSGeneral" File="LCLSGeneral.tmc"/>
 			</TypeSystem>
+			<ProjectVariant PvUseLink="true">
+				<Variant>
+					<Name>HardwareTesting</Name>
+					<TargetNetId>172.21.148.154.1.1</TargetNetId>
+				</Variant>
+				<Variant>
+					<Name>UnitTesting</Name>
+					<TargetNetId>199.4.42.250.1.1</TargetNetId>
+				</Variant>
+			</ProjectVariant>
 		</System>
 		<Motion>
 			<NC>
@@ -1138,10 +1185,10 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{DA380EE4-C409-4A84-97B8-4D1FBAEE5CC8}" Name="motion" PrjFilePath="motion\motion.plcproj" TmcFilePath="motion\motion.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{447B3133-E308-E85D-F452-7412E4B8A6CA}" TmcPath="motion\motion.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{35E04D0A-75C5-BD2C-D2ED-33EF3AE17D02}" TmcPath="motion\motion.tmc">
 					<Name>motion Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
-					<Vars VarGrpType="2" AreaNo="1">
+					<Vars VarGrpType="2" ContextId="1" AreaNo="17">
 						<Name>PlcTask Outputs</Name>
 						<Var>
 							<Name>MAIN.bHardEnable</Name>
@@ -1205,7 +1252,7 @@ External Setpoint Generation:
 							<Type>ULINT</Type>
 						</Var>
 					</Vars>
-					<Vars VarGrpType="1">
+					<Vars VarGrpType="1" ContextId="1" AreaNo="16">
 						<Name>PlcTask Inputs</Name>
 						<Var>
 							<Name>NcAxis_GVL.NC.NcToPlc</Name>
@@ -1330,6 +1377,15 @@ nDS402DriveControl		AT %Q*	:	UINT;
 					<Contexts>
 						<Context>
 							<Id>0</Id>
+							<Name>UnitTestTask</Name>
+							<ManualConfig>
+								<OTCID>#x02010060</OTCID>
+							</ManualConfig>
+							<Priority>1</Priority>
+							<CycleTime>10000000</CycleTime>
+						</Context>
+						<Context>
+							<Id>1</Id>
 							<Name>PlcTask</Name>
 							<ManualConfig>
 								<OTCID>#x02010030</OTCID>
@@ -1339,6 +1395,7 @@ nDS402DriveControl		AT %Q*	:	UINT;
 						</Context>
 					</Contexts>
 					<TaskPouOids>
+						<TaskPouOid Prio="1" OTCID="#x08502002"/>
 						<TaskPouOid Prio="20" OTCID="#x08502001"/>
 					</TaskPouOids>
 				</Instance>
@@ -1347,6 +1404,14 @@ nDS402DriveControl		AT %Q*	:	UINT;
 		<Io>
 			<Device File="Master_EtherCAT.xti" Id="3"/>
 		</Io>
+		<Variants SpecificLocalBootFolder="true">
+			<Variant>
+				<Name>HardwareTesting</Name>
+			</Variant>
+			<Variant>
+				<Name>UnitTesting</Name>
+			</Variant>
+		</Variants>
 		<SymbolWatch>
 			<Variable>TIID^Master_EtherCAT^MCS2-3C^Module 1 (MCS2M-D-3C)^mode/status/pos/fError TxPDO^Following Error Actual Value</Variable>
 			<Variable>TIID^Master_EtherCAT^MCS2-3C^Module 1 (MCS2M-D-3C)^mode/status/pos/fError TxPDO^Modes of Operation Display</Variable>
@@ -1356,9 +1421,7 @@ nDS402DriveControl		AT %Q*	:	UINT;
 	</Project>
 	<Mappings>
 		<MappingInfo Identifier="{00000000-2001-0850-0020-500800205008}" Id="#x02030040"/>
-		<MappingInfo Identifier="{00000000-0050-0304-1000-040350000403}" Id="#x02030010"/>
-		<MappingInfo Identifier="{08502001-0050-0304-0020-500850000403}" Id="#x02030020" Watchdog="00000000000000000000000000000000"/>
-		<MappingInfo Identifier="{05000010-2001-0850-1000-040300205008}" Id="#x02030030" Watchdog="14000000040000000400000004000000"/>
+		<MappingInfo Identifier="{05000010-2001-0850-1000-040301205008}" Id="#x02030010" Watchdog="14000000040000000400000004000000"/>
 		<OwnerA Name="TIPC^motion^motion Instance">
 			<OwnerB Name="TIID^Master_EtherCAT^MCS2-3C">
 				<Link VarA="PlcTask Inputs^MAIN.fbMotionStage.fbEncoderScaling.nRawEncoderDINT" VarB="Module 1 (MCS2M-D-3C)^mode/status/pos/fError TxPDO^Position Actual Value" AutoLink="true"/>

@@ -63,6 +63,7 @@ rtDone(CLK:=bDone);
 rtAborted(CLK:=bAborted);
 IF  rtDone.Q OR rtAborted.Q THEN
     THIS^.bCommandMoveAbsolute := FALSE;
+
 END_IF]]></ST>
     </Implementation>
     <Property Name="Aborted" Id="{e282a52e-140a-4032-b49e-bebd36434e55}">
@@ -202,13 +203,28 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.bCommandMoveAbsolute := Execute;
+        <ST><![CDATA[THIS^.bCommandMoveAbsolute := TRUE;
 THIS^.fTargetPosition := Position;
 THIS^.fTargetVelocity := Velocity;
 THIS^.fTargetAcceleration := Acceleration;
 THIS^.fTargetDeceleration := Deceleration;
 THIS^.fTargetJerk := Jerk;
-THIS^.eBufferMode := BufferMode;]]></ST>
+THIS^.eBufferMode := BufferMode;
+
+fbMcMoveAbsolute(Execute := THIS^.bCommandMoveAbsolute);
+
+// fbMoveAbsoluteNC : FB_MoveAbsolute
+// ----------------
+// STATE blablalba OF:
+// 1 :
+//	fbMoveAbsoluteNC.MoveAbsolute(fPOsition : =55.);
+
+    //	IF NOT fbMoveAbsolute.bBusy THEN
+//
+    // nState := 2;
+// 2
+//	IF NOT fbMoveAbsolute.bBusy THEN
+//	]]></ST>
       </Implementation>
     </Method>
   </POU>
