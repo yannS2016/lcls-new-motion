@@ -57,13 +57,14 @@ VAR
     bModeSwitchReady : BOOL;
     rtStartMove : R_TRIG;
     tonHomeDone : TON;
+    tonPositionHolding : TON;
     {attribute 'pytmc' := '
         pv: PLC:nPositionHoldTime
         io: io
         field: DESC Set Position Holding time
     '}
     nPositionHoldTime : UDINT := 100000;
-    tPositionHoldTime : TIME := T#150000MS;
+
     bTransition : BOOL;
     bHomeInit : BOOL;
     fbWriteFErrorWin		: 	FB_EcCoESdoWrite;
@@ -113,8 +114,6 @@ THIS^.iHome.DS402Status(	ModeOfOperationDisplay:=THIS^.stDS402Drive.nModeOfOpera
                             Bit12OpModeSpecific:=THIS^.stDS402Drive.stDriveStatus.Bit12_OpModeSpecific,
                             TargetReached:=THIS^.stDS402Drive.stDriveStatus.TargetReached );
 
-// handle combined Errors conditions
-THIS^.ErrorHandling();
 
 IF stDS402Drive.stDriveStatus.ReadyToSwitchOn
     AND stDS402Drive.stDriveStatus.SwitchedOn
@@ -129,31 +128,38 @@ ELSE
         bOperational := FALSE;
 END_IF
 
-rtExec (CLK:=THIS^.bCmdExecute);
-// Home Move Power override
-rtNewReq (CLK:=THIS^.bNewReq);
-rtHomeMove (CLK:=THIS^.bHomeMove);
-IF rtHomeMove.Q THEN
-    THIS^.nDS402DriveControl  := 15;
-    fDefaultFErrWin := THIS^.iReadParameter.MaxPosLagValue;
-        IF THIS^.iReadParameter.EnPositionLagMonitoring THEN
-            // Increase position lag monitoring during homing.
-            // this will  run once before and while homing
-            THIS^.iWriteParameter.WriteParameter(	Execute:=rtHomeMove.Q,
-                                                    ParameterNumber:=MC_AxisParameter.AxisMaxPosLagValue,
-                                                    ParameterValue:=fHomeFErrWin
-                                                );
-THIS^.bParamUpdateSuccess := FALSE;
-        END_IF
+// handle combined Errors conditions
+THIS^.ErrorHandling();
+
+// Write NC controlWord output by default
+// Homing will override it
+IF  NOT bPositionHolding AND NOT THIS^.bHomeMove OR rtError.Q THEN
+    THIS^.nDS402DriveControl := THIS^.stDS402Drive.nDS402DriveControlNC;
 END_IF
 
-        IF NOT THIS^.bHomeMove THEN
-            IF  NOT bPositionHolding OR THIS^.bError THEN
-                THIS^.nDS402DriveControl := THIS^.stDS402Drive.nDS402DriveControlNC;
-            END_IF
+rtError( CLK:=THIS^.bError);
+rtNewReq (CLK:=THIS^.bNewReq);
+rtHomeMove (CLK:=THIS^.bHomeMove);
+IF rtHomeMove.Q AND rtNewReq.Q THEN
+    THIS^.nDS402DriveControl  := 15;
+    fDefaultFErrWin := THIS^.iReadParameter.MaxPosLagValue;
+    IF THIS^.iReadParameter.EnPositionLagMonitoring THEN
+        // Increase position lag monitoring during homing.
+         // this will  run once before and while homing
+        THIS^.iWriteParameter.WriteParameter(	Execute:=rtHomeMove.Q,
+                                                    ParameterNumber:=MC_AxisParameter.AxisMaxPosLagValue,
+                                                    ParameterValue:=fHomeFErrWin
+                                             );
+        THIS^.bParamUpdateSuccess := FALSE;
+    END_IF
+    eMoveMode :=  E_EpicsMotorCmd.HOME;
+END_IF
 
+CASE eMoveMode  OF
+
+    E_EpicsMotorCmd.MOVE_ABSOLUTE:
+        IF THIS^.bOperational AND NOT THIS^.bPositionHolding THEN
             IF ModeOfOperation(RecentModeOfOperation:=8) THEN
-
                 IF THIS^.bOperational AND THIS^.iPower.Active(*AND rtExec.Q *) THEN
                     IF THIS^.bCmdExecute THEN
                         THIS^.iMoveAbsolute.CommandMoveAbsolute := bCmdExecute;
@@ -164,7 +170,7 @@ END_IF
             END_IF
         END_IF
 
-IF THIS^.bHomeMove THEN
+    E_EpicsMotorCmd.HOME:
         // wait FOR parameter write completetion
         IF THIS^.bOperational AND THIS^.bParamUpdateSuccess THEN
 
@@ -184,24 +190,36 @@ IF THIS^.bHomeMove THEN
                 END_IF
             END_IF
         END_IF
-END_IF
-
+END_CASE
 // catch home done here and start position holding
 rtMoveAbsoluteDone(CLK:=THIS^.iMoveAbsolute.Done);
 rtHomeDone(CLK:=THIS^.iHome.Done);
-rtError( CLK:=THIS^.bError);
+
 IF rtHomeDone.Q OR rtMoveAbsoluteDone.Q THEN
-    tonHomeDone.IN := TRUE;
+    tonPositionHolding.IN := TRUE;
     bPositionHolding := TRUE;
+    eMoveMode :=  E_EpicsMotorCmd.MOVE_ABSOLUTE;
     // Restore default Position lag threshold
-// 	THIS^.iWriteParameter.WriteParameter(	Execute:=bPositionHolding,
-// 											ParameterNumber:=MC_AxisParameter.AxisMaxPosLagValue,
-// 											ParameterValue:=fDefaultFErrWin
-// 										);
+    IF THIS^.iHome.Done THEN
+        tonHomeDone.IN := TRUE;
+         THIS^.iWriteParameter.WriteParameter(	Execute:=bPositionHolding,
+                                             ParameterNumber:=MC_AxisParameter.AxisMaxPosLagValue,
+                                             ParameterValue:=fDefaultFErrWin
+                                         );
+    END_IF
+
 END_IF
-// Break position holding and start this new request
-IF tonHomeDone.Q OR THIS^.rtNewReq.Q THEN
+
+tonHomeDone(PT:=T#500MS);
+IF tonHomeDone.Q THEN
+    // Restore default Mode
     tonHomeDone.IN := FALSE;
+    ModeOfOperation(RecentModeOfOperation:=8);
+END_IF
+// When move is done hold the current position within a timeout
+// Break from position holding and start a new request
+IF tonPositionHolding.Q OR THIS^.rtNewReq.Q THEN
+    tonPositionHolding.IN := FALSE;
     bPositionHolding := FALSE;
     //bHomeMove := FALSE;
     IF NOT THIS^.bNewReq THEN
@@ -219,7 +237,7 @@ IF  rtAbortDone.Q  OR rtError.Q THEN
         THIS^.iHome.CommandMoveHome := FALSE;
     END_IF
     THIS^.bStartMove := FALSE;
-    tonHomeDone.IN := FALSE;
+    tonPositionHolding.IN := FALSE;
     bPositionHolding := FALSE;
     bHomeMove := FALSE;
     bExecSdoWrite := FALSE;
@@ -228,14 +246,11 @@ IF  rtAbortDone.Q  OR rtError.Q THEN
     THIS^.iHome.GlobalReset := THIS^.iReset.Done;
     THIS^.nDS402DriveControl := THIS^.stDS402Drive.nDS402DriveControlNC;
     // Resotre default
-    THIS^.iWriteParameter.WriteParameter(	Execute:=TRUE,
-                                            ParameterNumber:=MC_AxisParameter.AxisMaxPosLagValue,
-                                            ParameterValue:=fDefaultFErrWin
-                                        );
+//     THIS^.iWriteParameter.WriteParameter(	Execute:=TRUE,
+//                                             ParameterNumber:=MC_AxisParameter.AxisMaxPosLagValue,
+//                                             ParameterValue:=fDefaultFErrWin
+//                                         );
 END_IF
-
-//
-
 
 IF THIS^.nDS402DriveControl <> THIS^.stDS402Drive.nDS402DriveControl THEN
     THIS^.stDS402Drive.nDS402DriveControl := THIS^.nDS402DriveControl;
@@ -284,11 +299,8 @@ IF NOT THIS^.iHome.Busy AND NOT THIS^.iMoveAbsolute.Busy THEN
     END_IF
 END_IF
 
-
 // use to set the operation mode some time after clearing run flag.
-tonHomeDone(PT:=UDINT_TO_TIME(nPositionHoldTime));
-
-]]></ST>
+tonPositionHolding(PT:=UDINT_TO_TIME(nPositionHoldTime));]]></ST>
     </Implementation>
     <Property Name="AbortDone" Id="{374c53b8-e916-472e-ade8-b85325191589}">
       <Declaration><![CDATA[PROPERTY AbortDone : BOOL
