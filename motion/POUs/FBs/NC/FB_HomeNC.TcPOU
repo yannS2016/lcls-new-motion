@@ -8,7 +8,7 @@ VAR
     iMotionLogger : I_MotionLogger;
     iLimSwStatus : I_LimSwStatus;
     //iHomeShareData : I_HomeShareData ;
-    bCommandMoveHome  : BOOL;
+    //bCommandMoveHome  : BOOL;
     bBusy			: BOOL;
     bDone			: BOOL;
     bError 			: BOOL;
@@ -41,6 +41,8 @@ VAR
     rtReset : R_TRIG;
     bHalted: BOOL;
     bReset : BOOL;
+
+    fbHome : MC_Home;
 END_VAR
 
 VAR CONSTANT
@@ -419,17 +421,18 @@ END_VAR
       </Set>
     </Property>
     <Method Name="Home" Id="{bc450e32-fe3c-4fef-961a-7ec21133b561}">
-      <Declaration><![CDATA[METHOD  Home
+      <Declaration><![CDATA[METHOD Home
 VAR_INPUT
-    Execute	: BOOL;
-    HomeSpeedFast	: LREAL;
-    HomeSpeedSlow	: LREAL;
+    //HomeSpeedFast	: LREAL;
+    //HomeSpeedSlow	: LREAL;
+    HomingMode : MC_HomingMode;
+    BufferMode : MC_BufferMode;
+    Options : ST_HomingOptions;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.bCommandMoveHome := Execute;
-THIS^.fRefVeloSearch := HomeSpeedFast;
-THIS^.fRefVeloSync := HomeSpeedSlow;
+        <ST><![CDATA[//THIS^.fRefVeloSearch := HomeSpeedFast;
+//THIS^.fRefVeloSync := HomeSpeedSlow;
 
 ]]></ST>
       </Implementation>
