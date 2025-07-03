@@ -7,24 +7,8 @@ VAR
     AxisRef : REFERENCE TO AXIS_REF;
     // MoveABsolute
     fbMcMoveAbsolute : MC_MoveAbsolute;
-    fTargetPosition	: LREAL;
-    fTargetVelocity	: LREAL;
-    fTargetAcceleration	: LREAL := 0.0;
-    fTargetDeceleration	: LREAL := 0.0;
-    fTargetJerk	: LREAL := 0.0;
-    eBufferMode	: MC_BufferMode := MC_BufferMode.MC_Aborting;
-    rtBusy : R_TRIG;
-    ftBusy : F_TRIG;
-    rtDone : R_TRIG;
-    rtAborted : R_TRIG;
-    bCommandMoveAbsolute : BOOL;
-    bAborted : BOOL;
-    bError : BOOL;
-    bBusy : BOOL;
-    bDone : BOOL;
-    bActive : BOOL;
-    nErrorID : UDINT;
     sMessage : T_MAXSTRING;
+    eMoveAbsoluteState : (WaitingMoveAbsolute, MovingAbsolute);
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -34,37 +18,21 @@ END_IF
 
 THIS^.AxisRef.ReadStatus();
 
-THIS^.fbMcMoveAbsolute(
-    Axis := THIS^.AxisRef,
-    Execute := THIS^.bCommandMoveAbsolute,
-    Position := THIS^.fTargetPosition,
-    Velocity := THIS^.fTargetVelocity,
-    Acceleration := THIS^.fTargetAcceleration,
-    Deceleration := THIS^.fTargetDeceleration,
-    Jerk := THIS^.fTargetJerk,
-    BufferMode := THIS^.eBufferMode,
-    Done => ,
-    Busy => THIS^.bBusy,
-    Active => ,
-    CommandAborted => THIS^.bAborted,
-    Error => THIS^.bError,
-    ErrorID => THIS^.nErrorID
-);
+CASE eMoveAbsoluteState OF
+    WaitingMoveAbsolute :
+        fbMcMoveAbsolute(
+        Axis := AxisRef,
+        Execute := FALSE);
 
-rtBusy (CLK:=bBusy);
-ftBusy(CLK:=bBusy);
-// to be checked
-bDone S= ftBusy.Q AND NOT THIS^.bError AND NOT THIS^.AxisRef.Status.HasJob;
-bDone R= rtBusy.Q;
+    MovingAbsolute :
+        fbMcMoveAbsolute(
+        Axis := AxisRef,
+        Execute := TRUE
+        );
 
-// Reset execute after when done successfull or after abort reset
-// this way the done and error condition is latched till next move or global reset.
-rtDone(CLK:=bDone);
-rtAborted(CLK:=bAborted);
-IF  rtDone.Q OR rtAborted.Q THEN
-    THIS^.bCommandMoveAbsolute := FALSE;
+END_CASE
 
-END_IF]]></ST>
+]]></ST>
     </Implementation>
     <Property Name="Aborted" Id="{e282a52e-140a-4032-b49e-bebd36434e55}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
@@ -75,7 +43,7 @@ PROPERTY Aborted : BOOL
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[Aborted := THIS^.bAborted;]]></ST>
+          <ST><![CDATA[Aborted := THIS^.fbMcMoveAbsolute.CommandAborted;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -88,7 +56,7 @@ PROPERTY Active : BOOL
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[Active := bActive;]]></ST>
+          <ST><![CDATA[Active := THIS^.fbMcMoveAbsolute.Active;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -101,7 +69,7 @@ PROPERTY Busy : BOOL
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[Busy := THIS^.bBusy;]]></ST>
+          <ST><![CDATA[Busy := THIS^.fbMcMoveAbsolute.Busy;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -136,7 +104,7 @@ PROPERTY Done : BOOL
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[Done := THIS^.bDone;]]></ST>
+          <ST><![CDATA[Done := THIS^.fbMcMoveAbsolute.Done;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -149,7 +117,7 @@ PROPERTY Error : BOOL
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[Error := THIS^.bError;]]></ST>
+          <ST><![CDATA[Error := THIS^.fbMcMoveAbsolute.Error;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -162,7 +130,7 @@ PROPERTY ErrorID : UDINT
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[ErrorID := THIS^.nErrorID;]]></ST>
+          <ST><![CDATA[ErrorID := THIS^.fbMcMoveAbsolute.ErrorID;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -193,7 +161,6 @@ END_VAR
     <Method Name="MoveAbsolute" Id="{ec9e8694-906a-4f94-b53d-2b2ff2681c1a}">
       <Declaration><![CDATA[METHOD MoveAbsolute
 VAR_INPUT
-    Execute     : BOOL;
     Position	: LREAL;
     Velocity	: LREAL;
     Acceleration	: LREAL := 0.0;
@@ -203,28 +170,18 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.bCommandMoveAbsolute := TRUE;
-THIS^.fTargetPosition := Position;
-THIS^.fTargetVelocity := Velocity;
-THIS^.fTargetAcceleration := Acceleration;
-THIS^.fTargetDeceleration := Deceleration;
-THIS^.fTargetJerk := Jerk;
-THIS^.eBufferMode := BufferMode;
+        <ST><![CDATA[fbMcMoveAbsolute(Execute := FALSE,
+                 Axis := THIS^.AxisRef);
 
-fbMcMoveAbsolute(Execute := THIS^.bCommandMoveAbsolute);
-
-// fbMoveAbsoluteNC : FB_MoveAbsolute
-// ----------------
-// STATE blablalba OF:
-// 1 :
-//	fbMoveAbsoluteNC.MoveAbsolute(fPOsition : =55.);
-
-    //	IF NOT fbMoveAbsolute.bBusy THEN
-//
-    // nState := 2;
-// 2
-//	IF NOT fbMoveAbsolute.bBusy THEN
-//	]]></ST>
+fbMcMoveAbsolute(Execute := TRUE,
+        Axis := THIS^.AxisRef,
+    Position := Position,
+    Velocity := Velocity,
+    Acceleration := Acceleration,
+    Deceleration := Deceleration,
+    Jerk := Jerk,
+    BufferMode := eBufferMode);
+eMoveAbsoluteState := MovingAbsolute;]]></ST>
       </Implementation>
     </Method>
   </POU>

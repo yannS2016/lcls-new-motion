@@ -877,13 +877,13 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.iMoveAbsolute.MoveAbsolute( 	Execute:=Execute,
-                                    Position:=Position,
-                                       Velocity := Velocity,
-                                    Acceleration := Acceleration,
-                                    Deceleration := Deceleration,
-                                    Jerk := Jerk,
-                                    BufferMode := BufferMode);
+        <ST><![CDATA[// THIS^.iMoveAbsolute.MoveAbsolute( 	Execute:=Execute,
+//                                     Position:=Position,
+//                                        Velocity := Velocity,
+//                                     Acceleration := Acceleration,
+//                                     Deceleration := Deceleration,
+//                                     Jerk := Jerk,
+//                                     BufferMode := BufferMode);
 ]]></ST>
       </Implementation>
     </Method>
