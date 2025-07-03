@@ -91,7 +91,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[bCommandMoveAbsolute := CommandMoveAbsolute;]]></ST>
+          <ST><![CDATA[//bCommandMoveAbsolute := CommandMoveAbsolute;]]></ST>
         </Implementation>
       </Set>
     </Property>
@@ -180,7 +180,7 @@ fbMcMoveAbsolute(Execute := TRUE,
     Acceleration := Acceleration,
     Deceleration := Deceleration,
     Jerk := Jerk,
-    BufferMode := eBufferMode);
+    BufferMode := BufferMode);
 eMoveAbsoluteState := MovingAbsolute;]]></ST>
       </Implementation>
     </Method>

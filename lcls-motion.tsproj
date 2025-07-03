@@ -1122,7 +1122,7 @@ External Setpoint Generation:
 				</ProjectVariant>
 			</Settings>
 			<Tasks>
-				<Task Id="3" Disabled="true" Priority="20" CycleTime="100000" AmsPort="350" AdtTasks="true">
+				<Task Id="3" Disabled="true" Priority="1" CycleTime="100000" AmsPort="350" AdtTasks="true">
 					<Name>PlcTask</Name>
 					<ProjectVariant PvUseDisable="true">
 						<Variant>
@@ -1135,7 +1135,7 @@ External Setpoint Generation:
 						</Variant>
 					</ProjectVariant>
 				</Task>
-				<Task Id="6" Priority="1" CycleTime="100000" AmsPort="351" AdtTasks="true">
+				<Task Id="6" Priority="20" CycleTime="100000" AmsPort="351" AdtTasks="true">
 					<Name>UnitTestTask</Name>
 					<ProjectVariant PvUseDisable="true">
 						<Variant>
@@ -1180,20 +1180,52 @@ External Setpoint Generation:
 				<SvbTask Priority="8" CycleTime="100000" AmsPort="511">
 					<Name>NC-Task 1 SVB</Name>
 				</SvbTask>
+				<AxisFolder Name="UnitTesting"/>
+				<Axis File="MoveAbsoluteNC_Test1.xti" Id="1"/>
 				<Axis File="MCS2-M1.xti" Id="2"/>
 			</NC>
 		</Motion>
 		<Plc>
 			<Project GUID="{DA380EE4-C409-4A84-97B8-4D1FBAEE5CC8}" Name="motion" PrjFilePath="motion\motion.plcproj" TmcFilePath="motion\motion.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{4D3D43C7-3F68-74D0-E04E-7BBC8334B404}" TmcPath="motion\motion.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{7E1F37CB-D89E-D4DE-3ADA-6B70D15F1E84}" TmcPath="motion\motion.tmc">
 					<Name>motion Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" ContextId="1" AreaNo="17">
-						<Name>PlcTask Outputs</Name>
+						<Name>UnitTestTask Outputs</Name>
 						<Var>
 							<Name>MAIN.bHardEnable</Name>
 							<Type>BOOL</Type>
 						</Var>
+						<Var>
+							<Name>NcAxis_GVL.NC.PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fbMoveAbsoluteNC_Test.fbMyAxisRef_Test1.PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>NcAxis_GVL.E727.PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="1" ContextId="1" AreaNo="16">
+						<Name>UnitTestTask Inputs</Name>
+						<Var>
+							<Name>PRG_TEST.fbMoveAbsoluteNC_Test.fbMyAxisRef_Test1.NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>NcAxis_GVL.NC.NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>NcAxis_GVL.E727.NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="2" AreaNo="1">
+						<Name>PlcTask Outputs</Name>
 						<Var>
 							<Name>MAIN.fbMotionStage.fbBrake.bBrakeRelease</Name>
 							<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
@@ -1240,19 +1272,11 @@ External Setpoint Generation:
 							<Type>ULINT</Type>
 						</Var>
 						<Var>
-							<Name>NcAxis_GVL.NC.PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
 							<Name>NcAxis_GVL.MCS2.PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
-						<Var>
-							<Name>NcAxis_GVL.E727.PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
 					</Vars>
-					<Vars VarGrpType="1" ContextId="1" AreaNo="16">
+					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
 							<Name>MAIN.fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
@@ -1315,15 +1339,7 @@ nDS402DriveControl		AT %Q*	:	UINT;
 							<Type>UINT</Type>
 						</Var>
 						<Var>
-							<Name>NcAxis_GVL.NC.NcToPlc</Name>
-							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
 							<Name>NcAxis_GVL.MCS2.NcToPlc</Name>
-							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>NcAxis_GVL.E727.NcToPlc</Name>
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 					</Vars>
@@ -1377,26 +1393,26 @@ nDS402DriveControl		AT %Q*	:	UINT;
 					<Contexts>
 						<Context>
 							<Id>0</Id>
-							<Name>UnitTestTask</Name>
+							<Name>PlcTask</Name>
 							<ManualConfig>
-								<OTCID>#x02010060</OTCID>
+								<OTCID>#x02010030</OTCID>
 							</ManualConfig>
 							<Priority>1</Priority>
 							<CycleTime>10000000</CycleTime>
 						</Context>
 						<Context>
 							<Id>1</Id>
-							<Name>PlcTask</Name>
+							<Name>UnitTestTask</Name>
 							<ManualConfig>
-								<OTCID>#x02010030</OTCID>
+								<OTCID>#x02010060</OTCID>
 							</ManualConfig>
 							<Priority>20</Priority>
 							<CycleTime>10000000</CycleTime>
 						</Context>
 					</Contexts>
 					<TaskPouOids>
-						<TaskPouOid Prio="1" OTCID="#x08502002"/>
-						<TaskPouOid Prio="20" OTCID="#x08502001"/>
+						<TaskPouOid Prio="1" OTCID="#x08502001"/>
+						<TaskPouOid Prio="20" OTCID="#x08502002"/>
 					</TaskPouOids>
 				</Instance>
 			</Project>
@@ -1414,8 +1430,9 @@ nDS402DriveControl		AT %Q*	:	UINT;
 		</Variants>
 	</Project>
 	<Mappings>
-		<MappingInfo Identifier="{00000000-2001-0850-0020-500800205008}" Id="#x02030020"/>
-		<MappingInfo Identifier="{05000010-2001-0850-1000-040301205008}" Id="#x02030010" Watchdog="14000000040000000400000004000000"/>
+		<MappingInfo Identifier="{08502001-2002-0850-0020-500801205008}" Id="#x02030020" Watchdog="04000000040000000400000004000000"/>
+		<MappingInfo Identifier="{08502001-0010-0500-0020-500810000403}" Id="#x02030010" Watchdog="04000000140000000400000004000000"/>
+		<MappingInfo Identifier="{05000010-2002-0850-1000-040301205008}" Id="#x02030030" Watchdog="14000000040000000400000004000000"/>
 		<OwnerA Name="TIPC^motion^motion Instance">
 			<OwnerB Name="TIID^Master_EtherCAT^MCS2-3C">
 				<Link VarA="PlcTask Inputs^MAIN.fbMotionStage.fbEncoderScaling.nRawEncoderDINT" VarB="Module 1 (MCS2M-D-3C)^mode/status/pos/fError TxPDO^Position Actual Value" AutoLink="true"/>
@@ -1432,8 +1449,12 @@ nDS402DriveControl		AT %Q*	:	UINT;
 				<Link VarA="PlcTask Inputs^NcAxis_GVL.MCS2.NcToPlc" VarB="Outputs^ToPlc"/>
 				<Link VarA="PlcTask Outputs^NcAxis_GVL.MCS2.PlcToNc" VarB="Inputs^FromPlc"/>
 			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^MoveAbsoluteNC_Test1">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fbMoveAbsoluteNC_Test.fbMyAxisRef_Test1.NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fbMoveAbsoluteNC_Test.fbMyAxisRef_Test1.PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			</OwnerB>
 			<OwnerB Name="TIPC^motion^motion Instance">
-				<Link VarA="PlcTask Inputs^MAIN.fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable" VarB="PlcTask Outputs^MAIN.bHardEnable"/>
+				<Link VarA="PlcTask Inputs^MAIN.fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable" VarB="UnitTestTask Outputs^MAIN.bHardEnable"/>
 			</OwnerB>
 		</OwnerA>
 	</Mappings>

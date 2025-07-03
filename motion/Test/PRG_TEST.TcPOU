@@ -4,6 +4,8 @@
     <Declaration><![CDATA[PROGRAM PRG_TEST
 VAR
     fbBrakeNC_Test : FB_BrakeNC_Test;
+    {attribute 'TcNcAxis' := '.fbMyAxisRef_Test1:=MoveAbsoluteNC_Test1'}
+    fbMoveAbsoluteNC_Test : FB_MoveAbsoluteNC_Test;
 END_VAR
 ]]></Declaration>
     <Implementation>
