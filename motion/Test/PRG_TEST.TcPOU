@@ -3,9 +3,14 @@
   <POU Name="PRG_TEST" Id="{a250f1a3-2206-4057-bf04-925c8d4e35ef}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM PRG_TEST
 VAR
-    fbBrakeNC_Test : FB_BrakeNC_Test;
-    {attribute 'TcNcAxis' := '.fbMyAxisRef_Test1:=MoveAbsoluteNC_Test1'}
-    fbMoveAbsoluteNC_Test : FB_MoveAbsoluteNC_Test;
+//     // New Motion Architecture tests
+//     fb_BrakeNC_Test: FB_BrakeNC_Test;
+//     fb_McMotionBlocks_Test: FB_NewArchMcMotionBlocks_Test;
+//	fb_MoveRequest_Test : FB_MoveRequest_Test;
+//	fb_MotionInterlocksCommon_Test : FB_MotionInterlocksCommon_Test;
+    fbMotionInterlocksLimSw_Test : FB_MotionInterlocksLimSw_Test;
+
+    fbMotionAxisNC_Test : FB_MotionAxisNC_Test;
 END_VAR
 ]]></Declaration>
     <Implementation>

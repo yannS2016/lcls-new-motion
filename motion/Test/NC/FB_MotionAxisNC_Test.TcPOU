@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_MotionAxisNC_Test" Id="{d9459441-c5aa-4f4b-8f3a-123153b6d2d2}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionAxisNC_Test EXTENDS FB_TestSuite
+VAR
+    fbHome : FB_HomeNC_TestDouble;
+    fbHalt : FB_HaltNC_TestDouble;
+    fbPower : FB_PowerNC_TestDouble;
+    fbReset : FB_ResetNC_TestDouble;
+    fbMoveAbsolute : FB_MoveAbsoluteNC_TestDouble;
+    fbReadParameter : FB_ReadParameterNC_TestDouble;
+    fbWriteParameter  : FB_WriteParameterNC_TestDouble;
+    fbParamSaveRestore: FB_ParamSaveRestoreNC_TestDouble;
+    fbEncoderScaling : FB_EncoderScaling_TestDouble;
+    fbAxisStatus : FB_AxisStatus_TestDouble;
+    fbBacklashCompensation : FB_BacklashCompensationNC_TestDouble;
+    // subject under test
+    fbMotionAxis : FB_MotionAxisNC(  	iHome := fbHome,
+                                        iHalt := fbHalt,
+                                        iPower := fbPower,
+                                        iReset := fbReset,
+                                        iMoveAbsolute := fbMoveAbsolute,
+                                        iReadParameter := fbReadParameter,
+                                        iWriteParameter  := fbWriteParameter,
+                                        iParamSaveRestore:= fbParamSaveRestore,
+                                        iEncoderScaling := fbEncoderScaling,
+                                        iAxisStatus := fbAxisStatus,
+                                        iBacklashCompensation := fbBacklashCompensation
+                                    );
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <CFC>
+        <XmlArchive>
+          <Data>
+            <o xml:space="preserve" t="CFCImplementationObject">
+              <o n="Items" t="CFCItemList">
+                <l2 n="InnerList" />
+              </o>
+              <n n="ParameterInitializationMethodGenerator" />
+              <o n="RoutingPathTable" t="CFCRoutingPathTable">
+                <d2 n="InnerDictionary" />
+              </o>
+              <v n="AutoSizeCanvas">true</v>
+              <v n="CanvasWidth">1</v>
+              <v n="CanvasHeight">1</v>
+              <n n="EditorConfiguration" />
+              <v n="AreElementsSpaceOptimized">true</v>
+            </o>
+          </Data>
+          <TypeList>
+            <Type n="Boolean">System.Boolean</Type>
+            <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
+            <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
+            <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
+            <Type n="Int32">System.Int32</Type>
+          </TypeList>
+        </XmlArchive>
+      </CFC>
+    </Implementation>
+    <ObjectProperties>
+      <XmlArchive>
+        <Data>
+          <o xml:space="preserve" t="CFCProperty">
+            <v n="UseExplicitExecutionOrder">false</v>
+          </o>
+        </Data>
+        <TypeList>
+          <Type n="Boolean">System.Boolean</Type>
+          <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
+        </TypeList>
+      </XmlArchive>
+    </ObjectProperties>
+  </POU>
+</TcPlcObject>

@@ -77,171 +77,217 @@
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\Common\FB_DS402Common.TcPOU">
-      <SubType>Code</SubType>
-      <ExcludeFromBuild>true</ExcludeFromBuild>
-    </Compile>
-    <Compile Include="POUs\FBs\Common\FB_LimSwStatus.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Common\FB_EncoderScaling.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\Common\FB_LimSwStatusMCS2.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Common\FB_EpicsMotionParamsStatus.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\Common\FB_MotionAxisCommonDS402Old.TcPOU">
-      <SubType>Code</SubType>
-      <ExcludeFromBuild>true</ExcludeFromBuild>
-    </Compile>
-    <Compile Include="POUs\FBs\Common\FB_MotionDrive.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Common\FB_LimSwStatus.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\Common\FB_MotionInterlocksCommon.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Common\FB_MotionDrive.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\Common\FB_MotionInterlocksLimSw.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Common\FB_MotionInterlocksCommon.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\Common\FB_MotionLogger.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Common\FB_MotionInterlocksLimSw.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\Common\FB_PersistentDataStorage.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Common\FB_MotionLogger.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\DS402\FB_HomeDS402.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Common\FB_MoveRequest.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_BrakeNC.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Common\FB_PersistentDataStorage.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_MotionAxisMCS2.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Containers\Demo.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_ParamsSaveRestoreNC.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Containers\FB_MotionStageMCS2CSP.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_AxisStatusNC.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Containers\FB_MotionStageNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_BacklashCompensationNC.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\DS402\FB_HomeDS402.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_EncoderScaling.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_AxisStatusNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_HaltNC.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_BacklashCompensationNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_HomeNC.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_BrakeNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_MotionAxisNC.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_HaltNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_MoveAbsoluteNC.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_HomeNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_PowerNC.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_MotionAxisNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_ReadParameterNC.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_MoveAbsoluteNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_ResetNC.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_ParamsSaveRestoreNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_WriteParameterNC.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_PowerNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\Samples\FB_MotionStage.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_ReadParameterNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\Samples\FB_MotionStageMCS2.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_ResetNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\Samples\MAIN.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_WriteParameterNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_AxisStatus.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_AxisStatus.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_ParamSaveRestore.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_BacklashCompensation.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_BacklashCompensation.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_Brake.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_EncoderScaling.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_DS402GenericDrive.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_Halt.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_EncoderScaling.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_Brake.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_EpicsMotionParamsStatus.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_Home.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_Error.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_HomeDS402.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_Halt.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_LimSwStatus.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_Home.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_LimSwStatusMCS2.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_HomeDS402.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_MotionAxisDS402.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_LimSwStatus.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_MotionInterlocks.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_MotionAxis.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_MotionInterlocksCommon.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_MotionAxisDS402.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_MotionInterlocksLimSw.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_MotionDrive.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_Output.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_MotionInterlocks.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_MotionAxis.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_MotionInterlocksCommon.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_DS402Common.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_MotionLogger.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_MotionDrive.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_MoveAbsolute.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_MotionLogger.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_MoveRequest.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_MoveAbsolute.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_Output.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_PersistentDataStorage.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_ParamSaveRestore.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_Power.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_PersistentDataStorage.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_ReadParameter.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_Power.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_Reset.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_ReadParameter.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_WriteParameter.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_Reset.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Test\FB_BrakeNC_Test.TcPOU">
+    <Compile Include="POUs\New-Arch\ITFs\I_WriteParameter.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Test\FB_MoveAbsoluteNC_Test.TcPOU">
+    <Compile Include="Test\Interlok\FB_MotionInterlocksCommon_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\Interlok\FB_MotionInterlocksLimSw_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\Interlok\TestDoubles\FB_LimSwStatus_testDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\Interlok\TestDoubles\FB_MotionInterlocksCommon_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\MotionDrive\FB_BrakeNC_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\NC\FB_MotionAxis_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\NC\FB_NewArchMcMotionBlocks_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\NC\TestDouble\FB_AxisStatus_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\NC\TestDouble\FB_BacklashCompensationNC_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\NC\TestDouble\FB_EncoderScaling_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\NC\TestDouble\FB_HaltNC_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\NC\TestDouble\FB_HomeNC_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\NC\TestDouble\FB_MoveAbsoluteNC_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\NC\TestDouble\FB_ParamSaveRestoreNC_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\NC\TestDouble\FB_PowerNC_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\NC\TestDouble\FB_ReadParameterNC_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\NC\TestDouble\FB_ResetNC_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\NC\TestDouble\FB_WriteParameterNC_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Test\PRG_TEST.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UnitTestTask.TcTTO">
@@ -254,13 +300,19 @@
   <ItemGroup>
     <Folder Include="DUTs" />
     <Folder Include="GVLs" />
+    <Folder Include="POUs\New-Arch" />
+    <Folder Include="POUs\New-Arch\FBs" />
+    <Folder Include="POUs\New-Arch\FBs\Common" />
+    <Folder Include="POUs\New-Arch\FBs\Containers" />
+    <Folder Include="POUs\New-Arch\FBs\DS402" />
+    <Folder Include="POUs\New-Arch\FBs\NC" />
+    <Folder Include="POUs\New-Arch\ITFs" />
     <Folder Include="Test" />
-    <Folder Include="POUs\FBs\DS402" />
-    <Folder Include="POUs\FBs\NC" />
-    <Folder Include="POUs\FBs\Common" />
-    <Folder Include="POUs\FBs\Samples" />
-    <Folder Include="POUs\ITFs" />
-    <Folder Include="POUs\FBs" />
+    <Folder Include="Test\Interlok" />
+    <Folder Include="Test\Interlok\TestDoubles" />
+    <Folder Include="Test\MotionDrive" />
+    <Folder Include="Test\NC" />
+    <Folder Include="Test\NC\TestDouble" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />
   </ItemGroup>
@@ -307,8 +359,8 @@
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-        <Data>
-          <o xml:space="preserve" t="OptionKey">
+  <Data>
+    <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -383,15 +435,15 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-        </Data>
-        <TypeList>
-          <Type n="Boolean">System.Boolean</Type>
-          <Type n="Hashtable">System.Collections.Hashtable</Type>
-          <Type n="Int32">System.Int32</Type>
-          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-          <Type n="String">System.String</Type>
-        </TypeList>
-      </XmlArchive>
+  </Data>
+  <TypeList>
+    <Type n="Boolean">System.Boolean</Type>
+    <Type n="Hashtable">System.Collections.Hashtable</Type>
+    <Type n="Int32">System.Int32</Type>
+    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+    <Type n="String">System.String</Type>
+  </TypeList>
+</XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>

@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAIN" Id="{cf068a0d-ba9f-4527-8e93-978663edefcc}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+    fbAxisRef : AXIS_REF;
+    fbLimSwStatus : FB_LimSwStatus;
+    fbMotionLogger : FB_MotionLogger;
+    fbPowerNC : FB_PowerNC(AxisRef:=fbAxisRef);
+    fbHome : FB_HomeNC(AxisRef:=fbAxisRef, iLimSwStatus:=fbLimSwStatus,iMotionLogger:=fbMotionLogger):=(Mode:=E_EpicsHomeCmd.ABSOLUTE_SET);
+    nHome : UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbLimSwStatus();
+fbMotionLogger();
+
+CASE nHome OF
+    0:
+
+        fbPowerNC.Power(	Enable:=TRUE,
+                            Enable_Positive:=fbLimSwStatus.LimForward,
+                            Enable_Negative:=fbLimSwStatus.LimBackward,
+                            Override:=100.0);
+        nHome := nHome + 1;
+    1:
+        fbHome.Home(Position:=0.0,BufferMode:=MC_BufferMode.MC_Aborting);
+        IF fbHome.Busy THEN
+            nHome := nHome + 1;
+        END_IF
+
+    2:
+        IF fbHome.Done THEN
+            nHome := nHome + 1;
+        END_IF
+    3:
+     //
+END_CASE
+fbPowerNC();
+fbHome();]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
