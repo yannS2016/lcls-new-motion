@@ -67,20 +67,7 @@ CASE eHomeMode OF
         fbMcHome.Options.ClearPositionLag := TRUE;
 END_CASE
 
-AxisRef.ReadStatus();
-
-CASE eHomeState OF
-    WaitingHome :
-        fbMcHome(
-        Axis := AxisRef,
-        Execute := bCommandMoveHome);
-
-    Homing :
-        fbMcHome(
-        Axis := AxisRef,
-        Execute := bCommandMoveHome
-        );
-END_CASE
+fbMcHome(Axis := AxisRef);
 ]]></ST>
     </Implementation>
     <Property Name="Aborted" Id="{b3440598-2192-4aa3-bd94-648810782f1d}">
@@ -200,16 +187,15 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[bCommandMoveHome := FALSE;
-fbMcHome(Execute := bCommandMoveHome, Axis := THIS^.AxisRef);
-
-IF THIS^.eHomeMode <> E_EpicsHomeCmd.NONE THEN
-    bCommandMoveHome :=TRUE;
-ELSE
-    bCommandMoveHome :=FALSE;
+        <ST><![CDATA[IF THIS^.eHomeMode = E_EpicsHomeCmd.NONE THEN
+    RETURN;
 END_IF
 
-fbMcHome(	Execute := bCommandMoveHome,
+fbMcHome(Execute := FALSE, Axis := THIS^.AxisRef);
+
+
+
+fbMcHome(	Execute := TRUE,
             Axis := THIS^.AxisRef,
             Position:=Position,
             BufferMode:=BufferMode);

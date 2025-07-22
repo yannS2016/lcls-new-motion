@@ -65,7 +65,8 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
+      <ST><![CDATA[AxisRef.ReadStatus();
+
 fbMotionInterlocksCommon();
 fbLimSwStatus();
 fbMotionInterlocksLimSw();

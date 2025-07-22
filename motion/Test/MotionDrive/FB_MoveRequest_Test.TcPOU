@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_MoveRequest_Test" Id="{05d79949-1f03-4557-a858-9a547a52b2be}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MoveRequest_Test EXTENDS FB_TestSuite
+VAR
+        stMotionEpicsItf :  ST_MotionEpicsInterface;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[GivenMoveCmdCheckDriveInputThenCheckRequestAndEpicsStatus();]]></ST>
+    </Implementation>
+    <Method Name="GivenEpicsExecuteCheckDriveInputThenCheckRequestAndEpicsStatus" Id="{223fd37a-e346-4e63-ae91-95e8242641a5}">
+      <Declaration><![CDATA[METHOD GivenEpicsExecuteCheckDriveInputThenCheckRequestAndEpicsStatus
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GivenHomeCmdCheckDriveInputThenCheckRequestAndEpicsStatus" Id="{9e26be9d-db97-4ea1-b419-a0aadd052025}">
+      <Declaration><![CDATA[METHOD GivenHomeCmdCheckDriveInputThenCheckRequestAndEpicsStatus
+VAR_INST
+    fbMoveRequest : FB_MoveRequest(stMotionEpicsItf:=stMotionEpicsItf);
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GivenMoveCmdCheckDriveInputThenCheckRequestAndEpicsStatus" Id="{0278f58c-2e71-49f5-9141-f6fec2b3cd3f}">
+      <Declaration><![CDATA[METHOD GivenMoveCmdCheckDriveInputThenCheckRequestAndEpicsStatus
+VAR
+    fbMoveRequest : FB_MoveRequest(stMotionEpicsItf:=stMotionEpicsItf);
+    eExpectedMoveMode : INT := E_EpicsMotorCmd.MOVE_ABSOLUTE;
+    eActualMoveMode : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST(__POUNAME());
+fbMoveRequest.MotionRequest(	HomeCmd:=FALSE,
+                                MoveCmd:=TRUE,
+                                HomeMode:=E_EpicsHomeCmd.NONE,
+                                EnableMode:=E_StageEnableMode.DURING_MOTION,
+                                EnableDone:=TRUE,
+                                MoveOk:=TRUE,
+                                PowerEnabled:=TRUE);
+
+fbMoveRequest();
+
+AssertTrue(Condition := fbMoveRequest.NewMoveReq,
+           Message := 'New request not Registered #1');
+AssertTrue(Condition := fbMoveRequest.Execute,
+           Message := 'New request not comfirm for execution #2');
+AssertTrue(Condition := fbMoveRequest.ExecMove,
+           Message := 'New move request will not execute #3');
+AssertFalse(Condition := fbMoveRequest.ExecHome,
+           Message := 'The request is not a Homing move #4');
+eActualMoveMode :=fbMoveRequest.CommandLocal;
+AssertEquals ( Expected:=eExpectedMoveMode, Actual:=eActualMoveMode ,
+            Message:='New move request motor  Cmd Must be Absolute #5');
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

@@ -68,6 +68,9 @@
     <Compile Include="DUTs\ST_DS402DriveStatus.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\ST_MotionEpicsInterface.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\ST_MotionEpicsItf.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -109,6 +112,7 @@
     </Compile>
     <Compile Include="POUs\New-Arch\FBs\Containers\FB_MotionStageMCS2CSP.TcPOU">
       <SubType>Code</SubType>
+      <ExcludeFromBuild>true</ExcludeFromBuild>
     </Compile>
     <Compile Include="POUs\New-Arch\FBs\Containers\FB_MotionStageNC.TcPOU">
       <SubType>Code</SubType>
@@ -245,7 +249,13 @@
     <Compile Include="Test\MotionDrive\FB_BrakeNC_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Test\NC\FB_MotionAxis_Test.TcPOU">
+    <Compile Include="Test\MotionDrive\FB_MoveRequest_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\NC\FB_HomeNC_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\NC\FB_MotionAxisNC_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Test\NC\FB_NewArchMcMotionBlocks_Test.TcPOU">

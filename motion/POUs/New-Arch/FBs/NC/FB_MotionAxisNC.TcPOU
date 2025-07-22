@@ -31,7 +31,7 @@ IF THIS^.iAxisStatus.Error  THEN
     bError:=THIS^.iAxisStatus.Error;
     nErrorId:=THIS^.iAxisStatus.ErrorID;
     sMessage := THIS^.iAxisStatus.Message;
-ELSIF THIS^.iPower.Error AND THIS^.iPower.IsEnabled THEN
+ELSIF THIS^.iPower.Error AND THIS^.iPower.PowerIsEnabled THEN
     bError:=THIS^.iPower.Error;
     nErrorId:=THIS^.iPower.ErrorID;
     sMessage := THIS^.iPower.Message;
@@ -403,16 +403,13 @@ END_VAR
     <Method Name="Home" Id="{8a366a57-02cc-4b8d-a460-471eb54cdc9a}">
       <Declaration><![CDATA[METHOD Home
 VAR_INPUT
-    Execute	: BOOL;
-    HomeSpeedFast	: LREAL;
-    HomeSpeedSlow	: LREAL;
+    Position        : LREAL         := DEFAULT_HOME_POSITION;
+    BufferMode      : MC_BufferMode;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[//
-THIS^.iHome.Home( Execute:=Execute,
-                  HomeSpeedFast:=HomeSpeedFast,
-                  HomeSpeedSlow:=HomeSpeedSlow );]]></ST>
+THIS^.iHome.Home(Position:=0.0,BufferMode:=MC_BufferMode.MC_Aborting);]]></ST>
       </Implementation>
     </Method>
     <Property Name="HomeBusy" Id="{29ae59ac-7893-45dc-a7ff-d7afbb9a8eee}">
@@ -819,16 +816,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[CASE MoveMode  OF
-    E_EpicsMotorCmd.MOVE_ABSOLUTE:
-       THIS^.iMoveAbsolute.CommandMoveAbsolute := CmdExecute;
-    E_EpicsMotorCmd.HOME:
-        THIS^.iHome.Home( Execute:=CmdExecute,
-                            HomeSpeedFast:=THIS^.iReadParameter.RefVeloSearch,
-                            HomeSpeedSlow:=THIS^.iReadParameter.RefVeloSync );
-END_CASE
-// for typical NC axis no further tests needed
-//StartMove := CmdExecute;]]></ST>
+        <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Property Name="Stopped" Id="{627971e5-8a4a-4a11-800c-3f489522ec58}">

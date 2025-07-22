@@ -7,7 +7,7 @@ VAR
     AxisRef : REFERENCE TO AXIS_REF;
     fbMcMoveAbsolute : MC_MoveAbsolute;
     sMessage : T_MAXSTRING;
-    eMoveAbsoluteState : (WaitingMoveAbsolute, MovingAbsolute);
+   // eMoveAbsoluteState : (WaitingMoveAbsolute, MovingAbsolute);
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -17,7 +17,9 @@ END_IF
 
 AxisRef.ReadStatus();
 
-CASE eMoveAbsoluteState OF
+fbMcMoveAbsolute(Axis := AxisRef);
+
+(*CASE eMoveAbsoluteState OF
     WaitingMoveAbsolute :
         fbMcMoveAbsolute(
         Axis := AxisRef,
@@ -29,7 +31,7 @@ CASE eMoveAbsoluteState OF
         Execute := TRUE
         );
 END_CASE
-
+*)
 ]]></ST>
     </Implementation>
     <Property Name="Aborted" Id="{e282a52e-140a-4032-b49e-bebd36434e55}">
@@ -173,7 +175,7 @@ fbMcMoveAbsolute(Execute := TRUE,
     Deceleration := Deceleration,
     Jerk := Jerk,
     BufferMode := BufferMode);
-eMoveAbsoluteState := MovingAbsolute;]]></ST>
+]]></ST>
       </Implementation>
     </Method>
   </POU>
