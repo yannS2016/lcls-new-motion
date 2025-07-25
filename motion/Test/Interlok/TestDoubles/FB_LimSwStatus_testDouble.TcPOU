@@ -4,9 +4,9 @@
     <Declaration><![CDATA[FUNCTION_BLOCK FB_LimSwStatus_testDouble IMPLEMENTS I_LimSwStatus
 VAR
    // NC Forward Limit Switch: TRUE if ok to move
-    bLimitForwardEnable : BOOL;
+    bLimitForwardEnable : BOOL := TRUE;
     // NC Backward Limit Switch: TRUE if ok to move
-    bLimitBackwardEnable : BOOL;
+    bLimitBackwardEnable : BOOL := TRUE;
     // NO Home Switch: TRUE if at home
     bHome : BOOL;
 END_VAR

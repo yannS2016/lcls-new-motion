@@ -1424,16 +1424,13 @@ External Setpoint Generation:
 			</Relations>
 		</DataType>
 	</DataTypes>
-	<Axis Id="4" Disabled="true" CreateSymbols="true" AxisType="1" AxisFolder="UnitTesting\Axis_HomeNC_Tests" GroupId="3">
+	<Axis Id="2" Disabled="true" CreateSymbols="true" AxisType="1" AxisFolder="UnitTesting\Axis_HomeNC_Tests" GroupId="8">
 		<Name>__FILENAME__</Name>
 		<ProjectVariant PvUseDisable="true">
 			<Variant>
 				<Name>HardwareTesting</Name>
-				<Disable>true</Disable>
-			</Variant>
-			<Variant>
 				<Name>UnitTesting</Name>
-				<Disable>false</Disable>
+				<Disable>true</Disable>
 			</Variant>
 		</ProjectVariant>
 		<AxisPara>

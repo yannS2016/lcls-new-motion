@@ -15,7 +15,8 @@ VAR
         .fbAxisRef[2] := Axis_HomeNC_Test2;
         .fbAxisRef[3] := Axis_HomeNC_Test3;
         .fbAxisRef[4] := Axis_HomeNC_Test4;
-        .fbAxisRef[5] := Axis_HomeNC_Test5
+        .fbAxisRef[5] := Axis_HomeNC_Test5;
+        .fbAxisRef[6] := Axis_HomeNC_Test6
     '}
     fbHomeNC_Test: FB_HomeNC_Test;
 END_VAR

@@ -4,46 +4,32 @@
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
     fbAxisRef : AXIS_REF;
-    fbLimSwStatus : FB_LimSwStatus;
+    fbLimSwStatus : FB_LimSwStatus_TestDouble;
     fbMotionLogger : FB_MotionLogger;
-    fbPowerNC : FB_PowerNC(AxisRef:=fbAxisRef);
-    fbHome : FB_HomeNC(AxisRef:=fbAxisRef, iLimSwStatus:=fbLimSwStatus,iMotionLogger:=fbMotionLogger):=(Mode:=E_EpicsHomeCmd.ABSOLUTE_SET);
-    nHome : UINT;
+    fbHome : FB_HomeNC(AxisRef:=fbAxisRef, iLimSwStatus:=fbLimSwStatus,iMotionLogger:=fbMotionLogger):=(Mode:=E_EpicsHomeCmd.HOME_VIA_HIGH);
+    fbPower : MC_Power;
+	bTriggerHome : BOOL;
+	nHomeState : UINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[fbLimSwStatus();
 fbMotionLogger();
 
-CASE nHome OF
-    0:
+fbPower(
+    Axis := fbAxisRef,
+    Enable := TRUE,
+    Enable_Positive := TRUE,
+    Enable_Negative := TRUE,
+    Override :=100.0
+);
+					  
+IF fbPower.Status AND bTriggerHome THEN
+	fbHome.Home(Position:=20.0,BufferMode:=MC_BufferMode.MC_Aborting);
+	bTriggerHome := FALSE;
+END_IF
 
-        fbPowerNC.Power(	Enable:=TRUE,
-                            Enable_Positive:=fbLimSwStatus.LimForward,
-                            Enable_Negative:=fbLimSwStatus.LimBackward,
-                            Override:=100.0);
-                nHome := nHome + 1;
-    1:
-    IF fbPowerNC.PowerIsEnabled THEN
-            fbHome.Home(Position:=0.0,BufferMode:=MC_BufferMode.MC_Aborting);
-        nHome := nHome + 1;
-    END_IF
-
-
-    2:
-        IF fbHome.Busy THEN
-            nHome := nHome + 1;
-        END_IF
-
-    3:
-        IF fbHome.Done THEN
-            nHome := nHome + 1;
-        END_IF
-    4:
-     //
-END_CASE
-fbPowerNC();
-fbHome();]]></ST>
+ fbHome();]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>
