@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <Itf Name="I_Halt" Id="{14029942-f501-4700-ae44-ffd198ee0804}">
-    <Declaration><![CDATA[INTERFACE I_Halt EXTENDS I_Output
+    <Declaration><![CDATA[INTERFACE I_Halt EXTENDS I_StatusEx
 ]]></Declaration>
     <Property Name="Active" Id="{931a7ba1-a94e-4370-afcb-3d6e40f3a0e7}">
       <Declaration><![CDATA[PROPERTY Active : BOOL]]></Declaration>

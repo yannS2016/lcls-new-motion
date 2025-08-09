@@ -3,55 +3,81 @@
   <Itf Name="I_MoveRequest" Id="{137539c3-dde3-4c10-956a-430895f58e3f}">
     <Declaration><![CDATA[INTERFACE I_MoveRequest
 ]]></Declaration>
-    <Property Name="CmdDataLocal" Id="{e161c220-3a12-4134-b562-8315170c3a07}">
-      <Declaration><![CDATA[PROPERTY CmdDataLocal : INT]]></Declaration>
-      <Get Name="Get" Id="{4ba2530a-3672-4728-b924-e8a9162d2bc9}">
+    <Property Name="EnableMode" Id="{96288f73-7124-4739-8281-a5f1351b7dec}">
+      <Declaration><![CDATA[PROPERTY EnableMode : ENUM_StageEnableMode
+]]></Declaration>
+      <Get Name="Get" Id="{e6c2d0bc-319b-4d46-b30a-2f8331e7b393}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
-    </Property>
-    <Property Name="CommandLocal" Id="{2edd46d4-8000-4e7c-bbf8-04e925b5d55d}">
-      <Declaration><![CDATA[PROPERTY CommandLocal : INT]]></Declaration>
-      <Get Name="Get" Id="{23e27fa6-8941-46b6-bd21-879204efd830}">
+      <Set Name="Set" Id="{e73b76dd-7f5f-4524-961b-2be552690066}">
         <Declaration><![CDATA[]]></Declaration>
-      </Get>
+      </Set>
     </Property>
-    <Property Name="ExecHome" Id="{a98eb3df-38b9-4ce0-9ed4-15302c147a46}">
-      <Declaration><![CDATA[PROPERTY ExecHome : BOOL]]></Declaration>
-      <Get Name="Get" Id="{4ed0f31b-e546-441d-a622-1823120c8487}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
-    <Property Name="ExecMove" Id="{4d7e436d-2d42-4063-92f3-ee6243d1d041}">
-      <Declaration><![CDATA[PROPERTY ExecMove : BOOL]]></Declaration>
-      <Get Name="Get" Id="{b5f6b945-cbe1-4275-ac7d-315b0cc41970}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
-    <Property Name="Execute" Id="{f585c8aa-b7bf-4e6f-a8c1-775433bfb251}">
-      <Declaration><![CDATA[PROPERTY Execute : BOOL]]></Declaration>
-      <Get Name="Get" Id="{a6fcbe12-0138-42cd-9ee7-1019930d731e}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
-    <Method Name="MotionRequest" Id="{77c44b2d-c7fa-42e2-ac15-c1335e9f60f3}">
-      <Declaration><![CDATA[METHOD MotionRequest
+    <Method Name="InitMoveRequest" Id="{bf494b24-bbf4-47db-9db8-0e709071e1e5}">
+      <Declaration><![CDATA[METHOD InitMoveRequest
 VAR_INPUT
-	(* From Drive*)
-	HomeCmd	: BOOL;
-	MoveCmd	: BOOL;
-	HomeMode	: E_EpicsHomeCmd;
-	EnableMode	: E_StageEnableMode;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="MoveRequest" Id="{77c44b2d-c7fa-42e2-ac15-c1335e9f60f3}">
+      <Declaration><![CDATA[METHOD MoveRequest
+VAR_INPUT
 	// From Axis through the drive
 	EnableDone	: BOOL;
 	// From Interlock through the drive
 	MoveOk  : BOOL;
-	PowerEnabled : BOOL;
 END_VAR
 ]]></Declaration>
     </Method>
-    <Property Name="NewMoveReq" Id="{6c5c7fda-46ce-4bc8-918f-1eb4d7798b9c}">
-      <Declaration><![CDATA[PROPERTY NewMoveReq : BOOL]]></Declaration>
-      <Get Name="Get" Id="{a66770b2-cef2-4e23-a58d-eef0b39ce63b}">
+    <Method Name="MoveRequestCompleted" Id="{aa658718-f76a-4c2d-b576-daebfa4e5df8}">
+      <Declaration><![CDATA[METHOD MoveRequestCompleted
+VAR_INPUT
+	MoveDone : BOOL;
+	HomeDone : BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="MoveRequestDone" Id="{b7ba62ad-702b-488f-894d-50d2d5664efc}">
+      <Declaration><![CDATA[METHOD MoveRequestDone
+VAR_INPUT
+	Done : BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="MoveRequestError" Id="{95046ea3-d17e-4079-a3da-2be38ac98aa6}">
+      <Declaration><![CDATA[METHOD MoveRequestError
+VAR_INPUT
+Error :BOOL;
+ErrorId :UDINT;
+ErrorMessage:T_MAXSTRING;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="PauseMoveRequest" Id="{f276ba1c-ec79-4d81-b3bf-f8c9b4e15e1e}">
+      <Declaration><![CDATA[METHOD PauseMoveRequest : BOOL
+VAR_INPUT
+	Busy : BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="ResetMoveEnable" Id="{0644586b-fcac-4d48-8e18-72697f9ae9a6}">
+      <Declaration><![CDATA[METHOD ResetMoveEnable
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="ResetMoveRequest" Id="{57864d20-f759-4f61-84ed-cba01a116bd5}">
+      <Declaration><![CDATA[METHOD ResetMoveRequest
+]]></Declaration>
+    </Method>
+    <Method Name="ResetMoveRequestErrors" Id="{ddb91a64-1588-4a56-b329-f2e5eb414f14}">
+      <Declaration><![CDATA[METHOD ResetMoveRequestErrors
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="Status" Id="{ab64de35-a099-4fa5-b457-201acf0de4df}">
+      <Declaration><![CDATA[PROPERTY Status : REFERENCE TO ST_MoveRequestStatus]]></Declaration>
+      <Get Name="Get" Id="{c6de0394-af15-4352-a13e-94702c6cefdf}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>

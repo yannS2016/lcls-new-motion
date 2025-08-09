@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <Itf Name="I_AxisStatus" Id="{ced1141c-4936-4e2b-89cc-52f3e59358c7}">
-    <Declaration><![CDATA[INTERFACE I_AxisStatus EXTENDS I_Output
+    <Declaration><![CDATA[INTERFACE I_AxisStatus EXTENDS I_StatusEx
 ]]></Declaration>
     <Method Name="AxisEnabled" Id="{630e5032-35fd-49af-8171-ae8c288f92dd}">
       <Declaration><![CDATA[METHOD AxisEnabled : BOOL

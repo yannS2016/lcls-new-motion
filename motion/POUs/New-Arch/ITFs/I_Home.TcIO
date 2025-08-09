@@ -1,8 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <Itf Name="I_Home" Id="{b2162ae7-b954-447f-934b-6cfe92c3e8fb}">
-    <Declaration><![CDATA[INTERFACE I_Home EXTENDS I_Output
+    <Declaration><![CDATA[INTERFACE I_Home EXTENDS I_StatusEx
 ]]></Declaration>
+    <Property Name="HLDone" Id="{411e6acf-1878-49a1-86b7-8c07ab8e1278}">
+      <Declaration><![CDATA[PROPERTY HLDone : BOOL]]></Declaration>
+      <Get Name="Get" Id="{15b5e428-904c-4355-93d3-e9738fb6a2a2}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Method Name="Home" Id="{33465a37-8a78-445e-9579-3e71296ed69d}">
       <Declaration><![CDATA[METHOD  Home
 VAR_INPUT

@@ -1,8 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <Itf Name="I_Power" Id="{3e27e6e8-6685-424d-9ead-eda513d1c175}">
-    <Declaration><![CDATA[INTERFACE I_Power  EXTENDS I_Output
+    <Declaration><![CDATA[INTERFACE I_Power  EXTENDS I_Status
 ]]></Declaration>
+    <Method Name="DisablePower" Id="{98c6d639-c96c-4ad8-b8a3-3faa561da209}">
+      <Declaration><![CDATA[METHOD DisablePower
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
     <Property Name="Override" Id="{961843bf-f471-4df9-93bb-5367e5ad1298}">
       <Declaration><![CDATA[PROPERTY Override : LREAL]]></Declaration>
       <Get Name="Get" Id="{680fd513-de2f-4508-bf7e-cee66bf848d5}">

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <Itf Name="I_MoveAbsolute" Id="{7b52c23d-d549-4d14-b715-d0e842580738}">
-    <Declaration><![CDATA[INTERFACE I_MoveAbsolute EXTENDS I_Output
+    <Declaration><![CDATA[INTERFACE I_MoveAbsolute EXTENDS I_StatusEx
 ]]></Declaration>
     <Property Name="Active" Id="{aa5e4d9b-53b9-487d-aa20-131cb555a892}">
       <Declaration><![CDATA[PROPERTY Active : BOOL]]></Declaration>
