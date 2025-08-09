@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="FB_MotionAxisNC_Test" Id="{d9459441-c5aa-4f4b-8f3a-123153b6d2d2}" SpecialFunc="None">
+  <POU Name="FB_MotionAxisNC_Test" Id="{fa75d716-c423-459e-9a73-6d09eee7d5ba}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionAxisNC_Test EXTENDS FB_TestSuite
 VAR
     fbHome : FB_HomeNC_TestDouble;
@@ -14,6 +14,15 @@ VAR
     fbEncoderScaling : FB_EncoderScaling_TestDouble;
     fbAxisStatus : FB_AxisStatus_TestDouble;
     fbBacklashCompensation : FB_BacklashCompensationNC_TestDouble;
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[GivenAllMCBlockErrorConditionThenPowerErrorHasHigherPriority();]]></ST>
+    </Implementation>
+    <Method Name="GivenAllMCBlockErrorConditionThenPowerErrorHasHigherPriority" Id="{9c82fcc9-f025-46d3-bdb0-63a901189948}">
+      <Declaration><![CDATA[METHOD PRIVATE GivenAllMCBlockErrorConditionThenPowerErrorHasHigherPriority
+VAR_INST
     // subject under test
     fbMotionAxis : FB_MotionAxisNC(  	iHome := fbHome,
                                         iHalt := fbHalt,
@@ -27,49 +36,185 @@ VAR
                                         iAxisStatus := fbAxisStatus,
                                         iBacklashCompensation := fbBacklashCompensation
                                     );
+bExpectedAxisError :BOOL := TRUE;
+nExpectedErrorId: UDINT;
 END_VAR
 ]]></Declaration>
-    <Implementation>
-      <CFC>
-        <XmlArchive>
-          <Data>
-            <o xml:space="preserve" t="CFCImplementationObject">
-              <o n="Items" t="CFCItemList">
-                <l2 n="InnerList" />
-              </o>
-              <n n="ParameterInitializationMethodGenerator" />
-              <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                <d2 n="InnerDictionary" />
-              </o>
-              <v n="AutoSizeCanvas">true</v>
-              <v n="CanvasWidth">1</v>
-              <v n="CanvasHeight">1</v>
-              <n n="EditorConfiguration" />
-              <v n="AreElementsSpaceOptimized">true</v>
-            </o>
-          </Data>
-          <TypeList>
-            <Type n="Boolean">System.Boolean</Type>
-            <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-            <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-            <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-            <Type n="Int32">System.Int32</Type>
-          </TypeList>
-        </XmlArchive>
-      </CFC>
-    </Implementation>
-    <ObjectProperties>
-      <XmlArchive>
-        <Data>
-          <o xml:space="preserve" t="CFCProperty">
-            <v n="UseExplicitExecutionOrder">false</v>
-          </o>
-        </Data>
-        <TypeList>
-          <Type n="Boolean">System.Boolean</Type>
-          <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-        </TypeList>
-      </XmlArchive>
-    </ObjectProperties>
+      <Implementation>
+        <ST><![CDATA[TEST(__POUNAME());
+
+	// Power highest priority
+	fbHome.Error := TRUE;
+	fbHalt.Error := TRUE;
+	fbPower.Error := TRUE;
+	fbReset.Error := TRUE;
+	fbMoveAbsolute.Error := TRUE;
+	fbReadParameter.Error := TRUE;
+	fbWriteParameter.Error := TRUE;
+	fbParamSaveRestore.Error := TRUE;
+	fbAxisStatus.Error := TRUE;
+	fbBacklashCompensation.Error := TRUE;
+	fbMotionAxis();
+	
+	nExpectedErrorId := 18000;
+	AssertTrue(Condition :=  fbMotionAxis.Status.bError, Message := 'Prioritized and generalized Error must be set #1');
+	AssertEquals_UDINT ( Expected:=nExpectedErrorId , Actual:=fbMotionAxis.Status.nErrorID, Message:='Prioritized error Id must be 18000 #2');
+	
+	// Halt has 2nd highest priority
+	fbHome.Error := TRUE;
+	fbHalt.Error := TRUE;
+	fbPower.Error := FALSE;
+	fbReset.Error := TRUE;
+	fbMoveAbsolute.Error := TRUE;
+	fbReadParameter.Error := TRUE;
+	fbWriteParameter.Error := TRUE;
+	fbParamSaveRestore.Error := TRUE;
+	fbAxisStatus.Error := TRUE;
+	fbBacklashCompensation.Error := TRUE;
+	fbMotionAxis();
+	
+	nExpectedErrorId := 19000;
+	AssertTrue(Condition :=  fbMotionAxis.Status.bError, Message := 'Prioritized and generalized Error must be set #3');
+	AssertEquals_UDINT ( Expected:=nExpectedErrorId , Actual:=fbMotionAxis.Status.nErrorID, Message:='Prioritized error Id must be 19000 #4');
+	
+	// Reset 3rd highest priority
+	fbHome.Error := TRUE;
+	fbHalt.Error := FALSE;
+	fbPower.Error := FALSE;
+	fbReset.Error := TRUE;
+	fbMoveAbsolute.Error := TRUE;
+	fbReadParameter.Error := TRUE;
+	fbWriteParameter.Error := TRUE;
+	fbParamSaveRestore.Error := TRUE;
+	fbAxisStatus.Error := TRUE;
+	fbBacklashCompensation.Error := TRUE;
+	fbMotionAxis();
+	
+	nExpectedErrorId := 20000;
+	AssertTrue(Condition :=  fbMotionAxis.Status.bError, Message := 'Prioritized and generalized Error must be set #5');
+	AssertEquals_UDINT ( Expected:=nExpectedErrorId , Actual:=fbMotionAxis.Status.nErrorID, Message:='Prioritized error Id must be 20000 #6');
+	
+	// BacklashCompensation 4th highest priority
+	fbHome.Error := TRUE;
+	fbHalt.Error := FALSE;
+	fbPower.Error := FALSE;
+	fbReset.Error := FALSE;
+	fbMoveAbsolute.Error := TRUE;
+	fbReadParameter.Error := TRUE;
+	fbWriteParameter.Error := TRUE;
+	fbParamSaveRestore.Error := TRUE;
+	fbAxisStatus.Error := TRUE;
+	fbBacklashCompensation.Error := TRUE;
+	fbMotionAxis();
+	
+	nExpectedErrorId := 21000;
+	AssertTrue(Condition :=  fbMotionAxis.Status.bError, Message := 'Prioritized and generalized Error must be set #7');
+	AssertEquals_UDINT ( Expected:=nExpectedErrorId , Actual:=fbMotionAxis.Status.nErrorID, Message:='Prioritized error Id must be 21000 #8');
+	
+	// MoveAbsolute 5th highest priority
+	fbHome.Error := TRUE;
+	fbHalt.Error := FALSE;
+	fbPower.Error := FALSE;
+	fbReset.Error := FALSE;
+	fbMoveAbsolute.Error := TRUE;
+	fbReadParameter.Error := TRUE;
+	fbWriteParameter.Error := TRUE;
+	fbParamSaveRestore.Error := TRUE;
+	fbAxisStatus.Error := TRUE;
+	fbBacklashCompensation.Error := FALSE;
+	fbMotionAxis();
+	
+	nExpectedErrorId := 22000;
+	AssertTrue(Condition :=  fbMotionAxis.Status.bError, Message := 'Prioritized and generalized Error must be set #9');
+	AssertEquals_UDINT ( Expected:=nExpectedErrorId , Actual:=fbMotionAxis.Status.nErrorID, Message:='Prioritized error Id must be 22000 #10');
+	
+	// Home 6th highest priority
+	fbHome.Error := TRUE;
+	fbHalt.Error := FALSE;
+	fbPower.Error := FALSE;
+	fbReset.Error := FALSE;
+	fbMoveAbsolute.Error := FALSE;
+	fbReadParameter.Error := TRUE;
+	fbWriteParameter.Error := TRUE;
+	fbParamSaveRestore.Error := TRUE;
+	fbAxisStatus.Error := TRUE;
+	fbBacklashCompensation.Error := FALSE;
+	fbMotionAxis();
+	
+	nExpectedErrorId := 23000;
+	AssertTrue(Condition :=  fbMotionAxis.Status.bError, Message := 'Prioritized and generalized Error must be set #11');
+	AssertEquals_UDINT ( Expected:=nExpectedErrorId , Actual:=fbMotionAxis.Status.nErrorID, Message:='Prioritized error Id must be 23000 #12');
+	
+	// AxisError 7th highest priority
+	fbHome.Error := FALSE;
+	fbHalt.Error := FALSE;
+	fbPower.Error := FALSE;
+	fbReset.Error := FALSE;
+	fbMoveAbsolute.Error := FALSE;
+	fbReadParameter.Error := TRUE;
+	fbWriteParameter.Error := TRUE;
+	fbParamSaveRestore.Error := TRUE;
+	fbAxisStatus.Error := TRUE;
+	fbBacklashCompensation.Error := FALSE;
+	fbMotionAxis();
+	
+	nExpectedErrorId := 24000;
+	AssertTrue(Condition :=  fbMotionAxis.Status.bError, Message := 'Prioritized and generalized Error must be set #13');
+	AssertEquals_UDINT ( Expected:=nExpectedErrorId , Actual:=fbMotionAxis.Status.nErrorID, Message:='Prioritized error Id must be 24000 #14');
+	
+	// ReadParameters 8th highest priority
+	fbHome.Error := FALSE;
+	fbHalt.Error := FALSE;
+	fbPower.Error := FALSE;
+	fbReset.Error := FALSE;
+	fbMoveAbsolute.Error := FALSE;
+	fbReadParameter.Error := TRUE;
+	fbWriteParameter.Error := TRUE;
+	fbParamSaveRestore.Error := TRUE;
+	fbAxisStatus.Error := FALSE;
+	fbBacklashCompensation.Error := FALSE;
+	fbMotionAxis();
+	
+	nExpectedErrorId := 25000;
+	AssertTrue(Condition :=  fbMotionAxis.Status.bError, Message := 'Prioritized and generalized Error must be set #15');
+	AssertEquals_UDINT ( Expected:=nExpectedErrorId , Actual:=fbMotionAxis.Status.nErrorID, Message:='Prioritized error Id must be 25000 #16');
+	
+	// WriteParameters 8th highest priority
+	fbHome.Error := FALSE;
+	fbHalt.Error := FALSE;
+	fbPower.Error := FALSE;
+	fbReset.Error := FALSE;
+	fbMoveAbsolute.Error := FALSE;
+	fbReadParameter.Error := FALSE;
+	fbWriteParameter.Error := TRUE;
+	fbParamSaveRestore.Error := TRUE;
+	fbAxisStatus.Error := FALSE;
+	fbBacklashCompensation.Error := FALSE;
+	fbMotionAxis();
+	
+	nExpectedErrorId := 26000;
+	AssertTrue(Condition :=  fbMotionAxis.Status.bError, Message := 'Prioritized and generalized Error must be set #17');
+	AssertEquals_UDINT ( Expected:=nExpectedErrorId , Actual:=fbMotionAxis.Status.nErrorID, Message:='Prioritized error Id must be 26000 #18');
+	
+	// save Restore 9th highest priority
+	fbHome.Error := FALSE;
+	fbHalt.Error := FALSE;
+	fbPower.Error := FALSE;
+	fbReset.Error := FALSE;
+	fbMoveAbsolute.Error := FALSE;
+	fbReadParameter.Error := FALSE;
+	fbWriteParameter.Error := FALSE;
+	fbParamSaveRestore.Error := TRUE;
+	fbAxisStatus.Error := FALSE;
+	fbBacklashCompensation.Error := FALSE;
+	fbMotionAxis();
+	
+	nExpectedErrorId := 27000;
+	AssertTrue(Condition :=  fbMotionAxis.Status.bError, Message := 'Prioritized and generalized Error must be set #19');
+	AssertEquals_UDINT ( Expected:=nExpectedErrorId , Actual:=fbMotionAxis.Status.nErrorID, Message:='Prioritized error Id must be 27000 #20');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
   </POU>
 </TcPlcObject>

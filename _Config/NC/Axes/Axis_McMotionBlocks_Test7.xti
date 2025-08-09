@@ -1424,7 +1424,7 @@ External Setpoint Generation:
 			</Relations>
 		</DataType>
 	</DataTypes>
-	<Axis Id="5" Disabled="true" CreateSymbols="true" AxisType="1" AxisFolder="UnitTesting\Axis_HomeNC_Tests" GroupId="2">
+	<Axis Id="1" Disabled="true" CreateSymbols="true" AxisType="1" AxisFolder="UnitTesting\Axis_McMotionBlocks_Test">
 		<Name>__FILENAME__</Name>
 		<ProjectVariant PvUseDisable="true">
 			<Variant>
@@ -1438,10 +1438,12 @@ External Setpoint Generation:
 			</Variant>
 		</ProjectVariant>
 		<AxisPara>
-			<Velo RefSearch="500" RefSync="500"/>
 			<OtherSettings AllowMotionCmdToSlave="true"/>
 		</AxisPara>
 		<Encoder Name="Enc" EncType="1">
+			<EncPara>
+				<ActPosCorrection Enable="true"/>
+			</EncPara>
 			<Vars VarGrpType="1">
 				<Name>Inputs</Name>
 				<Var>
