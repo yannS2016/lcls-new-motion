@@ -49,16 +49,23 @@ VAR
                                         iAxisStatus := fbAxisStatus,
                                         iBacklashCompensation :=fbBacklashCompensation,
                                     );
-      // Motion Requests
-      fbMoveRequest : FB_MoveRequest(stMotionEpicsItf:=stMotionEpicsItf);
-    fbEpicsMotionParamsStatus : FB_EpicsMotionParamsStatus(stMotionEpicsItf:=stMotionEpicsItf);
-      fbMotionDrive: FB_MotionDrive ( 	stMotionEpicsItf := stMotionEpicsItf,
+	// Motion Requests
+	fbMoveRequest : FB_MoveRequest(stMotionEpicsItf:=stMotionEpicsItf);
+	fbEpicsMotionParamsStatus : FB_EpicsMotionParamsStatus(stMotionEpicsItf:=stMotionEpicsItf);
+	// Motion StateMachine
+	fbStateMachine  : FB_MotionDriveStateMachine(
+										iMotionAxis:=fbMotionAxis, 
+										iMoveRequest:=fbMoveRequest
+									);
+	
+	fbMotionDrive: FB_MotionDrive (
                                     iBrake:=fbBrake,
                                     iMotionLogger:=iMotionLogger,
                                     iMotionInterlocks:=fbMotionInterlocksLimSw,
                                     iMotionAxis := fbMotionAxis,
                                     iMoveRequest := fbMoveRequest,
-                                    iEpicsMotionParamsStatus := fbEpicsMotionParamsStatus
+                                    iEpicsMotionParamsStatus := fbEpicsMotionParamsStatus,
+									iMotionDriveStateMachine:=fbStateMachine
                                   ) ;
     // Drive Name
     sName : T_MaxString;
@@ -70,22 +77,23 @@ END_VAR
 fbMotionInterlocksCommon();
 fbLimSwStatus();
 fbMotionInterlocksLimSw();
+fbMoveRequest();
 fbReset();
 fbHalt();
 fbPower();
-fbHome();
 fbBacklashCompensation();
 fbMoveAbsolute();
+fbHome();
+fbAxisStatus();
+fbEncoderScaling();
+fbMotionAxis();
+fbMotionDrive();
+fbBrake();
 fbReadParameter();
 fbWriteParameter();
 fbParamsSaveRestore();
-fbAxisStatus();
-fbMotionAxis();
-fbMoveRequest();
-fbMotionDrive();
 fbEpicsMotionParamsStatus();
-fbEncoderScaling();
-fbBrake();
+
 ]]></ST>
     </Implementation>
     <Property Name="BrakeMode" Id="{7b563b76-fecc-4885-824b-f91a0bc21af3}">
@@ -114,47 +122,61 @@ METHOD PRIVATE CallAfterInit]]></Declaration>
       <Implementation>
         <ST><![CDATA[fbMotionInterlocksCommon.CallAfterInit(iMotionLogger := THIS^.iMotionLogger);
 //fbLimSwStatus.CallAfterInit(iMotionLogger := THIS^.iMotionLogger);
-fbMotionInterlocksLimSw.CallAfterInit(iMotionInterlocksCommon := THIS^.fbMotionInterlocksCommon,
-                                      iLimSwStatus := THIS^.fbLimSwStatus);
-fbHome.CallAfterInit(AxisRef := THIS^.AxisRef,
-                       iMotionLogger := THIS^.iMotionLogger,
-                       iLimSwStatus := THIS^.fbLimSwStatus);
+fbMotionInterlocksLimSw.CallAfterInit(
+		iMotionInterlocksCommon := THIS^.fbMotionInterlocksCommon,
+		iLimSwStatus := THIS^.fbLimSwStatus
+);
+
+fbHome.CallAfterInit(
+		AxisRef := THIS^.AxisRef,
+		iMotionLogger := THIS^.iMotionLogger,
+		iLimSwStatus := THIS^.fbLimSwStatus
+);
+
 fbHalt.CallAfterInit(AxisRef := THIS^.AxisRef);
 fbPower.CallAfterInit(AxisRef := THIS^.AxisRef);
 fbReset.CallAfterInit(AxisRef := THIS^.AxisRef);
 fbMoveAbsolute.CallAfterInit(AxisRef := THIS^.AxisRef);
-
-
 fbReadParameter.CallAfterInit(AxisRef:=THIS^.AxisRef);
 fbWriteParameter.CallAfterInit(AxisRef:=THIS^.AxisRef);
-fbParamsSaveRestore.CallAfterInit(	AxisRef := THIS^.AxisRef,
-                                     iPersistentDataStorage := THIS^.iPersistentDataStorage);
+
+fbParamsSaveRestore.CallAfterInit(	
+		AxisRef := THIS^.AxisRef,
+        iPersistentDataStorage := THIS^.iPersistentDataStorage
+);
+
 // Pass correctly initialized Motion axis status dependencies
 fbAxisStatus.CallAfterInit(AxisRef := THIS^.AxisRef);
 fbBacklashCompensation.CallAfterInit(AxisRef := THIS^.AxisRef);
+
 // Pass correctly initialized Motion axis dependencies
-fbMotionAxis.CallAfterInit(iHome := THIS^.fbHome,
-                             iHalt := THIS^.fbHalt,
-                             iPower := THIS^.fbPower,
-                             iReset := THIS^.fbReset,
-                             iMoveAbsolute := THIS^.fbMoveAbsolute,
-                             iReadParameter := THIS^.fbReadParameter,
-                             iWriteParameter  := THIS^.fbWriteParameter,
-                             iParamSaveRestore:= THIS^.fbParamsSaveRestore,
-                             iEncoderScaling := THIS^.fbEncoderScaling,
-                             iAxisStatus := THIS^.fbAxisStatus,
-                             iBacklashCompensation := THIS^.fbBacklashCompensation);
+fbMotionAxis.CallAfterInit(
+		iHome := THIS^.fbHome,
+        iHalt := THIS^.fbHalt,
+        iPower := THIS^.fbPower,
+        iReset := THIS^.fbReset,
+        iMoveAbsolute := THIS^.fbMoveAbsolute,
+        iReadParameter := THIS^.fbReadParameter,
+        iWriteParameter  := THIS^.fbWriteParameter,
+        iParamSaveRestore:= THIS^.fbParamsSaveRestore,
+        iEncoderScaling := THIS^.fbEncoderScaling,
+        iAxisStatus := THIS^.fbAxisStatus,
+        iBacklashCompensation := THIS^.fbBacklashCompensation
+);
 
 fbMoveRequest.CallAfterInit(stMotionEpicsItf:= THIS^.stMotionEpicsItf);
 fbEpicsMotionParamsStatus.CallAfterInit(stMotionEpicsItf:= THIS^.stMotionEpicsItf);
+
 // Pass correctly initialized drive dependencies
-fbMotionDrive.CallAfterInit( stMotionEpicsItf:= THIS^.stMotionEpicsItf,
-                             iBrake:=THIS^.fbBrake,
-                             iMotionInterlocks:=THIS^.fbMotionInterlocksLimSw,
-                             iMotionLogger:=THIS^.iMotionLogger,
-                             iMotionAxis:=THIS^.fbMotionAxis,
-                             iMoveRequest:=THIS^.fbMoveRequest,
-                             iEpicsMotionParamsStatus:=THIS^.fbEpicsMotionParamsStatus );
+fbMotionDrive.CallAfterInit( 
+     iBrake:=THIS^.fbBrake,
+     iMotionInterlocks:=THIS^.fbMotionInterlocksLimSw,
+     iMotionLogger:=THIS^.iMotionLogger,
+     iMotionAxis:=THIS^.fbMotionAxis,
+     iMoveRequest:=THIS^.fbMoveRequest,
+     iEpicsMotionParamsStatus:=THIS^.fbEpicsMotionParamsStatus,
+	 iMotionDriveStateMachine:=THIS^.fbStateMachine
+);
 
 THIS^.stMotionEpicsItf.sName := THIS^.sName;
 ]]></ST>
@@ -167,7 +189,7 @@ THIS^.stMotionEpicsItf.sName := THIS^.sName;
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[EnableMode := THIS^.fbMotionDrive.EnableMode;]]></ST>
+          <ST><![CDATA[EnableMode := THIS^.fbMoveRequest.EnableMode;]]></ST>
         </Implementation>
       </Get>
       <Set Name="Set" Id="{1782045b-083a-4984-8c31-ce01cd3f2942}">
@@ -175,7 +197,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[THIS^.fbMotionDrive.EnableMode := EnableMode;]]></ST>
+          <ST><![CDATA[THIS^.fbMoveRequest.EnableMode := EnableMode;]]></ST>
         </Implementation>
       </Set>
     </Property>
@@ -199,7 +221,8 @@ END_VAR]]></Declaration>
 THIS^.AxisRef REF= AxisRef;
 THIS^.iPersistentDataStorage := iPersistentDataStorage;
 THIS^.stMotionEpicsItf REF=stMotionEpicsItf;
-THIS^.sName := sName;]]></ST>
+THIS^.sName := sName;
+]]></ST>
       </Implementation>
     </Method>
     <Property Name="HomeMode" Id="{6fbba694-14cc-47d7-b386-b3a87f93d4ab}">

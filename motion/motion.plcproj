@@ -23,6 +23,9 @@
     <GlobalVersionStructureIncluded>false</GlobalVersionStructureIncluded>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DemoTask.TcTTO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\E_HomeStates.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -68,10 +71,16 @@
     <Compile Include="DUTs\ST_DS402DriveStatus.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\ST_MotionAxisStatus.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\ST_MotionEpicsInterface.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\ST_MotionEpicsItf.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\ST_MoveRequestStatus.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GVLs\NcAxis_GVL.TcGVL">
@@ -91,6 +100,10 @@
     </Compile>
     <Compile Include="POUs\New-Arch\FBs\Common\FB_MotionDrive.TcPOU">
       <SubType>Code</SubType>
+      <ExcludeFromBuild>false</ExcludeFromBuild>
+    </Compile>
+    <Compile Include="POUs\New-Arch\FBs\Common\FB_MotionDriveOld.TcPOU">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\New-Arch\FBs\Common\FB_MotionInterlocksCommon.TcPOU">
       <SubType>Code</SubType>
@@ -107,7 +120,7 @@
     <Compile Include="POUs\New-Arch\FBs\Common\FB_PersistentDataStorage.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\New-Arch\FBs\Containers\Demo.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Common\FB_MotionDriveStateMachine.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\New-Arch\FBs\Containers\FB_MotionStageMCS2CSP.TcPOU">
@@ -119,6 +132,7 @@
     </Compile>
     <Compile Include="POUs\New-Arch\FBs\DS402\FB_HomeDS402.TcPOU">
       <SubType>Code</SubType>
+      <ExcludeFromBuild>true</ExcludeFromBuild>
     </Compile>
     <Compile Include="POUs\New-Arch\FBs\NC\FB_AxisStatusNC.TcPOU">
       <SubType>Code</SubType>
@@ -135,6 +149,10 @@
     <Compile Include="POUs\New-Arch\FBs\NC\FB_HomeNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_MotionAxisNCOld.TcPOU">
+      <SubType>Code</SubType>
+      <ExcludeFromBuild>true</ExcludeFromBuild>
+    </Compile>
     <Compile Include="POUs\New-Arch\FBs\NC\FB_MotionAxisNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -145,6 +163,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\New-Arch\FBs\NC\FB_PowerNC.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_PowerInterlockNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\New-Arch\FBs\NC\FB_ReadParameterNC.TcPOU">
@@ -189,10 +210,10 @@
     <Compile Include="POUs\New-Arch\ITFs\I_LimSwStatus.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\New-Arch\ITFs\I_MotionAxis.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_MotionAxisDS402.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\New-Arch\ITFs\I_MotionAxisDS402.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_MotionAxis.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\New-Arch\ITFs\I_MotionDrive.TcIO">
@@ -213,7 +234,10 @@
     <Compile Include="POUs\New-Arch\ITFs\I_MoveRequest.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\New-Arch\ITFs\I_Output.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_StatusEx.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_Status.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\New-Arch\ITFs\I_ParamSaveRestore.TcIO">
@@ -231,6 +255,9 @@
     <Compile Include="POUs\New-Arch\ITFs\I_Reset.TcIO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_MotionDriveStateMachine.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\New-Arch\ITFs\I_WriteParameter.TcIO">
       <SubType>Code</SubType>
     </Compile>
@@ -246,7 +273,13 @@
     <Compile Include="Test\Interlok\TestDoubles\FB_MotionInterlocksCommon_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Test\HARD_TEST.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Test\MotionDrive\FB_BrakeNC_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\MotionDrive\FB_MotionDriveStateMachine_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Test\MotionDrive\FB_MoveRequest_Test.TcPOU">
@@ -255,10 +288,13 @@
     <Compile Include="Test\NC\FB_HomeNC_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Test\NC\FB_McMotionBlocks_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Test\NC\FB_MotionAxisNC_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Test\NC\FB_NewArchMcMotionBlocks_Test.TcPOU">
+    <Compile Include="Test\NC\FB_MotionAxisNCShrink_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Test\NC\TestDouble\FB_AxisStatus_TestDouble.TcPOU">
@@ -274,6 +310,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Test\NC\TestDouble\FB_HomeNC_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\NC\TestDouble\FB_MotionAxisNC_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Test\NC\TestDouble\FB_MoveAbsoluteNC_TestDouble.TcPOU">
@@ -297,7 +336,7 @@
     <Compile Include="Test\PRG_TEST.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Test\MAIN.TcPOU">
+    <Compile Include="Test\CONTAINER_TEST.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UnitTestTask.TcTTO">

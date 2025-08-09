@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.13" TcProjectVariant="HardwareTesting">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.13" TcProjectVariant="UnitTesting">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-000000000035}" TcBaseType="true" HideType="true">UINTARR2</Name>
@@ -1657,6 +1657,7 @@ External Setpoint Generation:
 				<Cpu CpuId="3"/>
 				<ProjectVariant PvUseParameter="true">
 					<Variant>
+						<Name>Demo</Name>
 						<Name>HardwareTesting</Name>
 						<Name>UnitTesting</Name>
 						<Parameters RouterMemory="32" CoresPerPkg="1" MaxWinCpus="2" MaxNonWinCpus="2">
@@ -1671,29 +1672,45 @@ External Setpoint Generation:
 				</ProjectVariant>
 			</Settings>
 			<Tasks>
-				<Task Id="3" Priority="1" CycleTime="100000" AmsPort="350" AdtTasks="true">
+				<Task Id="3" Disabled="true" Priority="1" CycleTime="100000" AmsPort="350" AdtTasks="true">
 					<Name>PlcTask</Name>
 					<ProjectVariant PvUseDisable="true">
 						<Variant>
-							<Name>HardwareTesting</Name>
-							<Disable>false</Disable>
-						</Variant>
-						<Variant>
+							<Name>Demo</Name>
 							<Name>UnitTesting</Name>
 							<Disable>true</Disable>
+						</Variant>
+						<Variant>
+							<Name>HardwareTesting</Name>
+							<Disable>false</Disable>
 						</Variant>
 					</ProjectVariant>
 				</Task>
-				<Task Id="6" Disabled="true" Priority="20" CycleTime="100000" AmsPort="351" AdtTasks="true">
+				<Task Id="6" Priority="20" CycleTime="100000" AmsPort="351" AdtTasks="true">
 					<Name>UnitTestTask</Name>
 					<ProjectVariant PvUseDisable="true">
 						<Variant>
+							<Name>Demo</Name>
 							<Name>HardwareTesting</Name>
 							<Disable>true</Disable>
 						</Variant>
 						<Variant>
 							<Name>UnitTesting</Name>
 							<Disable>false</Disable>
+						</Variant>
+					</ProjectVariant>
+				</Task>
+				<Task Id="7" Disabled="true" Priority="2" CycleTime="100000" AmsPort="352" AdtTasks="true">
+					<Name>Demo</Name>
+					<ProjectVariant PvUseDisable="true">
+						<Variant>
+							<Name>Demo</Name>
+							<Disable>false</Disable>
+						</Variant>
+						<Variant>
+							<Name>HardwareTesting</Name>
+							<Name>UnitTesting</Name>
+							<Disable>true</Disable>
 						</Variant>
 					</ProjectVariant>
 				</Task>
@@ -1703,6 +1720,7 @@ External Setpoint Generation:
 			</TypeSystem>
 			<ProjectVariant PvUseLink="true">
 				<Variant>
+					<Name>Demo</Name>
 					<Name>HardwareTesting</Name>
 					<Name>UnitTesting</Name>
 					<TargetNetId/>
@@ -1728,26 +1746,45 @@ External Setpoint Generation:
 				</SvbTask>
 				<AxisFolder Name="UnitTesting">
 					<SubFolder Name="Axis_HomeNC_Tests"/>
+					<SubFolder Name="Axis_McMotionBlocks_Test"/>
 				</AxisFolder>
-				<Axis File="Axis_HomeNC_Test1.xti" Id="3"/>
-				<Axis File="Axis_HomeNC_Test2.xti" Id="4"/>
-				<Axis File="Axis_HomeNC_Test3.xti" Id="5"/>
-				<Axis File="Axis_HomeNC_Test4.xti" Id="6"/>
-				<Axis File="Axis_HomeNC_Test5.xti" Id="7"/>
+				<Axis File="Axis_HomeNC_Test8.xti" Id="15"/>
+				<Axis File="Axis_HomeNC_Test7.xti" Id="14"/>
 				<Axis File="Axis_HomeNC_Test6.xti" Id="2"/>
-				<Axis Id="8" CreateSymbols="true" AxisType="1" AxisFolder="UnitTesting\Axis_HomeNC_Tests" GroupId="7">
-					<Name>Axis_HomeNC_Hard_Test</Name>
+				<Axis File="Axis_HomeNC_Test5.xti" Id="7"/>
+				<Axis File="Axis_HomeNC_Test4.xti" Id="6"/>
+				<Axis File="Axis_HomeNC_Test3.xti" Id="5"/>
+				<Axis File="Axis_HomeNC_Test2.xti" Id="4"/>
+				<Axis File="Axis_HomeNC_Test1.xti" Id="3"/>
+				<Axis File="Axis_McMotionBlocks_Test1.xti" Id="9"/>
+				<Axis File="Axis_McMotionBlocks_Test2.xti" Id="10"/>
+				<Axis File="Axis_McMotionBlocks_Test3.xti" Id="11"/>
+				<Axis File="Axis_McMotionBlocks_Test4.xti" Id="12"/>
+				<Axis File="Axis_McMotionBlocks_Test8.xti" Id="17"/>
+				<Axis File="Axis_McMotionBlocks_Test7.xti" Id="1"/>
+				<Axis File="Axis_McMotionBlocks_Test6.xti" Id="16"/>
+				<Axis File="Axis_McMotionBlocks_Test5.xti" Id="13"/>
+				<Axis Id="8" Disabled="true" CreateSymbols="true" AxisType="1" AxisFolder="UnitTesting" GroupId="17">
+					<Name>Axis_Hard_Test</Name>
 					<ProjectVariant PvUseDisable="true">
 						<Variant>
-							<Name>HardwareTesting</Name>
+							<Name>Demo</Name>
 							<Name>UnitTesting</Name>
+							<Disable>true</Disable>
+						</Variant>
+						<Variant>
+							<Name>HardwareTesting</Name>
 							<Disable>false</Disable>
 						</Variant>
 					</ProjectVariant>
 					<AxisPara>
+						<Velo RefSync="100"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="1">
+						<EncPara>
+							<ActPosCorrection Enable="true"/>
+						</EncPara>
 						<Vars VarGrpType="1">
 							<Name>Inputs</Name>
 							<Var>
@@ -1896,79 +1933,105 @@ External Setpoint Generation:
 						</Var>
 					</Vars>
 				</Axis>
-				<Axis File="Axis_NewArchMcMotionBlocks_Test.xti" Id="1"/>
 			</NC>
 		</Motion>
 		<Plc>
 			<Project GUID="{DA380EE4-C409-4A84-97B8-4D1FBAEE5CC8}" Name="motion" PrjFilePath="motion\motion.plcproj" TmcFilePath="motion\motion.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{D10BD117-038E-8D45-2E34-10CBCCD3BCB8}" TmcPath="motion\motion.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{19A48F90-A2E5-C31F-0945-A0F17555FFF8}" TmcPath="motion\motion.tmc">
 					<Name>motion Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
-					<Vars VarGrpType="2" ContextId="1" AreaNo="17">
+					<Vars VarGrpType="2" ContextId="2" AreaNo="33">
 						<Name>UnitTestTask Outputs</Name>
 						<Var>
-							<Name>PRG_TEST.fbHomeNC_Test.fbAxisRef[1].PlcToNc</Name>
+							<Name>NcAxis_GVL.MCS2.PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
 						<Var>
-							<Name>PRG_TEST.fbHomeNC_Test.fbAxisRef[2].PlcToNc</Name>
+							<Name>NcAxis_GVL.E727.PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
+					</Vars>
+					<Vars VarGrpType="1" ContextId="2" AreaNo="32">
+						<Name>UnitTestTask Inputs</Name>
 						<Var>
-							<Name>PRG_TEST.fbHomeNC_Test.fbAxisRef[3].PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+							<Name>NcAxis_GVL.MCS2.NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
-							<Name>PRG_TEST.fbHomeNC_Test.fbAxisRef[4].PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+							<Name>NcAxis_GVL.E727.NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="2" ContextId="1" AreaNo="17">
+						<Name>DemoTask Outputs</Name>
+						<Var>
+							<Name>CONTAINER_TEST.fbMotionStage.fbBrake.bBrakeRelease</Name>
+							<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>PRG_TEST.fbHomeNC_Test.fbAxisRef[5].PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>PRG_TEST.fbHomeNC_Test.fbAxisRef[6].PlcToNc</Name>
+							<Name>NcAxis_GVL.NC.PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="1" ContextId="1" AreaNo="16">
-						<Name>UnitTestTask Inputs</Name>
+						<Name>DemoTask Inputs</Name>
 						<Var>
-							<Name>PRG_TEST.fbHomeNC_Test.fbAxisRef[1].NcToPlc</Name>
-							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+							<Name>CONTAINER_TEST.fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
+							<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>PRG_TEST.fbHomeNC_Test.fbAxisRef[2].NcToPlc</Name>
-							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+							<Name>CONTAINER_TEST.fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
+							<Comment><![CDATA[ Hardware 
+ NC Forward Limit Switch: TRUE if ok to move]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>PRG_TEST.fbHomeNC_Test.fbAxisRef[3].NcToPlc</Name>
-							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+							<Name>CONTAINER_TEST.fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
+							<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>PRG_TEST.fbHomeNC_Test.fbAxisRef[4].NcToPlc</Name>
-							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+							<Name>CONTAINER_TEST.fbMotionStage.fbLimSwStatus.bHome</Name>
+							<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>PRG_TEST.fbHomeNC_Test.fbAxisRef[5].NcToPlc</Name>
-							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+							<Name>CONTAINER_TEST.fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
+							<Type>ULINT</Type>
 						</Var>
 						<Var>
-							<Name>PRG_TEST.fbHomeNC_Test.fbAxisRef[6].NcToPlc</Name>
+							<Name>CONTAINER_TEST.fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
+							<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
+							<Type>UINT</Type>
+						</Var>
+						<Var>
+							<Name>CONTAINER_TEST.fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
+							<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>CONTAINER_TEST.fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
+							<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
+							<Type>DINT</Type>
+						</Var>
+						<Var>
+							<Name>NcAxis_GVL.NC.NcToPlc</Name>
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
 						<Var>
-							<Name>MAIN.fbAxisRef.PlcToNc</Name>
+							<Name>HARD_TEST.fbAxisRef.PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
-							<Name>MAIN.fbAxisRef.NcToPlc</Name>
+							<Name>HARD_TEST.fbAxisRef.NcToPlc</Name>
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 					</Vars>
@@ -2029,7 +2092,7 @@ External Setpoint Generation:
 							<OwnerB Name="TINC^NC-Task 1 SAF^Axes^MCS2-M1">
 								<Link VarA="MAIN.fbMotionStage.fbMotionAxis.stDS402Drive.nDS402DriveControlNC" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="Drive^Outputs^Out^nCtrl2" IdB="392" AutoLink="true" Size="8" OffsA="8" RestoreInfo="ANotFound"/>
 								<Link VarA="MAIN.fbMotionStage.fbMotionAxis.stDS402Drive.nModeOfOperationNC" TypeA="SINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000003}" VarB="Drive^Outputs^Out^nCtrl5" IdB="407" AutoLink="true" RestoreInfo="ANotFound"/>
-								<Link VarA="NcAxis_GVL.MCS2.NcToPlc" TypeA="MC.NCTOPLC_AXIS_REF" InOutA="0" GuidA="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" VarB="Outputs^ToPlc" IdB="438" RestoreInfo="ANotFound"/>
+								<Link VarA="NcAxis_GVL.MCS2.NcToPlc" TypeA="MC.NCTOPLC_AXIS_REF" InOutA="0" GuidA="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" VarB="Outputs^ToPlc" IdB="438" RestoreInfo="BNotFound"/>
 							</OwnerB>
 							<OwnerB Name="TIPC^motion^motion Instance">
 								<Link VarA="MAIN.fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="UnitTestTask Outputs^MAIN.bHardEnable" RestoreInfo="ANotFound"/>
@@ -2040,7 +2103,19 @@ External Setpoint Generation:
 								<Link VarA="MAIN.fbMotionStage.fbMotionAxis.stDS402Drive.nModeOfOperation" TypeA="SINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000003}" VarB="Module 1 (MCS2M-D-3C)^ctl/mode/pos/vel/acc RxPDO^Modes of Operation" IdB="-25" AutoLink="true" RestoreInfo="ANotFound"/>
 							</OwnerB>
 							<OwnerB Name="TINC^NC-Task 1 SAF^Axes^MCS2-M1">
-								<Link VarA="NcAxis_GVL.MCS2.PlcToNc" TypeA="MC.PLCTONC_AXIS_REF" InOutA="1" GuidA="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" VarB="Inputs^FromPlc" RestoreInfo="ANotFound"/>
+								<Link VarA="NcAxis_GVL.MCS2.PlcToNc" TypeA="MC.PLCTONC_AXIS_REF" InOutA="1" GuidA="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" VarB="Inputs^FromPlc" RestoreInfo="BNotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2025-07-31T13:30:45">
+						<OwnerA Name="InputDst" Prefix="TIPC^motion^motion Instance" Type="1">
+							<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Hard_Test">
+								<Link VarA="MAIN.fbAxisRef.NcToPlc" TypeA="MC.NCTOPLC_AXIS_REF" InOutA="0" GuidA="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" VarB="Outputs^ToPlc" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+						<OwnerA Name="OutputSrc" Prefix="TIPC^motion^motion Instance" Type="2">
+							<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Hard_Test">
+								<Link VarA="MAIN.fbAxisRef.PlcToNc" TypeA="MC.PLCTONC_AXIS_REF" InOutA="1" GuidA="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" VarB="Inputs^FromPlc" RestoreInfo="ANotFound"/>
 							</OwnerB>
 						</OwnerA>
 					</UnrestoredVarLinks>
@@ -2056,6 +2131,15 @@ External Setpoint Generation:
 						</Context>
 						<Context>
 							<Id>1</Id>
+							<Name>DemoTask</Name>
+							<ManualConfig>
+								<OTCID>#x02010070</OTCID>
+							</ManualConfig>
+							<Priority>2</Priority>
+							<CycleTime>10000000</CycleTime>
+						</Context>
+						<Context>
+							<Id>2</Id>
 							<Name>UnitTestTask</Name>
 							<ManualConfig>
 								<OTCID>#x02010060</OTCID>
@@ -2066,14 +2150,12 @@ External Setpoint Generation:
 					</Contexts>
 					<TaskPouOids>
 						<TaskPouOid Prio="1" OTCID="#x08502001"/>
+						<TaskPouOid Prio="2" OTCID="#x08502003"/>
 						<TaskPouOid Prio="20" OTCID="#x08502002"/>
 					</TaskPouOids>
 				</Instance>
 			</Project>
 		</Plc>
-		<Io>
-			<Device File="Master_EtherCAT.xti" Id="3"/>
-		</Io>
 		<Variants SpecificLocalBootFolder="true">
 			<Variant>
 				<Name>HardwareTesting</Name>
@@ -2081,38 +2163,16 @@ External Setpoint Generation:
 			<Variant>
 				<Name>UnitTesting</Name>
 			</Variant>
+			<Variant>
+				<Name>Demo</Name>
+			</Variant>
 		</Variants>
 	</Project>
 	<Mappings>
-		<MappingInfo Identifier="{08502001-0010-0500-0020-500810000403}" Id="#x02030010" Watchdog="04000000140000000400000004000000"/>
 		<OwnerA Name="TIPC^motion^motion Instance">
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Hard_Test">
-				<Link VarA="PlcTask Inputs^MAIN.fbAxisRef.NcToPlc" VarB="Outputs^ToPlc"/>
-				<Link VarA="PlcTask Outputs^MAIN.fbAxisRef.PlcToNc" VarB="Inputs^FromPlc"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Test1">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.fbHomeNC_Test.fbAxisRef[1].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.fbHomeNC_Test.fbAxisRef[1].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Test2">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.fbHomeNC_Test.fbAxisRef[2].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.fbHomeNC_Test.fbAxisRef[2].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Test3">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.fbHomeNC_Test.fbAxisRef[3].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.fbHomeNC_Test.fbAxisRef[3].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Test4">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.fbHomeNC_Test.fbAxisRef[4].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.fbHomeNC_Test.fbAxisRef[4].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Test5">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.fbHomeNC_Test.fbAxisRef[5].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.fbHomeNC_Test.fbAxisRef[5].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Test6">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.fbHomeNC_Test.fbAxisRef[6].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.fbHomeNC_Test.fbAxisRef[6].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_Hard_Test">
+				<Link VarA="PlcTask Inputs^HARD_TEST.fbAxisRef.NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^HARD_TEST.fbAxisRef.PlcToNc" VarB="Inputs^FromPlc"/>
 			</OwnerB>
 		</OwnerA>
 	</Mappings>
