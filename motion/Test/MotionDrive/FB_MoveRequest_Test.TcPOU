@@ -7,58 +7,187 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[GivenMoveCmdCheckDriveInputThenCheckRequestAndEpicsStatus();]]></ST>
+      <ST><![CDATA[GivenMoveRequestAndInterlockAndErrorStatusUpdateRequestStatus_Test1();
+]]></ST>
     </Implementation>
-    <Method Name="GivenEpicsExecuteCheckDriveInputThenCheckRequestAndEpicsStatus" Id="{223fd37a-e346-4e63-ae91-95e8242641a5}">
-      <Declaration><![CDATA[METHOD GivenEpicsExecuteCheckDriveInputThenCheckRequestAndEpicsStatus
-VAR_INPUT
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="GivenHomeCmdCheckDriveInputThenCheckRequestAndEpicsStatus" Id="{9e26be9d-db97-4ea1-b419-a0aadd052025}">
-      <Declaration><![CDATA[METHOD GivenHomeCmdCheckDriveInputThenCheckRequestAndEpicsStatus
+    <Method Name="GivenMoveRequestAndInterlockAndErrorStatusUpdateRequestStatus_Test1" Id="{223fd37a-e346-4e63-ae91-95e8242641a5}">
+      <Declaration><![CDATA[METHOD GivenMoveRequestAndInterlockAndErrorStatusUpdateRequestStatus_Test1
 VAR_INST
-    fbMoveRequest : FB_MoveRequest(stMotionEpicsItf:=stMotionEpicsItf);
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="GivenMoveCmdCheckDriveInputThenCheckRequestAndEpicsStatus" Id="{0278f58c-2e71-49f5-9141-f6fec2b3cd3f}">
-      <Declaration><![CDATA[METHOD GivenMoveCmdCheckDriveInputThenCheckRequestAndEpicsStatus
-VAR
     fbMoveRequest : FB_MoveRequest(stMotionEpicsItf:=stMotionEpicsItf);
     eExpectedMoveMode : INT := E_EpicsMotorCmd.MOVE_ABSOLUTE;
     eActualMoveMode : INT;
+    sMoveMessage : STRING := '';
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST(__POUNAME());
-fbMoveRequest.MotionRequest(	HomeCmd:=FALSE,
-                                MoveCmd:=TRUE,
-                                HomeMode:=E_EpicsHomeCmd.NONE,
-                                EnableMode:=E_StageEnableMode.DURING_MOTION,
-                                EnableDone:=TRUE,
-                                MoveOk:=TRUE,
-                                PowerEnabled:=TRUE);
+(*Mode of Operation ALWAYS: enable stays off if Latching error condition*)
+fbMoveRequest.MoveRequest( EnableDone:=FALSE, MoveOk:=FALSE );			
+fbMoveRequest.MoveRequestTest(	HomeCmd:=FALSE,
+                 		MoveCmd:=FALSE,
+                 		HomeMode:=E_EpicsHomeCmd.NONE,
+               			EnableMode:=E_StageEnableMode.ALWAYS,
+					 );
+fbMoveRequest();
+
+AssertFalse(Condition := THIS^.stMotionEpicsItf.bEnable,
+           Message := 'move request must be disabled with valid interlock condition in alwayd mode #1');
+
+		   
+fbMoveRequest.MoveRequest( EnableDone:=FALSE, MoveOk:=TRUE );			
+fbMoveRequest.MoveRequestTest(	HomeCmd:=FALSE,
+                 		MoveCmd:=TRUE,
+                 		HomeMode:=E_EpicsHomeCmd.NONE,
+               			EnableMode:=E_StageEnableMode.ALWAYS,
+					 );
+fbMoveRequest();
+
+AssertTRUE(Condition := THIS^.stMotionEpicsItf.bEnable,
+           Message := 'move request must be enabled with valid interlock condition in alwayd mode #2');
+
+//
+fbMoveRequest.ResetMoveRequest();
+fbMoveRequest();
+
+// Remove or latch power disable state					 
+THIS^.stMotionEpicsItf.bError := TRUE;
+fbMoveRequest.MoveRequestTest(	HomeCmd:=FALSE,
+                 		MoveCmd:=TRUE,
+                 		HomeMode:=E_EpicsHomeCmd.NONE,
+               			EnableMode:=E_StageEnableMode.ALWAYS,
+					 );
+fbMoveRequest();
+
+AssertFalse(Condition := THIS^.stMotionEpicsItf.bEnable,
+           Message := 'Latching error condition must disable move request in alwasy mode #3');
+
+(* Mode of Operation DURING Motion : enable stays off if Latching error condition *) 
+
+ // clear last request
+fbMoveRequest.ResetMoveRequest();
+fbMoveRequest.ResetMoveRequestErrors();
+fbMoveRequest();
+
+fbMoveRequest.MoveRequest( EnableDone:=FALSE, MoveOk:=FALSE );			
+fbMoveRequest.MoveRequestTest(	HomeCmd:=FALSE,
+                 		MoveCmd:=TRUE,
+                 		HomeMode:=E_EpicsHomeCmd.NONE,
+               			EnableMode:=E_StageEnableMode.DURING_MOTION,
+					 );
+fbMoveRequest();
+	   
+AssertFalse(Condition := THIS^.stMotionEpicsItf.bEnable,
+           Message := 'Missing interlock Ok must diabled move #4');
+
+
+ // clear last request
+fbMoveRequest.ResetMoveRequest();
+fbMoveRequest();
+
+fbMoveRequest.MoveRequest( EnableDone:=FALSE, MoveOk:=TRUE );			
+fbMoveRequest.MoveRequestTest(	HomeCmd:=FALSE,
+                 		MoveCmd:=TRUE,
+                 		HomeMode:=E_EpicsHomeCmd.NONE,
+               			EnableMode:=E_StageEnableMode.DURING_MOTION,
+					 );
+fbMoveRequest();
+	   
+AssertTrue(Condition := THIS^.stMotionEpicsItf.bEnable,
+           Message := 'Move request must be enabled #6');
+		   
+ // clear last request
+fbMoveRequest.ResetMoveRequest();
+fbMoveRequest();
+
+fbMoveRequest.MoveRequest( EnableDone:=TRUE, MoveOk:=TRUE );			
+fbMoveRequest.MoveRequestTest(	HomeCmd:=FALSE,
+                 		MoveCmd:=TRUE,
+                 		HomeMode:=E_EpicsHomeCmd.NONE,
+               			EnableMode:=E_StageEnableMode.DURING_MOTION,
+					 );
+
+fbMoveRequest();
+eActualMoveMode := fbMoveRequest.Status.nCommand;
+
+AssertTrue(Condition := fbMoveRequest.Status.bNewMoveReq, Message := 'Move request must be Registered #7');
+AssertTrue(Condition := fbMoveRequest.Status.bExecMove, Message := 'Absolute move must be ready #8');
+AssertFalse(Condition := fbMoveRequest.Status.bExecHome, Message := 'Move is not a Homing move #9');
+AssertEquals_INT ( Expected:=eExpectedMoveMode, Actual:=fbMoveRequest.Status.nCommand, 
+						Message:='Move command must be absolute #10');
+						
+// clear last request
+fbMoveRequest.ResetMoveRequest();
+fbMoveRequest();
+
+fbMoveRequest.MoveRequest( EnableDone:=TRUE, MoveOk:=TRUE );			
+fbMoveRequest.MoveRequestTest(	HomeCmd:=TRUE,
+                 		MoveCmd:=FALSE,
+                 		HomeMode:=E_EpicsHomeCmd.LOW_LIMIT,
+               			EnableMode:=E_StageEnableMode.DURING_MOTION,
+					 );
+
+fbMoveRequest();
+eExpectedMoveMode := E_EpicsMotorCmd.HOME;
+eActualMoveMode := fbMoveRequest.Status.nCommand;
+
+AssertTrue(Condition := fbMoveRequest.Status.bNewMoveReq, Message := 'Move request must be Registered #11');
+AssertFalse(Condition := fbMoveRequest.Status.bExecMove, Message := 'Move is not Absolute #12');
+AssertTrue(Condition := fbMoveRequest.Status.bExecHome, Message := 'Home move must be ready #13');
+AssertEquals_INT ( Expected:=eExpectedMoveMode, Actual:=fbMoveRequest.Status.nCommand, 
+						Message:='Move command must be a valid homing mode #14');
+	   
+// clear last request
+fbMoveRequest.ResetMoveRequest();
+fbMoveRequest();
+
+THIS^.stMotionEpicsItf.bError := FALSE;
+fbMoveRequest.MoveRequest( EnableDone:=TRUE, MoveOk:=TRUE );			
+fbMoveRequest.MoveRequestTest(	HomeCmd:=FALSE,
+                 		MoveCmd:=TRUE,
+                 		HomeMode:=E_EpicsHomeCmd.NONE,
+               			EnableMode:=E_StageEnableMode.DURING_MOTION,
+					 );
+fbMoveRequest.InitMoveRequest();
+fbMoveRequest();
+
+
+AssertTrue(Condition := THIS^.stMotionEpicsItf.bBusy, Message := 'Move Request Busy flag must be set at init #15');
+AssertFalse(Condition := THIS^.stMotionEpicsItf.bDone, Message := 'Move request Done flag must reset at init #16');
+AssertEquals_STRING ( Expected:=sMoveMessage, Actual:=THIS^.stMotionEpicsItf.sErrorMessage, 
+						Message:='Move request Error flag must be cleared at init #17');
+
+// clear last request
+fbMoveRequest.ResetMoveRequest();
+fbMoveRequest();
+
+THIS^.stMotionEpicsItf.bError := FALSE;
+fbMoveRequest.MoveRequest( EnableDone:=TRUE, MoveOk:=TRUE );			
+fbMoveRequest.MoveRequestTest(	HomeCmd:=FALSE,
+                 		MoveCmd:=TRUE,
+                 		HomeMode:=E_EpicsHomeCmd.NONE,
+               			EnableMode:=E_StageEnableMode.DURING_MOTION,
+					 );
+fbMoveRequest();
+
+AssertTrue(Condition := THIS^.stMotionEpicsItf.bExecute, Message := 'Execute must be st by now #18');
+AssertTrue(Condition := fbMoveRequest.Status.bExecute, Message := 'Local Execute must be set by now #19');
+
+// simulate a user stop
+THIS^.stMotionEpicsItf.bExecute := FALSE;
 
 fbMoveRequest();
 
-AssertTrue(Condition := fbMoveRequest.NewMoveReq,
-           Message := 'New request not Registered #1');
-AssertTrue(Condition := fbMoveRequest.Execute,
-           Message := 'New request not comfirm for execution #2');
-AssertTrue(Condition := fbMoveRequest.ExecMove,
-           Message := 'New move request will not execute #3');
-AssertFalse(Condition := fbMoveRequest.ExecHome,
-           Message := 'The request is not a Homing move #4');
-eActualMoveMode :=fbMoveRequest.CommandLocal;
-AssertEquals ( Expected:=eExpectedMoveMode, Actual:=eActualMoveMode ,
-            Message:='New move request motor  Cmd Must be Absolute #5');
+AssertTrue(Condition := fbMoveRequest.Status.bPrepareDisable, Message := 'Must preparaing to disable by now #20');
+
+// Forwarded Reset Reset
+// simulate reset event
+THIS^.stMotionEpicsItf.bReset := TRUE;
+fbMoveRequest();
+
+AssertFalse(Condition := THIS^.stMotionEpicsItf.bReset, Message := 'Reset must not latch #21');
+AssertTrue(Condition := fbMoveRequest.Status.bReset, Message := 'Reset event must set for forwarding #22');
+
+	   
 TEST_FINISHED();]]></ST>
       </Implementation>
     </Method>
