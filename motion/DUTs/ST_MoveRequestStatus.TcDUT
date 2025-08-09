@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_MoveRequestStatus" Id="{a07ca9a6-ee49-49b8-ab2e-03bd2d0e53c7}">
+    <Declaration><![CDATA[TYPE ST_MoveRequestStatus :
+STRUCT
+    bNewMoveReq: BOOL;
+    nCmdData: INT;
+    nCommand: INT;
+	bExecute : BOOL;
+    bExecHome: BOOL;
+    bExecMove: BOOL;
+	bValidatedMove : BOOL;
+	bStop : BOOL;
+	bReset : BOOL;
+	bEnable : BOOL;
+	bPrepareDisable : BOOL;
+	fPosition:LREAL;
+	fVelocity :LREAL;
+	fAcceleration :LREAL;
+	fDeceleration :LREAL;
+	fHomeOffset : LREAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
