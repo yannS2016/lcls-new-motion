@@ -122,6 +122,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[bReset :=  Reset;
+bNewMoveReq:=NewMoveReq;
 // Forward drive cmds to Generic interlocks and lim status FB
 THIS^.iMotionInterlocksCommon.DriveCommands(Enable:=Enable, NewMoveReq:=NewMoveReq, Reset:=Reset);
 ]]></ST>

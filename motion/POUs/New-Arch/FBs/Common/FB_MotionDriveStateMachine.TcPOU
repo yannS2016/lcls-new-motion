@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_MotionDriveStateMachine" Id="{8cb7b5f0-c2e7-431f-bb79-fb3574afad8a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionDriveStateMachine IMPLEMENTS I_MotionDriveStateMachine
+VAR
+
+    {attribute 'hide'}
+    iMoveRequest : I_MoveRequest;
+    {attribute 'hide'}
+    iMotionAxis: I_MotionAxis;
+    {attribute 'hide'}
+    iMotionAxisDS402: I_MotionAxisDS402;
+	tonMotionWatchDog: TON;
+	bError: BOOL;
+	eMoveState: E_MOVESTATE;
+	rtTargetReached: R_TRIG;
+	rtHomed: R_TRIG;
+	ftError: F_TRIG;
+	bInterlockEvent: BOOL;
+	rtStandStill : R_TRIG;
+END_VAR
+
+VAR_OUTPUT
+	Error: BOOL;
+	ErrorId: UDINT;
+	Message: T_MAXSTRING;	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[rtTargetReached(CLK:=iMotionAxis.Status.bMoveAbsoluteDone);
+rtHomed(CLK:=iMotionAxis.Status.bHomeDone);
+ftError(CLK:=bError);
+
+// Drive state Machine here
+CASE MoveState OF
+   E_MoveState.IDLING:
+        // Delay the disable until axis reach standstill
+        // and this state machine is idling
+        IF bError THEN
+               MoveState := E_MoveState.ERROR;
+        ELSIF iMoveRequest.Status.bExecute THEN
+			// When we start, set the busy/done appropriately
+			iMoveRequest.InitMoveRequest();
+			// Act as watch dog to set the drive in error state if axis side hangs.
+			tonMotionWatchDog.IN:=TRUE;
+            MoveState := E_MoveState.INIT;
+        END_IF
+
+   E_MoveState.INIT:
+
+		CASE iMoveRequest.Status.nCommand OF
+			E_EpicsMotorCmd.MOVE_ABSOLUTE:
+				// Activate backlash compensation
+				iMotionAxis.BacklashCompensation(
+					Enable:=TRUE, 
+					RampVelo:=iMoveRequest.Status.fVelocity/10.0
+				);
+				IF __QUERYINTERFACE(iMotionAxis, iMotionAxisDS402) THEN
+					// prepare piezo axis for motion
+					IF iMotionAxisDS402.ModeConfigDone(Mode:=E_EpicsMotorCmd.MOVE_ABSOLUTE) THEN
+						iMotionAxis.MoveAbsolute( 
+							Position:=iMoveRequest.Status.fPosition,
+							Velocity := iMoveRequest.Status.fVelocity,
+							Acceleration := iMoveRequest.Status.fAcceleration,
+							Deceleration := iMoveRequest.Status.fDeceleration
+						);
+					MoveState := E_MoveState.STARTED;
+					END_IF
+				ELSE
+					iMotionAxis.MoveAbsolute( 
+						Position:=iMoveRequest.Status.fPosition,
+						Velocity := iMoveRequest.Status.fVelocity,
+						Acceleration := iMoveRequest.Status.fAcceleration,
+						Deceleration := iMoveRequest.Status.fDeceleration
+					);
+					MoveState := E_MoveState.STARTED;
+				END_IF
+
+			E_EpicsMotorCmd.HOME:
+				// Deactivate backlash compensation
+				iMotionAxis.BacklashCompensation(
+					Enable:=FALSE, 
+					RampVelo:=iMoveRequest.Status.fVelocity/10.0
+				);
+
+				IF __QUERYINTERFACE(iMotionAxis, iMotionAxisDS402) THEN
+					IF iMotionAxisDS402.ModeConfigDone(Mode:=E_EpicsMotorCmd.HOME) THEN
+						iMotionAxis.home(
+								Position:=iMoveRequest.Status.fHomeOffset, 
+								BufferMode:=MC_Aborting
+						);
+						MoveState := E_MoveState.STARTED;
+					END_IF
+			 	ELSE
+					iMotionAxis.home(
+							Position:=iMoveRequest.Status.fHomeOffset, 
+							BufferMode:=MC_Aborting
+					);
+					MoveState := E_MoveState.STARTED;
+				END_IF
+		END_CASE
+	E_MoveState.STARTED:
+		IF bError THEN
+			MoveState := E_MoveState.ERROR;
+		// when we get this signal, all motion prerequisite are met and axis is in motion.
+		ELSIF iMotionAxis.Status.bBusy THEN
+			tonMotionWatchDog.IN := FALSE;
+			MoveState := E_MoveState.IN_PROGRESS;
+		END_IF
+
+   E_MoveState.IN_PROGRESS :
+
+		IF bError THEN
+           MoveState := E_MoveState.ERROR;
+		// Move interupted: halt or Reset, go wait for a done signal
+		// Move Aborted: hitting a directional limit switch wil set Aborted flag.
+		// we want to immediately prepare to disable drive power
+		ELSIF iMotionAxis.Status.bAborted  THEN
+			iMoveRequest.ResetMoveRequest();
+			MoveState := E_MoveState.INTERRUPTED;
+
+		ELSIF  rtTargetReached.Q OR rtHomed.Q  THEN
+		   iMoveRequest.ResetMoveRequest();
+           MoveState := E_MoveState.REACHED;
+		END_IF
+
+   E_MoveState.INTERRUPTED:
+		// Interlock event aka limit hit ?
+		IF bInterlockEvent THEN
+		   iMoveRequest.MoveRequestDone(Done:=TRUE);
+		   iMoveRequest.ResetMoveEnable();
+		   MoveState := E_MoveState.IDLING;
+		// Wait here for halt/reset done or clearing limit state to be restored
+		ELSIF iMotionAxis.Status.bAbortDone THEN
+		   iMoveRequest.MoveRequestDone(Done:=TRUE);
+		   iMoveRequest.ResetMoveEnable();
+           MoveState := E_MoveState.IDLING;
+       END_IF
+
+   E_MoveState.REACHED:
+
+	IF iMotionAxis.Status.bStandStill THEN
+		iMoveRequest.MoveRequestCompleted( 
+				HomeDone:=iMotionAxis.Status.bHomeDone, 
+				MoveDone:=iMotionAxis.Status.bMoveAbsoluteDone
+		);
+		MoveState := E_MoveState.IDLING;	
+	END_IF
+		
+   E_MoveState.ERROR:
+   		// NC would have already removepower to drive.
+		iMoveRequest.ResetMoveRequest();
+		iMoveRequest.ResetMoveEnable();
+   		IF ftError.Q THEN
+           MoveState := E_MoveState.IDLING;
+       END_IF
+END_CASE
+
+// prevent this state machine from hanging on user defined configs 
+tonMotionWatchDog(PT:=T#5S);
+IF tonMotionWatchDog.Q THEN
+	Error := TRUE;
+	ErrorId := 1;
+	Message:= 'Motion axis response timeout';
+	MoveState := E_MoveState.ERROR;
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="CallAfterInit" Id="{e0b49802-1f54-4d4a-bab0-a630f6e6317c}">
+      <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
+VAR_INPUT
+    iMotionAxis: I_MotionAxis;
+    iMoveRequest : I_MoveRequest;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+THIS^.iMotionAxis := iMotionAxis;
+THIS^.iMoveRequest :=iMoveRequest;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_Init" Id="{294adae6-d914-4615-a1d2-fba496fbc903}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
+    iMotionAxis: I_MotionAxis;
+    iMoveRequest : I_MoveRequest;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+THIS^.iMotionAxis := iMotionAxis;
+THIS^.iMoveRequest :=iMoveRequest;
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="MoveState" Id="{67fe1b58-6176-452d-99c9-b333901fd72b}">
+      <Declaration><![CDATA[PROPERTY INTERNAL MoveState : E_MOVESTATE;]]></Declaration>
+      <Get Name="Get" Id="{56c38c3a-8cc4-4e25-96c8-0e2866805f8f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MoveState := eMoveState;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{8bec99e5-1656-44fc-b9b6-90a5e318653a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[eMoveState := MoveState;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="StateMachine" Id="{66378d9f-e842-4289-88b6-7de0d7f7c0a0}">
+      <Declaration><![CDATA[METHOD StateMachine
+VAR_INPUT
+	InterlockEvent	: BOOL;
+	Error	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.bInterlockEvent := InterlockEvent;
+THIS^.bError := Error;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="WatchDogStatus" Id="{f4a0274a-eb4a-4d55-8725-d7041e208e2f}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY WatchDogStatus : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{a6ce01d7-e717-44d9-8fe7-d96ad2a3570f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[WatchDogStatus := THIS^.tonMotionWatchDog.IN;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="WatchDogTimeOut" Id="{e28a1111-9814-4bbb-b7b7-739c7c451e1f}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY WatchDogTimeOut : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{4fc28fed-c55a-4ffe-80b1-7041542caba2}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[WatchDogTimeOut := THIS^.tonMotionWatchDog.Q;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>

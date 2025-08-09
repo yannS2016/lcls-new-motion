@@ -2,10 +2,6 @@
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_MotionDrive" Id="{60d91316-04e3-4af1-aaa1-6a890af932f7}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionDrive IMPLEMENTS I_MotionDrive
-VAR_INPUT
-END_VAR
-VAR_OUTPUT
-END_VAR
 VAR
    // EPICS Interface
     {attribute 'no_copy'}
@@ -16,57 +12,20 @@ VAR
     iEpicsMotionParamsStatus : I_EpicsMotionParamsStatus;
     {attribute 'hide'}
     iMotionAxis: I_MotionAxis;
+    iMotionAxisDS402: I_MotionAxisDS402;
     {attribute 'hide'}
     iBrake 				: I_Brake;
     {attribute 'hide'}
     iMotionInterlocks	: I_MotionInterlocks;
     {attribute 'hide'}
     iMotionLogger 		: I_MotionLogger;
-    {attribute 'hide'}
-    eMoveMode : E_EpicsMotorCmd := E_EpicsMotorCmd.MOVE_ABSOLUTE;
-    // Determines when we automatically enable the motor
-    //{attribute 'hide'}
-    eEnableMode: E_StageEnableMode:=E_StageEnableMode.DURING_MOTION;
-
-    (* Shortcut Commands *)
-    // Start a move to fPosition with fVelocity
-    bMoveCmd: BOOL;
-    // Start the homing routine
-    {attribute 'pytmc' := '
-        pv: PLC:bHomeCmd
-        io: io
-        field: DESC Start the homing routine
-    '}
-    bHomeCmd: BOOL;
-    // Close or open loop operation ( DS402 Piezo axis )
-    {attribute 'pytmc' := '
-        pv: PLC:bServo
-        io: io
-        field: ZNAM FALSE
-        field: ONAM TRUE
-        field: DESC Used internally to reset errors
-    '}
-    bServo : BOOL;
+	iMotionDriveStateMachine : I_MotionDriveStateMachine;
 
     sName : STRING;
     {attribute 'hide'}
     eMoveState	: E_MoveState;
-    {attribute 'hide'}
-    bNewMoveReq : BOOL;
-    {attribute 'hide'}
-    bExecHome 	: BOOL;
-    {attribute 'hide'}
-    bExecMove 	: BOOL;
-    {attribute 'hide'}
-    rtMoveCmdShortcut	: R_TRIG;
-    {attribute 'hide'}
-    rtHomeCmdShortcut 	: R_TRIG;
-    {attribute 'hide'}
-    rtUserExec 			: R_TRIG;
-    {attribute 'hide'}
-    rtNewMoveReq 		: R_TRIG;
-    {attribute 'hide'}
     rtTarget			: R_TRIG;
+	rtResetDone : R_TRIG;
     {attribute 'hide'}
     rtHomed				: R_TRIG;
     {attribute 'hide'}
@@ -78,25 +37,15 @@ VAR
     {attribute 'hide'}
     ftError 			: F_TRIG;
     {attribute 'hide'}
-    nCommandLocal: UINT;
-    {attribute 'hide'}
-    nCmdDataLocal: UINT;
-    {attribute 'hide'}
-    ftLocalStart : F_TRIG;
-    {attribute 'hide'}
     bInitStart : BOOL;
     {attribute 'hide'}
-    bLocalExec : BOOL;
-    {attribute 'hide'}
-    bEnableDone : BOOL;
     {attribute 'hide'}
     bPrepareDisable : BOOL;
-    {attribute 'hide'}
-    rtEnableMode : R_TRIG;
     {attribute 'hide'}
     rtStopExec : R_TRIG;
     {attribute 'hide'}
     rtInterlockEvent : R_TRIG;
+	rtHaltEvent : R_TRIG;
     {attribute 'hide'}
     bCmdExecute : BOOL;
     {attribute 'hide'}
@@ -106,7 +55,7 @@ VAR
     {attribute 'hide'}
     rtRestoreDone : R_TRIG;
     {attribute 'hide'}
-    bHaltEvent : BOOL;
+    bStop : BOOL;
     // move state machine to error state in case a move command gets stuck after
     // the corresponding start signal was forwarded. the start signal should yeild a busy true response.
     // the move processing block may get stuck and return no errors. this is a contingency to make sure that reset would reinit all state machines.
@@ -114,179 +63,141 @@ VAR
     bLocalError : BOOL;
     bLocalMessage : T_MAXSTRING;
     Execute: INT;
+	rtTargetReached: R_TRIG;
+	bError: BOOL;
+	nErrorId: UDINT;
+	sErrorMessage: T_MAXSTRING;
+	tonMotionWatchDog: TON;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF NOT __ISVALIDREF( stMotionEpicsItf ) THEN
-   RETURN;
-END_IF
-// Restore axis parameters
-RestoreSettings();
-
-// catch high priority message
-// an extended error message from FB_MotionLogger will display cyclic errors and warning
-IF iMotionAxis.Error THEN
-   stMotionEpicsItf.bError := iMotionAxis.Error;
-   stMotionEpicsItf.nErrorId := iMotionAxis.ErrorID;
-   stMotionEpicsItf.sErrorMessage := iMotionAxis.Message;
-ELSIF iMotionInterlocks.Error THEN
-   stMotionEpicsItf.bError := iMotionInterlocks.Error;
-   stMotionEpicsItf.nErrorId := iMotionInterlocks.ErrorID;
-   stMotionEpicsItf.sErrorMessage := iMotionInterlocks.Message;
-ELSIF bLocalError THEN
-   stMotionEpicsItf.bError := bLocalError;
-   stMotionEpicsItf.sErrorMessage := bLocalMessage;
-// Warnings have lowest priority
-ELSIF iMotionInterlocks.Warning THEN
-   stMotionEpicsItf.sErrorMessage := iMotionInterlocks.Message;
-ELSE
-    IF stMotionEpicsItf.bBusy THEN
-        stMotionEpicsItf.sErrorMessage := '';
-    END_IF
-END_IF
-//
-THIS^.iMotionInterlocks.AxisStatus(
-                            HomeBusy:=THIS^.iMotionAxis.HomeBusy,
-                            PositiveDirection:=THIS^.iMotionAxis.PositiveMotionIsEnabled,
-                            NegativeDirection:=THIS^.iMotionAxis.NegativeMotionIsEnabled );
-
-iMoveRequest.MotionRequest(	HomeCmd:=bHomeCmd,
-                            MoveCmd:=bMoveCmd,
-                            HomeMode:=iMotionAxis.HomeMode,
-                            EnableMode:=eEnableMode,
-                            EnableDone:=iMotionAxis.AxisEnabled(),
-                            MoveOk:=iMotionInterlocks.MoveOk,
-                            PowerEnabled:=iMotionInterlocks.PowerEnabled
-                           );
-// Forward drive commands to interlock blocks
-THIS^.iMotionInterlocks.DriveCommands(Enable:=THIS^.stMotionEpicsItf.bEnable, NewMoveReq:=iMoveRequest.NewMoveReq, Reset:=THIS^.iMotionAxis.ResetDone);
-
-bPrepareDisable R= iMoveRequest.NewMoveReq;
-
-// Forward Power block enable flags
-THIS^.iMotionAxis.PowerEnables(Enable:=iMotionInterlocks.PowerEnabled,
-                        Enable_Positive:=iMotionInterlocks.MoveForwardEnabled,
-                        Enable_Negative:=iMotionInterlocks.MoveBackwardEnabled );
-
-
-//
-IF THIS^.stMotionEpicsItf.bReset THEN
-   // Relese motion cmds
-   THIS^.ClearVars(Done:=FALSE);
-   // Forward general reset event
-   THIS^.iMotionAxis.Reset();
-   THIS^.stMotionEpicsItf.bReset := FALSE;
-END_IF
-
-// When reset is done axis is standstill
-// safe to remove power
-IF iMotionAxis.ResetDone THEN
-    THIS^.stMotionEpicsItf.bEnable := FALSE;
-END_IF
-//
-ftStopExec(CLK:=iMoveRequest.Execute);
-// Halt is always a user stop but not an interlock event or a reset.
-bHaltEvent S= ftStopExec.Q AND ((iMotionAxis.HomeBusy AND (nCommandLocal=10))
-                            OR(iMotionAxis.MoveAbsoluteBusy AND (nCommandLocal=3)));
-
-bHaltEvent R= THIS^.iMotionAxis.HaltDone OR THIS^.iMotionAxis.ResetDone;
-//
-THIS^.iMotionAxis.Halt(Deceleration:=stMotionEpicsItf.fDeceleration);
-
-// Interlocks event i.e limit hit
-rtInterlockEvent(CLK:=iMotionInterlocks.InterlockEvent);
-
-// Drive state machine
-StateMachine();
-
-// Move done, or aborted? prepare disable.
-// we'll wait for axis to be in standstill and this state machine to be idling.
-ftStopExec(CLK:=stMotionEpicsItf.bExecute);
-THIS^.bPrepareDisable S= (eEnableMode = E_StageEnableMode.DURING_MOTION ) AND THIS^.ftStopExec.Q;
-
-// Forward axis state to brake FB
-THIS^.iBrake.AxisState := iMotionAxis.AxisState;
-// Read Axis Parameter
-THIS^.iMotionAxis.ReadAxisParams(Enable:=TRUE, RefreshDelay:=T#1S);
-
-// Save and Restore
-THIS^.iMotionAxis.SaveAxisParams(Enable:=TRUE);
-
-// update EPICS status
-iEpicsMotionParamsStatus.MotionParamsAndStatus( PowerEnabled := iMotionInterlocks.PowerEnabled,
-                                                PowerIsEnabled := iMotionAxis.PowerIsEnabled,
-                                                Execute := iMoveRequest.Execute,
-                                                LimHome := iMotionInterlocks.LimHome,
-                                                MoveBackwardEnabled := iMotionInterlocks.MoveBackwardEnabled,
-                                                MoveForwardEnabled := iMotionInterlocks.MoveForwardEnabled,
-                                                MeasuredPositionDiff := iMotionAxis.MeasuredPositionDiff,
-                                                MeasuredPosition := iMotionAxis.MeasuredPosition,
-                                                MeasuredVelocity := iMotionAxis.MeasuredVelocity,
-                                                PowerOverride := iMotionAxis.PowerOverride,
-                                                Busy := iMotionAxis.Busy,
-                                                HomeDone := iMotionAxis.HomeDone
-                                               );]]></ST>
+      <ST><![CDATA[// IF NOT __ISVALIDREF( stMotionEpicsItf ) THEN
+//    RETURN;
+// END_IF
+// 
+// // Restore axis parameters
+// RestoreSettings();
+// 
+// // catch high priority message
+// // an extended error message from FB_MotionLogger will display cyclic errors and warning
+// IF iMotionAxisNC.Status.bError THEN
+// 	iMoveRequest.MotionStatus( bError := iMotionAxisNC.Status.bError,
+// 								nErrorId := iMotionAxisNC.Status.nErrorID,
+// 								sErrorMessage:= iMotionAxisNC.Status.sMessage 
+// 							);
+// ELSIF iMotionInterlocks.Error THEN
+// 	iMoveRequest.MotionStatus( bError := iMotionInterlocks.Error,
+// 								nErrorId := iMotionInterlocks.ErrorID,
+// 								sErrorMessage:= iMotionInterlocks.Message 
+// 							);
+// // Warnings have lowest priority
+// ELSIF iMotionInterlocks.Warning THEN
+// 	iMoveRequest.MotionStatus( bError := FALSE,
+// 								nErrorId := 0,
+// 								sErrorMessage:= iMotionInterlocks.Message 
+// 							);
+// END_IF
+// 
+// //
+// rtReset(CLK:=iMoveRequest.Status.bReset);
+// rtResetDone(CLK:=iMotionAxisNC.Status.bResetDone);
+// 
+// IF rtReset.Q THEN
+//    // Forward general reset event
+//    iMotionAxisNC.Reset();
+//  ELSIF rtResetDone.Q THEN
+// 	// Reset EPICS ENbale, disbale drive power.
+// 	iMoveRequest.ClearEnable();
+// END_IF
+// 
+// //
+// iMotionInterlocks.AxisStatus(
+//       	HomeBusy:=iMotionAxisNC.Status.bHomeBusy,
+//       	PositiveDirection:=iMotionAxisNC.Status.bPositiveMotionIsEnabled,
+//        	NegativeDirection:=iMotionAxisNC.Status.bNegativeMotionIsEnabled 
+// );
+// //
+// iMoveRequest.MotionRequest(
+// 	EnableDone:=iMotionAxisNC.AxisEnabled(),
+// 	MoveOk:=iMotionInterlocks.MoveOk
+// );
+// // Forward drive commands to interlock blocks
+// iMotionInterlocks.DriveCommands(	
+// 	Enable:= iMoveRequest.Status.bEnable,
+// 	NewMoveReq:=iMoveRequest.Status.bNewMoveReq, 
+// 	Reset:=iMotionAxisNC.Status.bResetDone
+// );
+// // Forward Power block enable flags
+// iMotionAxisNC.Power(
+// 	Enable:=iMotionInterlocks.PowerEnabled,
+// 	Enable_Positive:=iMotionInterlocks.MoveForwardEnabled,
+// 	Enable_Negative:=iMotionInterlocks.MoveBackwardEnabled,
+//     Override	:= 100.0,
+//     BufferMode	:= MC_Aborting
+// );
+// 
+// ftStopExec(CLK:=stMotionEpicsItf.bExecute);
+// // Halt is always a user stop but not an interlock event or a reset.
+// bStop := ftStopExec.Q AND ((iMotionAxisNC.Status.bHomeBusy AND (iMoveRequest.Status.nCommand=10))
+//                             OR(iMotionAxisNC.Status.bMoveAbsoluteBusy AND (iMoveRequest.Status.nCommand=3)));
+// 
+// IF bStop THEN
+// 	iMotionAxisNC.Halt(Deceleration:=stMotionEpicsItf.fDeceleration);
+// 	bStop := FALSE;
+// END_IF
+// 
+// // Interlocks event i.e limit hit
+// rtInterlockEvent(CLK:=iMotionInterlocks.InterlockEvent);
+// 
+// // Drive state machine
+// StateMachine();
+// 
+// // Forward axis state to brake FB
+// iBrake.AxisState := iMotionAxisNC.Status.eAxisState;
+// // Read Axis Parameter
+// iMotionAxisNC.ReadAxisParams(Enable:=TRUE, RefreshDelay:=T#1S);
+// 
+// // Save and Restore
+// iMotionAxisNC.SaveAxisParams(Enable:=TRUE);
+// 
+// // update EPICS status
+// iEpicsMotionParamsStatus.MotionParamsAndStatus( 
+// 						   PowerEnabled := iMotionInterlocks.PowerEnabled,
+//                            PowerIsEnabled := iMotionAxisNC.Status.bPowerIsEnabled,
+//                            Execute := iMoveRequest.Status.bExecute,
+//                            LimHome := iMotionInterlocks.LimHome,
+//                            MoveBackwardEnabled := iMotionInterlocks.MoveBackwardEnabled,
+//                            MoveForwardEnabled := iMotionInterlocks.MoveForwardEnabled,
+//                            MeasuredPositionDiff := iMotionAxisNC.Status.fMeasuredPositionDiff,
+//                            MeasuredPosition := iMotionAxisNC.Status.fMeasuredPosition,
+//                            MeasuredVelocity := iMotionAxisNC.Status.fMeasuredVelocity,
+//                            PowerOverride := iMotionAxisNC.Status.fPowerOverride,
+//                            Busy := iMotionAxisNC.Status.bBusy,
+//                            HomeDone := iMotionAxisNC.Status.bHomeDone
+//                   	);]]></ST>
     </Implementation>
     <Method Name="CallAfterInit" Id="{f39ddf47-4815-43e7-8049-e534fb9f6092}">
       <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
 VAR_INPUT
-    stMotionEpicsItf : REFERENCE TO ST_MotionEpicsInterface;
     iBrake : I_Brake;
     iMotionInterlocks : I_MotionInterlocks;
     iMotionLogger : I_MotionLogger;
     iMotionAxis: I_MotionAxis;
     iMoveRequest : I_MoveRequest;
     iEpicsMotionParamsStatus : I_EpicsMotionParamsStatus;
+	iMotionDriveStateMachine : I_MotionDriveStateMachine;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.stMotionEpicsItf REF=stMotionEpicsItf;
-THIS^.iMotionAxis := iMotionAxis;
+        <ST><![CDATA[THIS^.iMotionAxis := iMotionAxis;
 THIS^.iMotionLogger:=iMotionLogger;
 THIS^.iBrake:=iBrake;
 THIS^.iMotionInterlocks:=iMotionInterlocks;
 THIS^.iMoveRequest :=iMoveRequest;
-THIS^.iEpicsMotionParamsStatus := iEpicsMotionParamsStatus;]]></ST>
+THIS^.iEpicsMotionParamsStatus := iEpicsMotionParamsStatus;
+THIS^.iMotionDriveStateMachine := iMotionDriveStateMachine;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="ClearVars" Id="{fc3a5981-a4d7-4a2d-bb30-c09c583c9e55}">
-      <Declaration><![CDATA[METHOD ClearVars
-VAR_INPUT
-    Done : BOOL;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[stMotionEpicsItf.bDone := Done;
-stMotionEpicsItf.bBusy := FALSE;
-// falling edge here when target is reached, move halted
-stMotionEpicsItf.bExecute := FALSE;
-// release the cmds
-THIS^.bHomeCmd:=FALSE;
-THIS^.bMoveCmd:=FALSE;
-
-]]></ST>
-      </Implementation>
-    </Method>
-    <Property Name="EnableMode" Id="{b16f2630-6990-4b39-b9f8-520a45141d0c}">
-      <Declaration><![CDATA[PROPERTY EnableMode : ENUM_StageEnableMode
-]]></Declaration>
-      <Get Name="Get" Id="{7a51a46e-96ce-4c74-a79d-9c4933dd0bbb}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[EnableMode := eEnableMode;]]></ST>
-        </Implementation>
-      </Get>
-      <Set Name="Set" Id="{45f0a372-ebc2-415b-8bac-12fafdac995e}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[eEnableMode := EnableMode;]]></ST>
-        </Implementation>
-      </Set>
-    </Property>
     <Method Name="FB_Init" Id="{927f7c72-9006-42d1-8ac3-5d4ce66d6511}">
       <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
 //The return value is not evaluated. For a specific influence, you can also declare the
@@ -296,75 +207,24 @@ METHOD FB_Init: BOOL
 VAR_INPUT
     bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
-    stMotionEpicsItf : REFERENCE TO ST_MotionEpicsInterface;
     iBrake : I_Brake;
     iMotionInterlocks : I_MotionInterlocks;
     iMotionLogger : I_MotionLogger;
     iMotionAxis: I_MotionAxis;
     iMoveRequest : I_MoveRequest;
     iEpicsMotionParamsStatus : I_EpicsMotionParamsStatus;
+	iMotionDriveStateMachine : I_MotionDriveStateMachine;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.stMotionEpicsItf REF=stMotionEpicsItf;
-THIS^.iMotionAxis := iMotionAxis;
+        <ST><![CDATA[THIS^.iMotionAxis := iMotionAxis;
 THIS^.iMotionLogger:=iMotionLogger;
 THIS^.iBrake:=iBrake;
 THIS^.iMotionInterlocks:=iMotionInterlocks;
 THIS^.iMoveRequest :=iMoveRequest;
 THIS^.iEpicsMotionParamsStatus := iEpicsMotionParamsStatus;
+THIS^.iMotionDriveStateMachine := iMotionDriveStateMachine;
 
 ]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="Instances" Id="{d9be84d7-fa96-4fa1-bfc2-ca22602705a2}">
-      <Declaration><![CDATA[{attribute 'call_after_init'}
-METHOD Instances
-VAR_INPUT
-END_VAR
-
-VAR
-
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[// bMotionAxisNC  := __QUERYINTERFACE(iMotionAxisCommon, iMotionAxisNC) AND NOT __QUERYINTERFACE(iMotionAxisCommon,iMotionAxisCommonDS402);
-// bMotionAxisNCDS402  := __QUERYINTERFACE(iMotionAxisCommon,iMotionAxisNCDS402) AND __QUERYINTERFACE(iMotionAxisCommon,iMotionAxisCommonDS402);
-// bMotionAxisDS402  := __QUERYINTERFACE(iMotionAxisCommon, iMotionAxisDS402);
-// bMotionInterlocks  := __QUERYINTERFACE(iMotionInterlocks,iMotionInterlocks) AND NOT __QUERYINTERFACE(iMotionInterlocks,iLimSw);
-// bMotionInterlocksLimSw  := __QUERYINTERFACE(iMotionInterlocks,iMotionInterlocks) AND __QUERYINTERFACE(iMotionInterlocks,iLimSw);;]]></ST>
-      </Implementation>
-    </Method>
-    <Property Name="Name" Id="{0539b87b-757a-4783-8076-20784ec838b8}">
-      <Declaration><![CDATA[PROPERTY Name : STRING
-]]></Declaration>
-      <Get Name="Get" Id="{de5a88c8-697f-4c59-899f-a942f6da58ae}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[Name := sName;]]></ST>
-        </Implementation>
-      </Get>
-      <Set Name="Set" Id="{b5eeddf9-6a45-438a-aa8f-016a0e45ff45}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[sName := Name;]]></ST>
-        </Implementation>
-      </Set>
-    </Property>
-    <Method Name="PostHandling" Id="{c18eec9d-05c9-4186-8155-d464e6e1ef71}">
-      <Declaration><![CDATA[METHOD PostHandling
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="PreHandling" Id="{b70d40df-94ce-4a86-890c-8d206ac7e676}">
-      <Declaration><![CDATA[METHOD PreHandling
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Method Name="RestoreSettings" Id="{d72becd9-0474-4aeb-9ec0-8e4cee03f8d2}">
@@ -372,118 +232,6 @@ END_VAR
 VAR_INPUT
 END_VAR
 ]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="StateMachine" Id="{7234df4d-6700-4cf9-89b9-9798d5355b81}">
-      <Declaration><![CDATA[METHOD StateMachine
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[// // Drive state Machine here
-// CASE eMoveState OF
-//    E_MoveState.IDLING:
-//
-//         // Delay the disable until axis reach standstill
-//         // and this state machine is idling
-//         IF bPrepareDisable AND iMotionAxis.StandStill THEN
-//             bPrepareDisable := FALSE;
-//             stMotionEpicsItf.bEnable := FALSE;
-//
-//         ELSIF iMoveRequest.ExecMove OR iMoveRequest.ExecHome THEN
-// 			   // When we start, set the busy/done appropriately
-// 			   stMotionEpicsItf.bBusy := TRUE;
-// 			   stMotionEpicsItf.bDone := FALSE;
-// 			   // reset error flag
-// 			   stMotionEpicsItf.sErrorMessage := '';
-//                eMoveState := E_MoveState.INIT;
-//
-//         ELSIF stMotionEpicsItf.bError THEN
-//                eMoveState := E_MoveState.ERROR;
-//         END_IF
-//
-//    E_MoveState.INIT:
-//
-// 		CASE iMoveRequest.nCommand OF
-// 			E_EpicsMotorCmd.MOVE_ABSOLUTE:
-//                eMoveMode := E_EpicsMotorCmd.MOVE_ABSOLUTE;
-//                bCmdExecute := bExecMove AND (nCommandLocal=3);
-// 			E_EpicsMotorCmd.HOME:
-//                eMoveMode := E_EpicsMotorCmd.HOME;
-//                bCmdExecute := nCommandLocal=10 AND bExecHome;
-// 		END_CASE
-//
-// 		IF bExecMove AND (iMoveRequest.nCommand=3) THEN
-//             // Activate backlash compensation
-//             iMotionAxis.BacklashCompensationActive(Active:=TRUE, RampVelocity:=stMotionEpicsItf.fVelocity/10.0);
-//             iMotionAxis.MoveAbsolute( Position:=stMotionEpicsItf.fPosition,
-// 									  Velocity := stMotionEpicsItf.fVelocity,
-// 									  Acceleration := stMotionEpicsItf.fAcceleration,
-// 									  Deceleration := stMotionEpicsItf.fDeceleration
-// 									);
-//
-// 		ELSIF bExecHome AND (iMoveRequest.nCommand=10)THEN
-//             // Deactivate backlash compensation
-//             iMotionAxis.BacklashCompensationActive(Active:=FALSE, RampVelocity:=0.0);
-// 			iMotionAxis.home();
-// 		END_IF
-// 		// configure and start move.
-// 		tonSyncTimer.IN:=TRUE;
-//         eMoveState := E_MoveState.STARTED;
-//    E_MoveState.STARTED:
-// 		IF stMotionEpicsItf.bError THEN
-// 			eMoveState := E_MoveState.ERROR;
-// 			// Move Started? use a timer to force quit this state if no response from axis
-// 		ELSIF tonSyncTimer.Q THEN
-//            bLocalError := TRUE;
-//            bLocalMessage := 'No Response from Axis';
-//            eMoveState := E_MoveState.ERROR;
-// 			// when we get this signal, all motion prerequisite are met and axis is in motion.
-// 			// this must  be implemented within iMotionAxis
-// 		ELSIF iMotionAxis.StartMove() THEN
-//            eMoveState := E_MoveState.IN_PROGRESS;
-// 		END_IF
-//
-//    E_MoveState.IN_PROGRESS :
-//
-// 		IF stMotionEpicsItf.bError THEN
-//            eMoveState := E_MoveState.ERROR;
-// 		// Move interupted: halt or Reset in motion will
-// 		// raise Aborted flag on NC axis.
-// 		ELSIF iMotionAxis.Aborted OR rtInterlockEvent.Q THEN
-//            eMoveState := E_MoveState.INTERRUPTED;
-//
-// 		ELSIF  rtTarget.Q OR rtHomed.Q  THEN
-//            eMoveState := E_MoveState.REACHED;
-// 		END_IF
-//
-//    E_MoveState.INTERRUPTED:
-//
-// 		IF iMotionInterlocks.InterlockEvent THEN
-// 		   ClearVars(Done:=TRUE);
-// 		   eMoveState := E_MoveState.IDLING;
-// 		// Wait here for halt or reset done or clearing limit state to be restored
-// 		ELSIF iMotionAxis.AbortDone THEN
-//            ClearVars(Done:=TRUE);
-//            eMoveState := E_MoveState.IDLING;
-//        END_IF
-//
-//    E_MoveState.REACHED:
-//        ClearVars(Done:=TRUE);
-//        eMoveState := E_MoveState.IDLING;
-//
-//    E_MoveState.ERROR:
-//        ClearVars(Done:=FALSE);
-//        stMotionEpicsItf.bEnable := FALSE;
-//        IF ftError.Q THEN
-//            eMoveState := E_MoveState.IDLING;
-//        END_IF
-//
-// END_CASE]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="UpdateParamAndStatus" Id="{bec7d97e-d393-4df3-816c-df000a420230}">
-      <Declaration><![CDATA[METHOD UpdateParamAndStatus]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
