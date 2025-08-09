@@ -18,21 +18,9 @@ END_VAR
     RETURN;
 END_IF
 
-AxisRef.ReadStatus();
+fbMcHalt(Axis := AxisRef );
 
-CASE eHaltState OF
-    WaitingHalt :
-        fbMcHalt(
-        Axis := AxisRef,
-        Execute := FALSE);
 
-    Halting :
-        fbMcHalt(
-        Axis := AxisRef,
-        Execute := TRUE
-        );
-
-END_CASE
 
 ]]></ST>
     </Implementation>

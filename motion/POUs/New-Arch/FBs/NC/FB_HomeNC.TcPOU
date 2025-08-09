@@ -9,8 +9,8 @@ VAR
     iMotionLogger : I_MotionLogger;
 	{attribute 'hide'}
     iLimSwStatus : I_LimSwStatus;
-	{attribute 'hide'}
     fbMcHome : MC_Home;
+	fbMcSetPosition : MC_SetPosition;
 	fPosition : LREAL;
 	fOffset : LREAL;
 	{attribute 'hide'}
@@ -31,8 +31,10 @@ VAR
 	{attribute 'hide'}
 	bHomeSwHitFirst : BOOL;
 	{attribute 'hide'}
-	bDone : BOOL;
-
+	bHLDone : BOOL;
+	{attribute 'hide'}
+    rtDone : R_TRIG;
+	bHomeDone: BOOL;
 END_VAR
 
 ]]></Declaration>
@@ -48,13 +50,17 @@ CASE eHomeMode OF
         fbMcHome.Options.SyncDirection := MC_Direction.MC_Positive_Direction;
         fbMcHome.Options.ClearPositionLag := TRUE;
         fbMcHome.bCalibrationCam := NOT iLimSwStatus.LimBackward;
+		fbMcSetPosition.Execute:=fbMcHome.Done;
+		bHomeDone := fbMcHome.Done AND fbMcSetPosition.Done;
        // bMove := TRUE;
     E_EpicsHomeCmd.HIGH_LIMIT:
         fbMcHome.HomingMode := MC_HomingMode.MC_DefaultHoming;
-        fbMcHome.Options.SearchDirection := MC_Direction.MC_Negative_Direction;
-        fbMcHome.Options.SyncDirection := MC_Direction.MC_Positive_Direction;
-        fbMcHome.Options.ClearPositionLag := TRUE;
-        fbMcHome.bCalibrationCam := iLimSwStatus.LimForward;
+        fbMcHome.Options.SearchDirection := MC_Direction.MC_Positive_Direction;
+        fbMcHome.Options.SyncDirection := MC_Direction.MC_Negative_Direction;
+        //fbMcHome.Options.ClearPositionLag := TRUE;
+        fbMcHome.bCalibrationCam := NOT iLimSwStatus.LimForward;
+		fbMcSetPosition.Execute:=fbMcHome.Done;
+		bHomeDone := fbMcHome.Done AND fbMcSetPosition.Done;
     E_EpicsHomeCmd.HOME_VIA_LOW:
 		fbMcHome.bCalibrationCam := iLimSwStatus.LimHome OR NOT iLimSwStatus.LimBackward;
 		CASE nHomeState OF
@@ -63,7 +69,6 @@ CASE eHomeMode OF
 				fbMcHome.Options.ClearPositionLag := TRUE;
 				fbMcHome.Options.SearchDirection := MC_Direction.MC_Negative_Direction;
 				fbMcHome.Options.SyncDirection := MC_Direction.MC_Positive_Direction;
-				bDone := FALSE;
 				IF fbMcHome.Busy THEN
 					nHomeState := 1;	
 				END_IF
@@ -85,6 +90,7 @@ CASE eHomeMode OF
 			2:
 				// Second Homing stage, this time around on the homing switch
 				IF bBackwardLimHitFirst AND fbMcHome.Done THEN
+					bHLDone := TRUE;
 					fbMcHome.Options.SearchDirection := MC_Direction.MC_Positive_Direction;
 					fbMcHome.Options.SyncDirection := MC_Direction.MC_Negative_Direction;
 					fbMcHome.Options.ClearPositionLag := TRUE;
@@ -95,8 +101,10 @@ CASE eHomeMode OF
 					nHomeState := 3;			
 				END_IF
 			3: // Done
-				IF fbMcHome.Done THEN
-					bDone:=fbMcHome.Done;
+				fbMcSetPosition.Execute:=fbMcHome.Done;
+				bHomeDone := fbMcHome.Done AND fbMcSetPosition.Done;
+				IF bHomeDone THEN
+					bHLDone := FALSE;
 					nHomeState := 0;	
 				END_IF
 		END_CASE
@@ -108,7 +116,7 @@ CASE eHomeMode OF
 				fbMcHome.Options.ClearPositionLag := TRUE;
 				fbMcHome.Options.SearchDirection := MC_Direction.MC_Positive_Direction;
 				fbMcHome.Options.SyncDirection := MC_Direction.MC_Negative_Direction;
-				bDone := FALSE;
+				
 				IF fbMcHome.Busy THEN
 					nHomeState := 1;	
 				END_IF
@@ -130,18 +138,20 @@ CASE eHomeMode OF
 			2:
 				// Second Homing stage, this time around on the homing switch
 				IF bFowardLimHitFirst AND fbMcHome.Done THEN
+					bHLDone := TRUE;
 					fbMcHome.Options.SearchDirection := MC_Direction.MC_Negative_Direction;
 					fbMcHome.Options.SyncDirection := MC_Direction.MC_Positive_Direction;
 					fbMcHome.Options.ClearPositionLag := TRUE;
-					//fbMcHome.bCalibrationCam := iLimSwStatus.LimHome OR NOT iLimSwStatus.LimForward;
 					// restart homing toward home switch
 					THIS^.Home(Position:=fbMcHome.Position, BufferMode:=MC_Aborting);
 					bFowardLimHitFirst := FALSE;
 					nHomeState := 3;			
 				END_IF
 			3: // Done
-				IF fbMcHome.Done THEN
-					bDone:=fbMcHome.Done;
+				fbMcSetPosition.Execute:=fbMcHome.Done;
+				bHomeDone := fbMcHome.Done AND fbMcSetPosition.Done;
+				IF bHomeDone THEN
+					bHLDone := FALSE;
 					nHomeState := 0;	
 				END_IF
 		END_CASE
@@ -151,9 +161,11 @@ CASE eHomeMode OF
         fbMcHome.Options.SearchDirection := MC_Direction.MC_Undefined_Direction;
         fbMcHome.Options.SyncDirection := MC_Direction.MC_Undefined_Direction;
         fbMcHome.Options.ClearPositionLag := TRUE;
+		bHomeDone := fbMcHome.Done;
 END_CASE
 
 fbMcHome(Axis := AxisRef);
+fbMcSetPosition(Axis := AxisRef, Mode:=0, Position:=fPosition);
 ]]></ST>
     </Implementation>
     <Property Name="Aborted" Id="{b3440598-2192-4aa3-bd94-648810782f1d}">
@@ -214,11 +226,8 @@ THIS^.iLimSwStatus:= iLimSwStatus;]]></ST>
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[IF THIS^.eHomeMode <> E_EpicsHomeCmd.NONE THEN
-    Done := bDone;
-ELSE
-    Done :=TRUE;
-END_IF]]></ST>
+          <ST><![CDATA[Done := bHomeDone;
+]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -265,6 +274,18 @@ THIS^.iMotionLogger := iMotionLogger;
 THIS^.iLimSwStatus:= iLimSwStatus;]]></ST>
       </Implementation>
     </Method>
+    <Property Name="HLDone" Id="{20fb5295-3ffb-4772-9ef6-2e47f50a3f94}">
+      <Declaration><![CDATA[PROPERTY HLDone : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{db41cbe0-bc47-4b18-a6d4-59eff84f4658}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[HLDone := bHLDone;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="Home" Id="{bc450e32-fe3c-4fef-961a-7ec21133b561}">
       <Declaration><![CDATA[METHOD  Home
 VAR_INPUT
@@ -274,15 +295,18 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF THIS^.eHomeMode = E_EpicsHomeCmd.NONE THEN
+	THIS^.bHomeDone := TRUE;
     RETURN;
 END_IF
 
-fbMcHome(Execute := FALSE, Axis := THIS^.AxisRef);
+THIS^.fPosition := Position;
+fbMcHome(Execute := FALSE, Axis := THIS^.AxisRef, Done=>bHomeDone);
 // dont start homing unless hardware limits are in correct state.
 fbMcHome(	Execute := iLimSwStatus.LimBackward AND iLimSwStatus.LimForward AND NOT iLimSwStatus.LimHome,
             Axis := THIS^.AxisRef,
-            Position:=Position,
-            BufferMode:=BufferMode);
+			Position := Position,
+            BufferMode:=BufferMode 
+		);
 ]]></ST>
       </Implementation>
     </Method>

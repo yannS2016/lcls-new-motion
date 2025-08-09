@@ -6,6 +6,7 @@ VAR
     {attribute 'no_copy'}
     AxisRef : REFERENCE TO AXIS_REF;
     fbMcPower : MC_Power;
+
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -19,30 +20,6 @@ fbMcPower(
     Axis := AxisRef,
 );]]></ST>
     </Implementation>
-    <Property Name="Aborted" Id="{bde69de1-325d-451d-b0a6-8cb993ec4d33}">
-      <Declaration><![CDATA[PROPERTY Aborted : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{8c49db22-f93b-4013-b841-4a43a6216501}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="Active" Id="{49693f07-c88b-4b06-be0c-0dc75c8f5fac}">
-      <Declaration><![CDATA[PROPERTY Active : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{b11a8d39-0dfc-40d5-ab4e-e7fe1f8bda7c}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[Active := THIS^.fbMcPower.Status;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
     <Property Name="Busy" Id="{1d88cc85-9bbc-4836-b583-4a9d93ccadc7}">
       <Declaration><![CDATA[PROPERTY Busy : BOOL
 ]]></Declaration>
@@ -63,6 +40,19 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.AxisRef REF= AxisRef;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DisablePower" Id="{577374a6-9c8d-40f0-8c0b-b6bac87de3d0}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD DisablePower
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(*Use to remove power in DURING_MOTION driving mode *)
+THIS^.fbMcPower(
+    Axis := THIS^.AxisRef,
+    Enable := FALSE
+);
+]]></ST>
       </Implementation>
     </Method>
     <Property Name="Done" Id="{47775ab2-32ed-415e-8f00-7dc8c50e6589}">
@@ -152,7 +142,8 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.fbMcPower(
+        <ST><![CDATA[(*The calling block must provide homing directional Power enables override *)
+THIS^.fbMcPower(
     Axis := THIS^.AxisRef,
     Enable := Enable,
     Enable_Positive := Enable_Positive,
@@ -160,7 +151,6 @@ END_VAR
     BufferMode := BufferMode,
     Override :=Override
 );
-
 ]]></ST>
       </Implementation>
     </Method>

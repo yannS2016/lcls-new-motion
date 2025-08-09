@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_PowerInterlockNC" Id="{b222b3b1-9ec8-48b5-a676-fb4737d78484}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_PowerInterlockNC IMPLEMENTS I_Power
+VAR
+	{attribute 'no_copy'}
+    AxisRef : REFERENCE TO AXIS_REF;
+    fbMcPower : MC_Power;
+	iMotionInterlocks :  I_MotionInterlocks;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT __ISVALIDREF(AxisRef) THEN
+    RETURN;
+END_IF
+
+THIS^.fbMcPower(
+    Axis := THIS^.AxisRef,
+    Enable := iMotionInterlocks.PowerEnabled,
+    Enable_Positive := THIS^.AxisRef.Status.Homing OR iMotionInterlocks.MoveForwardEnabled,
+    Enable_Negative := THIS^.AxisRef.Status.Homing OR iMotionInterlocks.MoveBackwardEnabled,
+    BufferMode := MC_Aborting,
+    Override :=100.0
+);
+
+]]></ST>
+    </Implementation>
+    <Property Name="Aborted" Id="{a40d560f-cb13-40c8-871a-70b1b5e580cd}">
+      <Declaration><![CDATA[PROPERTY Aborted : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{ae9fac66-d54f-4714-98ad-39ad36de3149}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Active" Id="{d6c9da44-25b9-488b-a80a-eee284997645}">
+      <Declaration><![CDATA[PROPERTY Active : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{f9278d87-b939-4e7e-b0a6-604fbce4fee7}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Active := THIS^.fbMcPower.Status;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Busy" Id="{f40114b3-3f08-4f4a-a270-d3c7dbcc33f3}">
+      <Declaration><![CDATA[PROPERTY Busy : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{b632ad50-032d-46e4-bb19-29ba643231bd}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Busy := THIS^.fbMcPower.Busy;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="CallAfterInit" Id="{47278372-4e99-4062-bc63-85d7fb70b1c2}">
+      <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
+VAR_INPUT
+	AxisRef : REFERENCE TO AXIS_REF;
+    iMotionInterlocks : I_MotionInterlocks;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.AxisRef := AxisRef;
+THIS^.iMotionInterlocks  := iMotionInterlocks ;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DisablePower" Id="{3f7f470b-1de2-4834-a415-04b7387e73a4}">
+      <Declaration><![CDATA[METHOD DisablePower
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.fbMcPower(
+    Axis := THIS^.AxisRef,
+    Enable := FALSE
+);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Done" Id="{04018364-02da-48ac-800e-dc96807da46a}">
+      <Declaration><![CDATA[PROPERTY Done : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{d6e10970-8b19-405f-ba61-2e1a936ae947}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Error" Id="{a5d4277d-4b1c-4b5d-8489-504e28f4f29f}">
+      <Declaration><![CDATA[PROPERTY Error : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{56981ac0-aedb-42f6-a189-3baee283f9b6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Error := THIS^.fbMcPower.Error;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ErrorID" Id="{f156f453-7f62-427d-b037-72b49802e7f6}">
+      <Declaration><![CDATA[PROPERTY ErrorID : UDINT
+]]></Declaration>
+      <Get Name="Get" Id="{ba340d84-a0a4-4e74-9b12-a4147bb402cd}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ErrorID := THIS^.fbMcPower.ErrorID;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="FB_Init" Id="{0169b8cc-7052-4a66-b0c8-a128928652ca}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
+	AxisRef : REFERENCE TO AXIS_REF;
+    iMotionInterlocks : I_MotionInterlocks;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.AxisRef := AxisRef;
+THIS^.iMotionInterlocks  := iMotionInterlocks ;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Message" Id="{2a263bc1-cf5e-43a0-8831-da4880f410c3}">
+      <Declaration><![CDATA[PROPERTY Message : T_MAXSTRING
+]]></Declaration>
+      <Get Name="Get" Id="{844fe6ee-1a07-48c9-9f1b-937153c25348}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Override" Id="{49df3625-b036-4680-8dd0-d616b9f7a3d6}">
+      <Declaration><![CDATA[PROPERTY Override : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{c9f1129d-53e4-4ac2-8e76-79d53d99edd3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Override := THIS^.fbMcPower.Override;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Power" Id="{0740c29a-6c13-440d-a0fb-1e146f329ced}">
+      <Declaration><![CDATA[// this implementation has an interlock interface reference.
+METHOD Power
+VAR_INPUT
+	Enable	: BOOL;
+	Enable_Positive	: BOOL;
+	Enable_Negative	: BOOL;
+	Override	: LREAL := 100;
+	BufferMode	: MC_BufferMode := .MC_BufferMode.MC_Aborting;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.fbMcPower(
+    Axis := THIS^.AxisRef,
+    BufferMode :=BufferMode,
+    Override :=Override
+);
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="PowerIsEnabled" Id="{441f8b32-5176-45ba-a37e-3ef904537368}">
+      <Declaration><![CDATA[PROPERTY PowerIsEnabled : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{4e49316f-aff8-4615-a9ab-55e4f0fa5fbf}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[PowerIsEnabled :=THIS^.fbMcPower.Status;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>
