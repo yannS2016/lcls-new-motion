@@ -1,0 +1,252 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_MotionDriveStateMachine_Test" Id="{d39824fa-0087-4628-a7b4-a03e3ade9ea2}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionDriveStateMachine_Test EXTENDS FB_TestSuite
+VAR
+	stMotionEpicsItf :  ARRAY [1..8] OF  ST_MotionEpicsInterface;
+	fbMotionAxisNC_TestDouble : ARRAY [1..8] OF FB_MotionAxisNC_TestDouble;
+	fbMoveRequest : ARRAY [1..8] OF FB_MoveRequest[ (stMotionEpicsItf:=stMotionEpicsItf[1]),
+													(stMotionEpicsItf:=stMotionEpicsItf[2]),
+													(stMotionEpicsItf:=stMotionEpicsItf[3]),
+													(stMotionEpicsItf:=stMotionEpicsItf[4]),
+													(stMotionEpicsItf:=stMotionEpicsItf[5]),
+													(stMotionEpicsItf:=stMotionEpicsItf[6]),
+													(stMotionEpicsItf:=stMotionEpicsItf[7]),
+													(stMotionEpicsItf:=stMotionEpicsItf[8])];
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[GIvenIdlingStateIfErrorGotoErrorState_Test1();
+GIvenIdlingStateIfValidatedMoveRequestThenGotoInitState_Test2();
+GIvenIdlingStateAndValidatedMoveRequestIfWatchDogTImerOutThenGotoErrorState_Test3();]]></ST>
+    </Implementation>
+    <Method Name="GIvenErrorStateAndResetMoveRequestDisableDriveIfNoErrorGotoIdlingState_Test18" Id="{9f4d5dc6-d662-4b77-962a-62bc9a422730}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenErrorStateAndResetMoveRequestDisableDriveIfNoErrorGotoIdlingState_Test18
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GIvenIdlingStateAndValidatedMoveRequestIfWatchDogTImerOutThenGotoErrorState_Test3" Id="{4057a05c-3e1d-4efd-850a-994007937f45}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenIdlingStateAndValidatedMoveRequestIfWatchDogTImerOutThenGotoErrorState_Test3
+VAR_INST
+	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=fbMotionAxisNC_TestDouble[3], iMoveRequest:=fbMoveRequest[3]);
+	expectedMoveState : E_MoveState := E_MoveState.ERROR;
+	fbTestTimer: TON := (IN:=TRUE, PT:=T#6S);
+	nTestStep : INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST(__POUNAME());
+CASE nTestStep OF
+	0:
+		fbMotionDriveStateMachine.MoveState := E_MoveState.IDLING;
+		fbMotionDriveStateMachine.StateMachine(InterlockEvent:=FALSE, Error:=FALSE);
+		fbMoveRequest[3].MoveRequest( EnableDone:=TRUE, MoveOk:=TRUE);			
+		fbMoveRequest[3].MoveRequestTest(	HomeCmd:=FALSE,
+								MoveCmd:=TRUE,
+								HomeMode:=E_EpicsHomeCmd.NONE,
+								EnableMode:=E_StageEnableMode.ALWAYS,
+							 );
+		fbMoveRequest[3]();
+		fbMotionDriveStateMachine();
+		AssertTrue(Condition := fbMotionDriveStateMachine.WatchDogStatus, Message := 'Validated Move must set watchdog timer #1');
+		nTestStep := nTestStep + 1;
+	1:	
+		IF fbMotionDriveStateMachine.WatchDogTimeOut THEN
+			nTestStep := nTestStep + 1;
+		END_IF
+END_CASE
+
+fbMotionDriveStateMachine();
+fbTestTimer();
+
+IF nTestStep = 2 THEN
+	AssertEquals_INT(	Expected:=expectedMoveState, 
+					Actual:=fbMotionDriveStateMachine.MoveState, 
+					Message:='Drive Machine state must be ERROR #2');
+	AssertTrue(Condition := fbMotionDriveStateMachine.Error, Message := 'Motion Drive state mchine must be in error state #3');
+    TEST_FINISHED();
+ELSIF fbTestTimer.Q THEN
+    AssertTrue(Condition := FALSE, Message := CONCAT('Timed out at step: ', TO_STRING(nTestStep)));
+    TEST_FINISHED();
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GIvenIdlingStateIfErrorGotoErrorState_Test1" Id="{75334e61-4a8e-42c8-8f02-90286a33998c}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenIdlingStateIfErrorGotoErrorState_Test1
+VAR_INST
+	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=THIS^.fbMotionAxisNC_TestDouble[1], iMoveRequest:=THIS^.fbMoveRequest[1]);
+	expectedMoveState : E_MoveState := E_MoveState.ERROR;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST(__POUNAME());
+
+fbMotionDriveStateMachine.MoveState := E_MoveState.IDLING;
+fbMotionDriveStateMachine.StateMachine(InterlockEvent:=FALSE, Error:=TRUE);
+fbMotionDriveStateMachine();
+AssertEquals_INT(	Expected:=expectedMoveState, 
+					Actual:=fbMotionDriveStateMachine.MoveState, 
+					Message:='Drive Machine state must be ERROR #1');
+
+
+TEST_FINISHED();
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GIvenIdlingStateIfValidatedMoveRequestThenGotoInitState_Test2" Id="{aa69a2b8-1ec4-42f6-90ff-db1409a56e0d}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenIdlingStateIfValidatedMoveRequestThenGotoInitState_Test2
+VAR_INST
+	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=fbMotionAxisNC_TestDouble[2], iMoveRequest:=fbMoveRequest[2]);
+	expectedMoveState : E_MoveState := E_MoveState.INIT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST(__POUNAME());
+
+fbMotionDriveStateMachine.MoveState := E_MoveState.IDLING;
+fbMotionDriveStateMachine.StateMachine(InterlockEvent:=FALSE, Error:=FALSE);
+THIS^.fbMoveRequest[2].MoveRequest( EnableDone:=TRUE, MoveOk:=TRUE);			
+THIS^.fbMoveRequest[2].MoveRequestTest(	HomeCmd:=FALSE,
+                 		MoveCmd:=TRUE,
+                 		HomeMode:=E_EpicsHomeCmd.NONE,
+               			EnableMode:=E_StageEnableMode.ALWAYS,
+					 );
+THIS^.fbMoveRequest[2]();
+fbMotionDriveStateMachine();
+AssertEquals_INT(	Expected:=expectedMoveState, 
+					Actual:=fbMotionDriveStateMachine.MoveState, 
+					Message:='Drive Machine state must be INIT #1');
+
+ AssertTrue(Condition := THIS^.fbMoveRequest[2].Status.bExecute, Message := 'This move must be validated #2');
+ AssertTrue(Condition := THIS^.stMotionEpicsItf[2].bBusy, Message := 'Move Request must be Busy #3');
+ AssertFalse(Condition := THIS^.stMotionEpicsItf[2].bDone, Message := 'Move Request must not yet de Done #4');
+TEST_FINISHED();
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GIvenInitStateNCDS402MotionAxisValidatedMoveRequestAndAbsoluteMoveCmdThenActivateBacklashAndStartAbsoluteMoveThenGototToStartedState_Test4" Id="{43eeb062-71d8-479f-9f71-8075526b7a07}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenInitStateNCDS402MotionAxisValidatedMoveRequestAndAbsoluteMoveCmdThenActivateBacklashAndStartAbsoluteMoveThenGototToStartedState_Test4
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GIvenInitStateNCDS402MotionAxisValidatedMoveRequestAndHomeMoveCmdThenActivateBacklashAndStartHomeMoveThenGotoToStartedState_Test5" Id="{e68f7607-01a4-4bca-a69b-7344281706fc}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenInitStateNCDS402MotionAxisValidatedMoveRequestAndHomeMoveCmdThenActivateBacklashAndStartHomeMoveThenGotoToStartedState_Test5
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GIvenInitStateNCMotionAxisValidatedMoveRequestAndAbsoluteMoveCmdThenActivateBacklashAndStartAbsoluteMoveThenGotoToStartedState_Test3" Id="{8d46b128-d2cf-4a84-88c0-16810e3a0f71}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenInitStateNCMotionAxisValidatedMoveRequestAndAbsoluteMoveCmdThenActivateBacklashAndStartAbsoluteMoveThenGotoToStartedState_Test3
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GIvenInitStateNCMotionAxisValidatedMoveRequestAndHomeMoveCmdThenActivateBacklashAndStartAbsoluteMoveThenGotoToStartedState_Test6" Id="{31fb44ea-162e-472b-980f-9ed88057e4a4}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenInitStateNCMotionAxisValidatedMoveRequestAndHomeMoveCmdThenActivateBacklashAndStartAbsoluteMoveThenGotoToStartedState_Test6
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GIvenInPogressStateAndAbortedStatusFromAxisThenGotoInterruptedState_Test11" Id="{dd70d28c-558c-475a-a5fe-be88009b20c8}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenInPogressStateAndAbortedStatusFromAxisThenGotoInterruptedState_Test11
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GIvenInPogressStateAndAbsoluteMoveDoneStatusFromAxisThenGotoReachedState_Test12" Id="{71b62c81-c6e4-427d-b511-8611291b8cc9}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenInPogressStateAndAbsoluteMoveDoneStatusFromAxisThenGotoReachedState_Test12
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GIvenInPogressStateAndErrorThenGotoErrorState_Test10" Id="{28cb6bb1-ec96-4d23-af1d-fc11517a7c6e}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenInPogressStateAndErrorThenGotoErrorState_Test10
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GIvenInPogressStateAndHomeMoveDoneStatusFromAxisThenGotoReachedState_Test13" Id="{d2a45819-db3f-4a59-bee7-a248201f6ba7}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenInPogressStateAndHomeMoveDoneStatusFromAxisThenGotoReachedState_Test13
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GIvenInterruptedStateAndAbortDoneResetMoveDisablePowerThenGotoIdlingState_Test15" Id="{aca46138-8000-454b-a5cd-42c8131dd80b}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenInterruptedStateAndAbortDoneResetMoveDisablePowerThenGotoIdlingState_Test15
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GIvenInterruptedStateAndInterlockEventResetMoveDisablePowerThenGotoIdlingState_Test14" Id="{cf5f17a7-5c73-4aaa-8b09-859ec5e5d3f4}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenInterruptedStateAndInterlockEventResetMoveDisablePowerThenGotoIdlingState_Test14
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GIvenReachedStateAndAxisStandStillCompleteMoveRequestThenGotoIdlingState_Test16" Id="{83e676d8-5c2e-4536-a041-fe86ebe293f0}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenReachedStateAndAxisStandStillCompleteMoveRequestThenGotoIdlingState_Test16
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GIvenStartedStateAndBusyStatusFromAxisThenGotoInPorgressState_Test8" Id="{f833457a-0a08-46c9-a02f-278e95854b77}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenStartedStateAndBusyStatusFromAxisThenGotoInPorgressState_Test8
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GIvenStartedStatedAndErrorThenGotoErrorState_Test7" Id="{1f66d336-89a0-4d12-b7a7-63e152d0a1f3}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenStartedStatedAndErrorThenGotoErrorState_Test7
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
