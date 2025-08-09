@@ -2,11 +2,9 @@
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_ReadParameterNC_TestDouble" Id="{2d3a2979-0e7d-4c6e-bda2-88be2b8d08ba}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_ReadParameterNC_TestDouble IMPLEMENTS  I_ReadParameter
-VAR_INPUT
-END_VAR
-VAR_OUTPUT
-END_VAR
 VAR
+	bError : BOOL;
+	nErrorID : UDINT := 25000;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -38,1459 +36,385 @@ END_VAR
         </XmlArchive>
       </CFC>
     </Implementation>
-    <Property Name="Aborted" Id="{e30e2073-027c-4b90-b3a5-d7ebbfd419e8}">
+    <Property Name="Aborted" Id="{8474dbb5-4ab8-4e66-8860-ede44113b767}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY Aborted : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{64635025-b38d-4649-83df-bc72f94b00d5}">
+      <Get Name="Get" Id="{d7a4deed-1e3c-4686-bb9f-335ad5a82c0d}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Property Name="Active" Id="{fa07102f-8ec1-4814-8a0b-f141a6e39370}">
+    <Property Name="Active" Id="{3177fe79-1c6c-40b1-9b72-4b3a9fa98b18}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY Active : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{45004c38-9418-4028-800d-80082f11da75}">
+      <Get Name="Get" Id="{ba9aeebd-2459-4329-a455-498c49bb9a7b}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Property Name="AmsNetID" Id="{2593fd79-5c8f-4a03-bc2a-9f69d5da8ed3}">
+    <Property Name="AmsNetID" Id="{13032c34-1a15-4c38-bae9-db218d73487c}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY AmsNetID : T_AmsNetId
 ]]></Declaration>
-      <Get Name="Get" Id="{05d5f0ea-b438-4f97-9e24-c329517774d3}">
+      <Get Name="Get" Id="{a678eab7-7d12-4869-85b0-28f505eacd51}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Property Name="AxisReadParamsInit" Id="{d12d0d03-a275-49d9-9684-e7f2c5e7f09a}">
+    <Property Name="AxisReadParamsInit" Id="{e9512799-3f3f-4cf6-9ae0-b09056cb6a95}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY AxisReadParamsInit : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{c6b24a7b-edc1-4714-875d-d585f115ceb6}">
+      <Get Name="Get" Id="{d7fbc327-9208-4681-8395-d548536c2dc3}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Property Name="Busy" Id="{e704699b-439c-4923-97b5-ec26997e63de}">
+    <Property Name="Busy" Id="{813eb2f9-eff4-43c2-a176-fb7fa4f2a99c}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY Busy : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{770542f4-3ee9-49f0-b66c-707cf408993b}">
+      <Get Name="Get" Id="{83385d70-be19-437c-9e36-37f5bfbd406e}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Property Name="Done" Id="{19988b90-a024-4110-a4ca-101065043034}">
+    <Property Name="Done" Id="{246aab87-a153-4441-bbb2-b12b7d5d43bd}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY Done : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{e61de11f-216d-4220-bff9-6d1cd9676505}">
+      <Get Name="Get" Id="{f35d5fec-9278-40c8-955c-7aab2756eac8}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Property Name="EnInTargetTimeout" Id="{0212e5eb-a322-4d46-ab85-e681cc52c7b4}">
+    <Property Name="EnInTargetTimeout" Id="{a7f61ff7-0c72-4d94-9c9e-df55781cb77a}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY EnInTargetTimeout : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{52a18f42-15de-44e1-b902-e0299eefaf23}">
+      <Get Name="Get" Id="{6fe02f44-3976-4577-ae4e-6a870cd94ca1}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Property Name="EnMaxSoftPosLimit" Id="{5bdc63d3-5250-4f30-8088-b529855c72fe}">
+    <Property Name="EnMaxSoftPosLimit" Id="{03ac280f-5a51-4fdd-a9c8-5014b0cb14cb}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY EnMaxSoftPosLimit : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{78ed16ea-48a8-4e22-932d-8032244e30d7}">
+      <Get Name="Get" Id="{ed0aff96-064a-4e39-9710-c8296f92cc4b}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Property Name="EnMinSoftPosLimit" Id="{5276793b-06f7-4b8b-bdc6-2e2307556bd6}">
+    <Property Name="EnMinSoftPosLimit" Id="{405a6593-958a-4507-93a9-569ba4fc10c7}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY EnMinSoftPosLimit : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{ba72abb6-d234-49fc-8657-f36615c58118}">
+      <Get Name="Get" Id="{3b85d3b5-d659-434d-93ed-8b274266dd87}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Property Name="EnPositionLagMonitoring" Id="{388c17cf-fad9-4c53-9da0-6ca2bd052eee}">
+    <Property Name="EnPositionLagMonitoring" Id="{93dc6b0b-40f1-46dc-966d-5191c84dea3f}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY EnPositionLagMonitoring : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{0db5ec23-1f24-43cc-931c-7e59c137960c}">
+      <Get Name="Get" Id="{87b0144f-036e-4962-8381-78791258ec4a}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Property Name="EnPositionRangeMonitoring" Id="{496b4426-97e8-446d-b6f1-4cd6982f6504}">
+    <Property Name="EnPositionRangeMonitoring" Id="{bd2c1f49-c2f8-4ebe-acfd-5bace6d85466}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY EnPositionRangeMonitoring : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{6e2c3345-8ab5-4ee9-a3e4-72b42409f913}">
+      <Get Name="Get" Id="{1e6b0bf8-ab60-4b10-8d28-494b30b58d26}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Property Name="EnScaleFactorInternal" Id="{915d9301-4db3-42b5-b7e7-e87cd1272a2d}">
+    <Property Name="EnScaleFactorInternal" Id="{a176806d-8507-419b-b721-5c9d6406d714}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY EnScaleFactorInternal : LREAL
 ]]></Declaration>
-      <Get Name="Get" Id="{c655e0a3-bec2-46aa-ab1b-947c63cfde2a}">
+      <Get Name="Get" Id="{9ad45982-8ab6-475c-8aef-b61a77bdcb97}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Property Name="EnTargetPositionMonitoring" Id="{21fd9057-b6a7-43ae-ae2d-1191bb067b99}">
+    <Property Name="EnTargetPositionMonitoring" Id="{1a409cb5-d3f6-4e48-9528-3698ad7320a2}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY EnTargetPositionMonitoring : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{450ca4fa-bf58-4cb1-927e-77712278e95a}">
+      <Get Name="Get" Id="{9ae6d697-73aa-4788-95c0-818702f2a5f9}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Property Name="Error" Id="{888dc20f-a421-4f17-ac2e-dee75460f3e4}">
+    <Property Name="Error" Id="{077f1294-4fda-4c92-947b-f0efec1090a9}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY Error : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{4742c825-e74f-41b4-8f05-f1ae90422ad7}">
+      <Get Name="Get" Id="{c23e806c-962d-4265-8a9c-46bac8a84bbe}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[Error := bError;]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
+      <Set Name="Set" Id="{3394db00-42a8-484a-8e70-18f483daa069}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bError := Error;]]></ST>
+        </Implementation>
+      </Set>
     </Property>
-    <Property Name="ErrorID" Id="{b71ee923-d577-4db1-a209-e4174b81d565}">
+    <Property Name="ErrorID" Id="{88e63353-f1c2-4014-b8f3-b964e67cad19}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY ErrorID : UDINT
 ]]></Declaration>
-      <Get Name="Get" Id="{e8641c76-aa66-451d-a203-0b84484498fc}">
+      <Get Name="Get" Id="{7b14065a-ef31-43b3-a378-40dd65b21057}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[ErrorId := nErrorID;]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
+      <Set Name="Set" Id="{19a1ee0e-e55c-423f-a491-ec1a205a499f}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[nErrorId := ErrorID;]]></ST>
+        </Implementation>
+      </Set>
     </Property>
-    <Property Name="InTargetTimeout" Id="{dde800d5-13e0-437c-b92e-e79fe743648a}">
+    <Property Name="InTargetTimeout" Id="{434627cd-e3f0-4755-a930-cc7f9d678a0a}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY InTargetTimeout : LREAL
 ]]></Declaration>
-      <Get Name="Get" Id="{192b49e7-8ed5-40e1-bfc3-811501dac53c}">
+      <Get Name="Get" Id="{f16a2042-b5b3-41c8-b119-2051ce916097}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Property Name="MaxPosLagFilterTime" Id="{8e21caae-47e9-4648-9c96-83ec31ab2a15}">
+    <Property Name="MaxPosLagFilterTime" Id="{76cf887f-2e1c-4db0-82f5-95a3c1c3136f}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY MaxPosLagFilterTime : LREAL
 ]]></Declaration>
-      <Get Name="Get" Id="{32273305-9e7c-46e9-a95c-4166d2e9cbaa}">
+      <Get Name="Get" Id="{ae6ec919-6c5f-4e41-8eb3-ecb359409279}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Property Name="MaxPosLagValue" Id="{25125bf1-f879-455b-8cf3-75ffd12f3d32}">
+    <Property Name="MaxPosLagValue" Id="{a2378202-3c6f-4d05-9af4-b5a132e0298c}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY MaxPosLagValue : LREAL
 ]]></Declaration>
-      <Get Name="Get" Id="{2d897e06-6aaf-4394-8127-e20549c5415d}">
+      <Get Name="Get" Id="{415bf667-7ef5-46d4-a20d-4f40d660b100}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Property Name="MaxSoftPosLimit" Id="{ff3a6c13-3447-41a9-93b3-fcc77540eb1e}">
+    <Property Name="MaxSoftPosLimit" Id="{bd3bc724-5ea2-49fd-b158-19a5a1c24db3}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY MaxSoftPosLimit : LREAL
 ]]></Declaration>
-      <Get Name="Get" Id="{eb70569f-3445-48f5-9469-179ed60d94a7}">
+      <Get Name="Get" Id="{20dfc5a4-68eb-4f26-a9f7-a912076fe365}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Property Name="Message" Id="{b8913be7-81b9-46e6-b3ef-8906aa701f8c}">
+    <Property Name="Message" Id="{0083a679-1b30-49eb-8a9d-7250ba3e50b8}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY Message : T_MAXSTRING
 ]]></Declaration>
-      <Get Name="Get" Id="{03c69082-615a-4d68-a3a2-3ab31f55f3dd}">
+      <Get Name="Get" Id="{d2df08c6-5dd5-488d-abfd-cb7add84465f}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Property Name="MinSoftPosLimit" Id="{3fd9d8f9-b446-41c2-a895-933da3ea348c}">
+    <Property Name="MinSoftPosLimit" Id="{dcc2cf22-3191-48ab-94d9-d2da868287bb}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY MinSoftPosLimit : LREAL
 ]]></Declaration>
-      <Get Name="Get" Id="{16640011-49d1-4363-9afe-fc9745436a0b}">
+      <Get Name="Get" Id="{dd55863c-359b-4ca8-bfc1-141972f3fb59}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Property Name="Port" Id="{b68cc545-151c-4bff-9ba8-9cc76315f38d}">
+    <Property Name="Port" Id="{cb47a716-36ed-4586-af2c-5dadcb43d150}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY Port : WORD
 ]]></Declaration>
-      <Get Name="Get" Id="{a2b7923a-fa76-41e4-8e78-2f51a4276d05}">
+      <Get Name="Get" Id="{1a73d7bc-b168-4b46-bb23-87289c661558}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Property Name="PositionRangeWindow" Id="{96b45665-3ce4-46ce-abde-1e0079ac149e}">
+    <Property Name="PositionRangeWindow" Id="{4dbc87d5-c7d6-42d6-a3e1-77c985e49e3e}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY PositionRangeWindow : LREAL
 ]]></Declaration>
-      <Get Name="Get" Id="{6bea18da-f9c5-4eed-9a64-df5d19f29401}">
+      <Get Name="Get" Id="{fa16b1c4-4891-4c40-9f01-d1b4dc2f3df0}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Method Name="ReadParameters" Id="{6027add3-df87-42f7-9043-a79e474a8ba9}">
+    <Method Name="ReadParameters" Id="{1f9bc1a5-7e1d-4e17-b037-a422a81fb0c0}">
       <Declaration><![CDATA[{warning 'Add method implementation '}
 METHOD ReadParameters
 VAR_INPUT
-    Enable	: BOOL;
-    RefreshDelay	: TIME;
+	Enable	: BOOL;
+	RefreshDelay	: TIME;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <CFC>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCImplementationObject">
-                <o n="Items" t="CFCItemList">
-                  <l2 n="InnerList" />
-                </o>
-                <n n="ParameterInitializationMethodGenerator" />
-                <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                  <d2 n="InnerDictionary" />
-                </o>
-                <v n="AutoSizeCanvas">true</v>
-                <v n="CanvasWidth">0</v>
-                <v n="CanvasHeight">0</v>
-                <n n="EditorConfiguration" />
-                <v n="AreElementsSpaceOptimized">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-              <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-              <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-              <Type n="Int32">System.Int32</Type>
-            </TypeList>
-          </XmlArchive>
-        </CFC>
+        <ST><![CDATA[]]></ST>
       </Implementation>
-      <ObjectProperties>
-        <XmlArchive>
-          <Data>
-            <o xml:space="preserve" t="CFCProperty">
-              <v n="UseExplicitExecutionOrder">false</v>
-            </o>
-          </Data>
-          <TypeList>
-            <Type n="Boolean">System.Boolean</Type>
-            <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-          </TypeList>
-        </XmlArchive>
-      </ObjectProperties>
     </Method>
-    <Property Name="RefVeloSearch" Id="{bf7f7e84-607b-46b4-b655-075da7baef5d}">
+    <Property Name="RefVeloSearch" Id="{8685362d-4da1-473a-97a8-a41259c76ece}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY RefVeloSearch : LREAL
 ]]></Declaration>
-      <Get Name="Get" Id="{43f7f35f-4a3e-4369-a7f8-a37c285439ee}">
+      <Get Name="Get" Id="{a7a0629b-b85e-47bf-a435-42dfd49c4bdc}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Property Name="RefVeloSync" Id="{c786121a-1ba6-42b3-a9f3-f8d5d74c7c26}">
+    <Property Name="RefVeloSync" Id="{698e5eaf-99fc-44fe-b03c-7e8a94ff9795}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY RefVeloSync : LREAL
 ]]></Declaration>
-      <Get Name="Get" Id="{3714bc17-c412-4ca2-8d0b-40dd4b2402bb}">
+      <Get Name="Get" Id="{55bf763f-2959-45f8-bf1d-c5eef95f49f8}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Property Name="TargetPositionMonitoringTime" Id="{314ff166-cc39-4c72-9458-296ddccf7c6b}">
+    <Property Name="TargetPositionMonitoringTime" Id="{3511b6c8-33aa-416c-8315-d8a5a7ad0193}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY TargetPositionMonitoringTime : LREAL
 ]]></Declaration>
-      <Get Name="Get" Id="{80136cb8-6cee-4b60-80ea-72c3256b2504}">
+      <Get Name="Get" Id="{6e2bc940-075f-43a6-9165-e4cc8a49dbcd}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
-    <Property Name="TargetPositionWindow" Id="{432d0ebf-30e8-410d-982f-789124da41bb}">
+    <Property Name="TargetPositionWindow" Id="{1ead85dc-d5c2-4ca6-beca-21315b167273}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY TargetPositionWindow : LREAL
 ]]></Declaration>
-      <Get Name="Get" Id="{16a9404d-a8d2-479c-977b-98945b2fed19}">
+      <Get Name="Get" Id="{fa14fe57-9392-43a4-a1c3-4005ca9017ac}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <CFC>
-            <XmlArchive>
-              <Data>
-                <o xml:space="preserve" t="CFCImplementationObject">
-                  <o n="Items" t="CFCItemList">
-                    <l2 n="InnerList" />
-                  </o>
-                  <n n="ParameterInitializationMethodGenerator" />
-                  <o n="RoutingPathTable" t="CFCRoutingPathTable">
-                    <d2 n="InnerDictionary" />
-                  </o>
-                  <v n="AutoSizeCanvas">true</v>
-                  <v n="CanvasWidth">0</v>
-                  <v n="CanvasHeight">0</v>
-                  <n n="EditorConfiguration" />
-                  <v n="AreElementsSpaceOptimized">false</v>
-                </o>
-              </Data>
-              <TypeList>
-                <Type n="Boolean">System.Boolean</Type>
-                <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
-                <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
-                <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
-                <Type n="Int32">System.Int32</Type>
-              </TypeList>
-            </XmlArchive>
-          </CFC>
+          <ST><![CDATA[]]></ST>
         </Implementation>
-        <ObjectProperties>
-          <XmlArchive>
-            <Data>
-              <o xml:space="preserve" t="CFCProperty">
-                <v n="UseExplicitExecutionOrder">false</v>
-              </o>
-            </Data>
-            <TypeList>
-              <Type n="Boolean">System.Boolean</Type>
-              <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
-            </TypeList>
-          </XmlArchive>
-        </ObjectProperties>
       </Get>
     </Property>
     <ObjectProperties>
