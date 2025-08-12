@@ -18,6 +18,7 @@ VAR
 	ftError: F_TRIG;
 	bInterlockEvent: BOOL;
 	rtStandStill : R_TRIG;
+	nInitState : UINT;
 END_VAR
 
 VAR_OUTPUT
@@ -33,7 +34,7 @@ ftError(CLK:=bError);
 
 // Drive state Machine here
 CASE MoveState OF
-   E_MoveState.IDLING:
+	E_MoveState.IDLING:
         // Delay the disable until axis reach standstill
         // and this state machine is idling
         IF bError THEN
@@ -46,15 +47,17 @@ CASE MoveState OF
             MoveState := E_MoveState.INIT;
         END_IF
 
-   E_MoveState.INIT:
+	E_MoveState.INIT:
 
 		CASE iMoveRequest.Status.nCommand OF
 			E_EpicsMotorCmd.MOVE_ABSOLUTE:
+	
 				// Activate backlash compensation
 				iMotionAxis.BacklashCompensation(
 					Enable:=TRUE, 
 					RampVelo:=iMoveRequest.Status.fVelocity/10.0
 				);
+	
 				IF __QUERYINTERFACE(iMotionAxis, iMotionAxisDS402) THEN
 					// prepare piezo axis for motion
 					IF iMotionAxisDS402.ModeConfigDone(Mode:=E_EpicsMotorCmd.MOVE_ABSOLUTE) THEN
@@ -64,7 +67,8 @@ CASE MoveState OF
 							Acceleration := iMoveRequest.Status.fAcceleration,
 							Deceleration := iMoveRequest.Status.fDeceleration
 						);
-					MoveState := E_MoveState.STARTED;
+
+						MoveState := E_MoveState.STARTED;
 					END_IF
 				ELSE
 					iMotionAxis.MoveAbsolute( 
@@ -77,6 +81,7 @@ CASE MoveState OF
 				END_IF
 
 			E_EpicsMotorCmd.HOME:
+
 				// Deactivate backlash compensation
 				iMotionAxis.BacklashCompensation(
 					Enable:=FALSE, 
@@ -91,13 +96,14 @@ CASE MoveState OF
 						);
 						MoveState := E_MoveState.STARTED;
 					END_IF
-			 	ELSE
+				ELSE
 					iMotionAxis.home(
 							Position:=iMoveRequest.Status.fHomeOffset, 
 							BufferMode:=MC_Aborting
 					);
 					MoveState := E_MoveState.STARTED;
 				END_IF
+
 		END_CASE
 	E_MoveState.STARTED:
 		IF bError THEN
@@ -108,14 +114,14 @@ CASE MoveState OF
 			MoveState := E_MoveState.IN_PROGRESS;
 		END_IF
 
-   E_MoveState.IN_PROGRESS :
+	E_MoveState.IN_PROGRESS :
 
 		IF bError THEN
            MoveState := E_MoveState.ERROR;
 		// Move interupted: halt or Reset, go wait for a done signal
 		// Move Aborted: hitting a directional limit switch wil set Aborted flag.
 		// we want to immediately prepare to disable drive power
-		ELSIF iMotionAxis.Status.bAborted  THEN
+		ELSIF iMotionAxis.Status.bAborted OR bInterlockEvent  THEN
 			iMoveRequest.ResetMoveRequest();
 			MoveState := E_MoveState.INTERRUPTED;
 
@@ -124,7 +130,7 @@ CASE MoveState OF
            MoveState := E_MoveState.REACHED;
 		END_IF
 
-   E_MoveState.INTERRUPTED:
+	E_MoveState.INTERRUPTED:
 		// Interlock event aka limit hit ?
 		IF bInterlockEvent THEN
 		   iMoveRequest.MoveRequestDone(Done:=TRUE);
@@ -137,17 +143,15 @@ CASE MoveState OF
            MoveState := E_MoveState.IDLING;
        END_IF
 
-   E_MoveState.REACHED:
-
-	IF iMotionAxis.Status.bStandStill THEN
-		iMoveRequest.MoveRequestCompleted( 
-				HomeDone:=iMotionAxis.Status.bHomeDone, 
-				MoveDone:=iMotionAxis.Status.bMoveAbsoluteDone
-		);
-		MoveState := E_MoveState.IDLING;	
-	END_IF
-		
-   E_MoveState.ERROR:
+	E_MoveState.REACHED:
+		IF iMotionAxis.Status.bStandStill THEN
+			iMoveRequest.MoveRequestCompleted( 
+					HomeDone:=iMotionAxis.Status.bHomeDone, 
+					MoveDone:=iMotionAxis.Status.bMoveAbsoluteDone
+			);
+			MoveState := E_MoveState.IDLING;	
+		END_IF
+	E_MoveState.ERROR:
    		// NC would have already removepower to drive.
 		iMoveRequest.ResetMoveRequest();
 		iMoveRequest.ResetMoveEnable();
@@ -231,6 +235,17 @@ END_VAR
 THIS^.bError := Error;]]></ST>
       </Implementation>
     </Method>
+    <Property Name="WatchDog" Id="{ffd10039-8300-4aa4-a939-c817f83dfa6b}">
+      <Declaration><![CDATA[PROPERTY INTERNAL WatchDog : BOOL]]></Declaration>
+      <Set Name="Set" Id="{a8c696ab-b8a9-4f3e-bc17-b0a6d0d39466}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[THIS^.tonMotionWatchDog.IN := WatchDog;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Property Name="WatchDogStatus" Id="{f4a0274a-eb4a-4d55-8725-d7041e208e2f}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY WatchDogStatus : BOOL

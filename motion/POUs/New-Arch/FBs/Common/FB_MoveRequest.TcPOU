@@ -325,8 +325,7 @@ stMotionRequestStatus.bExecute := FALSE;]]></ST>
       </Implementation>
     </Method>
     <Property Name="Status" Id="{f678d159-cc5d-41ad-889c-5f951c755b6f}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY Status : REFERENCE TO ST_MoveRequestStatus
+      <Declaration><![CDATA[PROPERTY Status : REFERENCE TO ST_MoveRequestStatus
 ]]></Declaration>
       <Get Name="Get" Id="{08876ea6-b526-4166-bd4c-0a2aa1b11215}">
         <Declaration><![CDATA[VAR
