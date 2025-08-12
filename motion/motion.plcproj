@@ -123,10 +123,6 @@
     <Compile Include="POUs\New-Arch\FBs\Common\FB_MotionDriveStateMachine.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\New-Arch\FBs\Containers\FB_MotionStageMCS2CSP.TcPOU">
-      <SubType>Code</SubType>
-      <ExcludeFromBuild>true</ExcludeFromBuild>
-    </Compile>
     <Compile Include="POUs\New-Arch\FBs\Containers\FB_MotionStageNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -297,46 +293,52 @@
     <Compile Include="Test\NC\FB_MotionAxisNCShrink_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Test\NC\TestDouble\FB_AxisStatus_TestDouble.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Test\NC\TestDouble\FB_BacklashCompensationNC_TestDouble.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Test\NC\TestDouble\FB_EncoderScaling_TestDouble.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Test\NC\TestDouble\FB_HaltNC_TestDouble.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Test\NC\TestDouble\FB_HomeNC_TestDouble.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Test\NC\TestDouble\FB_MotionAxisNC_TestDouble.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Test\NC\TestDouble\FB_MoveAbsoluteNC_TestDouble.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Test\NC\TestDouble\FB_ParamSaveRestoreNC_TestDouble.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Test\NC\TestDouble\FB_PowerNC_TestDouble.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Test\NC\TestDouble\FB_ReadParameterNC_TestDouble.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Test\NC\TestDouble\FB_ResetNC_TestDouble.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Test\NC\TestDouble\FB_WriteParameterNC_TestDouble.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Test\PRG_TEST.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Test\CONTAINER_TEST.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestDouble\FB_AxisStatus_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestDouble\FB_BacklashCompensationNC_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestDouble\FB_EncoderScaling_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestDouble\FB_HaltNC_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestDouble\FB_HomeNC_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestDouble\FB_MotionAxisDS402_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestDouble\FB_MotionAxisNC_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestDouble\FB_MoveAbsoluteNC_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestDouble\FB_MoveRequest_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestDouble\FB_ParamSaveRestoreNC_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestDouble\FB_PowerNC_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestDouble\FB_ReadParameterNC_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestDouble\FB_ResetNC_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestDouble\FB_WriteParameterNC_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UnitTestTask.TcTTO">
@@ -361,7 +363,7 @@
     <Folder Include="Test\Interlok\TestDoubles" />
     <Folder Include="Test\MotionDrive" />
     <Folder Include="Test\NC" />
-    <Folder Include="Test\NC\TestDouble" />
+    <Folder Include="Test\TestDouble" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />
   </ItemGroup>

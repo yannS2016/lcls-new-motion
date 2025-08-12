@@ -3,24 +3,226 @@
   <POU Name="FB_MotionDriveStateMachine_Test" Id="{d39824fa-0087-4628-a7b4-a03e3ade9ea2}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionDriveStateMachine_Test EXTENDS FB_TestSuite
 VAR
-	stMotionEpicsItf :  ARRAY [1..8] OF  ST_MotionEpicsInterface;
-	fbMotionAxisNC_TestDouble : ARRAY [1..8] OF FB_MotionAxisNC_TestDouble;
-	fbMoveRequest : ARRAY [1..8] OF FB_MoveRequest[ (stMotionEpicsItf:=stMotionEpicsItf[1]),
-													(stMotionEpicsItf:=stMotionEpicsItf[2]),
-													(stMotionEpicsItf:=stMotionEpicsItf[3]),
-													(stMotionEpicsItf:=stMotionEpicsItf[4]),
-													(stMotionEpicsItf:=stMotionEpicsItf[5]),
-													(stMotionEpicsItf:=stMotionEpicsItf[6]),
-													(stMotionEpicsItf:=stMotionEpicsItf[7]),
-													(stMotionEpicsItf:=stMotionEpicsItf[8])];
+	fbMotionAxisNC : ARRAY [1..20] OF FB_MotionAxisNC_TestDouble;
+	fbMotionAxisDS402 : ARRAY [1..8] OF FB_MotionAxisDS402_TestDouble;
+	fbMoveRequest : ARRAY [1..20] OF FB_MoveRequest_TestDouble;
 
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[GIvenIdlingStateIfErrorGotoErrorState_Test1();
 GIvenIdlingStateIfValidatedMoveRequestThenGotoInitState_Test2();
-GIvenIdlingStateAndValidatedMoveRequestIfWatchDogTImerOutThenGotoErrorState_Test3();]]></ST>
+GIvenIdlingStateAndValidatedMoveRequestIfWatchDogTImerOutThenGotoErrorState_Test3();
+GivenNCAxisInitStateValidatedAbsoluteMoveRequestThenGotoStartedState_Test4();
+GivenNCAxisInitStateValidatedHomeMoveRequestIfModeConfigDoneThenGotoStartedState_Test5();
+GivenDS402AxisInitStateValidatedHomeMoveRequestAndNotModeConfigDoneThenLacthInitState_Test6();
+GivenDS402AxisInitStateValidatedAbsoluteMoveRequestAndNotModeConfigDoneThenLatchInitState_Test7();
+GivenDS402AxisInitStateValidatedHomeMoveRequestAndModeConfigDoneThenGotoStartedState_Test8();
+GivenDS402AxisInitStateValidatedAbsoluteMoveRequestAndModeConfigDoneThenGotoStartedState_Test9();
+GIvenStartedStatedAndErrorThenGotoErrorState_Test10();
+GIvenStartedStateAndBusyStatusFromAxisThenGotoInProgressState_Test11();
+GIvenStartedStateAndWatchDogTimeOutThenGotoInProgressState_Test12();
+GIvenInPogressStateAndErrorThenGotoErrorState_Test13();
+GivenInPogressStateAndAbortedThenGotoInterruptedState_Test14();
+GIvenInPogressStateAndInterlockEventThenGotoInterruptedState_Test15();
+GIvenInPogressStateAndHomeMoveDoneStatusFromAxisThenGotoReachedState_Test16();
+GIvenInPogressStateAndAbsoluteMoveDoneStatusFromAxisThenGotoReachedState_Test17();
+GIvenInterruptedStateAndAbortDoneResetMoveDisablePowerThenGotoIdlingState_Test18();
+GIvenInterruptedStateAndInterlockEventResetMoveDisablePowerThenGotoIdlingState_Test19();
+GIvenReachedStateAndAxisStandStillCompleteMoveRequestThenGotoIdlingState_Test20();]]></ST>
     </Implementation>
+    <Method Name="GivenDS402AxisInitStateValidatedAbsoluteMoveRequestAndModeConfigDoneThenGotoStartedState_Test9" Id="{999d64dd-c1ac-4dac-a6a8-0c4cac62c08d}">
+      <Declaration><![CDATA[METHOD PRIVATE GivenDS402AxisInitStateValidatedAbsoluteMoveRequestAndModeConfigDoneThenGotoStartedState_Test9
+VAR_INST
+	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=fbMotionAxisDS402[4], iMoveRequest:=fbMoveRequest[9]);
+	expectedMoveState : E_MoveState := E_MoveState.STARTED;
+	fbTestTimer: TON := (IN:=TRUE, PT:=T#6S);
+	nTestStep : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST(__POUNAME());
+(*DS402 axis modeConfig did not complete within the watchDog timeout*)
+CASE nTestStep OF
+	0:
+		fbMotionDriveStateMachine.MoveState := E_MoveState.IDLING;
+		fbMoveRequest[9].Status.bExecute := TRUE;
+		fbMoveRequest[9]();
+		nTestStep := nTestStep + 1;
+	1:
+		fbMoveRequest[9].EpicsMotorCommand := E_EpicsMotorCmd.MOVE_ABSOLUTE;
+		fbMoveRequest[9]();
+		fbMotionAxisDS402[4].ConfigDone := TRUE;
+		fbMotionAxisDS402[4]();
+		nTestStep := nTestStep + 1;
+	2:
+		fbMotionDriveStateMachine.MoveState := E_MoveState.INIT;
+		nTestStep := nTestStep + 1;
+	3:
+		AssertEquals_INT(	Expected:=expectedMoveState, 
+							Actual:=fbMotionDriveStateMachine.MoveState, 
+							Message:='Drive Machine must be in STARTED state #1');
+		nTestStep := nTestStep + 1;
+		TEST_FINISHED();
+END_CASE
+
+fbMotionDriveStateMachine();
+fbTestTimer();
+	
+IF fbTestTimer.Q THEN
+    AssertTrue(Condition := FALSE, Message := CONCAT('Timed out at step: ', TO_STRING(nTestStep)));
+    TEST_FINISHED();
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GivenDS402AxisInitStateValidatedAbsoluteMoveRequestAndNotModeConfigDoneThenLatchInitState_Test7" Id="{43eeb062-71d8-479f-9f71-8075526b7a07}">
+      <Declaration><![CDATA[METHOD PRIVATE GivenDS402AxisInitStateValidatedAbsoluteMoveRequestAndNotModeConfigDoneThenLatchInitState_Test7
+VAR_INST
+	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=fbMotionAxisDS402[2], iMoveRequest:=fbMoveRequest[7]);
+	expectedMoveState : E_MoveState := E_MoveState.INIT;
+	fbTestTimer: TON := (IN:=TRUE, PT:=T#6S);
+	nTestStep : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST(__POUNAME());
+(*DS402 axis modeConfig did not complete within the watchDog timeout*)
+CASE nTestStep OF
+	0:
+		fbMotionDriveStateMachine.MoveState := E_MoveState.IDLING;
+		fbMoveRequest[7].Status.bExecute := TRUE;
+		fbMoveRequest[7]();
+		nTestStep := nTestStep + 1;
+	1:
+		fbMoveRequest[7].EpicsMotorCommand := E_EpicsMotorCmd.MOVE_ABSOLUTE;
+		fbMoveRequest[7]();
+		fbMotionDriveStateMachine.MoveState := E_MoveState.INIT;
+		fbMotionDriveStateMachine();
+		nTestStep := nTestStep + 1;
+	2:
+		AssertEquals_INT(	Expected:=expectedMoveState, 
+							Actual:=fbMotionDriveStateMachine.MoveState, 
+							Message:='Drive Machine lacthes in INIT state #1');
+		nTestStep := nTestStep + 1;
+	3:
+		IF fbMotionDriveStateMachine.WatchDogTimeOut THEN
+			nTestStep := nTestStep + 1;
+		END_IF
+	4:
+		expectedMoveState := E_MoveState.ERROR;
+		AssertEquals_INT(	Expected:=expectedMoveState, 
+							Actual:=fbMotionDriveStateMachine.MoveState, 
+							Message:='Drive Machine lacthes in INIT state #2');
+		TEST_FINISHED();
+END_CASE
+
+fbMotionDriveStateMachine();
+fbTestTimer();
+	
+IF fbTestTimer.Q THEN
+    AssertTrue(Condition := FALSE, Message := CONCAT('Timed out at step: ', TO_STRING(nTestStep)));
+    TEST_FINISHED();
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GivenDS402AxisInitStateValidatedHomeMoveRequestAndModeConfigDoneThenGotoStartedState_Test8" Id="{62ae964d-0556-48d9-911f-ae141ce5356a}">
+      <Declaration><![CDATA[METHOD PRIVATE GivenDS402AxisInitStateValidatedHomeMoveRequestAndModeConfigDoneThenGotoStartedState_Test8
+VAR_INST
+	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=fbMotionAxisDS402[3], iMoveRequest:=fbMoveRequest[8]);
+	expectedMoveState : E_MoveState := E_MoveState.STARTED;
+	fbTestTimer: TON := (IN:=TRUE, PT:=T#6S);
+	nTestStep : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST(__POUNAME());
+(*DS402 axis modeConfig did not complete within the watchDog timeout*)
+CASE nTestStep OF
+	0:
+		fbMotionDriveStateMachine.MoveState := E_MoveState.IDLING;
+		fbMoveRequest[8].Status.bExecute := TRUE;
+		fbMoveRequest[8]();
+		nTestStep := nTestStep + 1;
+	1:
+		fbMoveRequest[8].EpicsMotorCommand := E_EpicsMotorCmd.HOME;
+		fbMoveRequest[8]();
+		fbMotionAxisDS402[3].ConfigDone := TRUE;
+		fbMotionAxisDS402[3]();
+		nTestStep := nTestStep + 1;
+	2:
+		fbMotionDriveStateMachine.MoveState := E_MoveState.INIT;
+		nTestStep := nTestStep + 1;
+	3:
+		AssertEquals_INT(	Expected:=expectedMoveState, 
+							Actual:=fbMotionDriveStateMachine.MoveState, 
+							Message:='Drive Machine must be in STARTED state #1');
+		nTestStep := nTestStep + 1;
+		TEST_FINISHED();
+END_CASE
+
+fbMotionDriveStateMachine();
+fbTestTimer();
+	
+IF fbTestTimer.Q THEN
+    AssertTrue(Condition := FALSE, Message := CONCAT('Timed out at step: ', TO_STRING(nTestStep)));
+    TEST_FINISHED();
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GivenDS402AxisInitStateValidatedHomeMoveRequestAndNotModeConfigDoneThenLacthInitState_Test6" Id="{e68f7607-01a4-4bca-a69b-7344281706fc}">
+      <Declaration><![CDATA[METHOD PRIVATE GivenDS402AxisInitStateValidatedHomeMoveRequestAndNotModeConfigDoneThenLacthInitState_Test6
+VAR_INST
+	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=fbMotionAxisDS402[1], iMoveRequest:=fbMoveRequest[6]);
+	expectedMoveState : E_MoveState := E_MoveState.INIT;
+	fbTestTimer: TON := (IN:=TRUE, PT:=T#6S);
+	nTestStep : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST(__POUNAME());
+(*DS402 axis modeConfig did not complete within the watchDog timeout*)
+CASE nTestStep OF
+	0:
+		fbMotionDriveStateMachine.MoveState := E_MoveState.IDLING;
+		fbMoveRequest[6].Status.bExecute := TRUE;
+		fbMoveRequest[6]();
+		nTestStep := nTestStep + 1;
+	1:
+		fbMoveRequest[6].EpicsMotorCommand := E_EpicsMotorCmd.HOME;
+		fbMoveRequest[6]();
+		fbMotionDriveStateMachine.MoveState := E_MoveState.INIT;
+		fbMotionDriveStateMachine();
+		nTestStep := nTestStep + 1;
+	2:
+		AssertEquals_INT(	Expected:=expectedMoveState, 
+							Actual:=fbMotionDriveStateMachine.MoveState, 
+							Message:='Drive Machine lacthes in INIT state #1');
+		nTestStep := nTestStep + 1;
+	3:
+		IF fbMotionDriveStateMachine.WatchDogTimeOut THEN
+			nTestStep := nTestStep + 1;
+		END_IF
+	4:
+		expectedMoveState := E_MoveState.ERROR;
+		AssertEquals_INT(	Expected:=expectedMoveState, 
+							Actual:=fbMotionDriveStateMachine.MoveState, 
+							Message:='Drive Machine lacthes in INIT state #2');
+		TEST_FINISHED();
+END_CASE
+
+fbMotionDriveStateMachine();
+fbTestTimer();
+	
+IF fbTestTimer.Q THEN
+    AssertTrue(Condition := FALSE, Message := CONCAT('Timed out at step: ', TO_STRING(nTestStep)));
+    TEST_FINISHED();
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="GIvenErrorStateAndResetMoveRequestDisableDriveIfNoErrorGotoIdlingState_Test18" Id="{9f4d5dc6-d662-4b77-962a-62bc9a422730}">
       <Declaration><![CDATA[METHOD PRIVATE GIvenErrorStateAndResetMoveRequestDisableDriveIfNoErrorGotoIdlingState_Test18
 VAR_INPUT
@@ -33,7 +235,7 @@ END_VAR
     <Method Name="GIvenIdlingStateAndValidatedMoveRequestIfWatchDogTImerOutThenGotoErrorState_Test3" Id="{4057a05c-3e1d-4efd-850a-994007937f45}">
       <Declaration><![CDATA[METHOD PRIVATE GIvenIdlingStateAndValidatedMoveRequestIfWatchDogTImerOutThenGotoErrorState_Test3
 VAR_INST
-	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=fbMotionAxisNC_TestDouble[3], iMoveRequest:=fbMoveRequest[3]);
+	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=fbMotionAxisNC[3], iMoveRequest:=fbMoveRequest[3]);
 	expectedMoveState : E_MoveState := E_MoveState.ERROR;
 	fbTestTimer: TON := (IN:=TRUE, PT:=T#6S);
 	nTestStep : INT;
@@ -43,33 +245,32 @@ END_VAR]]></Declaration>
 CASE nTestStep OF
 	0:
 		fbMotionDriveStateMachine.MoveState := E_MoveState.IDLING;
-		fbMotionDriveStateMachine.StateMachine(InterlockEvent:=FALSE, Error:=FALSE);
-		fbMoveRequest[3].MoveRequest( EnableDone:=TRUE, MoveOk:=TRUE);			
-		fbMoveRequest[3].MoveRequestTest(	HomeCmd:=FALSE,
-								MoveCmd:=TRUE,
-								HomeMode:=E_EpicsHomeCmd.NONE,
-								EnableMode:=E_StageEnableMode.ALWAYS,
-							 );
+		fbMoveRequest[3].Status.bExecute := TRUE;
 		fbMoveRequest[3]();
 		fbMotionDriveStateMachine();
-		AssertTrue(Condition := fbMotionDriveStateMachine.WatchDogStatus, Message := 'Validated Move must set watchdog timer #1');
 		nTestStep := nTestStep + 1;
-	1:	
+	1:
+		IF fbMotionDriveStateMachine.WatchDogStatus THEN
+			nTestStep := nTestStep + 1;
+		END_IF
+
+	2:
 		IF fbMotionDriveStateMachine.WatchDogTimeOut THEN
 			nTestStep := nTestStep + 1;
 		END_IF
+	3:
+		AssertEquals_INT(	Expected:=expectedMoveState, 
+							Actual:=fbMotionDriveStateMachine.MoveState, 
+							Message:='Drive Machine state must be ERROR #1');
+		AssertTrue(Condition := fbMotionDriveStateMachine.Error, Message := 'Motion Drive state machine must be in error state #2');
+		nTestStep := nTestStep + 1;
+		TEST_FINISHED();	
 END_CASE
 
 fbMotionDriveStateMachine();
 fbTestTimer();
 
-IF nTestStep = 2 THEN
-	AssertEquals_INT(	Expected:=expectedMoveState, 
-					Actual:=fbMotionDriveStateMachine.MoveState, 
-					Message:='Drive Machine state must be ERROR #2');
-	AssertTrue(Condition := fbMotionDriveStateMachine.Error, Message := 'Motion Drive state mchine must be in error state #3');
-    TEST_FINISHED();
-ELSIF fbTestTimer.Q THEN
+IF fbTestTimer.Q THEN
     AssertTrue(Condition := FALSE, Message := CONCAT('Timed out at step: ', TO_STRING(nTestStep)));
     TEST_FINISHED();
 END_IF
@@ -79,7 +280,7 @@ END_IF
     <Method Name="GIvenIdlingStateIfErrorGotoErrorState_Test1" Id="{75334e61-4a8e-42c8-8f02-90286a33998c}">
       <Declaration><![CDATA[METHOD PRIVATE GIvenIdlingStateIfErrorGotoErrorState_Test1
 VAR_INST
-	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=THIS^.fbMotionAxisNC_TestDouble[1], iMoveRequest:=THIS^.fbMoveRequest[1]);
+	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=THIS^.fbMotionAxisNC[1], iMoveRequest:=THIS^.fbMoveRequest[1]);
 	expectedMoveState : E_MoveState := E_MoveState.ERROR;
 END_VAR
 ]]></Declaration>
@@ -102,7 +303,7 @@ TEST_FINISHED();
     <Method Name="GIvenIdlingStateIfValidatedMoveRequestThenGotoInitState_Test2" Id="{aa69a2b8-1ec4-42f6-90ff-db1409a56e0d}">
       <Declaration><![CDATA[METHOD PRIVATE GIvenIdlingStateIfValidatedMoveRequestThenGotoInitState_Test2
 VAR_INST
-	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=fbMotionAxisNC_TestDouble[2], iMoveRequest:=fbMoveRequest[2]);
+	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=fbMotionAxisNC[2], iMoveRequest:=fbMoveRequest[2]);
 	expectedMoveState : E_MoveState := E_MoveState.INIT;
 END_VAR
 ]]></Declaration>
@@ -110,142 +311,404 @@ END_VAR
         <ST><![CDATA[TEST(__POUNAME());
 
 fbMotionDriveStateMachine.MoveState := E_MoveState.IDLING;
-fbMotionDriveStateMachine.StateMachine(InterlockEvent:=FALSE, Error:=FALSE);
-THIS^.fbMoveRequest[2].MoveRequest( EnableDone:=TRUE, MoveOk:=TRUE);			
-THIS^.fbMoveRequest[2].MoveRequestTest(	HomeCmd:=FALSE,
-                 		MoveCmd:=TRUE,
-                 		HomeMode:=E_EpicsHomeCmd.NONE,
-               			EnableMode:=E_StageEnableMode.ALWAYS,
-					 );
-THIS^.fbMoveRequest[2]();
+fbMoveRequest[2].Status.bExecute := TRUE;
+fbMoveRequest[2]();
 fbMotionDriveStateMachine();
+
 AssertEquals_INT(	Expected:=expectedMoveState, 
 					Actual:=fbMotionDriveStateMachine.MoveState, 
 					Message:='Drive Machine state must be INIT #1');
 
- AssertTrue(Condition := THIS^.fbMoveRequest[2].Status.bExecute, Message := 'This move must be validated #2');
- AssertTrue(Condition := THIS^.stMotionEpicsItf[2].bBusy, Message := 'Move Request must be Busy #3');
- AssertFalse(Condition := THIS^.stMotionEpicsItf[2].bDone, Message := 'Move Request must not yet de Done #4');
+AssertTrue(Condition := THIS^.fbMoveRequest[2].Status.bExecute, Message := 'Move must be validated #2');
+
 TEST_FINISHED();
 
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GIvenInitStateNCDS402MotionAxisValidatedMoveRequestAndAbsoluteMoveCmdThenActivateBacklashAndStartAbsoluteMoveThenGototToStartedState_Test4" Id="{43eeb062-71d8-479f-9f71-8075526b7a07}">
-      <Declaration><![CDATA[METHOD PRIVATE GIvenInitStateNCDS402MotionAxisValidatedMoveRequestAndAbsoluteMoveCmdThenActivateBacklashAndStartAbsoluteMoveThenGototToStartedState_Test4
-VAR_INPUT
+    <Method Name="GivenInPogressStateAndAbortedThenGotoInterruptedState_Test14" Id="{dd70d28c-558c-475a-a5fe-be88009b20c8}">
+      <Declaration><![CDATA[METHOD PRIVATE GivenInPogressStateAndAbortedThenGotoInterruptedState_Test14
+VAR_INST
+	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=THIS^.fbMotionAxisNC[10], iMoveRequest:=THIS^.fbMoveRequest[14]);
+	expectedMoveState : E_MoveState := E_MoveState.INTERRUPTED;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[TEST(__POUNAME());
+
+fbMotionAxisNC[10].Status.bAborted := TRUE;
+fbMotionAxisNC[10]();
+fbMotionDriveStateMachine.MoveState := E_MoveState.IN_PROGRESS;
+fbMotionDriveStateMachine();
+AssertEquals_INT(	Expected:=expectedMoveState, 
+					Actual:=fbMotionDriveStateMachine.MoveState, 
+					Message:='Drive must be in INTERRUPTED state #1');
+
+
+TEST_FINISHED();
+
+]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GIvenInitStateNCDS402MotionAxisValidatedMoveRequestAndHomeMoveCmdThenActivateBacklashAndStartHomeMoveThenGotoToStartedState_Test5" Id="{e68f7607-01a4-4bca-a69b-7344281706fc}">
-      <Declaration><![CDATA[METHOD PRIVATE GIvenInitStateNCDS402MotionAxisValidatedMoveRequestAndHomeMoveCmdThenActivateBacklashAndStartHomeMoveThenGotoToStartedState_Test5
-VAR_INPUT
+    <Method Name="GIvenInPogressStateAndAbsoluteMoveDoneStatusFromAxisThenGotoReachedState_Test17" Id="{71b62c81-c6e4-427d-b511-8611291b8cc9}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenInPogressStateAndAbsoluteMoveDoneStatusFromAxisThenGotoReachedState_Test17
+VAR_INST
+	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=THIS^.fbMotionAxisNC[13], iMoveRequest:=THIS^.fbMoveRequest[17]);
+	expectedMoveState : E_MoveState := E_MoveState.REACHED;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[TEST(__POUNAME());
+
+fbMotionAxisNC[13].Status.bMoveAbsoluteDone := TRUE;
+fbMotionAxisNC[13]();
+fbMotionDriveStateMachine.MoveState := E_MoveState.IN_PROGRESS;
+fbMotionDriveStateMachine();
+AssertEquals_INT(	Expected:=expectedMoveState, 
+					Actual:=fbMotionDriveStateMachine.MoveState, 
+					Message:='Drive must be in REACHED state #1');
+
+
+TEST_FINISHED();
+
+]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GIvenInitStateNCMotionAxisValidatedMoveRequestAndAbsoluteMoveCmdThenActivateBacklashAndStartAbsoluteMoveThenGotoToStartedState_Test3" Id="{8d46b128-d2cf-4a84-88c0-16810e3a0f71}">
-      <Declaration><![CDATA[METHOD PRIVATE GIvenInitStateNCMotionAxisValidatedMoveRequestAndAbsoluteMoveCmdThenActivateBacklashAndStartAbsoluteMoveThenGotoToStartedState_Test3
-VAR_INPUT
+    <Method Name="GIvenInPogressStateAndErrorThenGotoErrorState_Test13" Id="{28cb6bb1-ec96-4d23-af1d-fc11517a7c6e}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenInPogressStateAndErrorThenGotoErrorState_Test13
+VAR_INST
+	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=THIS^.fbMotionAxisNC[9], iMoveRequest:=THIS^.fbMoveRequest[13]);
+	expectedMoveState : E_MoveState := E_MoveState.ERROR;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[TEST(__POUNAME());
+
+fbMotionDriveStateMachine.MoveState := E_MoveState.IN_PROGRESS;
+fbMotionDriveStateMachine.StateMachine(InterlockEvent:=FALSE, Error:=TRUE);
+fbMotionDriveStateMachine();
+AssertEquals_INT(	Expected:=expectedMoveState, 
+					Actual:=fbMotionDriveStateMachine.MoveState, 
+					Message:='Drive Machine state must be ERROR #1');
+
+
+TEST_FINISHED();
+
+]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GIvenInitStateNCMotionAxisValidatedMoveRequestAndHomeMoveCmdThenActivateBacklashAndStartAbsoluteMoveThenGotoToStartedState_Test6" Id="{31fb44ea-162e-472b-980f-9ed88057e4a4}">
-      <Declaration><![CDATA[METHOD PRIVATE GIvenInitStateNCMotionAxisValidatedMoveRequestAndHomeMoveCmdThenActivateBacklashAndStartAbsoluteMoveThenGotoToStartedState_Test6
-VAR_INPUT
+    <Method Name="GIvenInPogressStateAndHomeMoveDoneStatusFromAxisThenGotoReachedState_Test16" Id="{d2a45819-db3f-4a59-bee7-a248201f6ba7}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenInPogressStateAndHomeMoveDoneStatusFromAxisThenGotoReachedState_Test16
+VAR_INST
+	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=THIS^.fbMotionAxisNC[12], iMoveRequest:=THIS^.fbMoveRequest[16]);
+	expectedMoveState : E_MoveState := E_MoveState.REACHED;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[TEST(__POUNAME());
+
+fbMotionAxisNC[12].Status.bHomeDone := TRUE;
+fbMotionAxisNC[12]();
+fbMotionDriveStateMachine.MoveState := E_MoveState.IN_PROGRESS;
+fbMotionDriveStateMachine();
+AssertEquals_INT(	Expected:=expectedMoveState, 
+					Actual:=fbMotionDriveStateMachine.MoveState, 
+					Message:='Drive must be in REACHED state #1');
+
+
+TEST_FINISHED();
+
+]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GIvenInPogressStateAndAbortedStatusFromAxisThenGotoInterruptedState_Test11" Id="{dd70d28c-558c-475a-a5fe-be88009b20c8}">
-      <Declaration><![CDATA[METHOD PRIVATE GIvenInPogressStateAndAbortedStatusFromAxisThenGotoInterruptedState_Test11
-VAR_INPUT
+    <Method Name="GIvenInPogressStateAndInterlockEventThenGotoInterruptedState_Test15" Id="{9eb7fa1a-cdef-4bb5-ae48-ca6d47201611}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenInPogressStateAndInterlockEventThenGotoInterruptedState_Test15
+VAR_INST
+	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=THIS^.fbMotionAxisNC[11], iMoveRequest:=THIS^.fbMoveRequest[15]);
+	expectedMoveState : E_MoveState := E_MoveState.INTERRUPTED;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[TEST(__POUNAME());
+
+fbMotionDriveStateMachine.MoveState := E_MoveState.IN_PROGRESS;
+fbMotionDriveStateMachine.StateMachine(InterlockEvent:=TRUE, Error:=FALSE);
+fbMotionDriveStateMachine();
+AssertEquals_INT(	Expected:=expectedMoveState, 
+					Actual:=fbMotionDriveStateMachine.MoveState, 
+					Message:='Drive must be in INTERRUPTED state #1');
+
+
+TEST_FINISHED();
+
+]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GIvenInPogressStateAndAbsoluteMoveDoneStatusFromAxisThenGotoReachedState_Test12" Id="{71b62c81-c6e4-427d-b511-8611291b8cc9}">
-      <Declaration><![CDATA[METHOD PRIVATE GIvenInPogressStateAndAbsoluteMoveDoneStatusFromAxisThenGotoReachedState_Test12
-VAR_INPUT
+    <Method Name="GIvenInterruptedStateAndAbortDoneResetMoveDisablePowerThenGotoIdlingState_Test18" Id="{aca46138-8000-454b-a5cd-42c8131dd80b}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenInterruptedStateAndAbortDoneResetMoveDisablePowerThenGotoIdlingState_Test18
+VAR_INST
+	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=THIS^.fbMotionAxisNC[14], iMoveRequest:=THIS^.fbMoveRequest[18]);
+	expectedMoveState : E_MoveState := E_MoveState.IDLING;
+	fbTestTimer: TON := (IN:=TRUE, PT:=T#2S);
+	nTestStep : INT;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[TEST(__POUNAME());
+CASE 	nTestStep OF 
+	0:
+		fbMotionAxisNC[14].Status.bAborted := TRUE;
+		fbMotionDriveStateMachine.MoveState := E_MoveState.IN_PROGRESS;
+		nTestStep := nTestStep + 1;
+	1:
+		// now we should be in the interrupted state
+		fbMotionAxisNC[14].Status.bAbortDone := TRUE;
+		fbMotionAxisNC[14]();
+		nTestStep := nTestStep + 1;
+END_CASE
+
+fbMotionAxisNC[14]();
+fbMotionDriveStateMachine();
+fbTestTimer();
+
+IF nTestStep = 2 THEN
+	AssertEquals_INT(	Expected:=expectedMoveState, 
+					Actual:=fbMotionDriveStateMachine.MoveState, 
+					Message:='Drive must be in IDLING state #1');	
+	TEST_FINISHED();
+ELSIF fbTestTimer.Q THEN
+    AssertTrue(Condition := FALSE, Message := CONCAT('Timed out at step: ', TO_STRING(nTestStep)));
+    TEST_FINISHED();
+END_IF
+
+
+
+]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GIvenInPogressStateAndErrorThenGotoErrorState_Test10" Id="{28cb6bb1-ec96-4d23-af1d-fc11517a7c6e}">
-      <Declaration><![CDATA[METHOD PRIVATE GIvenInPogressStateAndErrorThenGotoErrorState_Test10
-VAR_INPUT
+    <Method Name="GIvenInterruptedStateAndInterlockEventResetMoveDisablePowerThenGotoIdlingState_Test19" Id="{cf5f17a7-5c73-4aaa-8b09-859ec5e5d3f4}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenInterruptedStateAndInterlockEventResetMoveDisablePowerThenGotoIdlingState_Test19
+VAR_INST
+	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=THIS^.fbMotionAxisNC[15], iMoveRequest:=THIS^.fbMoveRequest[19]);
+	expectedMoveState : E_MoveState := E_MoveState.IDLING;
+	fbTestTimer: TON := (IN:=TRUE, PT:=T#2S);
+	nTestStep : INT;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[TEST(__POUNAME());
+CASE 	nTestStep OF 
+	0:
+		fbMotionDriveStateMachine.MoveState := E_MoveState.IN_PROGRESS;
+		fbMotionDriveStateMachine.StateMachine(InterlockEvent:=TRUE, Error:=FALSE);
+		fbMotionDriveStateMachine();
+		nTestStep := nTestStep + 1;
+	1:
+		nTestStep := nTestStep + 1;
+END_CASE
+
+fbMotionAxisNC[14]();
+fbMotionDriveStateMachine();
+fbTestTimer();
+
+IF nTestStep = 2 THEN
+	AssertEquals_INT(	Expected:=expectedMoveState, 
+					Actual:=fbMotionDriveStateMachine.MoveState, 
+					Message:='Drive must be in IDLING state #1');	
+	TEST_FINISHED();
+ELSIF fbTestTimer.Q THEN
+    AssertTrue(Condition := FALSE, Message := CONCAT('Timed out at step: ', TO_STRING(nTestStep)));
+    TEST_FINISHED();
+END_IF
+
+
+
+]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GIvenInPogressStateAndHomeMoveDoneStatusFromAxisThenGotoReachedState_Test13" Id="{d2a45819-db3f-4a59-bee7-a248201f6ba7}">
-      <Declaration><![CDATA[METHOD PRIVATE GIvenInPogressStateAndHomeMoveDoneStatusFromAxisThenGotoReachedState_Test13
-VAR_INPUT
+    <Method Name="GivenNCAxisInitStateValidatedAbsoluteMoveRequestThenGotoStartedState_Test4" Id="{8d46b128-d2cf-4a84-88c0-16810e3a0f71}">
+      <Declaration><![CDATA[METHOD PRIVATE GivenNCAxisInitStateValidatedAbsoluteMoveRequestThenGotoStartedState_Test4
+VAR_INST
+	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=fbMotionAxisNC[4], iMoveRequest:=fbMoveRequest[4]);
+	expectedMoveState : E_MoveState := E_MoveState.STARTED;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[TEST(__POUNAME());
+
+fbMoveRequest[4].EpicsMotorCommand := E_EpicsMotorCmd.MOVE_ABSOLUTE;
+fbMoveRequest[4]();
+fbMotionDriveStateMachine.MoveState := E_MoveState.INIT;
+fbMotionDriveStateMachine();
+
+
+expectedMoveState := E_MoveState.STARTED;
+AssertEquals_INT(	Expected:=expectedMoveState, 
+					Actual:=fbMotionDriveStateMachine.MoveState, 
+					Message:='Drive Machine state must be STARTED #1');
+TEST_FINISHED();	
+]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GIvenInterruptedStateAndAbortDoneResetMoveDisablePowerThenGotoIdlingState_Test15" Id="{aca46138-8000-454b-a5cd-42c8131dd80b}">
-      <Declaration><![CDATA[METHOD PRIVATE GIvenInterruptedStateAndAbortDoneResetMoveDisablePowerThenGotoIdlingState_Test15
-VAR_INPUT
-END_VAR
-]]></Declaration>
+    <Method Name="GivenNCAxisInitStateValidatedHomeMoveRequestIfModeConfigDoneThenGotoStartedState_Test5" Id="{31fb44ea-162e-472b-980f-9ed88057e4a4}">
+      <Declaration><![CDATA[METHOD PRIVATE GivenNCAxisInitStateValidatedHomeMoveRequestIfModeConfigDoneThenGotoStartedState_Test5
+VAR_INST
+	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=fbMotionAxisNC[5], iMoveRequest:=fbMoveRequest[5]);
+	expectedMoveState : E_MoveState := E_MoveState.ERROR;
+	fbTestTimer: TON := (IN:=TRUE, PT:=T#6S);
+	nTestStep : INT;
+END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[TEST(__POUNAME());
+
+fbMoveRequest[5].EpicsMotorCommand := E_EpicsMotorCmd.HOME;
+fbMoveRequest[5]();
+fbMotionDriveStateMachine.MoveState := E_MoveState.INIT;
+fbMotionDriveStateMachine();
+
+
+expectedMoveState := E_MoveState.STARTED;
+AssertEquals_INT(	Expected:=expectedMoveState, 
+					Actual:=fbMotionDriveStateMachine.MoveState, 
+					Message:='Drive Machine state must be STARTED #1');
+TEST_FINISHED();	
+]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GIvenInterruptedStateAndInterlockEventResetMoveDisablePowerThenGotoIdlingState_Test14" Id="{cf5f17a7-5c73-4aaa-8b09-859ec5e5d3f4}">
-      <Declaration><![CDATA[METHOD PRIVATE GIvenInterruptedStateAndInterlockEventResetMoveDisablePowerThenGotoIdlingState_Test14
-VAR_INPUT
+    <Method Name="GIvenReachedStateAndAxisStandStillCompleteMoveRequestThenGotoIdlingState_Test20" Id="{83e676d8-5c2e-4536-a041-fe86ebe293f0}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenReachedStateAndAxisStandStillCompleteMoveRequestThenGotoIdlingState_Test20
+VAR_INST
+	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=THIS^.fbMotionAxisNC[16], iMoveRequest:=THIS^.fbMoveRequest[20]);
+	expectedMoveState : E_MoveState := E_MoveState.IDLING;
 END_VAR
+
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[TEST(__POUNAME());
+
+fbMotionAxisNC[16].Status.bStandStill := TRUE;
+fbMotionAxisNC[16].Status.bHomeDone := FALSE;
+fbMotionAxisNC[16].Status.bMoveAbsoluteDone := TRUE;
+fbMotionAxisNC[16]();
+fbMotionDriveStateMachine.MoveState := E_MoveState.REACHED;
+fbMotionDriveStateMachine();
+
+AssertEquals_INT(	Expected:=expectedMoveState, 
+					Actual:=fbMotionDriveStateMachine.MoveState, 
+					Message:='Drive must be in IDLING state #1');
+
+
+TEST_FINISHED();
+
+]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GIvenReachedStateAndAxisStandStillCompleteMoveRequestThenGotoIdlingState_Test16" Id="{83e676d8-5c2e-4536-a041-fe86ebe293f0}">
-      <Declaration><![CDATA[METHOD PRIVATE GIvenReachedStateAndAxisStandStillCompleteMoveRequestThenGotoIdlingState_Test16
-VAR_INPUT
+    <Method Name="GIvenStartedStateAndBusyStatusFromAxisThenGotoInProgressState_Test11" Id="{f833457a-0a08-46c9-a02f-278e95854b77}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenStartedStateAndBusyStatusFromAxisThenGotoInProgressState_Test11
+VAR_INST
+	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=fbMotionAxisNC[7], iMoveRequest:=fbMoveRequest[11]);
+	expectedMoveState : E_MoveState := E_MoveState.IN_PROGRESS;
+	nTestStep : INT;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[TEST(__POUNAME());
+CASE nTestStep OF
+	0:
+		fbMotionDriveStateMachine.MoveState := E_MoveState.STARTED;
+		fbMotionAxisNC[7].Status.bBusy := TRUE;
+		nTestStep := nTestStep + 1;	
+	1:
+		AssertEquals_INT(	Expected:=expectedMoveState, 
+							Actual:=fbMotionDriveStateMachine.MoveState, 
+							Message:='Drive Machine must be IN_PROGRESS state #1');
+		TEST_FINISHED();
+END_CASE
+
+fbMotionDriveStateMachine();
+
+
+
+
+]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GIvenStartedStateAndBusyStatusFromAxisThenGotoInPorgressState_Test8" Id="{f833457a-0a08-46c9-a02f-278e95854b77}">
-      <Declaration><![CDATA[METHOD PRIVATE GIvenStartedStateAndBusyStatusFromAxisThenGotoInPorgressState_Test8
-VAR_INPUT
+    <Method Name="GIvenStartedStateAndWatchDogTimeOutThenGotoInProgressState_Test12" Id="{b226f6b2-d93a-4ba8-aec3-1cd70a749a51}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenStartedStateAndWatchDogTimeOutThenGotoInProgressState_Test12
+VAR_INST
+	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=fbMotionAxisNC[8], iMoveRequest:=fbMoveRequest[12]);
+	expectedMoveState : E_MoveState := E_MoveState.ERROR;
+	fbTestTimer: TON := (IN:=TRUE, PT:=T#6S);
+	nTestStep : INT;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[TEST(__POUNAME());
+CASE nTestStep OF
+	0:
+		fbMoveRequest[12].Status.bExecute := TRUE;
+		fbMoveRequest[12]();
+		fbMotionDriveStateMachine.MoveState := E_MoveState.STARTED;
+		fbMotionDriveStateMachine.WatchDog := TRUE;
+		fbMotionDriveStateMachine();
+		nTestStep := nTestStep + 1;
+	1:
+		IF fbMotionDriveStateMachine.WatchDogStatus THEN
+			nTestStep := nTestStep + 1;
+		END_IF
+
+	2:
+		IF fbMotionDriveStateMachine.WatchDogTimeOut THEN
+			nTestStep := nTestStep + 1;
+		END_IF
+	3:
+		AssertEquals_INT(	Expected:=expectedMoveState, 
+							Actual:=fbMotionDriveStateMachine.MoveState, 
+							Message:='Drive Machine state must be ERROR #1');
+		AssertTrue(Condition := fbMotionDriveStateMachine.Error, Message := 'Motion Drive state machine must be in error state #2');
+		nTestStep := nTestStep + 1;
+		TEST_FINISHED();	
+END_CASE
+
+fbMotionDriveStateMachine();
+fbTestTimer();
+
+IF fbTestTimer.Q THEN
+    AssertTrue(Condition := FALSE, Message := CONCAT('Timed out at step: ', TO_STRING(nTestStep)));
+    TEST_FINISHED();
+END_IF
+]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GIvenStartedStatedAndErrorThenGotoErrorState_Test7" Id="{1f66d336-89a0-4d12-b7a7-63e152d0a1f3}">
-      <Declaration><![CDATA[METHOD PRIVATE GIvenStartedStatedAndErrorThenGotoErrorState_Test7
-VAR_INPUT
+    <Method Name="GIvenStartedStatedAndErrorThenGotoErrorState_Test10" Id="{1f66d336-89a0-4d12-b7a7-63e152d0a1f3}">
+      <Declaration><![CDATA[METHOD PRIVATE GIvenStartedStatedAndErrorThenGotoErrorState_Test10
+VAR_INST
+	fbMotionDriveStateMachine : FB_MotionDriveStateMachine(iMotionAxis:=fbMotionAxisNC[6], iMoveRequest:=fbMoveRequest[10]);
+	expectedMoveState : E_MoveState := E_MoveState.ERROR;
+
+	nTestStep : INT;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[TEST(__POUNAME());
+CASE nTestStep OF
+	0:
+		fbMotionDriveStateMachine.MoveState := E_MoveState.STARTED;
+		fbMotionDriveStateMachine.StateMachine(InterlockEvent:=FALSE, Error:=TRUE);
+		nTestStep := nTestStep + 1;	
+	1:
+		AssertEquals_INT(	Expected:=expectedMoveState, 
+							Actual:=fbMotionDriveStateMachine.MoveState, 
+							Message:='Drive Machine must be ERROR state #1');
+		TEST_FINISHED();
+END_CASE
+
+fbMotionDriveStateMachine();
+
+
+
+
+]]></ST>
       </Implementation>
     </Method>
   </POU>

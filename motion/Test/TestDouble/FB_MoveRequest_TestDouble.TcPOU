@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_MoveRequest_TestDouble" Id="{f79ff9ea-c5fb-4287-a47e-3e52fe39dad4}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MoveRequest_TestDouble IMPLEMENTS I_MoveRequest
+VAR
+    eEnableMode: E_StageEnableMode:=E_StageEnableMode.DURING_MOTION;
+    bMoveCmd	: BOOL;
+    bHomeCmd: BOOL;
+    eHomeMode	: E_EpicsHomeCmd;
+	bEnableDone : BOOL;
+    bMoveOk: BOOL;
+    bExecute : BOOL;
+	stMotionRequestStatus : ST_MoveRequestStatus;	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="EnableMode" Id="{66b8f19e-4221-443f-b49c-d49ffdab97f1}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY EnableMode : ENUM_StageEnableMode
+]]></Declaration>
+      <Get Name="Get" Id="{a1b2d88c-6b31-492d-ab0b-905dfac6e434}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{0826e199-470b-41c3-a9c0-813d50acad62}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="EpicsMotorCommand" Id="{9e3a0522-4957-4a0f-822b-ec71ef18e062}">
+      <Declaration><![CDATA[PROPERTY INTERNAL EpicsMotorCommand : INT]]></Declaration>
+      <Get Name="Get" Id="{3e155d13-93f5-474c-9ebd-b644c33d821d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[EpicsMotorCommand := stMotionRequestStatus.nCommand;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{ad667525-86b7-4afb-af24-f093ed7473d3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[stMotionRequestStatus.nCommand := EpicsMotorCommand;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="InitMoveRequest" Id="{26231f67-3b3b-4070-a264-798d1d19bc23}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD InitMoveRequest
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveRequest" Id="{e51e3678-c3aa-4bd6-8679-36a860fb753b}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD MoveRequest
+VAR_INPUT
+	(* From Axis through the drive*)
+	EnableDone	: BOOL;
+	(* From Interlock through the drive*)
+	MoveOk	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveRequestCompleted" Id="{c7ab1522-b76e-48c4-86bd-f5dd13d1298b}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD MoveRequestCompleted
+VAR_INPUT
+	MoveDone	: BOOL;
+	HomeDone	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveRequestDone" Id="{44c9f40d-ce58-4660-9fa7-f17f0c4adf10}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD MoveRequestDone
+VAR_INPUT
+	Done	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveRequestError" Id="{17958167-de04-4369-8ecb-b80a6455af92}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD MoveRequestError
+VAR_INPUT
+	Error	: BOOL;
+	ErrorId	: UDINT;
+	ErrorMessage	: T_MAXSTRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PauseMoveRequest" Id="{62f53f48-84cf-46cf-967e-c760a56f5485}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD PauseMoveRequest : BOOL
+VAR_INPUT
+	Busy	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ResetMoveEnable" Id="{d9a38b2c-4208-4dbc-9ad7-b8bdcfa1e4f3}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD ResetMoveEnable
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ResetMoveRequest" Id="{8bff28f3-fae6-46e5-8f37-8cf755f60759}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD ResetMoveRequest
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ResetMoveRequestErrors" Id="{a7158e7f-c22a-418f-a7c6-dc5045d8a707}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD ResetMoveRequestErrors
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Status" Id="{aa3ec75e-548d-4120-aabb-5680dda6acfd}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Status : REFERENCE TO ST_MoveRequestStatus
+]]></Declaration>
+      <Get Name="Get" Id="{e6adfc98-9c8d-4e29-8b25-b75a7be4044a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Status REF= stMotionRequestStatus;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>
