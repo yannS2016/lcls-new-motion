@@ -3,6 +3,19 @@
   <POU Name="FB_MotionAxisNC_TestDouble" Id="{65106e1e-861e-4e30-b566-2b009ccc179b}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionAxisNC_TestDouble IMPLEMENTS I_MotionAxis
 VAR
+
+    iHome : I_Home;
+    iHalt : I_Halt;
+    iPower : I_Power;
+    iReset : I_Reset;
+    iMoveAbsolute : I_MoveAbsolute;
+    iReadParameter : I_ReadParameter;
+    iWriteParameter  : I_WriteParameter;
+    iParamSaveRestore: I_ParamSaveRestore;
+    iEncoderScaling : I_EncoderScaling;
+    iAxisStatus : I_AxisStatus;
+    iBacklashCompensation : I_BacklashCompensation;
+
     bError: BOOL;
     nErrorID: UDINT;
     sMessage : T_MAXSTRING;

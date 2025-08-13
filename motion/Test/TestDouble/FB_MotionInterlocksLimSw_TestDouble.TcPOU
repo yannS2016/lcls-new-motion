@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_MotionInterlocksLimSw_TestDouble" Id="{21f43876-bbfe-45b3-9c17-f49316824f4b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionInterlocksLimSw_TestDouble IMPLEMENTS I_MotionInterlocks
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="AxisStatus" Id="{50c5bd0b-cc66-4749-8282-e5e3388dc90e}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD AxisStatus
+VAR_INPUT
+	HomeBusy	: BOOL;
+	PositiveDirection	: BOOL;
+	NegativeDirection	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DriveCommands" Id="{33f79738-8853-40d3-b276-fd3ec975ee74}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD DriveCommands
+VAR_INPUT
+	Enable	: BOOL;
+	NewMoveReq	: BOOL;
+	Reset	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Error" Id="{2d82a3f7-e9d9-4f60-89ee-f767c119473b}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Error : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{0c9adc32-875f-455a-9348-9e91c2136a2e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ErrorID" Id="{7591664c-59d6-4ea6-ad7a-b681f08c6bcb}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY ErrorID : UDINT
+]]></Declaration>
+      <Get Name="Get" Id="{09b56839-3ecc-4575-9657-b30965a00f60}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="InterlockEvent" Id="{462e9ab6-e8ad-4dc9-b9b7-9bd40388e72b}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY InterlockEvent : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{c25ec5f6-f6f9-4e64-8f34-2543ccad456d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="LimHome" Id="{996b3d94-6585-4089-bf52-671882c7dacd}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY LimHome : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{6cf28804-ad65-4297-bb72-3dbdad554599}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Message" Id="{b505fe82-ef78-4450-b778-d2c5899646d2}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Message : T_MAXSTRING
+]]></Declaration>
+      <Get Name="Get" Id="{dccbdb6b-766a-405b-95e8-5df32119c93f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MoveBackwardEnabled" Id="{ed482ad7-b1c3-412c-b832-6da8fe190d69}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY MoveBackwardEnabled : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{67810e1e-6b2d-43ef-b25c-e51d48dcc777}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MoveForwardEnabled" Id="{3dea3059-8830-4c14-9c0d-196aba715801}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY MoveForwardEnabled : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{7d4bfd5f-8649-4742-8367-f47786025327}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MoveOk" Id="{65cb5539-77ba-45bb-a7c8-e0a3eaedca97}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY MoveOk : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{55e9535f-457b-4dcc-9e51-a423b28cefb8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="PowerEnabled" Id="{d3350f4f-282b-492a-8e6d-573e2b2cca20}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY PowerEnabled : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{36d3dc3c-431d-4213-b2b1-505c852c4fc6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Warning" Id="{08266c97-a963-44e9-976e-acb204a37e59}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Warning : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{87c853ab-7d2a-4039-a7e5-d576f8c47535}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>

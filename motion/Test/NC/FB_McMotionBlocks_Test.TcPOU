@@ -89,6 +89,7 @@ CASE nTestStep OF
 
 END_CASE
 //
+fbAxisRef[6].ReadStatus();
 fbBacklashCompensation();
 fbHome();
 fbCamSwitchPulserSearch();
@@ -185,6 +186,7 @@ CASE nTestStep OF
 
 END_CASE
 //
+fbAxisRef[8].ReadStatus();
 fbBacklashCompensation();
 fbMoveAbsolute();
 fbTestTimer();
@@ -280,6 +282,7 @@ CASE nTestStep OF
 
 END_CASE
 //
+fbAxisRef[7].ReadStatus();
 fbBacklashCompensation();
 fbMoveAbsolute();
 fbTestTimer();
@@ -355,6 +358,7 @@ END_CASE
 //
 fbLimtHitTimer();
 fbTestTimer();
+fbAxisRef[5].ReadStatus();
 fbMoveAbsolute();
 
 IF nTestStateStep = 4 THEN
@@ -424,6 +428,7 @@ END_CASE
 //
 fbLimtHitTimer();
 fbTestTimer();
+fbAxisRef[4].ReadStatus();
 fbMoveAbsolute();
 
 IF nTestStateStep = 4 THEN
@@ -479,6 +484,7 @@ CASE nTestStateStep OF
 END_CASE
 
 fbTestTimer();
+fbAxisRef[1].ReadStatus();
 fbMoveAbsolute();
 
 IF nTestStateStep = 3 THEN
@@ -552,6 +558,7 @@ END_CASE
  
 fbTestTimer();
 fbInMotionTimer();
+fbAxisRef[2].ReadStatus();
 fbMoveAbsolute();
 fbHalt();
 
@@ -627,6 +634,7 @@ CASE nTestStateStep OF
 END_CASE
  
 fbInMotionTimer();
+fbAxisRef[3].ReadStatus();
 fbMoveAbsolute();
 fbReset();
 fbTestTimer();

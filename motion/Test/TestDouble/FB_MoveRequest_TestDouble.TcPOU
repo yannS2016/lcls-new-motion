@@ -149,6 +149,16 @@ METHOD ResetMoveRequestErrors
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
+    <Method Name="RestoreSettings" Id="{41457382-4ca7-41b9-9de4-5889425b6779}">
+      <Declaration><![CDATA[METHOD RestoreSettings
+VAR_INPUT
+	RestoreDone : BOOL;
+	SavedPosition : LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="Status" Id="{aa3ec75e-548d-4120-aabb-5680dda6acfd}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY Status : REFERENCE TO ST_MoveRequestStatus

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="FB_AxisStatus_TestDouble" Id="{3bc600b5-957e-4849-b712-96877efc6ba9}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_AxisStatus_TestDouble IMPLEMENTS I_AxisStatus
+  <POU Name="FB_AxisStatusNC_TestDouble" Id="{3bc600b5-957e-4849-b712-96877efc6ba9}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_AxisStatusNC_TestDouble IMPLEMENTS I_AxisStatus
 VAR
 	bError : BOOL;
 	nErrorID : UDINT := 24000;

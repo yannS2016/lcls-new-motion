@@ -11,8 +11,8 @@ VAR
     fbReadParameter : FB_ReadParameterNC_TestDouble;
     fbWriteParameter  : FB_WriteParameterNC_TestDouble;
     fbParamSaveRestore: FB_ParamSaveRestoreNC_TestDouble;
-    fbEncoderScaling : FB_EncoderScaling_TestDouble;
-    fbAxisStatus : FB_AxisStatus_TestDouble;
+    fbEncoderScaling : FB_EncoderScalingNC_TestDouble;
+    fbAxisStatus : FB_AxisStatusNC_TestDouble;
     fbBacklashCompensation : FB_BacklashCompensationNC_TestDouble;
 
 END_VAR

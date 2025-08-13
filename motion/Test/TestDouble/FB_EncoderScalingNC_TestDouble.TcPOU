@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="FB_EncoderScaling_TestDouble" Id="{3f8ce75b-8ee3-4620-85ff-fbc59d6ed483}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_EncoderScaling_TestDouble IMPLEMENTS I_EncoderScaling
+  <POU Name="FB_EncoderScalingNC_TestDouble" Id="{3f8ce75b-8ee3-4620-85ff-fbc59d6ed483}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_EncoderScalingNC_TestDouble IMPLEMENTS I_EncoderScaling
 
 ]]></Declaration>
     <Implementation>

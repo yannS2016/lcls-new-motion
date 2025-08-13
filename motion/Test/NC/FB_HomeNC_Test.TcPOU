@@ -21,7 +21,7 @@ END_VAR
     <Implementation>
       <ST><![CDATA[GivenHomeCmdNoneThenHomeDoneIsTrue_Test1();
 GivenHomeCmdAbsoluteSetThenThenAndHomeDoneAndPositionSetToUserDefineOffset_Test2();
-GivenHomeCmdSetToLowLimitAndALowLimitPulseThenHomeDoneAndPositionSetToUserDefineOffset_Test3();
+GivenHomeCmdLowLimitModeAndABackwardSwPulseThenHomeDoneAndPositionSetToUserDefineOffset_Test3();
 GivenHomeCmdSetToHighLimitAndHighLimitPulseThenHomeDoneAndPositionSetToUserDefineOffset_Test4();
 GivenHomeCmdSetToHomeViaHighLimitAndHomeHighLimitPulseThenHomeDoneAndPositionSetToUserDefineOffset_Test5();
 GivenHomeCmdSetToHomeViaLowLimitAndHomeLowLimitPulseThenHomeDoneAndPositionSetToUserDefineOffset_Test6();
@@ -66,7 +66,7 @@ CASE nTestStep OF
     2:
      //
 END_CASE
-
+fbAxisRef[2].ReadStatus();
 fbHome();
 fbTestTimer(IN := TRUE);
 
@@ -81,6 +81,78 @@ ELSIF fbTestTimer.Q THEN
         Condition := FALSE,
         Message := CONCAT('Timed out at step: ', TO_STRING(nTestStep))
     );
+    TEST_FINISHED();
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GivenHomeCmdLowLimitModeAndABackwardSwPulseThenHomeDoneAndPositionSetToUserDefineOffset_Test3" Id="{258c5fca-fb29-4806-85ec-0c0567cfff16}">
+      <Declaration><![CDATA[METHOD PRIVATE GivenHomeCmdLowLimitModeAndABackwardSwPulseThenHomeDoneAndPositionSetToUserDefineOffset_Test3
+VAR_INST
+    fbHome : FB_HomeNC(AxisRef:=fbAxisRef[3], iLimSwStatus:=fbLimSwStatus[3],iMotionLogger:=fbMotionLogger[3]):=(Mode:=E_EpicsHomeCmd.LOW_LIMIT);
+    fbTestTimer: TON := (IN:=TRUE, PT:=T#5S);
+    fbCamSwitchPulserSearch: TON := (IN:=TRUE, PT:=T#500MS);
+    fbCamSwitchPulserSync: TON := (PT:=T#1000MS);
+    nTestStep : INT;
+    fExpectedPosition : LREAL := 20.0;
+    fActPosition : LREAL;
+	bCalibrated: BOOL;
+	// reset this when error or homeDone
+	bHomingOverride : BOOL := TRUE;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST(__POUNAME());
+
+fbLimSwStatus[3]();
+fbMotionLogger[3]();
+fbPower[3].Power(	Enable:=TRUE,
+                            Enable_Positive:=bHomingOverride OR fbLimSwStatus[3].LimForward,
+                            Enable_Negative:=bHomingOverride OR fbLimSwStatus[3].LimBackward,
+                            Override:=100.0);
+							
+CASE nTestStep OF
+    0:
+		IF fbPower[3].PowerIsEnabled THEN
+			fbHome.Home(Position:=20.0,BufferMode:=MC_BufferMode.MC_Aborting);
+			nTestStep := nTestStep + 1;
+		END_IF
+
+    1:
+        IF fbCamSwitchPulserSearch.Q THEN
+            fbLimSwStatus[3].LimBackward := FALSE;
+            fbCamSwitchPulserSearch.IN := FALSE;
+            fbCamSwitchPulserSync.IN := TRUE;
+            nTestStep := nTestStep + 1;
+        END_IF
+    2:
+        IF fbCamSwitchPulserSync.Q THEN
+            fbLimSwStatus[3].LimBackward := TRUE;
+            nTestStep := nTestStep + 1;
+        END_IF
+    3:
+        IF fbHome.Done THEN
+            nTestStep := nTestStep + 1;
+        END_IF
+    4:;
+END_CASE
+fbAxisRef[3].ReadStatus();
+fbHome();
+fbCamSwitchPulserSearch();
+fbCamSwitchPulserSync();
+fbTestTimer();
+
+IF nTestStep = 4 THEN
+	bCalibrated := fbHome.Done;
+	AssertEquals_BOOL(Expected:=fbAxisRef[3].Status.Homed, Actual:=bCalibrated, Message := 'Axis not calibrated #1');
+	AssertEquals_LREAL ( Delta:=0.001, Expected:=fExpectedPosition, Actual:=fbAxisRef[3].NcToPlc.ActPos, Message:='Position is not the expected #2');
+	TEST_FINISHED();
+ELSIF fbTestTimer.Q THEN
+    AssertTrue(
+        Condition := FALSE,
+        Message := CONCAT('Timed out at step: ', TO_STRING(nTestStep))
+    );
+
     TEST_FINISHED();
 END_IF
 ]]></ST>
@@ -191,7 +263,7 @@ CASE nTestStep OF
         END_IF
     4:;
 END_CASE
-
+fbAxisRef[4].ReadStatus();
 fbHome();
 fbCamSwitchPulserSearch();
 fbCamSwitchPulserSync();
@@ -231,7 +303,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST(__POUNAME());
-
+fbAxisRef[8].ReadStatus();
 fbLimSwStatus[8]();
 fbMotionLogger[8]();
 fbPower[8].Power(	Enable:=TRUE,
@@ -354,7 +426,7 @@ CASE nTestStep OF
         END_IF
     4:;
 END_CASE
-
+fbAxisRef[5].ReadStatus();
 fbPower[5]();
 fbHome();
 
@@ -396,7 +468,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST(__POUNAME());
-
+fbAxisRef[7].ReadStatus();
 fbLimSwStatus[7]();
 fbMotionLogger[7]();
 fbPower[7].Power(	Enable:=TRUE,
@@ -519,7 +591,7 @@ CASE nTestStep OF
         END_IF
     4:;
 END_CASE
-
+fbAxisRef[6].ReadStatus();
 fbPower[6]();
 fbHome();
 
@@ -531,78 +603,6 @@ IF nTestStep = 4 THEN
 	bCalibrated := fbHome.Done;
 	AssertEquals_BOOL(Expected:=fbAxisRef[6].Status.Homed, Actual:=bCalibrated, Message := 'Axis not calibrated #1');
 	AssertEquals_LREAL ( Delta:=0.001, Expected:=fExpectedPosition, Actual:=fbAxisRef[6].NcToPlc.ActPos, Message:='Position is not the expected #2');
-	TEST_FINISHED();
-ELSIF fbTestTimer.Q THEN
-    AssertTrue(
-        Condition := FALSE,
-        Message := CONCAT('Timed out at step: ', TO_STRING(nTestStep))
-    );
-
-    TEST_FINISHED();
-END_IF
-]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="GivenHomeCmdSetToLowLimitAndALowLimitPulseThenHomeDoneAndPositionSetToUserDefineOffset_Test3" Id="{258c5fca-fb29-4806-85ec-0c0567cfff16}">
-      <Declaration><![CDATA[METHOD PRIVATE GivenHomeCmdSetToLowLimitAndALowLimitPulseThenHomeDoneAndPositionSetToUserDefineOffset_Test3
-VAR_INST
-    fbHome : FB_HomeNC(AxisRef:=fbAxisRef[3], iLimSwStatus:=fbLimSwStatus[3],iMotionLogger:=fbMotionLogger[3]):=(Mode:=E_EpicsHomeCmd.LOW_LIMIT);
-    fbTestTimer: TON := (IN:=TRUE, PT:=T#5S);
-    fbCamSwitchPulserSearch: TON := (IN:=TRUE, PT:=T#500MS);
-    fbCamSwitchPulserSync: TON := (PT:=T#1000MS);
-    nTestStep : INT;
-    fExpectedPosition : LREAL := 20.0;
-    fActPosition : LREAL;
-	bCalibrated: BOOL;
-	// reset this when error or homeDone
-	bHomingOverride : BOOL := TRUE;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[TEST(__POUNAME());
-
-fbLimSwStatus[3]();
-fbMotionLogger[3]();
-fbPower[3].Power(	Enable:=TRUE,
-                            Enable_Positive:=bHomingOverride OR fbLimSwStatus[3].LimForward,
-                            Enable_Negative:=bHomingOverride OR fbLimSwStatus[3].LimBackward,
-                            Override:=100.0);
-							
-CASE nTestStep OF
-    0:
-		IF fbPower[3].PowerIsEnabled THEN
-			fbHome.Home(Position:=20.0,BufferMode:=MC_BufferMode.MC_Aborting);
-			nTestStep := nTestStep + 1;
-		END_IF
-
-    1:
-        IF fbCamSwitchPulserSearch.Q THEN
-            fbLimSwStatus[3].LimBackward := FALSE;
-            fbCamSwitchPulserSearch.IN := FALSE;
-            fbCamSwitchPulserSync.IN := TRUE;
-            nTestStep := nTestStep + 1;
-        END_IF
-    2:
-        IF fbCamSwitchPulserSync.Q THEN
-            fbLimSwStatus[3].LimBackward := TRUE;
-            nTestStep := nTestStep + 1;
-        END_IF
-    3:
-        IF fbHome.Done THEN
-            nTestStep := nTestStep + 1;
-        END_IF
-    4:;
-END_CASE
-
-fbHome();
-fbCamSwitchPulserSearch();
-fbCamSwitchPulserSync();
-fbTestTimer();
-
-IF nTestStep = 4 THEN
-	bCalibrated := fbHome.Done;
-	AssertEquals_BOOL(Expected:=fbAxisRef[3].Status.Homed, Actual:=bCalibrated, Message := 'Axis not calibrated #1');
-	AssertEquals_LREAL ( Delta:=0.001, Expected:=fExpectedPosition, Actual:=fbAxisRef[3].NcToPlc.ActPos, Message:='Position is not the expected #2');
 	TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
     AssertTrue(

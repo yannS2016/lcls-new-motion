@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_Brake_TestDouble" Id="{144e9e0e-b20e-44b9-be24-540c71e71b69}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Brake_TestDouble IMPLEMENTS I_Brake
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="Aborted" Id="{d6d3ac9a-da23-4ec5-8683-4729acf07c88}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Aborted : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{016caaf0-561b-47e3-ae05-652cc4429097}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Active" Id="{dc9c061b-08ec-445c-b29c-649824dcb8f5}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Active : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{24629651-eac6-4c0a-9482-41dee2928646}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="AxisState" Id="{87881c62-dd7e-4b35-956a-61cea7d5e5bd}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY AxisState : MC_AxisStates
+]]></Declaration>
+      <Set Name="Set" Id="{697c60ec-1f96-4cd7-a3e0-0ae926e536e6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="BrakeMode" Id="{c9e6f71f-3a17-40ca-88e4-7bf1c3940aa8}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY BrakeMode : E_StageBrakeMode
+]]></Declaration>
+      <Get Name="Get" Id="{91d11968-8e98-4880-a691-e94a587e09ac}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{cfdb5a25-98ba-4d3d-a7d4-8b2e98d14c8e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="BrakeRelease" Id="{2677e38e-be6d-4d87-91b7-f6ae4b2bec9a}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY BrakeRelease : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{27393291-46ff-41e8-864b-020d1f46f1ea}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Busy" Id="{9067f159-30bf-4383-a6d8-62c6fe818374}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Busy : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{3346dd29-44cf-44e7-8304-1133b9bfd0f5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Done" Id="{07c65a08-92e2-457a-8eea-2f1d736697a1}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Done : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{71ce288d-50e3-4ac7-b9e1-dd60a15be1b3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Error" Id="{b39b5a8a-4ddd-4d03-a22e-142bdde97e16}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Error : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{d368ffe4-e8e0-4f0e-bbc4-9a265390cd7f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ErrorID" Id="{4086e430-c1e8-4b0e-8c31-15d742ffdb37}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY ErrorID : UDINT
+]]></Declaration>
+      <Get Name="Get" Id="{5efa3fd9-4d60-4cd7-aa65-35c688d8f83e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Message" Id="{aae38139-b2f4-41b4-9a9b-5a1861e7d08d}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Message : T_MAXSTRING
+]]></Declaration>
+      <Get Name="Get" Id="{947ae49f-a6ce-498b-9c00-7da72e067a19}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>
