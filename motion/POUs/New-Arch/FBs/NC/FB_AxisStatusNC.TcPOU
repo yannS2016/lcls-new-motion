@@ -2,20 +2,18 @@
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_AxisStatusNC" Id="{48b2ca9e-7e0c-4a40-afd9-65beb0d8f7fb}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_AxisStatusNC IMPLEMENTS I_AxisStatus
-VAR_INPUT
-END_VAR
-VAR_OUTPUT
-END_VAR
 VAR
     {attribute 'no_copy'}
     AxisRef : REFERENCE TO AXIS_REF;
-    bDone : BOOL;
-    bBusy    : BOOL;
     sMessage : T_MAXSTRING;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[IF NOT __ISVALIDREF(AxisRef) THEN
+    RETURN;
+END_IF
+
+AxisRef.ReadStatus();]]></ST>
     </Implementation>
     <Property Name="Aborted" Id="{493fe813-f38c-4a72-a412-d39deeb9c5a8}">
       <Declaration><![CDATA[PROPERTY Aborted : BOOL
@@ -155,18 +153,6 @@ END_VAR]]></Declaration>
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="InTargetPosition" Id="{833e02a9-2ab3-4627-b017-70699d164f13}">
-      <Declaration><![CDATA[PROPERTY InTargetPosition : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{61009624-f415-45ec-8a11-0cb9f7b4d0aa}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[InTargetPosition := THIS^.AxisRef.Status.InTargetPosition;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
     <Property Name="MeasuredAcceleration" Id="{4119321c-b4b8-4129-b781-b94c8b154a94}">
       <Declaration><![CDATA[PROPERTY MeasuredAcceleration : LREAL
 ]]></Declaration>
@@ -263,18 +249,6 @@ END_VAR
 ]]></Declaration>
         <Implementation>
           <ST><![CDATA[StandStill := THIS^.AxisRef.Status.StandStill;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="Stopped" Id="{c6375ac0-08b6-4b85-999a-45c5d7a1fa71}">
-      <Declaration><![CDATA[PROPERTY Stopped : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{abded25b-8407-4890-9c37-9bccdbf06f91}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[Stopped := THIS^.AxisRef.Status.HasBeenStopped;]]></ST>
         </Implementation>
       </Get>
     </Property>

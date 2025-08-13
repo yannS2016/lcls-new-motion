@@ -57,12 +57,15 @@ VAR
         field: DESC Currently applied compensation
     '}
     fCurrentBacklash: LREAL;
-
+	{attribute 'hide'}
     fCurrentCompensation : LREAL := 0.0;
+	{attribute 'hide'}
     bEnable: BOOL;
+	{attribute 'hide'}
 	rtbacklashCompensation : R_TRIG;
+	{attribute 'hide'}
     bLocalEnable : BOOL;
-	btest : BOOL;
+	{attribute 'hide'}
     sMessage : T_MAXSTRING;
 END_VAR
 ]]></Declaration>

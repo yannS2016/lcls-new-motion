@@ -10,37 +10,61 @@ END_VAR
 VAR
     {attribute 'no_copy'}
     AxisRef : REFERENCE TO AXIS_REF;
+	{attribute 'hide'}
     iPersistentDataStorage : I_PersistentDataStorage;
-
     // save and restore
+	{attribute 'hide'}
     fbSetPos: MC_SetPosition;
+	{attribute 'hide'}
     bClearPositionLag : BOOL := TRUE;
-
+	{attribute 'hide'}
     nLatchErrId : BOOL;
+	{attribute 'hide'}
     bRestoreDone 	: BOOL;
+	{attribute 'hide'}
     bRestoreError 	: BOOL;
+	{attribute 'hide'}
     nRestoreErrorID : UDINT;
+	{attribute 'hide'}
     // save and Restore
     RestoreTimer: TON;
+	{attribute 'hide'}
     bRestoreInit: BOOL;
+	{attribute 'hide'}
     bRestoreLoad: BOOL;
+	{attribute 'hide'}
     nLatchError: UDINT;
+	{attribute 'hide'}
     bEncError: BOOL;
+	{attribute 'hide'}
     tRetryDelay: TIME := T#1S;
+	{attribute 'hide'}
     tRefreshDelay: TIME := T#1S;
+	{attribute 'hide'}
     bUpdateEnable : BOOL;
+	{attribute 'hide'}
     bExecute : BOOL;
+	{attribute 'hide'}
     nMaxRetries: UINT := 10;
+	{attribute 'hide'}
     nCurrTries: UINT := 0;
+	{attribute 'hide'}
     bRestoreWaitRetry: BOOL;
+	{attribute 'hide'}
     tonRestoreRetry: TON;
+	{attribute 'hide'}
     tRefreshTime : TIME := T#1S;
+	{attribute 'hide'}
     bError				: BOOL;
+	{attribute 'hide'}
     nErrorId			: UDINT:=0;
+	{attribute 'hide'}
     sMessage : T_MAXSTRING;
-
+	{attribute 'hide'}
     bSaveEnabled	: BOOL := TRUE;
+	{attribute 'hide'}
     bDone : BOOL;
+	{attribute 'hide'}
     bBusy    : BOOL;
 END_VAR
 
@@ -51,7 +75,31 @@ VAR PERSISTENT
     fSavedPosition: LREAL;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[IF NOT __ISVALIDREF(THIS^.AxisRef) THEN
+    RETURN;
+END_IF
+
+THIS^.AxisRef.ReadStatus();
+
+// Save Encoder position
+// needs some pre-conditions to use persistent storage
+IF bSaveEnabled THEN
+    // Check ST_MotionStage for an encoder error (range 0x44nn)
+    bEncError:= AxisRef.Status.Error AND  ( AxisRef.Status.ErrorID  >= 16#4400  AND AxisRef.Status.ErrorID <= 16#44FF );
+    // Do not save if we're currently loading or if there is an encoder error
+    IF NOT bRestoreLoad AND NOT bEncError AND NOT bRestoreWaitRetry THEN
+        fSavedPosition := AxisRef.NcToPlc.ActPos;
+        // This persistent variable lets us check if anything was saved
+        // It will be TRUE at startup if we have saved values
+        bSaved := TRUE;
+        (*
+            use this with a timer of a change threshold on the fActPosition
+            to trigger a save from this PLC program. otherwise this will be a spamming
+            persistence, filling up the disk.
+        *)
+        //iPersistentDataStorage.TriggerWriteOfPersistentData := bSaveEnabled;
+    END_IF
+END_IF]]></ST>
     </Implementation>
     <Property Name="Aborted" Id="{6f730b0b-0a56-4d4b-b10c-7aa6d451ffb9}">
       <Declaration><![CDATA[PROPERTY Aborted : BOOL

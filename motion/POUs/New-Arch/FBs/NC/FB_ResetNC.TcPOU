@@ -6,8 +6,6 @@ VAR
     {attribute 'no_copy'}
     AxisRef : REFERENCE TO AXIS_REF;
     fbMcReset 	: MC_Reset;
-    eResetState : (WaitingReset, Resetting);
-
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -15,21 +13,7 @@ END_VAR
     RETURN;
 END_IF
 
-AxisRef.ReadStatus();
-
-CASE eResetState OF
-    WaitingReset :
-        fbMcReset(
-        Axis := AxisRef,
-        Execute := FALSE);
-
-    Resetting :
-        fbMcReset(
-        Axis := AxisRef,
-        Execute := TRUE
-        );
-
-END_CASE
+fbMcReset( Axis := AxisRef );
 
 ]]></ST>
     </Implementation>
@@ -150,8 +134,7 @@ fbMcReset(Execute := FALSE,  Axis := THIS^.AxisRef);
 // initiate a new Resetting request
 fbMcReset(   Axis := THIS^.AxisRef,
              Execute := TRUE );
-
-eResetState := Resetting;]]></ST>
+]]></ST>
       </Implementation>
     </Method>
   </POU>

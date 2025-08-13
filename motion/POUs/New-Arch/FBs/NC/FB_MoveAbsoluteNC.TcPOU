@@ -150,14 +150,16 @@ END_VAR
         <ST><![CDATA[fbMcMoveAbsolute(Execute := FALSE,
                  Axis := THIS^.AxisRef);
 
-fbMcMoveAbsolute(Execute := TRUE,
+fbMcMoveAbsolute(
+		Execute := TRUE,
         Axis := THIS^.AxisRef,
-    Position := Position,
-    Velocity := Velocity,
-    Acceleration := Acceleration,
-    Deceleration := Deceleration,
-    Jerk := Jerk,
-    BufferMode := BufferMode);
+    	Position := Position,
+    	Velocity := Velocity,
+    	Acceleration := Acceleration,
+    	Deceleration := Deceleration,
+    	Jerk := Jerk,
+    	BufferMode := BufferMode
+);
 ]]></ST>
       </Implementation>
     </Method>

@@ -19,12 +19,6 @@
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Property Name="InTargetPosition" Id="{0d324bbd-5ce1-446d-b766-965d50324bd5}">
-      <Declaration><![CDATA[PROPERTY InTargetPosition : BOOL]]></Declaration>
-      <Get Name="Get" Id="{fe1a8697-1bab-490c-a151-eed566bd8470}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
     <Property Name="MeasuredAcceleration" Id="{11db257d-9669-4636-bf1c-bca0c2ae5dde}">
       <Declaration><![CDATA[PROPERTY MeasuredAcceleration : LREAL]]></Declaration>
       <Get Name="Get" Id="{f4db0f9e-f6fa-470b-a8a6-0964abbcda80}">
@@ -64,12 +58,6 @@
     <Property Name="StandStill" Id="{56f881a0-102f-43c3-a476-aa30cefe31e9}">
       <Declaration><![CDATA[PROPERTY StandStill : BOOL]]></Declaration>
       <Get Name="Get" Id="{4d5f8519-3e3d-411b-bc51-16b647124219}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
-    <Property Name="Stopped" Id="{752ae048-f4b8-4fc3-90c4-81c2b42c4222}">
-      <Declaration><![CDATA[PROPERTY Stopped : BOOL]]></Declaration>
-      <Get Name="Get" Id="{9de74096-402c-41b0-8e8b-490e64645362}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
