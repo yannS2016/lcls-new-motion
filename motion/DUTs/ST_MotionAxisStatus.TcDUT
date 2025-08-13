@@ -3,6 +3,7 @@
   <DUT Name="ST_MotionAxisStatus" Id="{5360b8d7-a1fc-4337-aa26-a64d019d9101}">
     <Declaration><![CDATA[TYPE ST_MotionAxisStatus :
 STRUCT
+	nAxisId : UDINT;
 	bAxisEnable : BOOL;
 	bAbortDone : BOOL;
 	bAborted : BOOL;

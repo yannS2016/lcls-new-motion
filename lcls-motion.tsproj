@@ -1937,7 +1937,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{DA380EE4-C409-4A84-97B8-4D1FBAEE5CC8}" Name="motion" PrjFilePath="motion\motion.plcproj" TmcFilePath="motion\motion.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{0B3CB873-AA3F-A37F-9D0B-B6671F19F2CF}" TmcPath="motion\motion.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{FDAE4C56-9885-9336-7DCC-0193827110BB}" TmcPath="motion\motion.tmc">
 					<Name>motion Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" ContextId="2" AreaNo="33">
@@ -1950,6 +1950,70 @@ External Setpoint Generation:
 							<Name>NcAxis_GVL.E727.PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[1].PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[2].PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[3].PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[4].PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[5].PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[6].PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[7].PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[8].PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[1].PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[2].PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[3].PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[4].PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[5].PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[6].PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[7].PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[8].PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
 					</Vars>
 					<Vars VarGrpType="1" ContextId="2" AreaNo="32">
 						<Name>UnitTestTask Inputs</Name>
@@ -1959,6 +2023,70 @@ External Setpoint Generation:
 						</Var>
 						<Var>
 							<Name>NcAxis_GVL.E727.NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[1].NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[2].NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[3].NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[4].NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[5].NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[6].NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[7].NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[8].NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[1].NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[2].NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[3].NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[4].NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[5].NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[6].NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[7].NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[8].NcToPlc</Name>
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 					</Vars>
@@ -2156,6 +2284,7 @@ External Setpoint Generation:
 				</Instance>
 			</Project>
 		</Plc>
+		<Io/>
 		<Variants SpecificLocalBootFolder="true">
 			<Variant>
 				<Name>HardwareTesting</Name>
@@ -2169,10 +2298,75 @@ External Setpoint Generation:
 		</Variants>
 	</Project>
 	<Mappings>
+		<MappingInfo Identifier="{05000010-2002-0850-1000-040302205008}" Id="#x02030010" Watchdog="14000000040000000400000004000000"/>
 		<OwnerA Name="TIPC^motion^motion Instance">
 			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_Hard_Test">
 				<Link VarA="PlcTask Inputs^HARD_TEST.fbAxisRef.NcToPlc" VarB="Outputs^ToPlc"/>
 				<Link VarA="PlcTask Outputs^HARD_TEST.fbAxisRef.PlcToNc" VarB="Inputs^FromPlc"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Test1">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[1].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[1].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Test2">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[2].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[2].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Test3">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[3].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[3].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Test4">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[4].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[4].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Test5">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[5].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[5].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Test6">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[6].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[6].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Test7">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[7].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[7].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Test8">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[8].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[8].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_McMotionBlocks_Test1">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[1].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[1].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_McMotionBlocks_Test2">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[2].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[2].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_McMotionBlocks_Test3">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[3].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[3].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_McMotionBlocks_Test4">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[4].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[4].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_McMotionBlocks_Test5">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[5].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[5].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_McMotionBlocks_Test6">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[6].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[6].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_McMotionBlocks_Test7">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[7].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[7].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_McMotionBlocks_Test8">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[8].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[8].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
 			</OwnerB>
 		</OwnerA>
 	</Mappings>

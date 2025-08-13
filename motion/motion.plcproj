@@ -263,12 +263,6 @@
     <Compile Include="Test\Interlok\FB_MotionInterlocksLimSw_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Test\Interlok\TestDoubles\FB_LimSwStatus_testDouble.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Test\Interlok\TestDoubles\FB_MotionInterlocksCommon_TestDouble.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Test\HARD_TEST.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -276,6 +270,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Test\MotionDrive\FB_MotionDriveStateMachine_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\MotionDrive\FB_MotionDrive_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Test\MotionDrive\FB_MoveRequest_Test.TcPOU">
@@ -299,13 +296,19 @@
     <Compile Include="Test\CONTAINER_TEST.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Test\TestDouble\FB_AxisStatus_TestDouble.TcPOU">
+    <Compile Include="Test\TestDouble\FB_AxisStatusNC_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Test\TestDouble\FB_BacklashCompensationNC_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Test\TestDouble\FB_EncoderScaling_TestDouble.TcPOU">
+    <Compile Include="Test\TestDouble\FB_Brake_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestDouble\FB_EncoderScalingNC_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestDouble\FB_EpicsMotionParamsStatus_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Test\TestDouble\FB_HaltNC_TestDouble.TcPOU">
@@ -314,10 +317,25 @@
     <Compile Include="Test\TestDouble\FB_HomeNC_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Test\TestDouble\FB_LimSwStatus_testDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Test\TestDouble\FB_MotionAxisDS402_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Test\TestDouble\FB_MotionAxisNC_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestDouble\FB_MotionDriveStateMachine_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestDouble\FB_MotionInterlocksCommon_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestDouble\FB_MotionInterlocksLimSw_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestDouble\FB_MotionLogger_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Test\TestDouble\FB_MoveAbsoluteNC_TestDouble.TcPOU">
@@ -360,7 +378,6 @@
     <Folder Include="POUs\New-Arch\ITFs" />
     <Folder Include="Test" />
     <Folder Include="Test\Interlok" />
-    <Folder Include="Test\Interlok\TestDoubles" />
     <Folder Include="Test\MotionDrive" />
     <Folder Include="Test\NC" />
     <Folder Include="Test\TestDouble" />

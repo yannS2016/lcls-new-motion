@@ -18,6 +18,7 @@ VAR_INPUT
 	PowerOverride : LREAL;
 	Busy : BOOL;
 	HomeDone : BOOL;
+	MotionAxisId : UDINT;
 END_VAR
 ]]></Declaration>
     </Method>

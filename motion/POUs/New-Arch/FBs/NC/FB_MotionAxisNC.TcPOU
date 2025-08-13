@@ -45,6 +45,7 @@ stMotionAxisStatus.bHomeBusy := iHome.Busy;
 stMotionAxisStatus.bHomeDone := iHome.Done;
 stMotionAxisStatus.eHomeMode := iHome.Mode;
 stMotionAxisStatus.bInTargetPosition := iAxisStatus.InTargetPosition;
+stMotionAxisStatus.nAxisId := iAxisStatus.AxisID;
 stMotionAxisStatus.fMeasuredAcceleration := iAxisStatus.MeasuredAcceleration;
 stMotionAxisStatus.fMeasuredCompensation := iBacklashCompensation.CurrentBacklash;
 stMotionAxisStatus.fMeasuredPosition := iAxisStatus.MeasuredPosition;

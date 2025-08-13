@@ -3,11 +3,5 @@
   <Itf Name="I_MotionDrive" Id="{848572bc-fef8-4708-bb80-0dc37710e2cf}">
     <Declaration><![CDATA[INTERFACE I_MotionDrive
 ]]></Declaration>
-    <Method Name="RestoreSettings" Id="{14eecb93-a536-495b-8a81-ca4fbc68ea55}">
-      <Declaration><![CDATA[METHOD RestoreSettings
-VAR_INPUT
-END_VAR
-]]></Declaration>
-    </Method>
   </Itf>
 </TcPlcObject>

@@ -40,6 +40,8 @@ VAR
 	stMotionRequestStatus : ST_MoveRequestStatus;
     {attribute 'hide'}
 	ftStopExec: F_TRIG;
+	rtRestoreDone: R_TRIG;
+	eRestoreSettingsState : ( RestoreSettingWaiting:=0, RestoreSettingDone:=1);
 END_VAR
 
 ]]></Declaration>
@@ -85,6 +87,7 @@ IF rtUserExec.Q THEN
     // Transfer nCommand and nCmdData to local copies at rising edge of bExecute (avoid issues if nCommand or nCmdData are changed during a command)
     stMotionRequestStatus.nCmdData:=stMotionEpicsItf.nCmdData;
     stMotionRequestStatus.nCommand:=stMotionEpicsItf.nCommand;
+	
 	stMotionRequestStatus.bReset := FALSE;
     IF NOT bHomeCmd THEN
         (* attempting to move an axis without homing first? *)
@@ -232,7 +235,7 @@ VAR_INPUT
 	Done : BOOL;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.stMotionEpicsItf.bDone := Done;]]></ST>
+        <ST><![CDATA[stMotionEpicsItf.bDone := Done;]]></ST>
       </Implementation>
     </Method>
     <Method Name="MoveRequestError" Id="{674719eb-75b4-4cc3-924b-ecc3d1af31ff}">
@@ -324,6 +327,39 @@ stMotionEpicsItf.sErrorMessage := '';
 stMotionRequestStatus.bExecute := FALSE;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="RestoreSettings" Id="{08281416-55cb-4b9c-81b3-3cf6fd0d7faf}">
+      <Declaration><![CDATA[METHOD RestoreSettings
+VAR_INPUT
+	RestoreDone : BOOL;
+	SavedPosition : LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// no needed in production since the actual position is already set on the axis
+// and epics status will get that last position
+// use this to restore anything thats not an axisref paramter.
+
+CASE eRestoreSettingsState OF
+	RestoreSettingWaiting:
+		IF RestoreDone THEN
+			THIS^.stMotionEpicsItf.fPosition := SavedPosition;
+			eRestoreSettingsState := RestoreSettingDone;
+		END_IF
+	RestoreSettingDone:;
+		
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="RestoreSettingsState" Id="{b366cb5d-502b-43b3-8623-320516670b00}">
+      <Declaration><![CDATA[PROPERTY INTERNAL RestoreSettingsState : UINT]]></Declaration>
+      <Get Name="Get" Id="{a39741db-d8b0-422d-b3ab-4a4dba01333b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[//RestoreSettingsState := eRestoreSettingsState;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="Status" Id="{f678d159-cc5d-41ad-889c-5f951c755b6f}">
       <Declaration><![CDATA[PROPERTY Status : REFERENCE TO ST_MoveRequestStatus
 ]]></Declaration>

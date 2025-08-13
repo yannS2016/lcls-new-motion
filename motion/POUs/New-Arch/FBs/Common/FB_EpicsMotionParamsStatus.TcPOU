@@ -19,6 +19,7 @@ VAR
     fMeasuredPositionDiff: LREAL;
     fMeasuredPosition: LREAL;
     fMeasuredVelocity: LREAL;
+	nMotionAxisId : UDINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -38,6 +39,7 @@ stMotionEpicsItf.stAxisStatus.fActVelocity:=fMeasuredVelocity;
 stMotionEpicsItf.stAxisStatus.fOverride:=fPowerOverride;
 stMotionEpicsItf.stAxisStatus.bBusy:=bBusy;
 stMotionEpicsItf.stAxisStatus.bHomed:=bHomeDone;
+stMotionEpicsItf.nMotionAxisID :=nMotionAxisId;
 //stMotionEpicsInterface.stAxisStatus.bJogBwd:=bJogBwd;
 //stMotionEpicsInterface.stAxisStatus.bJogFwd:=bJogFwd;
 stMotionEpicsItf.stAxisStatus.bReset:=stMotionEpicsItf.bReset;
@@ -77,8 +79,7 @@ END_VAR]]></Declaration>
       </Implementation>
     </Method>
     <Method Name="MotionParamsAndStatus" Id="{f134f110-1d08-4330-b5d0-f1fa3db27f4f}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD MotionParamsAndStatus
+      <Declaration><![CDATA[METHOD MotionParamsAndStatus
 VAR_INPUT
     PowerEnabled	: BOOL;
     PowerIsEnabled	: BOOL;
@@ -92,21 +93,23 @@ VAR_INPUT
     PowerOverride	: LREAL;
     Busy	: BOOL;
     HomeDone	: BOOL;
+	MotionAxisId : UDINT;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[PowerEnabled := bPowerEnabled;
-PowerIsEnabled := bPowerIsEnabled;
-Execute := bExecute;
-LimHome := bLimHome;
-MoveBackwardEnabled := bMoveBackwardEnabled;
-MoveForwardEnabled := bMoveForwardEnabled;
-MeasuredPositionDiff := fMeasuredPositionDiff;
-MeasuredPosition := fMeasuredPosition;
-MeasuredVelocity := fMeasuredVelocity;
-PowerOverride := fPowerOverride;
-Busy := bBusy;
-HomeDone := bHomeDone;]]></ST>
+        <ST><![CDATA[THIS^.bPowerEnabled := PowerEnabled;
+THIS^.bPowerIsEnabled := PowerIsEnabled;
+THIS^.bExecute := Execute;
+THIS^.bLimHome := LimHome;
+THIS^.bMoveBackwardEnabled := MoveBackwardEnabled;
+THIS^.bMoveForwardEnabled := MoveForwardEnabled;
+THIS^.fMeasuredPositionDiff := MeasuredPositionDiff;
+THIS^.fMeasuredPosition := MeasuredPosition;
+THIS^.fMeasuredVelocity := MeasuredVelocity;
+THIS^.fPowerOverride := PowerOverride;
+THIS^.bBusy := Busy;
+THIS^.bHomeDone := HomeDone;
+THIS^.nMotionAxisId := MotionAxisId;]]></ST>
       </Implementation>
     </Method>
   </POU>

@@ -75,6 +75,14 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
+    <Method Name="RestoreSettings" Id="{9701b3da-9713-48c2-a2a8-cb5a91108d7e}">
+      <Declaration><![CDATA[METHOD RestoreSettings
+VAR_INPUT
+	RestoreDone : BOOL;
+	SavedPosition : LREAL;
+END_VAR
+]]></Declaration>
+    </Method>
     <Property Name="Status" Id="{ab64de35-a099-4fa5-b457-201acf0de4df}">
       <Declaration><![CDATA[PROPERTY Status : REFERENCE TO ST_MoveRequestStatus]]></Declaration>
       <Get Name="Get" Id="{c6de0394-af15-4352-a13e-94702c6cefdf}">
