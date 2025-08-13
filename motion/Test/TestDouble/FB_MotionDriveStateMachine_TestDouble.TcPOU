@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_MotionDriveStateMachine_TestDouble" Id="{bd4c0fda-2c0f-4d99-bff0-ed190100a01c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionDriveStateMachine_TestDouble IMPLEMENTS I_MotionDriveStateMachine
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="StateMachine" Id="{53a2f700-2d7e-4499-830f-475a67ac2b82}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD StateMachine
+VAR_INPUT
+	InterlockEvent	: BOOL;
+	Error	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="WatchDogStatus" Id="{e6fb2611-cf62-410c-b73d-4c60b0873c32}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY WatchDogStatus : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{6302b0ad-2cc0-4385-83f3-ee776beb4493}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="WatchDogTimeOut" Id="{18a85cf8-05cc-4f4c-b8a1-59a6774c4d9d}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY WatchDogTimeOut : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{0ada9824-d6e4-439b-a047-2c42f8f82b99}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>

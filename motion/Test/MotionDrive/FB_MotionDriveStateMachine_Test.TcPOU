@@ -3,6 +3,9 @@
   <POU Name="FB_MotionDriveStateMachine_Test" Id="{d39824fa-0087-4628-a7b4-a03e3ade9ea2}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionDriveStateMachine_Test EXTENDS FB_TestSuite
 VAR
+	(*Test all this subject and all dependencies FB_Init call *)
+
+	
 	fbMotionAxisNC : ARRAY [1..20] OF FB_MotionAxisNC_TestDouble;
 	fbMotionAxisDS402 : ARRAY [1..8] OF FB_MotionAxisDS402_TestDouble;
 	fbMoveRequest : ARRAY [1..20] OF FB_MoveRequest_TestDouble;

@@ -19,6 +19,9 @@ VAR
 	bInterlockEvent: BOOL;
 	rtStandStill : R_TRIG;
 	nInitState : UINT;
+	ftStop: F_TRIG;
+	rtReset: R_TRIG;
+	rtResetDone: R_TRIG;
 END_VAR
 
 VAR_OUTPUT
