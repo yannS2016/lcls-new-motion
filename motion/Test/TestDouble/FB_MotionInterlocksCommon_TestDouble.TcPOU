@@ -25,12 +25,11 @@ END_VAR
 VAR_INPUT
     Enable: BOOL;
     NewMoveReq : BOOL;
-    Reset: BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.bEnable := Enable;
-THIS^.bReset := Reset;
+
 ]]></ST>
       </Implementation>
     </Method>
@@ -160,6 +159,14 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
+    <Method Name="Reset" Id="{45939870-a895-412f-94d4-338002dacd8f}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD Reset
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="ResetErrors" Id="{f36f7e3b-4b1e-4387-89e2-e52b4f418e83}">
       <Declaration><![CDATA[METHOD ResetErrors
 VAR_INPUT

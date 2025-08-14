@@ -27,7 +27,6 @@ METHOD DriveCommands
 VAR_INPUT
 	Enable	: BOOL;
 	NewMoveReq	: BOOL;
-	Reset	: BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -151,6 +150,14 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="Reset" Id="{d7213581-eb45-4db7-87f8-6dbc2af5c9c3}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD Reset
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="Warning" Id="{08266c97-a963-44e9-976e-acb204a37e59}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY Warning : BOOL

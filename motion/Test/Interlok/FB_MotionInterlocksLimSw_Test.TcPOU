@@ -221,7 +221,7 @@ fbLimSwStatus[1]();
 fbMotionInterlocksLimSw();
 
 // Reset Flags
-fbMotionInterlocksLimSw.DriveCommands(Enable:=FALSE, NewMoveReq:=FALSE, Reset:=fbMotionInterlocksLimSw.Warning);
+fbMotionInterlocksLimSw.Reset();
 fbMotionInterlocksLimSw();
 
 AssertFalse(Condition := fbMotionInterlocksLimSw.Warning,
@@ -236,7 +236,7 @@ AssertFalse(Condition := fbMotionInterlocksLimSw.LimHit,
 fbLimSwStatus[1].LimForward := TRUE;
 fbLimSwStatus[1].LimBackward := TRUE;
 fbLimSwStatus[1]();
-fbMotionInterlocksLimSw.DriveCommands(Enable:=FALSE, NewMoveReq:=FALSE, Reset:=FALSE);
+fbMotionInterlocksLimSw.DriveCommands(Enable:=FALSE, NewMoveReq:=FALSE);
 fbMotionInterlocksLimSw.AxisStatus(HomeBusy:=FALSE, PositiveDirection:=FALSE, NegativeDirection:=FALSE);
 fbMotionInterlocksLimSw();
 
@@ -250,7 +250,7 @@ fbLimSwStatus[1]();
 fbMotionInterlocksLimSw();
 
 // clear Flags from global reset
-fbMotionInterlocksLimSw.DriveCommands(Enable:=FALSE, NewMoveReq:=FALSE, Reset:=fbMotionInterlocksLimSw.Warning);
+fbMotionInterlocksLimSw.Reset();
 fbMotionInterlocksLimSw();
 
 AssertFalse(Condition := fbMotionInterlocksLimSw.Warning,
@@ -264,7 +264,7 @@ AssertFalse(Condition := fbMotionInterlocksLimSw.LimHit,
 fbLimSwStatus[1].LimForward := TRUE;
 fbLimSwStatus[1].LimBackward := TRUE;
 fbLimSwStatus[1]();
-fbMotionInterlocksLimSw.DriveCommands(Enable:=FALSE, NewMoveReq:=FALSE, Reset:=FALSE);
+fbMotionInterlocksLimSw.DriveCommands(Enable:=FALSE, NewMoveReq:=FALSE);
 fbMotionInterlocksLimSw.AxisStatus(HomeBusy:=FALSE, PositiveDirection:=FALSE, NegativeDirection:=FALSE);
 fbMotionInterlocksLimSw();
 
@@ -278,7 +278,7 @@ fbLimSwStatus[1]();
 fbMotionInterlocksLimSw();
 
 // clear Flags from global reset
-fbMotionInterlocksLimSw.DriveCommands(Enable:=FALSE, NewMoveReq:=TRUE, Reset:=FALSE);
+fbMotionInterlocksLimSw.DriveCommands(Enable:=FALSE, NewMoveReq:=TRUE);
 fbMotionInterlocksLimSw();
 
 AssertFalse(Condition := fbMotionInterlocksLimSw.Warning,

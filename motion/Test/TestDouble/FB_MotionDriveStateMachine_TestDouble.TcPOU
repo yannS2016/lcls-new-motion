@@ -8,6 +8,19 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
+    <Property Name="MoveState" Id="{5b8ab468-efd2-474c-930c-53db7f21c503}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY MoveState : E_MOVESTATE
+]]></Declaration>
+      <Get Name="Get" Id="{d8032f69-63db-4d74-bbc2-c680fd7b80fa}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="StateMachine" Id="{53a2f700-2d7e-4499-830f-475a67ac2b82}">
       <Declaration><![CDATA[{warning 'Add method implementation '}
 METHOD StateMachine

@@ -86,6 +86,14 @@ END_VAR
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
+    <Method Name="HaltDone" Id="{59550dbb-aa67-4387-9438-83d50938411a}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD HaltDone
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="Home" Id="{90a1bdab-074d-4863-8a1b-c6c7a045e87f}">
       <Declaration><![CDATA[{warning 'Add method implementation '}
 METHOD Home
@@ -144,6 +152,14 @@ END_VAR
     <Method Name="Reset" Id="{858d6560-051e-479b-b8ae-08b100424d27}">
       <Declaration><![CDATA[{warning 'Add method implementation '}
 METHOD Reset
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ResetDone" Id="{22bf93a0-04be-4c16-87ee-018aa5d58a3d}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD ResetDone
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>

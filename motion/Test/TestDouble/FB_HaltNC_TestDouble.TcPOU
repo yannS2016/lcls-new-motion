@@ -158,6 +158,14 @@ END_VAR
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
+    <Method Name="HaltDone" Id="{926c075d-bb71-43bb-b2c3-d039de87d848}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD HaltDone
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="Message" Id="{98d02838-f1f1-467b-9553-0611cc90df48}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY Message : T_MAXSTRING

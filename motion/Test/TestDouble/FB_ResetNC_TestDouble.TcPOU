@@ -154,6 +154,14 @@ METHOD Reset
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
+    <Method Name="ResetDone" Id="{b1bfc581-c709-4547-a6b7-03233b3cf12b}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD ResetDone
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <ObjectProperties>
       <XmlArchive>
         <Data>

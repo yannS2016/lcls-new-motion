@@ -8,7 +8,6 @@ VAR
 	fb_MoveRequest_Test : FB_MoveRequest_Test;
   	fb_MotionInterlocksCommon_Test : FB_MotionInterlocksCommon_Test;
     fb_MotionInterlocksLimSw_Test : FB_MotionInterlocksLimSw_Test;
-    fb_MotionAxisNC_Test : FB_MotionAxisNC_Test;
     {attribute 'TcNcAxis' := '
         .fbAxisRef[1] := Axis_HomeNC_Test1;
         .fbAxisRef[2] := Axis_HomeNC_Test2;
@@ -32,6 +31,7 @@ VAR
         .fbAxisRef[8] := Axis_McMotionBlocks_Test8
     '}	
 	fb_McMotionBlocks_Test:  FB_McMotionBlocks_Test;
+	fb_MotionAxisNC_Test : FB_MotionAxisNC_Test;
 	fb_MotionDriveStateMachine_Test : FB_MotionDriveStateMachine_Test;
 	fb_MotionDrive_Test	:  FB_MotionDrive_Test;
 	

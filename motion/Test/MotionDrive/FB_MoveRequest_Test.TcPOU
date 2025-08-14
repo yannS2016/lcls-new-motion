@@ -14,7 +14,7 @@ GivenRestoreDoneThenUpdatepositionOnceAfterBoot_Test2();
     <Method Name="GivenMoveRequestAndInterlockAndErrorStatusUpdateRequestStatus_Test1" Id="{223fd37a-e346-4e63-ae91-95e8242641a5}">
       <Declaration><![CDATA[METHOD PRIVATE GivenMoveRequestAndInterlockAndErrorStatusUpdateRequestStatus_Test1
 VAR_INST
-    fbMoveRequest : FB_MoveRequest(stMotionEpicsItf:=stMotionEpicsItf[1]);
+    fbMoveRequest : FB_EpicsMoveRequest(stMotionEpicsItf:=stMotionEpicsItf[1]);
     eExpectedMoveMode : INT := E_EpicsMotorCmd.MOVE_ABSOLUTE;
     eActualMoveMode : INT;
     sMoveMessage : STRING := '';
@@ -47,7 +47,7 @@ AssertTRUE(Condition := THIS^.stMotionEpicsItf[1].bEnable,
            Message := 'move request must be enabled with valid interlock condition in alwayd mode #2');
 
 //
-fbMoveRequest.ResetMoveRequest();
+fbMoveRequest.ClearMoveRequest();
 fbMoveRequest();
 
 // Remove or latch power disable state					 
@@ -65,8 +65,8 @@ AssertFalse(Condition := THIS^.stMotionEpicsItf[1].bEnable,
 (* Mode of Operation DURING Motion : enable stays off if Latching error condition *) 
 
  // clear last request
-fbMoveRequest.ResetMoveRequest();
-fbMoveRequest.ResetMoveRequestErrors();
+fbMoveRequest.ClearMoveRequest();
+fbMoveRequest.ClearMoveRequestErrors();
 fbMoveRequest();
 
 fbMoveRequest.MoveRequest( EnableDone:=FALSE, MoveOk:=FALSE );			
@@ -82,7 +82,7 @@ AssertFalse(Condition := THIS^.stMotionEpicsItf[1].bEnable,
 
 
  // clear last request
-fbMoveRequest.ResetMoveRequest();
+fbMoveRequest.ClearMoveRequest();
 fbMoveRequest();
 
 fbMoveRequest.MoveRequest( EnableDone:=FALSE, MoveOk:=TRUE );			
@@ -97,7 +97,7 @@ AssertTrue(Condition := THIS^.stMotionEpicsItf[1].bEnable,
            Message := 'Move request must be enabled #6');
 		   
  // clear last request
-fbMoveRequest.ResetMoveRequest();
+fbMoveRequest.ClearMoveRequest();
 fbMoveRequest();
 
 fbMoveRequest.MoveRequest( EnableDone:=TRUE, MoveOk:=TRUE );			
@@ -117,7 +117,7 @@ AssertEquals_INT ( Expected:=eExpectedMoveMode, Actual:=fbMoveRequest.Status.nCo
 						Message:='Move command must be absolute #10');
 						
 // clear last request
-fbMoveRequest.ResetMoveRequest();
+fbMoveRequest.ClearMoveRequest();
 fbMoveRequest();
 
 fbMoveRequest.MoveRequest( EnableDone:=TRUE, MoveOk:=TRUE );			
@@ -138,7 +138,7 @@ AssertEquals_INT ( Expected:=eExpectedMoveMode, Actual:=fbMoveRequest.Status.nCo
 						Message:='Move command must be a valid homing mode #14');
 	   
 // clear last request
-fbMoveRequest.ResetMoveRequest();
+fbMoveRequest.ClearMoveRequest();
 fbMoveRequest();
 
 THIS^.stMotionEpicsItf[1].bError := FALSE;
@@ -158,7 +158,7 @@ AssertEquals_STRING ( Expected:=sMoveMessage, Actual:=THIS^.stMotionEpicsItf[1].
 						Message:='Move request Error flag must be cleared at init #17');
 
 // clear last request
-fbMoveRequest.ResetMoveRequest();
+fbMoveRequest.ClearMoveRequest();
 fbMoveRequest();
 
 THIS^.stMotionEpicsItf[1].bError := FALSE;
@@ -197,7 +197,7 @@ TEST_FINISHED();]]></ST>
 VAR_INST
     fbTestTimer : TON := (PT := T#2S, IN := TRUE);
 	//subject under test
-    fbMoveRequest : FB_MoveRequest(stMotionEpicsItf:=stMotionEpicsItf[2]);
+    fbMoveRequest : FB_EpicsMoveRequest(stMotionEpicsItf:=stMotionEpicsItf[2]);
 	fActualPosition : LREAL := 20.0;
 	nTestStep: INT;
 END_VAR

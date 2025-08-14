@@ -16,6 +16,22 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
+    <Method Name="ClearMoveRequest" Id="{8bff28f3-fae6-46e5-8f37-8cf755f60759}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD ClearMoveRequest
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ClearMoveRequestErrors" Id="{a7158e7f-c22a-418f-a7c6-dc5045d8a707}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD ClearMoveRequestErrors
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="EnableMode" Id="{66b8f19e-4221-443f-b49c-d49ffdab97f1}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
 PROPERTY EnableMode : ENUM_StageEnableMode
@@ -56,6 +72,17 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
+    <Method Name="HaltMoveRequest" Id="{62f53f48-84cf-46cf-967e-c760a56f5485}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD HaltMoveRequest : BOOL
+VAR_INPUT
+	Busy	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="InitMoveRequest" Id="{26231f67-3b3b-4070-a264-798d1d19bc23}">
       <Declaration><![CDATA[{warning 'Add method implementation '}
 METHOD InitMoveRequest
@@ -114,12 +141,9 @@ END_VAR
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
-    <Method Name="PauseMoveRequest" Id="{62f53f48-84cf-46cf-967e-c760a56f5485}">
+    <Method Name="MoveResetDone" Id="{898f0db3-7029-4aa3-bbce-939166937d7c}">
       <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD PauseMoveRequest : BOOL
-VAR_INPUT
-	Busy	: BOOL;
-END_VAR
+METHOD MoveResetDone
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
@@ -133,17 +157,9 @@ METHOD ResetMoveEnable
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
-    <Method Name="ResetMoveRequest" Id="{8bff28f3-fae6-46e5-8f37-8cf755f60759}">
+    <Method Name="ResetMoveRequest" Id="{d9033c6c-929e-4449-ae64-e4cd6df1d3c0}">
       <Declaration><![CDATA[{warning 'Add method implementation '}
 METHOD ResetMoveRequest
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="ResetMoveRequestErrors" Id="{a7158e7f-c22a-418f-a7c6-dc5045d8a707}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD ResetMoveRequestErrors
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
