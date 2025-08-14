@@ -13,7 +13,7 @@ VAR
     // NC Backward Limit Switch: TRUE if ok to move
     bLimitBackwardEnable AT %I*: BOOL;
     // NO Home Switch: TRUE if at home
-    bHome AT %I*: BOOL;
+    bLimitHome AT %I*: BOOL;
 
 END_VAR
 ]]></Declaration>
@@ -31,6 +31,15 @@ END_VAR
           <ST><![CDATA[LimBackward := bLimitBackwardEnable;]]></ST>
         </Implementation>
       </Get>
+      <Set Name="Set" Id="{bd1cd8be-0ef5-4bb3-be52-2ca7a979245c}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bLimitBackwardEnable :=LimBackward;]]></ST>
+        </Implementation>
+      </Set>
     </Property>
     <Property Name="LimForward" Id="{60bb8d48-4b37-425b-923e-b1e7d0d2cba8}">
       <Declaration><![CDATA[PROPERTY LimForward : BOOL
@@ -43,6 +52,15 @@ END_VAR
           <ST><![CDATA[LimForward := bLimitForwardEnable;]]></ST>
         </Implementation>
       </Get>
+      <Set Name="Set" Id="{7860d5f2-6502-460a-9e8f-7946aad41f2e}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bLimitForwardEnable := LimForward;]]></ST>
+        </Implementation>
+      </Set>
     </Property>
     <Property Name="LimHome" Id="{1b597d59-cd48-4a23-82a2-a38399b4eb9e}">
       <Declaration><![CDATA[PROPERTY LimHome : BOOL
@@ -52,7 +70,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[LimHome :=  bHome ;]]></ST>
+          <ST><![CDATA[LimHome :=  bLimitHome ;]]></ST>
         </Implementation>
       </Get>
     </Property>

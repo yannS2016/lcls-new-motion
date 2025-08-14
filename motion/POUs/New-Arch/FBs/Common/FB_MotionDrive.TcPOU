@@ -26,7 +26,7 @@ VAR
 
 	rtReset: R_TRIG;
 	rtResetDone: R_TRIG;
-	ftStop: F_TRIG;
+	rtStop: R_TRIG;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -56,31 +56,40 @@ iMoveRequest.MoveRequestError(
 	ErrorId :=nErrorId,
 	ErrorMessage:=sErrorMessage
 );
-
+//
+iMoveRequest.MoveRequest(
+	EnableDone:=iMotionAxis.AxisEnabled(),
+	MoveOk:=iMotionInterlocks.MoveOk
+);
+// Forward Move requests status to interlock blocks
+iMotionInterlocks.DriveCommands(	
+	Enable:= iMoveRequest.Status.bEnable,
+	NewMoveReq:=iMoveRequest.Status.bNewMoveReq
+);
 // Forward Power block enable flags
 iMotionAxis.Power(
 	Enable:=iMotionInterlocks.PowerEnabled,
-	Enable_Positive:=iMotionInterlocks.MoveForwardEnabled,
-	Enable_Negative:=iMotionInterlocks.MoveBackwardEnabled,
+	Enable_Positive:=iMoveRequest.Status.bExecHome OR iMotionInterlocks.MoveForwardEnabled,
+	Enable_Negative:=iMoveRequest.Status.bExecHome OR iMotionInterlocks.MoveBackwardEnabled,
     Override	:= 100.0,
     BufferMode	:= MC_Aborting
 );
 
 // Halt the Move
-ftStop(CLK:=iMoveRequest.PauseMoveRequest(Busy:=iMotionAxis.Status.bBusy));
-IF ftStop.Q THEN
+rtStop(CLK:=iMoveRequest.HaltMoveRequest(Busy:=iMotionAxis.Status.bBusy));
+IF rtStop.Q THEN
 	iMotionAxis.Halt(Deceleration:=iMoveRequest.Status.fDeceleration);
 END_IF
-
 // Reset
 rtReset(CLK:=iMoveRequest.Status.bReset);
-rtResetDone(CLK:=iMotionAxis.Status.bResetDone);
 IF rtReset.Q THEN
+	bError := FALSE;
+	nErrorId := 0;
+	sErrorMessage:= '';
+	iMoveRequest.Status.bReset := FALSE;
    // Forward general reset event
    iMotionAxis.Reset();
- ELSIF rtResetDone.Q THEN
-	// Reset EPICS ENbale, disbale drive power.
-	iMoveRequest.ResetMoveEnable();
+   iMotionInterlocks.Reset();
 END_IF
 
 iMotionInterlocks.AxisStatus(
@@ -88,20 +97,6 @@ iMotionInterlocks.AxisStatus(
       	PositiveDirection:=iMotionAxis.Status.bPositiveMotionIsEnabled,
        	NegativeDirection:=iMotionAxis.Status.bNegativeMotionIsEnabled 
 );
-
-//
-iMoveRequest.MoveRequest(
-	EnableDone:=iMotionAxis.AxisEnabled(),
-	MoveOk:=iMotionInterlocks.MoveOk
-);
-
-// Forward drive commands to interlock blocks
-iMotionInterlocks.DriveCommands(	
-	Enable:= iMoveRequest.Status.bEnable,
-	NewMoveReq:=iMoveRequest.Status.bNewMoveReq, 
-	Reset:=iMotionAxis.Status.bResetDone
-);
-
 
 // Drive state machine
 iMotionDriveStateMachine.StateMachine(	

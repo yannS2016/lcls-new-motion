@@ -10,17 +10,29 @@ VAR
     iMotionAxis: I_MotionAxis;
     {attribute 'hide'}
     iMotionAxisDS402: I_MotionAxisDS402;
+    {attribute 'hide'}
 	tonMotionWatchDog: TON;
+    {attribute 'hide'}
 	bError: BOOL;
+    {attribute 'hide'}
 	eMoveState: E_MOVESTATE;
+    {attribute 'hide'}
 	rtTargetReached: R_TRIG;
+    {attribute 'hide'}
 	rtHomed: R_TRIG;
+    {attribute 'hide'}
 	ftError: F_TRIG;
+    {attribute 'hide'}
 	bInterlockEvent: BOOL;
+    {attribute 'hide'}
 	rtStandStill : R_TRIG;
+    {attribute 'hide'}
 	nInitState : UINT;
+    {attribute 'hide'}
 	ftStop: F_TRIG;
+    {attribute 'hide'}
 	rtReset: R_TRIG;
+    {attribute 'hide'}
 	rtResetDone: R_TRIG;
 END_VAR
 
@@ -36,18 +48,18 @@ rtHomed(CLK:=iMotionAxis.Status.bHomeDone);
 ftError(CLK:=bError);
 
 // Drive state Machine here
-CASE MoveState OF
+CASE eMoveState OF
 	E_MoveState.IDLING:
         // Delay the disable until axis reach standstill
         // and this state machine is idling
         IF bError THEN
-               MoveState := E_MoveState.ERROR;
+               eMoveState := E_MoveState.ERROR;
         ELSIF iMoveRequest.Status.bExecute THEN
 			// When we start, set the busy/done appropriately
 			iMoveRequest.InitMoveRequest();
 			// Act as watch dog to set the drive in error state if axis side hangs.
 			tonMotionWatchDog.IN:=TRUE;
-            MoveState := E_MoveState.INIT;
+            eMoveState := E_MoveState.INIT;
         END_IF
 
 	E_MoveState.INIT:
@@ -71,7 +83,7 @@ CASE MoveState OF
 							Deceleration := iMoveRequest.Status.fDeceleration
 						);
 
-						MoveState := E_MoveState.STARTED;
+						eMoveState := E_MoveState.STARTED;
 					END_IF
 				ELSE
 					iMotionAxis.MoveAbsolute( 
@@ -80,7 +92,7 @@ CASE MoveState OF
 						Acceleration := iMoveRequest.Status.fAcceleration,
 						Deceleration := iMoveRequest.Status.fDeceleration
 					);
-					MoveState := E_MoveState.STARTED;
+					eMoveState := E_MoveState.STARTED;
 				END_IF
 
 			E_EpicsMotorCmd.HOME:
@@ -97,40 +109,40 @@ CASE MoveState OF
 								Position:=iMoveRequest.Status.fHomeOffset, 
 								BufferMode:=MC_Aborting
 						);
-						MoveState := E_MoveState.STARTED;
+						eMoveState := E_MoveState.STARTED;
 					END_IF
 				ELSE
 					iMotionAxis.home(
 							Position:=iMoveRequest.Status.fHomeOffset, 
 							BufferMode:=MC_Aborting
 					);
-					MoveState := E_MoveState.STARTED;
+					eMoveState := E_MoveState.STARTED;
 				END_IF
 
 		END_CASE
 	E_MoveState.STARTED:
 		IF bError THEN
-			MoveState := E_MoveState.ERROR;
+			eMoveState := E_MoveState.ERROR;
 		// when we get this signal, all motion prerequisite are met and axis is in motion.
 		ELSIF iMotionAxis.Status.bBusy THEN
 			tonMotionWatchDog.IN := FALSE;
-			MoveState := E_MoveState.IN_PROGRESS;
+			eMoveState := E_MoveState.IN_PROGRESS;
 		END_IF
 
 	E_MoveState.IN_PROGRESS :
 
 		IF bError THEN
-           MoveState := E_MoveState.ERROR;
+           eMoveState := E_MoveState.ERROR;
 		// Move interupted: halt or Reset, go wait for a done signal
 		// Move Aborted: hitting a directional limit switch wil set Aborted flag.
 		// we want to immediately prepare to disable drive power
 		ELSIF iMotionAxis.Status.bAborted OR bInterlockEvent  THEN
-			iMoveRequest.ResetMoveRequest();
-			MoveState := E_MoveState.INTERRUPTED;
+			iMoveRequest.ClearMoveRequest();
+			eMoveState := E_MoveState.INTERRUPTED;
 
 		ELSIF  rtTargetReached.Q OR rtHomed.Q  THEN
-		   iMoveRequest.ResetMoveRequest();
-           MoveState := E_MoveState.REACHED;
+		   iMoveRequest.ClearMoveRequest();
+           eMoveState := E_MoveState.REACHED;
 		END_IF
 
 	E_MoveState.INTERRUPTED:
@@ -138,12 +150,16 @@ CASE MoveState OF
 		IF bInterlockEvent THEN
 		   iMoveRequest.MoveRequestDone(Done:=TRUE);
 		   iMoveRequest.ResetMoveEnable();
-		   MoveState := E_MoveState.IDLING;
+		   eMoveState := E_MoveState.IDLING;
 		// Wait here for halt/reset done or clearing limit state to be restored
 		ELSIF iMotionAxis.Status.bAbortDone THEN
 		   iMoveRequest.MoveRequestDone(Done:=TRUE);
+		   // clear latched reset flags.
+		   iMotionAxis.ResetDone();
+		   iMotionAxis.HaltDone();
 		   iMoveRequest.ResetMoveEnable();
-           MoveState := E_MoveState.IDLING;
+
+           eMoveState := E_MoveState.IDLING;
        END_IF
 
 	E_MoveState.REACHED:
@@ -152,14 +168,14 @@ CASE MoveState OF
 					HomeDone:=iMotionAxis.Status.bHomeDone, 
 					MoveDone:=iMotionAxis.Status.bMoveAbsoluteDone
 			);
-			MoveState := E_MoveState.IDLING;	
+			eMoveState := E_MoveState.IDLING;	
 		END_IF
 	E_MoveState.ERROR:
    		// NC would have already removepower to drive.
-		iMoveRequest.ResetMoveRequest();
+		iMoveRequest.ClearMoveRequest();
 		iMoveRequest.ResetMoveEnable();
    		IF ftError.Q THEN
-           MoveState := E_MoveState.IDLING;
+           eMoveState := E_MoveState.IDLING;
        END_IF
 END_CASE
 
@@ -169,7 +185,7 @@ IF tonMotionWatchDog.Q THEN
 	Error := TRUE;
 	ErrorId := 1;
 	Message:= 'Motion axis response timeout';
-	MoveState := E_MoveState.ERROR;
+	eMoveState := E_MoveState.ERROR;
 END_IF]]></ST>
     </Implementation>
     <Method Name="CallAfterInit" Id="{e0b49802-1f54-4d4a-bab0-a630f6e6317c}">
@@ -207,9 +223,11 @@ THIS^.iMoveRequest :=iMoveRequest;
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="MoveState" Id="{67fe1b58-6176-452d-99c9-b333901fd72b}">
-      <Declaration><![CDATA[PROPERTY INTERNAL MoveState : E_MOVESTATE;]]></Declaration>
-      <Get Name="Get" Id="{56c38c3a-8cc4-4e25-96c8-0e2866805f8f}">
+    <Property Name="MoveState" Id="{e4b86fb5-39ba-415c-bea9-8752f5b3590f}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
+PROPERTY MoveState : E_MOVESTATE
+]]></Declaration>
+      <Get Name="Get" Id="{7e0d7816-166f-41f5-a5d4-3d2ac7cfde0b}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -217,12 +235,24 @@ END_VAR
           <ST><![CDATA[MoveState := eMoveState;]]></ST>
         </Implementation>
       </Get>
+    </Property>
+    <Property Name="State" Id="{67fe1b58-6176-452d-99c9-b333901fd72b}">
+      <Declaration><![CDATA[(*Strictly used for testing*)
+PROPERTY INTERNAL State : E_MOVESTATE;]]></Declaration>
+      <Get Name="Get" Id="{56c38c3a-8cc4-4e25-96c8-0e2866805f8f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[State := eMoveState;]]></ST>
+        </Implementation>
+      </Get>
       <Set Name="Set" Id="{8bec99e5-1656-44fc-b9b6-90a5e318653a}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[eMoveState := MoveState;]]></ST>
+          <ST><![CDATA[eMoveState := State;]]></ST>
         </Implementation>
       </Set>
     </Property>
@@ -239,7 +269,8 @@ THIS^.bError := Error;]]></ST>
       </Implementation>
     </Method>
     <Property Name="WatchDog" Id="{ffd10039-8300-4aa4-a939-c817f83dfa6b}">
-      <Declaration><![CDATA[PROPERTY INTERNAL WatchDog : BOOL]]></Declaration>
+      <Declaration><![CDATA[(*Testing only*)
+PROPERTY INTERNAL WatchDog : BOOL]]></Declaration>
       <Set Name="Set" Id="{a8c696ab-b8a9-4f3e-bc17-b0a6d0d39466}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -250,7 +281,7 @@ END_VAR
       </Set>
     </Property>
     <Property Name="WatchDogStatus" Id="{f4a0274a-eb4a-4d55-8725-d7041e208e2f}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
+      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
 PROPERTY WatchDogStatus : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{a6ce01d7-e717-44d9-8fe7-d96ad2a3570f}">
@@ -263,7 +294,7 @@ END_VAR
       </Get>
     </Property>
     <Property Name="WatchDogTimeOut" Id="{e28a1111-9814-4bbb-b7b7-739c7c451e1f}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
+      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
 PROPERTY WatchDogTimeOut : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{4fc28fed-c55a-4ffe-80b1-7041542caba2}">
