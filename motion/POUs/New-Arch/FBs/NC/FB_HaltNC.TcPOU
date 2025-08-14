@@ -6,9 +6,7 @@ VAR
     {attribute 'no_copy'}
     AxisRef : REFERENCE TO AXIS_REF;
     fbMcHalt 		: MC_Halt;
-    //eBufferMode : MC_BufferMode := MC_BufferMode.MC_Aborting;
     sMessage : T_MAXSTRING;
-   // bDone : BOOL;
 
 END_VAR
 ]]></Declaration>
@@ -151,6 +149,15 @@ fbMcHalt(Execute := TRUE,
     Jerk := Jerk,
     BufferMode := BufferMode);
 ]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="HaltDone" Id="{22a58216-660c-4b25-a8ed-e863b8c537cb}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD HaltDone
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Clear previous status: MC_Halt auto clear this bit when Done is set.
+fbMcHalt(Execute := FALSE,  Axis := THIS^.AxisRef);]]></ST>
       </Implementation>
     </Method>
     <Property Name="Message" Id="{08e92b01-505f-4268-a83e-cb2252382ca8}">

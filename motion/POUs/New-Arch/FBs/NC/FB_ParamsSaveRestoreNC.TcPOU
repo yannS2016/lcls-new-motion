@@ -1,12 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_ParamsSaveRestoreNC" Id="{7f8d36cc-18a1-4d6c-99dd-bd0795394dcd}" SpecialFunc="None">
-    <Declaration><![CDATA[{attribute 'call_after_init'}
-FUNCTION_BLOCK FB_ParamsSaveRestoreNC IMPLEMENTS I_ParamSaveRestore
-VAR_INPUT
-END_VAR
-VAR_OUTPUT
-END_VAR
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_ParamsSaveRestoreNC IMPLEMENTS I_ParamSaveRestore
 VAR
     {attribute 'no_copy'}
     AxisRef : REFERENCE TO AXIS_REF;
@@ -79,7 +74,9 @@ END_VAR]]></Declaration>
     RETURN;
 END_IF
 
-THIS^.AxisRef.ReadStatus();
+RestoreAxisParams();
+
+AxisRef.ReadStatus();
 
 // Save Encoder position
 // needs some pre-conditions to use persistent storage
@@ -101,30 +98,6 @@ IF bSaveEnabled THEN
     END_IF
 END_IF]]></ST>
     </Implementation>
-    <Property Name="Aborted" Id="{6f730b0b-0a56-4d4b-b10c-7aa6d451ffb9}">
-      <Declaration><![CDATA[PROPERTY Aborted : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{195d6a7f-01a2-451b-aa25-a64fd76e79b7}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="Active" Id="{b22df6f2-a22f-4a34-ae94-cfb631a24757}">
-      <Declaration><![CDATA[PROPERTY Active : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{d1a9a3ed-fe85-4bb0-87cf-89cdb316a968}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
     <Property Name="Busy" Id="{e5dec030-d598-46fd-afca-22fd9bde3a46}">
       <Declaration><![CDATA[PROPERTY Busy : BOOL
 ]]></Declaration>
@@ -217,8 +190,7 @@ END_VAR
       </Get>
     </Property>
     <Method Name="RestoreAxisParams" Id="{68aa741c-8d0b-49b0-a5c7-e5cb1bf9c532}">
-      <Declaration><![CDATA[{attribute 'call_after_init'}
-METHOD RestoreAxisParams
+      <Declaration><![CDATA[METHOD RestoreAxisParams
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[// Trigger a load if anything was saved at all
@@ -229,7 +201,7 @@ IF NOT bRestoreInit THEN
 END_IF
 
 // Set our position if bRestoreLoad is true
-fbSetPos( Axis:=THIS^.AxisRef, Execute:=bRestoreLoad, Position:=fSavedPosition);
+fbSetPos( Axis:=AxisRef, Execute:=bRestoreLoad, Position:=fSavedPosition);
 
 // Only load once, at startup
 bRestoreLoad R= fbSetPos.Done OR fbSetPos.Error;
@@ -239,8 +211,8 @@ IF fbSetPos.Error THEN
     nLatchError := fbSetPos.ErrorID;
     nCurrTries := nCurrTries + 1;
     IF nCurrTries >= nMaxRetries THEN
-    // Alert the user that something has gone wrong
-    bError := TRUE;
+    	// Alert the user that something has gone wrong
+    	bError := TRUE;
         nErrorId := nLatchError;
         sMessage := 'Error loading previously saved position.';
     ELSE
@@ -250,7 +222,7 @@ IF fbSetPos.Error THEN
         bRestoreWaitRetry := TRUE;
     END_IF
 ELSE
-    THIS^.bRestoreDone := TRUE;
+    bRestoreDone := TRUE;
 END_IF
 
 tonRestoreRetry( IN := bRestoreWaitRetry, PT := tRetryDelay);

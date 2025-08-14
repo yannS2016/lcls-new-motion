@@ -62,6 +62,7 @@ stMotionAxisStatus.bPowerActive := iPower.PowerIsEnabled;
 stMotionAxisStatus.fPowerOverride := iPower.Override;
 stMotionAxisStatus.bResetBusy := iReset.Busy;
 stMotionAxisStatus.bResetDone := iReset.Done;
+stMotionAxisStatus.bRestoreDone := iParamSaveRestore.Done;
 stMotionAxisStatus.fSavedPosition := iParamSaveRestore.SavedPosition;
 stMotionAxisStatus.nScaledEncoderCount := iEncoderScaling.EncoderCount;
 stMotionAxisStatus.bStandStill := iAxisStatus.StandStill;
@@ -259,6 +260,14 @@ END_VAR
                     BufferMode:=BufferMode );]]></ST>
       </Implementation>
     </Method>
+    <Method Name="HaltDone" Id="{10092d88-8263-4453-9e57-d2d8fd2128e6}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD HaltDone
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iHalt.HaltDone();]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="Home" Id="{19a4a42c-65d0-44c2-9ba0-43e7fa25e791}">
       <Declaration><![CDATA[METHOD Home
 VAR_INPUT
@@ -349,6 +358,13 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.iReset.Reset();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ResetDone" Id="{7f0790e9-8e29-4ab4-adcd-e05f727f68d8}">
+      <Declaration><![CDATA[METHOD ResetDone
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iReset.ResetDone();]]></ST>
       </Implementation>
     </Method>
     <Method Name="SaveAxisParams" Id="{e5a35223-1f28-40e0-a094-53d1b9164718}">

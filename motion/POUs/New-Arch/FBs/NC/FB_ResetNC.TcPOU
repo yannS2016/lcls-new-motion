@@ -137,5 +137,13 @@ fbMcReset(   Axis := THIS^.AxisRef,
 ]]></ST>
       </Implementation>
     </Method>
+    <Method Name="ResetDone" Id="{703d31eb-b69f-4e59-82a6-fb6d1d408441}">
+      <Declaration><![CDATA[METHOD ResetDone
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Clear previous status
+fbMcReset(Execute := FALSE,  Axis := THIS^.AxisRef);]]></ST>
+      </Implementation>
+    </Method>
   </POU>
 </TcPlcObject>
