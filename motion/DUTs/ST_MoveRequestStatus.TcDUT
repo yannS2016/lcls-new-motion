@@ -8,8 +8,8 @@ STRUCT
     nCommand: INT;
 	bExecute : BOOL;
     bExecHome: BOOL;
+	bHomeEnablewOverride : BOOL;
     bExecMove: BOOL;
-	bValidatedMove : BOOL;
 	bStop : BOOL;
 	bReset : BOOL;
 	bEnable : BOOL;

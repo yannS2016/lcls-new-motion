@@ -46,6 +46,12 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
+    <Method Name="HaltDone" Id="{82ddacec-70b6-479e-92f4-829c8fc195ef}">
+      <Declaration><![CDATA[METHOD HaltDone
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
     <Method Name="Home" Id="{a01fdf56-b8af-4aa8-857c-a6510f1759dd}">
       <Declaration><![CDATA[METHOD  Home
 VAR_INPUT
@@ -86,6 +92,12 @@ END_VAR
     </Method>
     <Method Name="Reset" Id="{7a4653ab-674a-4e3f-8902-d38983bd8a4e}">
       <Declaration><![CDATA[METHOD Reset
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="ResetDone" Id="{0015b9f1-a510-4692-b355-009b1830367b}">
+      <Declaration><![CDATA[METHOD ResetDone
 VAR_INPUT
 END_VAR
 ]]></Declaration>

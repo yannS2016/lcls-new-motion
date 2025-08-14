@@ -3,6 +3,16 @@
   <Itf Name="I_MoveRequest" Id="{137539c3-dde3-4c10-956a-430895f58e3f}">
     <Declaration><![CDATA[INTERFACE I_MoveRequest
 ]]></Declaration>
+    <Method Name="ClearMoveRequest" Id="{57864d20-f759-4f61-84ed-cba01a116bd5}">
+      <Declaration><![CDATA[METHOD ClearMoveRequest
+]]></Declaration>
+    </Method>
+    <Method Name="ClearMoveRequestErrors" Id="{ddb91a64-1588-4a56-b329-f2e5eb414f14}">
+      <Declaration><![CDATA[METHOD ClearMoveRequestErrors
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
     <Property Name="EnableMode" Id="{96288f73-7124-4739-8281-a5f1351b7dec}">
       <Declaration><![CDATA[PROPERTY EnableMode : ENUM_StageEnableMode
 ]]></Declaration>
@@ -13,6 +23,13 @@
         <Declaration><![CDATA[]]></Declaration>
       </Set>
     </Property>
+    <Method Name="HaltMoveRequest" Id="{f276ba1c-ec79-4d81-b3bf-f8c9b4e15e1e}">
+      <Declaration><![CDATA[METHOD HaltMoveRequest : BOOL
+VAR_INPUT
+	Busy : BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
     <Method Name="InitMoveRequest" Id="{bf494b24-bbf4-47db-9db8-0e709071e1e5}">
       <Declaration><![CDATA[METHOD InitMoveRequest
 VAR_INPUT
@@ -52,10 +69,9 @@ ErrorId :UDINT;
 ErrorMessage:T_MAXSTRING;
 END_VAR]]></Declaration>
     </Method>
-    <Method Name="PauseMoveRequest" Id="{f276ba1c-ec79-4d81-b3bf-f8c9b4e15e1e}">
-      <Declaration><![CDATA[METHOD PauseMoveRequest : BOOL
+    <Method Name="MoveResetDone" Id="{fe489e21-73f0-4ddd-9dc4-aa68a3402786}">
+      <Declaration><![CDATA[METHOD MoveResetDone
 VAR_INPUT
-	Busy : BOOL;
 END_VAR
 ]]></Declaration>
     </Method>
@@ -65,12 +81,8 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
-    <Method Name="ResetMoveRequest" Id="{57864d20-f759-4f61-84ed-cba01a116bd5}">
+    <Method Name="ResetMoveRequest" Id="{03c7c64b-8551-4106-a3c0-5e029b2f2ad9}">
       <Declaration><![CDATA[METHOD ResetMoveRequest
-]]></Declaration>
-    </Method>
-    <Method Name="ResetMoveRequestErrors" Id="{ddb91a64-1588-4a56-b329-f2e5eb414f14}">
-      <Declaration><![CDATA[METHOD ResetMoveRequestErrors
 VAR_INPUT
 END_VAR
 ]]></Declaration>

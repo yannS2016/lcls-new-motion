@@ -3,6 +3,12 @@
   <Itf Name="I_MotionDriveStateMachine" Id="{40b216ee-9f46-47cd-9746-7ef949a43466}">
     <Declaration><![CDATA[INTERFACE I_MotionDriveStateMachine
 ]]></Declaration>
+    <Property Name="MoveState" Id="{e8643675-62f4-49b4-a123-32f66c1fe60c}">
+      <Declaration><![CDATA[PROPERTY MoveState : E_MOVESTATE]]></Declaration>
+      <Get Name="Get" Id="{ad4a13f0-51ea-427f-a59a-e1cbc3d762f5}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Method Name="StateMachine" Id="{95486653-d40f-4598-a1e5-f89d76b3879d}">
       <Declaration><![CDATA[METHOD StateMachine
 VAR_INPUT

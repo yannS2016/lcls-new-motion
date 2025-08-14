@@ -8,16 +8,17 @@
 VAR_INPUT
 	Enable: BOOL;
 	NewMoveReq : BOOL;
-	Reset: BOOL;
 END_VAR
 
 ]]></Declaration>
     </Method>
     <Property Name="HardwareEnable" Id="{340fc236-f476-43a5-8232-685aab4a5a0e}">
       <Declaration><![CDATA[PROPERTY HardwareEnable : BOOL]]></Declaration>
-      <Set Name="Set" Id="{dc5d0d52-5e0c-47bc-95ab-8f6b05507bf4}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Set>
+      <Get Name="Get" Id="{8af58745-28c2-4726-b711-8ab5523bc308}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+      </Get>
     </Property>
     <Property Name="MoveOk" Id="{1afd93f7-f2a6-41c4-917d-1b6c9a77ea87}">
       <Declaration><![CDATA[PROPERTY MoveOk : BOOL]]></Declaration>
@@ -31,6 +32,12 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
+    <Method Name="Reset" Id="{cc36a04e-8ae1-4d1a-b6d2-3ef1ada15b9d}">
+      <Declaration><![CDATA[METHOD Reset
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
     <Property Name="UserEnable" Id="{16b82871-fb73-4df5-80f5-08b1172c1b10}">
       <Declaration><![CDATA[PROPERTY UserEnable : BOOL]]></Declaration>
       <Set Name="Set" Id="{e08ffba2-63ce-4002-9296-5aee47ddb046}">
