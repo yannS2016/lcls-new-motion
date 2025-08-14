@@ -114,7 +114,7 @@
     <Compile Include="POUs\New-Arch\FBs\Common\FB_MotionLogger.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\New-Arch\FBs\Common\FB_MoveRequest.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Common\FB_EpicsMoveRequest.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\New-Arch\FBs\Common\FB_PersistentDataStorage.TcPOU">

@@ -37,47 +37,51 @@ VAR
       the powerenables() is provided in case the interlock status were passed via the drive
       nonetheless passing via this object is more flexible
     *)
-    fbMotionAxis : FB_MotionAxisNC( 	iHome := fbHome,
-                                        iHalt := fbHalt,
-                                        iPower := fbPower,
-                                        iReset := fbReset,
-                                        iMoveAbsolute := fbMoveAbsolute,
-                                        iReadParameter := fbReadParameter,
-                                        iWriteParameter  := fbWriteParameter,
-                                        iParamSaveRestore:= fbParamsSaveRestore,
-                                        iEncoderScaling := fbEncoderScaling,
-                                        iAxisStatus := fbAxisStatus,
-                                        iBacklashCompensation :=fbBacklashCompensation,
-                                    );
+    fbMotionAxis : FB_MotionAxisNC( 	
+		iHome := fbHome,
+        iHalt := fbHalt,
+        iPower := fbPower,
+        iReset := fbReset,
+        iMoveAbsolute := fbMoveAbsolute,
+        iReadParameter := fbReadParameter,
+        iWriteParameter  := fbWriteParameter,
+        iParamSaveRestore:= fbParamsSaveRestore,
+        iEncoderScaling := fbEncoderScaling,
+        iAxisStatus := fbAxisStatus,
+        iBacklashCompensation :=fbBacklashCompensation,
+	);
 	// Motion Requests
-	fbMoveRequest : FB_MoveRequest(stMotionEpicsItf:=stMotionEpicsItf);
+	fbMoveRequest : FB_EpicsMoveRequest(stMotionEpicsItf:=stMotionEpicsItf);
 	fbEpicsMotionParamsStatus : FB_EpicsMotionParamsStatus(stMotionEpicsItf:=stMotionEpicsItf);
 	// Motion StateMachine
 	fbStateMachine  : FB_MotionDriveStateMachine(
-										iMotionAxis:=fbMotionAxis, 
-										iMoveRequest:=fbMoveRequest
-									);
+			iMotionAxis:=fbMotionAxis, 
+			iMoveRequest:=fbMoveRequest
+	);
 	
 	fbMotionDrive: FB_MotionDrive (
-                                    iBrake:=fbBrake,
-                                    iMotionLogger:=iMotionLogger,
-                                    iMotionInterlocks:=fbMotionInterlocksLimSw,
-                                    iMotionAxis := fbMotionAxis,
-                                    iMoveRequest := fbMoveRequest,
-                                    iEpicsMotionParamsStatus := fbEpicsMotionParamsStatus,
-									iMotionDriveStateMachine:=fbStateMachine
-                                  ) ;
+        iBrake:=fbBrake,
+        iMotionLogger:=iMotionLogger,
+        iMotionInterlocks:=fbMotionInterlocksLimSw,
+        iMotionAxis := fbMotionAxis,
+        iMoveRequest := fbMoveRequest,
+   		iEpicsMotionParamsStatus := fbEpicsMotionParamsStatus,
+		iMotionDriveStateMachine:=fbStateMachine
+	 ) ;
     // Drive Name
+	{attribute 'hide'}
     sName : T_MaxString;
+	// Non EPICS User Interface ( avoid digging into child FBs)
+	eBrakeMode : E_StageBrakeMode;
+	eEnableMode : E_StageEnableMode;
+    eHomeMode: E_EpicsHomeCmd :=E_EpicsHomeCmd.NONE;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[AxisRef.ReadStatus();
-
-fbMotionInterlocksCommon();
 fbLimSwStatus();
+fbMotionInterlocksCommon();
 fbMotionInterlocksLimSw();
-fbMoveRequest();
 fbReset();
 fbHalt();
 fbPower();
@@ -85,34 +89,34 @@ fbBacklashCompensation();
 fbMoveAbsolute();
 fbHome();
 fbAxisStatus();
-fbEncoderScaling();
 fbMotionAxis();
+fbMoveRequest();
 fbMotionDrive();
+fbStateMachine();
 fbBrake();
 fbReadParameter();
 fbWriteParameter();
 fbParamsSaveRestore();
+fbEncoderScaling();
 fbEpicsMotionParamsStatus();
+
+//
+fbBrake.BrakeMode := eBrakeMode;
+fbMoveRequest.EnableMode := eEnableMode;
+fbMoveRequest.HomeMode := eHomeMode;
+fbHome.Mode :=  eHomeMode;
 
 ]]></ST>
     </Implementation>
     <Property Name="BrakeMode" Id="{7b563b76-fecc-4885-824b-f91a0bc21af3}">
       <Declaration><![CDATA[PROPERTY BrakeMode : E_StageBrakeMode
 ]]></Declaration>
-      <Get Name="Get" Id="{0f26607f-cf71-44b1-9984-79929f233e16}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[BrakeMode := fbBrake.BrakeMode;]]></ST>
-        </Implementation>
-      </Get>
       <Set Name="Set" Id="{15a41f16-798f-4b50-9250-e347873647b8}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[fbBrake.BrakeMode := BrakeMode;]]></ST>
+          <ST><![CDATA[eBrakeMode := BrakeMode;]]></ST>
         </Implementation>
       </Set>
     </Property>
@@ -166,7 +170,7 @@ fbMotionAxis.CallAfterInit(
 
 fbMoveRequest.CallAfterInit(stMotionEpicsItf:= THIS^.stMotionEpicsItf);
 fbEpicsMotionParamsStatus.CallAfterInit(stMotionEpicsItf:= THIS^.stMotionEpicsItf);
-
+fbStateMachine.CallAfterInit(iMotionAxis:=fbMotionAxis, iMoveRequest:=fbMoveRequest);
 // Pass correctly initialized drive dependencies
 fbMotionDrive.CallAfterInit( 
      iBrake:=THIS^.fbBrake,
@@ -184,20 +188,12 @@ THIS^.stMotionEpicsItf.sName := THIS^.sName;
     </Method>
     <Property Name="EnableMode" Id="{d2517567-d217-491d-9b68-9264f829d81e}">
       <Declaration><![CDATA[PROPERTY EnableMode : E_StageEnableMode]]></Declaration>
-      <Get Name="Get" Id="{71e16d1d-1779-46bd-acad-1d5698e3b457}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[EnableMode := THIS^.fbMoveRequest.EnableMode;]]></ST>
-        </Implementation>
-      </Get>
       <Set Name="Set" Id="{1782045b-083a-4984-8c31-ce01cd3f2942}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[THIS^.fbMoveRequest.EnableMode := EnableMode;]]></ST>
+          <ST><![CDATA[eEnableMode := EnableMode;]]></ST>
         </Implementation>
       </Set>
     </Property>
@@ -225,23 +221,59 @@ THIS^.sName := sName;
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="HomeMode" Id="{6fbba694-14cc-47d7-b386-b3a87f93d4ab}">
-      <Declaration><![CDATA[PROPERTY HomeMode : E_EpicsHomeCmd
-]]></Declaration>
-      <Get Name="Get" Id="{43254037-02b5-4fe5-96e1-8431d24f54f5}">
+    <Property Name="HardwareEnable" Id="{de413790-64d6-4df7-be45-e16e9a7af71c}">
+      <Declaration><![CDATA[PROPERTY HardwareEnable : BOOL]]></Declaration>
+      <Set Name="Set" Id="{4e90c6a1-868e-40b9-a14d-f0f664cb75ae}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[HomeMode := THIS^.fbHome.Mode;]]></ST>
+          <ST><![CDATA[THIS^.fbMotionInterlocksCommon.HardwareEnable := HardwareEnable;]]></ST>
         </Implementation>
-      </Get>
+      </Set>
+    </Property>
+    <Property Name="HomeMode" Id="{6fbba694-14cc-47d7-b386-b3a87f93d4ab}">
+      <Declaration><![CDATA[PROPERTY HomeMode : E_EpicsHomeCmd
+]]></Declaration>
       <Set Name="Set" Id="{1a6336ac-7eec-4dce-ac7d-8543b797a82e}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[THIS^.fbHome.Mode := HomeMode;]]></ST>
+          <ST><![CDATA[eHomeMode := HomeMode;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="LimBackward" Id="{0a694a2c-821b-487b-b05f-33f0c7db41ce}">
+      <Declaration><![CDATA[PROPERTY LimBackward : BOOL]]></Declaration>
+      <Set Name="Set" Id="{da6b1409-3d4c-4a22-9e2d-f94bf698dc21}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[THIS^.fbLimSwStatus.LimBackward := LimBackward;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="LimForward" Id="{12e7d2e2-4178-42bf-a874-e4fbc8f61cdb}">
+      <Declaration><![CDATA[PROPERTY LimForward : BOOL]]></Declaration>
+      <Set Name="Set" Id="{3d00e8a0-812a-46a2-abcc-4f40ba55e42d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[THIS^.fbLimSwStatus.LimForward := LimForward;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="UserEnable" Id="{863b6547-890c-46aa-afec-34d889e5d2ed}">
+      <Declaration><![CDATA[PROPERTY UserEnable : BOOL]]></Declaration>
+      <Set Name="Set" Id="{a26c7d34-2d19-4d31-8732-6c1180f87277}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[THIS^.fbMotionInterlocksCommon.UserEnable := UserEnable;]]></ST>
         </Implementation>
       </Set>
     </Property>
