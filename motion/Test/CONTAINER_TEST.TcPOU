@@ -14,7 +14,14 @@ VAR
                                         AxisRef := NcAxis_GVL.NC,
                                         iMotionLogger := fbMotionLogger,
                                         iPersistentDataStorage := fbPersistentDataStorage
-                                    ) := (BrakeMode := E_StageBrakeMode.IF_MOVING, EnableMode:=ENUM_StageEnableMode.DURING_MOTION, HomeMode:=E_EpicsHomeCmd.AUTOZERO);
+                                    ) := (	HardwareEnable:=TRUE, 
+											UserEnable:=TRUE, 
+											LimBackward := TRUE,
+											LimForward:=TRUE,
+											BrakeMode := E_StageBrakeMode.IF_MOVING, 
+											EnableMode:=ENUM_StageEnableMode.DURING_MOTION, 
+											HomeMode:=E_EpicsHomeCmd.ABSOLUTE_SET
+									);
 END_VAR
 ]]></Declaration>
     <Implementation>
