@@ -8,7 +8,7 @@ FUNCTION_BLOCK FB_ReadParameterNC IMPLEMENTS I_ReadParameter
 VAR
     {attribute 'no_copy'}
     AxisRef : REFERENCE TO AXIS_REF;
-	// NC parameters that are exposed with pytmc pragmas
+    // NC parameters that are exposed with pytmc pragmas
     {attribute 'pytmc' := '
         pv: PLC:AxisPar
         io: i
@@ -22,9 +22,11 @@ VAR
     {attribute 'hide'}
     NCParamsTimer : TON;
     {attribute 'hide'}
-	bExecParamsRead: BOOL;
+    bExecParamsRead: BOOL;
     {attribute 'hide'}
-	bAxisParamsInit: BOOL;
+    bAxisParamsInit: BOOL;
+    {attribute 'hide'}
+	bEnable : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -35,9 +37,8 @@ bExecParamsRead S= NCParamsTimer.Q;
 
 fbMcReadParams(
     Parameter:=stAxisParameters,
-    Axis:=AxisRef,
-    Execute:= bExecParamsRead );
-
+    Axis:=AxisRef );
+	
 // Copy axis parameters that we want to expose to the EPICS layer.
 stAxisParametersExposed.bCtrlEnablePosDiffControl     := stAxisParameters.bCtrlEnablePosDiffControl;
 stAxisParametersExposed.bEncEnableSoftEndMaxControl   := stAxisParameters.bEncEnableSoftEndMaxControl;
@@ -57,8 +58,7 @@ bAxisParamsInit S= fbMcReadParams.Done;
 ]]></ST>
     </Implementation>
     <Property Name="AxisReadParamsInit" Id="{0109e5c1-4895-4b1a-9b52-46a0b8e2477f}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY AxisReadParamsInit : BOOL
+      <Declaration><![CDATA[PROPERTY AxisReadParamsInit : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{20a2d9ed-7c9e-44bc-9052-1da3a8039812}">
         <Declaration><![CDATA[VAR
@@ -70,8 +70,7 @@ END_VAR
       </Get>
     </Property>
     <Property Name="Busy" Id="{027c86ab-2c4c-431c-83d3-a5f280a9f4be}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY Busy : BOOL
+      <Declaration><![CDATA[PROPERTY Busy : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{71f3d4a5-5815-498a-9dc2-dd0484d5e903}">
         <Declaration><![CDATA[VAR
@@ -95,8 +94,7 @@ END_VAR
       </Implementation>
     </Method>
     <Property Name="Done" Id="{e98d6c07-6b86-4458-b10f-56cbec3afbe1}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY Done : BOOL
+      <Declaration><![CDATA[PROPERTY Done : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{0b3720d9-74c0-4b42-ab6a-f777060e2826}">
         <Declaration><![CDATA[VAR
@@ -108,8 +106,7 @@ END_VAR
       </Get>
     </Property>
     <Property Name="Error" Id="{48964554-9c0e-4daf-bea2-36931ed4e51d}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY Error : BOOL
+      <Declaration><![CDATA[PROPERTY Error : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{c59c9eb4-e912-4bca-ad7b-68b0f66032f4}">
         <Declaration><![CDATA[VAR
@@ -121,8 +118,7 @@ END_VAR
       </Get>
     </Property>
     <Property Name="ErrorID" Id="{530b840d-dfad-4b4f-9afc-f45789cd4abf}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY ErrorID : UDINT
+      <Declaration><![CDATA[PROPERTY ErrorID : UDINT
 ]]></Declaration>
       <Get Name="Get" Id="{e4b754f9-0ba4-4250-b008-bc6a86a67490}">
         <Declaration><![CDATA[VAR
@@ -150,8 +146,7 @@ END_VAR]]></Declaration>
       </Implementation>
     </Method>
     <Property Name="Message" Id="{87c74a72-7209-4ca3-a50c-82afcaba9293}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY Message : T_MAXSTRING
+      <Declaration><![CDATA[PROPERTY Message : T_MAXSTRING
 ]]></Declaration>
       <Get Name="Get" Id="{22b2cbd8-48fc-4d7c-b048-86eb05394900}">
         <Declaration><![CDATA[VAR
@@ -170,10 +165,10 @@ VAR_INPUT
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[fbMcReadParams(
-    Parameter:=stAxisParameters,
+    Parameter:=THIS^.stAxisParameters,
     Axis:=THIS^.AxisRef,
-    Execute:= Enable );
-	
+    Execute:= Enable AND THIS^.bExecParamsRead );
+
 NCParamsTimer.PT:=RefreshDelay;]]></ST>
       </Implementation>
     </Method>

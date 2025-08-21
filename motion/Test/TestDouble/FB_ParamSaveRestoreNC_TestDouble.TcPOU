@@ -3,8 +3,8 @@
   <POU Name="FB_ParamSaveRestoreNC_TestDouble" Id="{634c36c5-150a-4764-a0a6-c7ecdf090bad}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_ParamSaveRestoreNC_TestDouble IMPLEMENTS I_ParamSaveRestore
 VAR
-	bError : BOOL;
-	nErrorID : UDINT := 27000;
+    bError : BOOL;
+    nErrorID : UDINT := 27000;
 END_VAR
 
 ]]></Declaration>
@@ -38,8 +38,7 @@ END_VAR
       </CFC>
     </Implementation>
     <Property Name="Aborted" Id="{bc5e58f9-bdb5-465a-8980-ce019c8e1cfe}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY Aborted : BOOL
+      <Declaration><![CDATA[PROPERTY Aborted : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{4c1d0fe5-99cc-49f2-a6ac-9ea433dc24cf}">
         <Declaration><![CDATA[VAR
@@ -51,8 +50,7 @@ END_VAR
       </Get>
     </Property>
     <Property Name="Active" Id="{6e1b4f23-e301-4c8f-9bd5-a38bb628d40b}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY Active : BOOL
+      <Declaration><![CDATA[PROPERTY Active : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{8252c21a-74f6-4362-88f2-f282e34cb17f}">
         <Declaration><![CDATA[VAR
@@ -64,8 +62,7 @@ END_VAR
       </Get>
     </Property>
     <Property Name="Busy" Id="{5a4a5d7c-ae6e-4502-870e-86886aa909c9}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY Busy : BOOL
+      <Declaration><![CDATA[PROPERTY Busy : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{51ddd32b-ece9-4791-b112-7954fe8ff65a}">
         <Declaration><![CDATA[VAR
@@ -77,8 +74,7 @@ END_VAR
       </Get>
     </Property>
     <Property Name="Done" Id="{bc6d9acd-70c6-47fe-ba6a-fb560c9aff76}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY Done : BOOL
+      <Declaration><![CDATA[PROPERTY Done : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{24c263ee-a777-4f51-8935-34366e1c9da6}">
         <Declaration><![CDATA[VAR
@@ -90,8 +86,7 @@ END_VAR
       </Get>
     </Property>
     <Property Name="Error" Id="{a3fc6456-bb0b-48c1-a3f8-d7cf3b385b41}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY Error : BOOL
+      <Declaration><![CDATA[PROPERTY Error : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{b2c27d55-aedf-420a-b6a5-ccf426ea0da1}">
         <Declaration><![CDATA[VAR
@@ -112,8 +107,7 @@ END_VAR
       </Set>
     </Property>
     <Property Name="ErrorID" Id="{7ca8ce4e-9d2e-45b2-a0d8-9fa871d9391f}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY ErrorID : UDINT
+      <Declaration><![CDATA[PROPERTY ErrorID : UDINT
 ]]></Declaration>
       <Get Name="Get" Id="{2050ca11-2489-4a5a-823e-d551d917f3fc}">
         <Declaration><![CDATA[VAR
@@ -134,8 +128,7 @@ END_VAR
       </Set>
     </Property>
     <Property Name="Message" Id="{60544b15-6916-422b-8d01-2a440816513d}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY Message : T_MAXSTRING
+      <Declaration><![CDATA[PROPERTY Message : T_MAXSTRING
 ]]></Declaration>
       <Get Name="Get" Id="{ad3aa3c9-16b3-4778-a316-68d7a7a4d78f}">
         <Declaration><![CDATA[VAR
@@ -147,18 +140,16 @@ END_VAR
       </Get>
     </Property>
     <Method Name="RestoreAxisParams" Id="{bbaaf4ec-2d6e-4692-b30a-5dfb5456d188}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD RestoreAxisParams
+      <Declaration><![CDATA[METHOD RestoreAxisParams
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Method Name="SaveAxisParams" Id="{e0f4633b-667b-40dc-bf7a-69721d025eec}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD SaveAxisParams
+      <Declaration><![CDATA[METHOD SaveAxisParams
 VAR_INPUT
-	Enable	: BOOL;
+    Enable	: BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -166,8 +157,7 @@ END_VAR
       </Implementation>
     </Method>
     <Property Name="SavedPosition" Id="{b6c343b0-db42-4635-9453-81ad3052e4e7}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY SavedPosition : LREAL
+      <Declaration><![CDATA[PROPERTY SavedPosition : LREAL
 ]]></Declaration>
       <Get Name="Get" Id="{c40f7aea-0904-494e-b28e-2c01ae5477fd}">
         <Declaration><![CDATA[VAR

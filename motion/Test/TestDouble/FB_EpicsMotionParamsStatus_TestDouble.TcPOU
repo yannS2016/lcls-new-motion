@@ -9,22 +9,21 @@ END_VAR
       <ST><![CDATA[]]></ST>
     </Implementation>
     <Method Name="MotionParamsAndStatus" Id="{8f7bda7b-2400-4fc0-8724-9d744b9c2bb5}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD MotionParamsAndStatus
+      <Declaration><![CDATA[METHOD MotionParamsAndStatus
 VAR_INPUT
-	PowerEnabled	: BOOL;
-	PowerIsEnabled	: BOOL;
-	Execute	: BOOL;
-	LimHome	: BOOL;
-	MoveBackwardEnabled	: BOOL;
-	MoveForwardEnabled	: BOOL;
-	MeasuredPositionDiff	: LREAL;
-	MeasuredPosition	: LREAL;
-	MeasuredVelocity	: LREAL;
-	PowerOverride	: LREAL;
-	Busy	: BOOL;
-	HomeDone	: BOOL;
-	MotionAxisId : UDINT;
+    PowerEnabled	: BOOL;
+    PowerIsEnabled	: BOOL;
+    Execute	: BOOL;
+    LimHome	: BOOL;
+    MoveBackwardEnabled	: BOOL;
+    MoveForwardEnabled	: BOOL;
+    MeasuredPositionDiff	: LREAL;
+    MeasuredPosition	: LREAL;
+    MeasuredVelocity	: LREAL;
+    PowerOverride	: LREAL;
+    Busy	: BOOL;
+    HomeDone	: BOOL;
+    MotionAxisId : UDINT;
 END_VAR
 ]]></Declaration>
       <Implementation>

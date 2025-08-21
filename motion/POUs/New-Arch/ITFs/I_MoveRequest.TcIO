@@ -77,8 +77,6 @@ END_VAR
     </Method>
     <Method Name="ResetMoveEnable" Id="{0644586b-fcac-4d48-8e18-72697f9ae9a6}">
       <Declaration><![CDATA[METHOD ResetMoveEnable
-VAR_INPUT
-END_VAR
 ]]></Declaration>
     </Method>
     <Method Name="ResetMoveRequest" Id="{03c7c64b-8551-4106-a3c0-5e029b2f2ad9}">

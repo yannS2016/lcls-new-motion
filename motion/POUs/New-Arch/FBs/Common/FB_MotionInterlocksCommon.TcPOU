@@ -38,10 +38,7 @@ VAR
     {attribute 'hide'}
     nErrorID : UDINT;
     {attribute 'hide'}
-    // Set by default, an error condition will reset this
-    bMoveOk : BOOL := TRUE;
-    {attribute 'hide'}
-    rtGlobalReset : R_TRIG;
+    bMoveOk : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -58,7 +55,7 @@ bMoveOk := bUserEnable AND bHardwareEnable;
 
 IF NOT bUserEnable OR NOT bHardwareEnable THEN
     bError := TRUE;
-    nErrorID:= 1;
+    nErrorID:= 11;
     bMoveOk := FALSE;
     IF NOT bUserEnable THEN
         sMessage := 'User enable interlock triggered!';
@@ -88,6 +85,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.bEnable := Enable;
+THIS^.bPowerEnabled := bEnable AND bHardwareEnable;
 ]]></ST>
       </Implementation>
     </Method>

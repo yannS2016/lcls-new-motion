@@ -11,35 +11,29 @@ VAR
     {attribute 'hide'}
     iMotionAxisDS402: I_MotionAxisDS402;
     {attribute 'hide'}
-	tonMotionWatchDog: TON;
+    tonMotionWatchDog: TON;
     {attribute 'hide'}
-	bError: BOOL;
+    bError: BOOL;
     {attribute 'hide'}
-	eMoveState: E_MOVESTATE;
+    eMoveState: E_MOVESTATE;
     {attribute 'hide'}
-	rtTargetReached: R_TRIG;
+    rtTargetReached: R_TRIG;
     {attribute 'hide'}
-	rtHomed: R_TRIG;
+    rtHomed: R_TRIG;
     {attribute 'hide'}
-	ftError: F_TRIG;
+    ftError: F_TRIG;
     {attribute 'hide'}
-	bInterlockEvent: BOOL;
+    bInterlockEvent: BOOL;
     {attribute 'hide'}
-	rtStandStill : R_TRIG;
+    rtStandStill : R_TRIG;;
     {attribute 'hide'}
-	nInitState : UINT;
-    {attribute 'hide'}
-	ftStop: F_TRIG;
-    {attribute 'hide'}
-	rtReset: R_TRIG;
-    {attribute 'hide'}
-	rtResetDone: R_TRIG;
+    ftStop: F_TRIG;
 END_VAR
 
 VAR_OUTPUT
-	Error: BOOL;
-	ErrorId: UDINT;
-	Message: T_MAXSTRING;	
+    Error: BOOL;
+    ErrorId: UDINT;
+    Message: T_MAXSTRING;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -49,143 +43,157 @@ ftError(CLK:=bError);
 
 // Drive state Machine here
 CASE eMoveState OF
-	E_MoveState.IDLING:
+    E_MoveState.IDLING:
         // Delay the disable until axis reach standstill
         // and this state machine is idling
         IF bError THEN
                eMoveState := E_MoveState.ERROR;
         ELSIF iMoveRequest.Status.bExecute THEN
-			// When we start, set the busy/done appropriately
-			iMoveRequest.InitMoveRequest();
-			// Act as watch dog to set the drive in error state if axis side hangs.
-			tonMotionWatchDog.IN:=TRUE;
+            // When we start, set the busy/done appropriately
+            //iMoveRequest.InitMoveRequest();
+            // Act as watch dog to set the drive in error state if axis side hangs.
+            tonMotionWatchDog.IN:=TRUE;
             eMoveState := E_MoveState.INIT;
         END_IF
 
-	E_MoveState.INIT:
+    E_MoveState.INIT:
 
-		CASE iMoveRequest.Status.nCommand OF
-			E_EpicsMotorCmd.MOVE_ABSOLUTE:
-	
-				// Activate backlash compensation
-				iMotionAxis.BacklashCompensation(
-					Enable:=TRUE, 
-					RampVelo:=iMoveRequest.Status.fVelocity/10.0
-				);
-	
-				IF __QUERYINTERFACE(iMotionAxis, iMotionAxisDS402) THEN
-					// prepare piezo axis for motion
-					IF iMotionAxisDS402.ModeConfigDone(Mode:=E_EpicsMotorCmd.MOVE_ABSOLUTE) THEN
-						iMotionAxis.MoveAbsolute( 
-							Position:=iMoveRequest.Status.fPosition,
-							Velocity := iMoveRequest.Status.fVelocity,
-							Acceleration := iMoveRequest.Status.fAcceleration,
-							Deceleration := iMoveRequest.Status.fDeceleration
-						);
+        CASE iMoveRequest.Status.nCommand OF
+            E_EpicsMotorCmd.MOVE_ABSOLUTE:
 
-						eMoveState := E_MoveState.STARTED;
-					END_IF
-				ELSE
-					iMotionAxis.MoveAbsolute( 
-						Position:=iMoveRequest.Status.fPosition,
-						Velocity := iMoveRequest.Status.fVelocity,
-						Acceleration := iMoveRequest.Status.fAcceleration,
-						Deceleration := iMoveRequest.Status.fDeceleration
-					);
-					eMoveState := E_MoveState.STARTED;
-				END_IF
+                // Activate backlash compensation
+                iMotionAxis.BacklashCompensation(
+                    Enable:=TRUE,
+                    RampVelo:=iMoveRequest.Status.fVelocity/10.0
+                );
 
-			E_EpicsMotorCmd.HOME:
+                IF __QUERYINTERFACE(iMotionAxis, iMotionAxisDS402) THEN
+                    // prepare piezo axis for motion
+                    IF iMotionAxisDS402.ModeConfigDone(Mode:=E_EpicsMotorCmd.MOVE_ABSOLUTE) THEN
+                        iMotionAxis.MoveAbsolute(
+                            Position:=iMoveRequest.Status.fPosition,
+                            Velocity := iMoveRequest.Status.fVelocity,
+                            Acceleration := iMoveRequest.Status.fAcceleration,
+                            Deceleration := iMoveRequest.Status.fDeceleration
+                        );
 
-				// Deactivate backlash compensation
-				iMotionAxis.BacklashCompensation(
-					Enable:=FALSE, 
-					RampVelo:=iMoveRequest.Status.fVelocity/10.0
-				);
+                        eMoveState := E_MoveState.STARTED;
+                    END_IF
+                ELSE
+                    iMotionAxis.MoveAbsolute(
+                        Position:=iMoveRequest.Status.fPosition,
+                        Velocity := iMoveRequest.Status.fVelocity,
+                        Acceleration := iMoveRequest.Status.fAcceleration,
+                        Deceleration := iMoveRequest.Status.fDeceleration
+                    );
+                    eMoveState := E_MoveState.STARTED;
+                END_IF
 
-				IF __QUERYINTERFACE(iMotionAxis, iMotionAxisDS402) THEN
-					IF iMotionAxisDS402.ModeConfigDone(Mode:=E_EpicsMotorCmd.HOME) THEN
-						iMotionAxis.home(
-								Position:=iMoveRequest.Status.fHomeOffset, 
-								BufferMode:=MC_Aborting
-						);
-						eMoveState := E_MoveState.STARTED;
-					END_IF
-				ELSE
-					iMotionAxis.home(
-							Position:=iMoveRequest.Status.fHomeOffset, 
-							BufferMode:=MC_Aborting
-					);
-					eMoveState := E_MoveState.STARTED;
-				END_IF
+            E_EpicsMotorCmd.HOME:
 
-		END_CASE
-	E_MoveState.STARTED:
-		IF bError THEN
-			eMoveState := E_MoveState.ERROR;
-		// when we get this signal, all motion prerequisite are met and axis is in motion.
-		ELSIF iMotionAxis.Status.bBusy THEN
-			tonMotionWatchDog.IN := FALSE;
-			eMoveState := E_MoveState.IN_PROGRESS;
-		END_IF
+                // Deactivate backlash compensation
+                iMotionAxis.BacklashCompensation(
+                    Enable:=FALSE,
+                    RampVelo:=iMoveRequest.Status.fVelocity/10.0
+                );
 
-	E_MoveState.IN_PROGRESS :
+                IF __QUERYINTERFACE(iMotionAxis, iMotionAxisDS402) THEN
+                    IF iMotionAxisDS402.ModeConfigDone(Mode:=E_EpicsMotorCmd.HOME) THEN
+                        iMotionAxis.home(
+                                Position:=iMoveRequest.Status.fHomeOffset,
+                                BufferMode:=MC_Aborting
+                        );
+                        eMoveState := E_MoveState.STARTED;
+                    END_IF
+                ELSE
+                    iMotionAxis.home(
+                            Position:=iMoveRequest.Status.fHomeOffset,
+                            BufferMode:=MC_Aborting
+                    );
+                    eMoveState := E_MoveState.STARTED;
+                END_IF
 
-		IF bError THEN
+        END_CASE
+    E_MoveState.STARTED:
+        IF bError THEN
+            eMoveState := E_MoveState.ERROR;
+        // when we get this signal, all motion prerequisite are met and axis is in motion.
+        ELSIF iMotionAxis.Status.bBusy THEN
+            tonMotionWatchDog.IN := FALSE;
+            eMoveState := E_MoveState.IN_PROGRESS;
+        END_IF
+
+    E_MoveState.IN_PROGRESS :
+
+        IF bError THEN
            eMoveState := E_MoveState.ERROR;
-		// Move interupted: halt or Reset, go wait for a done signal
-		// Move Aborted: hitting a directional limit switch wil set Aborted flag.
-		// we want to immediately prepare to disable drive power
-		ELSIF iMotionAxis.Status.bAborted OR bInterlockEvent  THEN
-			iMoveRequest.ClearMoveRequest();
-			eMoveState := E_MoveState.INTERRUPTED;
+        // Move interupted: halt or Reset, go wait for a done signal
+        // Move Aborted: hitting a directional limit switch will set Aborted flag.
+        // we want to immediately prepare to disable drive power
+        ELSIF iMotionAxis.Status.bAborted THEN
+            iMoveRequest.ClearMoveRequest();
+            eMoveState := E_MoveState.INTERRUPTED;
 
-		ELSIF  rtTargetReached.Q OR rtHomed.Q  THEN
-		   iMoveRequest.ClearMoveRequest();
+        ELSIF  rtTargetReached.Q OR rtHomed.Q  THEN
+           iMoveRequest.ClearMoveRequest();
            eMoveState := E_MoveState.REACHED;
-		END_IF
+        END_IF
 
-	E_MoveState.INTERRUPTED:
-		// Interlock event aka limit hit ?
-		IF bInterlockEvent THEN
-		   iMoveRequest.MoveRequestDone(Done:=TRUE);
-		   iMoveRequest.ResetMoveEnable();
-		   eMoveState := E_MoveState.IDLING;
-		// Wait here for halt/reset done or clearing limit state to be restored
-		ELSIF iMotionAxis.Status.bAbortDone THEN
-		   iMoveRequest.MoveRequestDone(Done:=TRUE);
-		   // clear latched reset flags.
-		   iMotionAxis.ResetDone();
-		   iMotionAxis.HaltDone();
-		   iMoveRequest.ResetMoveEnable();
-
+    E_MoveState.INTERRUPTED:
+        // Interlock event aka limit hit ?
+        IF NOT iMotionAxis.Status.bDirectionalPowerEnabled THEN
+           iMoveRequest.MoveRequestDone(Done:=TRUE);
+			// 'DURING_MOTION' AND STANDSTILL ? 
+			IF iMotionAxis.Status.bStandStill THEN
+				iMoveRequest.ResetMoveEnable();
+				iMotionAxis.DisablePower();
+			END_IF
            eMoveState := E_MoveState.IDLING;
-       END_IF
+        // Wait here for halt/reset done or clearing limit state to be restored
+        ELSIF iMotionAxis.Status.bAbortDone THEN
+        	iMoveRequest.MoveRequestDone(Done:=TRUE);
+           	// clear latched reset flags.
+           	iMotionAxis.ResetDone();
+           	iMotionAxis.ResetExecute();
+			// 'DURING_MOTION' AND STANDSTILL ? immediatelly disabled and remove power here.
+			IF iMotionAxis.Status.bStandStill THEN
+				iMoveRequest.ResetMoveEnable();
+				iMotionAxis.DisablePower();
+			END_IF
+           	eMoveState := E_MoveState.IDLING;
+      	END_IF
 
-	E_MoveState.REACHED:
+    E_MoveState.REACHED:
+
+ 		iMoveRequest.MoveRequestCompleted(
+             HomeDone:=iMotionAxis.Status.bHomeDone,
+             MoveDone:=iMotionAxis.Status.bMoveAbsoluteDone
+ 		);
+		// 'DURING_MOTION' AND STANDSTILL ? immediatelly disabled and remove power here.
 		IF iMotionAxis.Status.bStandStill THEN
-			iMoveRequest.MoveRequestCompleted( 
-					HomeDone:=iMotionAxis.Status.bHomeDone, 
-					MoveDone:=iMotionAxis.Status.bMoveAbsoluteDone
-			);
-			eMoveState := E_MoveState.IDLING;	
+			iMoveRequest.ResetMoveEnable();
+			iMotionAxis.DisablePower();
 		END_IF
-	E_MoveState.ERROR:
-   		// NC would have already removepower to drive.
-		iMoveRequest.ClearMoveRequest();
-		iMoveRequest.ResetMoveEnable();
-   		IF ftError.Q THEN
+
+		eMoveState := E_MoveState.IDLING;
+		
+    E_MoveState.ERROR:
+           // NC would have already removepower to drive.
+        iMoveRequest.ClearMoveRequest();
+        iMoveRequest.ResetMoveEnable();
+		tonMotionWatchDog.IN := FALSE;
+		IF ftError.Q THEN
            eMoveState := E_MoveState.IDLING;
-       END_IF
+       	END_IF
 END_CASE
 
-// prevent this state machine from hanging on user defined configs 
+// prevent this state machine from hanging on user defined axis configs
 tonMotionWatchDog(PT:=T#5S);
 IF tonMotionWatchDog.Q THEN
-	Error := TRUE;
-	ErrorId := 1;
-	Message:= 'Motion axis response timeout';
-	eMoveState := E_MoveState.ERROR;
+    Error := TRUE;
+    ErrorId := 99;
+    Message:= 'Motion axis response timeout';
+    eMoveState := E_MoveState.ERROR;
 END_IF]]></ST>
     </Implementation>
     <Method Name="CallAfterInit" Id="{e0b49802-1f54-4d4a-bab0-a630f6e6317c}">
@@ -259,13 +267,11 @@ END_VAR
     <Method Name="StateMachine" Id="{66378d9f-e842-4289-88b6-7de0d7f7c0a0}">
       <Declaration><![CDATA[METHOD StateMachine
 VAR_INPUT
-	InterlockEvent	: BOOL;
-	Error	: BOOL;
+    Error	: BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.bInterlockEvent := InterlockEvent;
-THIS^.bError := Error;]]></ST>
+        <ST><![CDATA[THIS^.bError := Error;]]></ST>
       </Implementation>
     </Method>
     <Property Name="WatchDog" Id="{ffd10039-8300-4aa4-a939-c817f83dfa6b}">

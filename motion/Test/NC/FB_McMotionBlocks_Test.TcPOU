@@ -3,10 +3,10 @@
   <POU Name="FB_McMotionBlocks_Test" Id="{dc41a27c-ab9f-47fb-bcb5-3fed2b1c906b}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_McMotionBlocks_Test EXTENDS FB_TestSuite
 VAR
- 	fbAxisRef : ARRAY [1..8] OF AXIS_REF;
-	fbLimSwStatus : ARRAY [1..8] OF FB_LimSwStatus_TestDouble;
-	fbMotionLogger : ARRAY [1..8] OF FB_MotionLogger;
-											
+    fbAxisRef : ARRAY [1..8] OF AXIS_REF;
+    fbLimSwStatus : ARRAY [1..8] OF FB_LimSwStatus_TestDouble;
+    fbMotionLogger : ARRAY [1..8] OF FB_MotionLogger;
+
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[GivenThatPowerIsEnabledAndMoveAbsoluteStartedAndCompletedThenMoveAbsoluteRetainsDoneStatus_Test1();
@@ -14,26 +14,26 @@ GivenThatPowerIsEnabledAndMoveAbsoluteStartedFollowByAHaltSignalThenMoveIsAborte
 GivenThatPowerIsEnabledAndMoveAbsoluteStartedFollowByAResetSignalThenMoveIsAbortedAndResetDoneIsRetained_Test3();
 GivenThatDirectionalPositivePowerIsEnabledAndMoveAbsoluteStartedIfPositiveLimitHitThenMoveAbsoluteAbortedStatus_Test4();
 GivenThatDirectionalNegativePowerIsEnabledAndMoveAbsoluteStartedIfNegativeLimitHitThenMoveAbsoluteAbortedStatus_Test5();
+// Enable COE position correction for these 3 axis.
 GivenHomeCmdBacklashCompensationInactiveThenMoveStartandCompletesWithBacklashCompensationDisabled_Test6();
 GivenMoveCmdPositiveBacklashCompensationActiveThenReverseMoveStartedandCompletedWithBacklashCompensationEnabled_Test7();
-]]></ST>
+GivenMoveCmdNegativeBacklashCompensationActiveThenReverseMoveStartedandCompletedWithBacklashCompensationEnabled_Test8();]]></ST>
     </Implementation>
     <Method Name="GivenHomeCmdBacklashCompensationInactiveThenMoveStartandCompletesWithBacklashCompensationDisabled_Test6" Id="{d165f2d2-92b0-417e-9f05-e4578b84306f}">
       <Declaration><![CDATA[METHOD PRIVATE GivenHomeCmdBacklashCompensationInactiveThenMoveStartandCompletesWithBacklashCompensationDisabled_Test6
 VAR_INST
-	// Subject under tests										
+    // Subject under tests
     fbBacklashCompensation : FB_BacklashCompensationNC(AxisRef := fbAxisRef[6]);
 
-	// Backalsh is testing on simulated NC axis in Homing and PTP
+    // Backalsh is testing on simulated NC axis in Homing and PTP
     fbTestTimer : TON := (PT := T#5S, IN := TRUE);
     nTestStep : INT;
     fbHome : FB_HomeNC(AxisRef:=fbAxisRef[6], iLimSwStatus:=fbLimSwStatus[6],iMotionLogger:=fbMotionLogger[6]):=(Mode:=E_EpicsHomeCmd.HIGH_LIMIT);
     fbPower :  FB_PowerNC(AxisRef := fbAxisRef[6]);
-    fbCamSwitchPulserSearch: TON := (IN:=TRUE, PT:=T#500MS);
-    fbCamSwitchPulserSync: TON := (PT:=T#1000MS);                                          											                            
-	bHomingOverride: BOOL := TRUE;
-	bBacklashResetStatus : BOOL;
-	bBacklashHomingStatus : BOOL;
+    fbCamSwitchPulserSearch: TON := (IN:=TRUE, PT:=T#100MS);
+    fbCamSwitchPulserSync: TON := (PT:=T#500MS);
+    bHomingOverride: BOOL := TRUE;
+
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -42,50 +42,49 @@ END_VAR
 // must be called cycliclly
 // one issue , directional enables mmust be overridden during homing.
 fbPower.Power(	Enable := TRUE,
-          		Enable_Positive := bHomingOverride OR fbLimSwStatus[6].LimForward,
-       			Enable_Negative := bHomingOverride OR fbLimSwStatus[6].LimBackward,
-        		Override := 100
-			  );
-					
+                  Enable_Positive := bHomingOverride OR fbLimSwStatus[6].LimForward,
+                   Enable_Negative := bHomingOverride OR fbLimSwStatus[6].LimBackward,
+                Override := 100
+              );
+
 CASE nTestStep OF
     0:
-		fbBacklashCompensation.BacklashCompensationTest(UserEnable:=TRUE, Compensation:=1.0);
+        fbBacklashCompensation.EnableBacklashCompensation(UserEnable:=TRUE, Compensation:=1.0);
+        nTestStep := nTestStep + 1;
+    1:
+        // Homing? Enable must be FALSE
+        fbBacklashCompensation.BacklashCompensation(Enable:=FALSE, RampVelo:=10.0);
+        nTestStep := nTestStep + 1;
+    2:
+		AssertFalse(Condition :=  fbBacklashCompensation.Status, Message := 'backlash  must be disabled while homing #1');
 		nTestStep := nTestStep + 1;
-	1:
-		fbBacklashCompensation.BacklashCompensation(Enable:=FALSE, RampVelo:=10.0);
-		bBacklashResetStatus := fbBacklashCompensation.Status;
-		nTestStep := nTestStep + 1;	
-	2:
-
-		IF  fbPower.PowerIsEnabled THEN
-			// Initate Positive backlash compensation
-			fbHome.Home(Position:=20.0,BufferMode:=MC_Aborting);
-			nTestStep := nTestStep + 1;
-		END_IF	
 	3:
-		IF fbHome.Busy THEN
-			bBacklashHomingStatus := fbBacklashCompensation.Status;
-			nTestStep := nTestStep + 1;
-
-		END_IF
+        IF  fbPower.PowerIsEnabled THEN
+            // Initate Positive backlash compensation
+            fbHome.Home(Position:=20.0,BufferMode:=MC_Aborting);
+            nTestStep := nTestStep + 1;
+        END_IF
     4:
+        IF fbHome.Busy THEN
+			AssertFalse(Condition := fbBacklashCompensation.Status, Message := 'backlash must be disabled after resetting #2');
+            nTestStep := nTestStep + 1;
+        END_IF
+    5:
         IF fbCamSwitchPulserSearch.Q THEN
             fbLimSwStatus[6].LimForward := FALSE;
             fbCamSwitchPulserSearch.IN := FALSE;
             fbCamSwitchPulserSync.IN := TRUE;
             nTestStep := nTestStep + 1;
         END_IF
-    5:
+    6:
         IF fbCamSwitchPulserSync.Q THEN
             fbLimSwStatus[6].LimForward := TRUE;
             nTestStep := nTestStep + 1;
         END_IF
-    6:
+    7:
         IF fbHome.Done THEN
-			
             nTestStep := nTestStep + 1;
         END_IF
-    7:;
 
 END_CASE
 //
@@ -97,11 +96,9 @@ fbCamSwitchPulserSync();
 fbTestTimer();
 
 IF nTestStep = 7 THEN
-	AssertFalse(Condition :=  bBacklashHomingStatus, Message := 'backlash  must be disabled while homing #1');
-	AssertFalse(Condition := bBacklashResetStatus, Message := 'backlash must be disabled after resetting #2');
-	AssertTrue(Condition :=  ((fbAxisRef[6].NcToPlc.ActPos - fbAxisRef[6].NcToPlc.ActPosWithoutPosCorrection)= 0),
-								 Message := 'backlash compensation must be enable #3');
-	TEST_FINISHED();
+    AssertTrue(Condition :=((fbAxisRef[6].NcToPlc.ActPos - fbAxisRef[6].NcToPlc.ActPosWithoutPosCorrection)=0),
+                                 Message := 'backlash compensation must be enable #3');
+    TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
     AssertTrue(
         Condition := FALSE,
@@ -117,19 +114,16 @@ END_IF
     <Method Name="GivenMoveCmdNegativeBacklashCompensationActiveThenReverseMoveStartedandCompletedWithBacklashCompensationEnabled_Test8" Id="{ed4242b5-1f08-417f-b32f-5a900afbf462}">
       <Declaration><![CDATA[METHOD PRIVATE GivenMoveCmdNegativeBacklashCompensationActiveThenReverseMoveStartedandCompletedWithBacklashCompensationEnabled_Test8
 VAR_INST
-	// Subject under tests										
+    // Subject under tests
     fbBacklashCompensation : FB_BacklashCompensationNC(AxisRef := fbAxisRef[8]);
 
-	// Backalsh is testing on simulated NC axis in Homing and PTP
+    // Backalsh is testing on simulated NC axis in Homing and PTP
     fbTestTimer : TON := (PT := T#5S, IN := TRUE);
     nTestStep : INT;
 
     fbMoveAbsolute : FB_MoveAbsoluteNC(AxisRef := fbAxisRef[8]);
     fbPower :  FB_PowerNC(AxisRef := fbAxisRef[8]);
-	bBacklashResetStatus : BOOL;
-	bBacklashStatus : BOOL;
-	fNoCompensation : LREAL;
-	fCompensation : LREAL;
+
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -138,66 +132,63 @@ END_VAR
 // must be called cycliclly
 // one issue , directional enables mmust be overridden during homing.
 fbPower.Power(	Enable := TRUE,
-          		Enable_Positive := fbLimSwStatus[8].LimForward,
-       			Enable_Negative := fbLimSwStatus[8].LimBackward,
-        		Override := 100
-			  );
-					
+                  Enable_Positive := fbLimSwStatus[8].LimForward,
+                   Enable_Negative := fbLimSwStatus[8].LimBackward,
+                Override := 100
+              );
+
 CASE nTestStep OF
     0:
-		fbBacklashCompensation.BacklashCompensationTest(UserEnable:=TRUE, Compensation:=-4.0);
-		nTestStep := nTestStep + 1;
-	1:
-		bBacklashResetStatus := fbBacklashCompensation.Status;
-		fbBacklashCompensation.BacklashCompensation(Enable:=TRUE, RampVelo:=10.0);
-		nTestStep := nTestStep + 1;		
+        fbBacklashCompensation.EnableBacklashCompensation(UserEnable:=TRUE, Compensation:=-4.0);
+        nTestStep := nTestStep + 1;
+    1:
+        AssertFalse(Condition :=  fbBacklashCompensation.Status, Message := 'backlash compensation must be disabled #1');
+        fbBacklashCompensation.BacklashCompensation(Enable:=TRUE, RampVelo:=10.0);
+        nTestStep := nTestStep + 1;
+    2:
+        AssertTrue(Condition :=  fbBacklashCompensation.Status, Message := 'backlash compensation must be enabled #2');
+        nTestStep := nTestStep + 1;
+    3:
+        IF  fbPower.PowerIsEnabled THEN
+            // Initate Positive backlash compensation
+            fbMoveAbsolute.MoveAbsolute(	Position := -10.0,
+                                            Velocity := 100,
+                                            Acceleration := 200,
+                                            Deceleration := 200
+                                        );
+            nTestStep := nTestStep + 1;
+        END_IF
+    4:
 
-	2:
-
-		bBacklashStatus := fbBacklashCompensation.Status;
-		IF  fbPower.PowerIsEnabled THEN
-			// Initate Positive backlash compensation
-			fbMoveAbsolute.MoveAbsolute(	Position := -150.0,
-											Velocity := 100,
-											Acceleration := 200,
-											Deceleration := 200
-										);
-			nTestStep := nTestStep + 1;
-		END_IF
-	3:
- 		IF fbMoveAbsolute.Done THEN
-			fNoCompensation := (fbAxisRef[8].NcToPlc.ActPos - fbAxisRef[8].NcToPlc.ActPosWithoutPosCorrection);
-
-			nTestStep := nTestStep + 1;
-		END_IF
-	4:
-		// reverse movement
-		fbMoveAbsolute.MoveAbsolute(	Position := 100.0,
-                                   		Velocity := 100,
-                                  		Acceleration := 200,
-                                 		Deceleration := 200
-									);
-		nTestStep := nTestStep + 1;
-	5:
- 		IF fbMoveAbsolute.Done THEN
-			fCompensation :=(fbAxisRef[8].NcToPlc.ActPos - fbAxisRef[8].NcToPlc.ActPosWithoutPosCorrection);
-			nTestStep := nTestStep + 1;
-		END_IF
+         IF fbMoveAbsolute.Done THEN
+			AssertTrue(Condition :=  ((fbAxisRef[8].NcToPlc.ActPos - fbAxisRef[8].NcToPlc.ActPosWithoutPosCorrection)= 0),Message := 'No Backlash compensation in this direction #3');
+            nTestStep := nTestStep + 1;
+        END_IF
+    5:
+        // reverse movement
+        fbMoveAbsolute.MoveAbsolute(	Position := 20.0,
+                                           Velocity := 100,
+                                          Acceleration := 200,
+                                         Deceleration := 200
+                                    );
+        nTestStep := nTestStep + 1;
+    6:
+         IF fbMoveAbsolute.Done THEN
+            AssertTrue(Condition :=  ((fbAxisRef[8].NcToPlc.ActPos - fbAxisRef[8].NcToPlc.ActPosWithoutPosCorrection)=4),Message := 'Current backlash must be 1 #4');
+            nTestStep := nTestStep + 1;
+        END_IF
 
 END_CASE
 //
-fbAxisRef[8].ReadStatus();
+
 fbBacklashCompensation();
 fbMoveAbsolute();
 fbTestTimer();
 
-IF nTestStep = 6 THEN
-	AssertFalse(Condition :=  bBacklashResetStatus, Message := 'backlash compensation must be disabled after resetting #1');
-	AssertTrue(Condition :=  bBacklashStatus, Message := 'backlash compensation must be enable #2');
-	AssertTrue(Condition :=  (fNoCompensation= 0),Message := 'No Backlash compensation in this direction #3');
-	AssertTrue(Condition :=  (fCompensation= 4),Message := 'Current backlash must be 4 #4');
+IF nTestStep = 7 THEN
+   
     AssertTrue(Condition :=  fbBacklashCompensation.status, Message := 'backlash compensation must stay enable after absolute move #5');
-	TEST_FINISHED();
+    TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
     AssertTrue(
         Condition := FALSE,
@@ -213,19 +204,16 @@ END_IF
     <Method Name="GivenMoveCmdPositiveBacklashCompensationActiveThenReverseMoveStartedandCompletedWithBacklashCompensationEnabled_Test7" Id="{9c1a4bce-ba95-4b9d-bd69-46b6e3327f0a}">
       <Declaration><![CDATA[METHOD PRIVATE GivenMoveCmdPositiveBacklashCompensationActiveThenReverseMoveStartedandCompletedWithBacklashCompensationEnabled_Test7
 VAR_INST
-	// Subject under tests										
+    // Subject under tests
     fbBacklashCompensation : FB_BacklashCompensationNC(AxisRef := fbAxisRef[7]);
 
-	// Backalsh is testing on simulated NC axis in Homing and PTP
+    // Backalsh is testing on simulated NC axis in Homing and PTP
     fbTestTimer : TON := (PT := T#5S, IN := TRUE);
     nTestStep : INT;
 
     fbMoveAbsolute : FB_MoveAbsoluteNC(AxisRef := fbAxisRef[7]);
     fbPower :  FB_PowerNC(AxisRef := fbAxisRef[7]);
-	bBacklashResetStatus : BOOL;
-	bBacklashStatus : BOOL;
-	fNoCompensation : LREAL;
-	fCompensation : LREAL;
+
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -234,66 +222,64 @@ END_VAR
 // must be called cycliclly
 // one issue , directional enables mmust be overridden during homing.
 fbPower.Power(	Enable := TRUE,
-          		Enable_Positive := fbLimSwStatus[7].LimForward,
-       			Enable_Negative := fbLimSwStatus[7].LimBackward,
-        		Override := 100
-			  );
-					
+                  Enable_Positive := fbLimSwStatus[7].LimForward,
+                   Enable_Negative := fbLimSwStatus[7].LimBackward,
+                Override := 100
+              );
+
 CASE nTestStep OF
     0:
-		fbBacklashCompensation.BacklashCompensationTest(UserEnable:=TRUE, Compensation:=1.0);
-		nTestStep := nTestStep + 1;
-	1:
-		bBacklashResetStatus := fbBacklashCompensation.Status;
+        fbBacklashCompensation.EnableBacklashCompensation(UserEnable:=TRUE, Compensation:=1.0);
+        nTestStep := nTestStep + 1;
+    1:
+
+        AssertFalse(Condition :=  fbBacklashCompensation.Status, Message := 'backlash compensation must be disabled #1');
+        fbBacklashCompensation.BacklashCompensation(Enable:=TRUE, RampVelo:=10.0);
+        nTestStep := nTestStep + 1;
+    2:
+        AssertTrue(Condition :=  fbBacklashCompensation.Status, Message := 'backlash compensation must be enabled #2');
+        nTestStep := nTestStep + 1;
+    3:
+
+        IF  fbPower.PowerIsEnabled THEN
+            // Initate Positive backlash compensation
+            fbMoveAbsolute.MoveAbsolute(	Position := 150.0,
+                                            Velocity := 300,
+                                            Acceleration := 600,
+                                            Deceleration := 600
+                                        );
+            nTestStep := nTestStep + 1;
+        END_IF
+    4:
+
+         IF fbMoveAbsolute.Done THEN
+			AssertTrue(Condition :=  ((fbAxisRef[7].NcToPlc.ActPos - fbAxisRef[7].NcToPlc.ActPosWithoutPosCorrection) = 0),Message := 'No Backlash compensation in this direction #3');
+            nTestStep := nTestStep + 1;
+        END_IF
+    5:
+        // reverse movement
 		fbBacklashCompensation.BacklashCompensation(Enable:=TRUE, RampVelo:=10.0);
-		nTestStep := nTestStep + 1;		
-
-	2:
-
-		bBacklashStatus := fbBacklashCompensation.Status;
-		IF  fbPower.PowerIsEnabled THEN
-			// Initate Positive backlash compensation
-			fbMoveAbsolute.MoveAbsolute(	Position := 150.0,
-											Velocity := 100,
-											Acceleration := 200,
-											Deceleration := 200
-										);
-			nTestStep := nTestStep + 1;
-		END_IF
-	3:
- 		IF fbMoveAbsolute.Done THEN
-			fNoCompensation := (fbAxisRef[7].NcToPlc.ActPos - fbAxisRef[7].NcToPlc.ActPosWithoutPosCorrection);
-
-			nTestStep := nTestStep + 1;
-		END_IF
-	4:
-		// reverse movement
-		fbMoveAbsolute.MoveAbsolute(	Position := 100.0,
-                                   		Velocity := 100,
-                                  		Acceleration := 200,
-                                 		Deceleration := 200
-									);
-		nTestStep := nTestStep + 1;
-	5:
- 		IF fbMoveAbsolute.Done THEN
-			fCompensation :=(fbAxisRef[7].NcToPlc.ActPos - fbAxisRef[7].NcToPlc.ActPosWithoutPosCorrection);
-			nTestStep := nTestStep + 1;
-		END_IF
+        fbMoveAbsolute.MoveAbsolute(	Position := 100.0,
+                                           Velocity := 300,
+                                          Acceleration := 600,
+                                         Deceleration := 600
+                                    );
+        nTestStep := nTestStep + 1;
+    6:
+         IF fbMoveAbsolute.Done THEN
+			AssertTrue(Condition :=((fbAxisRef[7].NcToPlc.ActPos - fbAxisRef[7].NcToPlc.ActPosWithoutPosCorrection)= 1),Message := 'Current backlash must be 1 #4');
+            nTestStep := nTestStep + 1;
+        END_IF
 
 END_CASE
-//
-fbAxisRef[7].ReadStatus();
+
 fbBacklashCompensation();
 fbMoveAbsolute();
 fbTestTimer();
 
-IF nTestStep = 6 THEN
-	AssertFalse(Condition :=  bBacklashResetStatus, Message := 'backlash compensation must be disabled after resetting #1');
-	AssertTrue(Condition :=  bBacklashStatus, Message := 'backlash compensation must be enable #2');
-	AssertTrue(Condition :=  (fNoCompensation= 0),Message := 'No Backlash compensation in this direction #3');
-	AssertTrue(Condition :=  (fCompensation= 1),Message := 'Current backlash must be 1 #4');
+IF nTestStep = 7 THEN
     AssertTrue(Condition :=  fbBacklashCompensation.status, Message := 'backlash compensation must stay enable after absolute move #5');
-	TEST_FINISHED();
+    TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
     AssertTrue(
         Condition := FALSE,
@@ -311,12 +297,12 @@ END_IF
 VAR_INST
     fbTestTimer : TON := (PT := T#3S, IN := TRUE);
     nTestStateStep : INT;
-	// Subject under tests
+    // Subject under tests
     fbMoveAbsolute : FB_MoveAbsoluteNC(AxisRef := fbAxisRef[5]);
-	// simulate limit hit event
+    // simulate limit hit event
     fbPower :  FB_PowerNC(AxisRef := fbAxisRef[5]);
-    fbLimtHitTimer : TON := (PT := T#1S, IN := FALSE);                                           											                            
-	fExpectedPosition: LREAL := 50.0;
+    fbLimtHitTimer : TON := (PT := T#1S, IN := FALSE);
+    fExpectedPosition: LREAL := 50.0;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST(__POUNAME());
@@ -324,11 +310,11 @@ END_VAR]]></Declaration>
 // must be called cycliclly
 // one issue , directional enables mmust be overridden during homing.
 fbPower.Power(	Enable := TRUE,
-          		Enable_Positive := fbLimSwStatus[5].LimForward,
-       			Enable_Negative := fbLimSwStatus[5].LimBackward,
-        		Override := 100
-			  );
-					
+                  Enable_Positive := fbLimSwStatus[5].LimForward,
+                   Enable_Negative := fbLimSwStatus[5].LimBackward,
+                Override := 100
+              );
+
 CASE nTestStateStep OF
     0 :
         IF fbPower.PowerIsEnabled THEN
@@ -337,22 +323,22 @@ CASE nTestStateStep OF
 
     1 :
         fbMoveAbsolute.MoveAbsolute(	Position := -150.0,
-                                      	Velocity := 100,
-                                      	Acceleration := 200,
-                                      	Deceleration := 200
-									);
-		fbLimtHitTimer.IN := TRUE;						
+                                          Velocity := 100,
+                                          Acceleration := 200,
+                                          Deceleration := 200
+                                    );
+        fbLimtHitTimer.IN := TRUE;
         nTestStateStep := nTestStateStep + 1;
-	2 :
-		IF fbLimtHitTimer.Q THEN
-			fbLimSwStatus[5].LimBackward := FALSE;
-			nTestStateStep := nTestStateStep + 1;	
-		END_IF
+    2 :
+        IF fbLimtHitTimer.Q THEN
+            fbLimSwStatus[5].LimBackward := FALSE;
+            nTestStateStep := nTestStateStep + 1;
+        END_IF
     3 :
-		IF fbMoveAbsolute.Aborted THEN
-			nTestStateStep := nTestStateStep + 1;
-		END_IF
-	4:;
+        IF fbMoveAbsolute.Aborted THEN
+            nTestStateStep := nTestStateStep + 1;
+        END_IF
+    4:;
 
 END_CASE
 //
@@ -363,7 +349,7 @@ fbMoveAbsolute();
 
 IF nTestStateStep = 4 THEN
     AssertTrue(Condition :=  fbAxisRef[5].Status.HasBeenStopped, Message := 'Expected HasBeenStopped');
-	TEST_FINISHED();
+    TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
     AssertTrue(
         Condition := FALSE,
@@ -381,12 +367,12 @@ END_IF
 VAR_INST
     fbTestTimer : TON := (PT := T#3S, IN := TRUE);
     nTestStateStep : INT;
-	// Subject under tests
+    // Subject under tests
     fbMoveAbsolute : FB_MoveAbsoluteNC(AxisRef := fbAxisRef[4]);
-	// simulate limit hit event
+    // simulate limit hit event
     fbPower :  FB_PowerNC(AxisRef := fbAxisRef[4]);
-    fbLimtHitTimer : TON := (PT := T#1S, IN := FALSE);                                           											                            
-	fExpectedPosition: LREAL := 50.0;
+    fbLimtHitTimer : TON := (PT := T#1S, IN := FALSE);
+    fExpectedPosition: LREAL := 50.0;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST(__POUNAME());
@@ -394,11 +380,11 @@ END_VAR]]></Declaration>
 // must be called cycliclly
 // one issue , directional enables mmust be overridden during homing.
 fbPower.Power(	Enable := TRUE,
-          		Enable_Positive := fbLimSwStatus[4].LimForward,
-       			Enable_Negative := fbLimSwStatus[4].LimBackward,
-        		Override := 100
-			  );
-					
+                  Enable_Positive := fbLimSwStatus[4].LimForward,
+                   Enable_Negative := fbLimSwStatus[4].LimBackward,
+                Override := 100
+              );
+
 CASE nTestStateStep OF
     0 :
         IF fbPower.PowerIsEnabled THEN
@@ -407,22 +393,22 @@ CASE nTestStateStep OF
 
     1 :
         fbMoveAbsolute.MoveAbsolute(	Position := 150,
-                                      	Velocity := 100,
-                                      	Acceleration := 200,
-                                      	Deceleration := 200
-									);
-		fbLimtHitTimer.IN := TRUE;						
+                                          Velocity := 100,
+                                          Acceleration := 200,
+                                          Deceleration := 200
+                                    );
+        fbLimtHitTimer.IN := TRUE;
         nTestStateStep := nTestStateStep + 1;
-	2 :
-		IF fbLimtHitTimer.Q THEN
-			fbLimSwStatus[4].LimForward := FALSE;
-			nTestStateStep := nTestStateStep + 1;	
-		END_IF
+    2 :
+        IF fbLimtHitTimer.Q THEN
+            fbLimSwStatus[4].LimForward := FALSE;
+            nTestStateStep := nTestStateStep + 1;
+        END_IF
     3 :
-		IF fbMoveAbsolute.Aborted THEN
-			nTestStateStep := nTestStateStep + 1;
-		END_IF
-	4:;
+        IF fbMoveAbsolute.Aborted THEN
+            nTestStateStep := nTestStateStep + 1;
+        END_IF
+    4:;
 
 END_CASE
 //
@@ -433,7 +419,7 @@ fbMoveAbsolute();
 
 IF nTestStateStep = 4 THEN
     AssertTrue(Condition :=  fbAxisRef[4].Status.HasBeenStopped, Message := 'Expected HasBeenStopped');
-	TEST_FINISHED();
+    TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
     AssertTrue(
         Condition := FALSE,
@@ -452,18 +438,18 @@ VAR_INST
     fbTestTimer : TON := (PT := T#3S, IN := TRUE);
     nTestStateStep : INT;
     fbMoveAbsolute : FB_MoveAbsoluteNC(AxisRef := fbAxisRef[1]);
-    fbPower :   FB_PowerNC(AxisRef := fbAxisRef[1]);                                          											                            
-	fExpectedPosition: LREAL := 50.0;
+    fbPower :   FB_PowerNC(AxisRef := fbAxisRef[1]);
+    fExpectedPosition: LREAL := 50.0;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST(__POUNAME());
 
 fbPower.Power(	Enable := TRUE,
-          		Enable_Positive := fbLimSwStatus[1].LimForward,
-       			Enable_Negative := fbLimSwStatus[1].LimBackward,
-        		Override := 100
-			  );
-			  
+                  Enable_Positive := fbLimSwStatus[1].LimForward,
+                   Enable_Negative := fbLimSwStatus[1].LimBackward,
+                Override := 100
+              );
+
 CASE nTestStateStep OF
     0 :
         IF fbPower.PowerIsEnabled THEN
@@ -479,8 +465,8 @@ CASE nTestStateStep OF
 
     2 :
         IF fbMoveAbsolute.Done THEN
-			nTestStateStep := nTestStateStep + 1;
-		END_IF
+            nTestStateStep := nTestStateStep + 1;
+        END_IF
 END_CASE
 
 fbTestTimer();
@@ -488,8 +474,8 @@ fbAxisRef[1].ReadStatus();
 fbMoveAbsolute();
 
 IF nTestStateStep = 3 THEN
-	AssertEquals_LREAL ( Delta:=0.001, Expected:=fExpectedPosition, Actual:=fbAxisRef[1].NcToPlc.ActPos, Message:='Position is not the expected #1');
-	TEST_FINISHED();
+    AssertEquals_LREAL ( Delta:=0.001, Expected:=fExpectedPosition, Actual:=fbAxisRef[1].NcToPlc.ActPos, Message:='Position is not the expected #1');
+    TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
     AssertTrue(
         Condition := FALSE,
@@ -509,9 +495,9 @@ VAR_INST
     fbTestTimer : TON := (PT := T#3S, IN := TRUE);
     fbInMotionTimer : TON := (PT := T#1S, IN := FALSE);
     nTestStateStep : INT;
-    fbPower :   FB_PowerNC(AxisRef := fbAxisRef[2]);  
-	// Subjects under test
-    fbMoveAbsolute : FB_MoveAbsoluteNC(AxisRef := fbAxisRef[2]); 
+    fbPower :   FB_PowerNC(AxisRef := fbAxisRef[2]);
+    // Subjects under test
+    fbMoveAbsolute : FB_MoveAbsoluteNC(AxisRef := fbAxisRef[2]);
     fbHalt : FB_HaltNC(AxisRef := fbAxisRef[2]);
 
 END_VAR]]></Declaration>
@@ -520,28 +506,28 @@ END_VAR]]></Declaration>
 
 
 fbPower.Power(	Enable := TRUE,
-          		Enable_Positive := fbLimSwStatus[2].LimForward,
-       			Enable_Negative := fbLimSwStatus[2].LimBackward,
-        		Override := 100
-			  );
-			  
+                  Enable_Positive := fbLimSwStatus[2].LimForward,
+                   Enable_Negative := fbLimSwStatus[2].LimBackward,
+                Override := 100
+              );
+
 CASE nTestStateStep OF
     0 :
-		
+
         IF fbPower.PowerIsEnabled THEN
             nTestStateStep := nTestStateStep + 1;
         END_IF
-	1 :	
+    1 :
         fbMoveAbsolute.MoveAbsolute(Position := 100,
                                       Velocity := 100,
                                       Acceleration :=50,
                                       Deceleration := 50);
         nTestStateStep := nTestStateStep + 1;
-	2 :
-		IF fbMoveAbsolute.Busy THEN
-			fbInMotionTimer.IN := TRUE;	
-			nTestStateStep := nTestStateStep + 1;	
-		END_IF
+    2 :
+        IF fbMoveAbsolute.Busy THEN
+            fbInMotionTimer.IN := TRUE;
+            nTestStateStep := nTestStateStep + 1;
+        END_IF
 
     3 :
          IF fbInMotionTimer.Q THEN
@@ -550,12 +536,12 @@ CASE nTestStateStep OF
             nTestStateStep := nTestStateStep + 1;
         END_IF
     4 :
-		IF  fbHalt.Done THEN
-			nTestStateStep := nTestStateStep + 1;	
-		END_IF
-	5 : // Do nothing
+        IF  fbHalt.Done THEN
+            nTestStateStep := nTestStateStep + 1;
+        END_IF
+    5 : // Do nothing
 END_CASE
- 
+
 fbTestTimer();
 fbInMotionTimer();
 fbAxisRef[2].ReadStatus();
@@ -569,7 +555,7 @@ IF nTestStateStep = 5 THEN
                 Message := 'Expected Done');
     AssertFalse(Condition := fbHalt.Busy,
                 Message := 'Expected not busy');
-	TEST_FINISHED();
+    TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
     AssertTrue(
         Condition := FALSE,
@@ -588,9 +574,9 @@ VAR_INST
     fbTestTimer : TON := (PT := T#3S, IN := TRUE);
     fbInMotionTimer : TON := (PT := T#1S, IN := FALSE);
     nTestStateStep : INT;
-    fbPower :   FB_PowerNC(AxisRef := fbAxisRef[3]); 
-	// Subjects under test
-    fbMoveAbsolute : FB_MoveAbsoluteNC(AxisRef := fbAxisRef[3]); 
+    fbPower :   FB_PowerNC(AxisRef := fbAxisRef[3]);
+    // Subjects under test
+    fbMoveAbsolute : FB_MoveAbsoluteNC(AxisRef := fbAxisRef[3]);
     fbReset : FB_ResetNC(AxisRef := fbAxisRef[3]);
 
 END_VAR]]></Declaration>
@@ -598,27 +584,27 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST(__POUNAME());
 
 fbPower.Power(	Enable := TRUE,
-          		Enable_Positive := fbLimSwStatus[3].LimForward,
-       			Enable_Negative := fbLimSwStatus[3].LimBackward,
-        		Override := 100
-			  );
+                  Enable_Positive := fbLimSwStatus[3].LimForward,
+                   Enable_Negative := fbLimSwStatus[3].LimBackward,
+                Override := 100
+              );
 CASE nTestStateStep OF
     0 :
-				
+
         IF fbPower.PowerIsEnabled THEN
             nTestStateStep := nTestStateStep + 1;
         END_IF
-	1 :	
+    1 :
         fbMoveAbsolute.MoveAbsolute(Position := 100,
                                       Velocity := 100,
                                       Acceleration :=50,
                                       Deceleration := 50);
         nTestStateStep := nTestStateStep + 1;
-	2 :
-		IF fbMoveAbsolute.Busy THEN
-			fbInMotionTimer.IN := TRUE;	
-			nTestStateStep := nTestStateStep + 1;	
-		END_IF
+    2 :
+        IF fbMoveAbsolute.Busy THEN
+            fbInMotionTimer.IN := TRUE;
+            nTestStateStep := nTestStateStep + 1;
+        END_IF
 
     3 :
          IF fbInMotionTimer.Q THEN
@@ -627,12 +613,12 @@ CASE nTestStateStep OF
             nTestStateStep := nTestStateStep + 1;
         END_IF
     4 :
-		IF  fbReset.Done THEN
-			nTestStateStep := nTestStateStep + 1;	
-		END_IF
-	5 : // Do nothing
+        IF  fbReset.Done THEN
+            nTestStateStep := nTestStateStep + 1;
+        END_IF
+    5 : // Do nothing
 END_CASE
- 
+
 fbInMotionTimer();
 fbAxisRef[3].ReadStatus();
 fbMoveAbsolute();
@@ -646,7 +632,7 @@ IF nTestStateStep = 5 THEN
                 Message := 'Expected Done');
     AssertFalse(Condition := fbReset.Busy,
                 Message := 'Expected not busy');
-	TEST_FINISHED();
+    TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
     AssertTrue(
         Condition := FALSE,

@@ -19,6 +19,7 @@ STRUCT
 	bHaltDone : BOOL;
 	bHomeBusy : BOOL;
 	bHomeDone : BOOL;
+	bLimHomeDone : BOOL;
 	eHomeMode : E_EpicsHomeCmd;
 	bInTargetPosition : BOOL;
 	fMeasuredAcceleration : LREAL;
@@ -33,6 +34,7 @@ STRUCT
 	bMoveAbsoluteDone : BOOL;
 	bNegativeMotionIsEnabled : BOOL;
 	bPositiveMotionIsEnabled : BOOL;
+	bDirectionalPowerEnabled : BOOL;
 	bPowerActive : BOOL;
 	bPowerIsEnabled : BOOL;
 	fPowerOverride : LREAL;

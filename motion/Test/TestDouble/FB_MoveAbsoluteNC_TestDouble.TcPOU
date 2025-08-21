@@ -3,8 +3,8 @@
   <POU Name="FB_MoveAbsoluteNC_TestDouble" Id="{ee594e6f-53e4-4528-9152-6d9202e100ed}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MoveAbsoluteNC_TestDouble IMPLEMENTS I_MoveABsolute
 VAR
-	bError : BOOL;
-	nErrorID : UDINT := 22000;
+    bError : BOOL;
+    nErrorID : UDINT := 22000;
 END_VAR
 
 ]]></Declaration>
@@ -12,8 +12,7 @@ END_VAR
       <ST><![CDATA[]]></ST>
     </Implementation>
     <Property Name="Aborted" Id="{c35c0582-1d5a-4b6e-9c78-63e285fc8bf8}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY Aborted : BOOL
+      <Declaration><![CDATA[PROPERTY Aborted : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{e123dc24-4ad5-43ff-964d-f052d34939ad}">
         <Declaration><![CDATA[VAR
@@ -25,8 +24,7 @@ END_VAR
       </Get>
     </Property>
     <Property Name="Active" Id="{194dfdf5-ee61-4acf-826d-8d994288cd8c}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY Active : BOOL
+      <Declaration><![CDATA[PROPERTY Active : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{edfff653-2b5a-4eae-b74e-ac521933dc03}">
         <Declaration><![CDATA[VAR
@@ -38,8 +36,7 @@ END_VAR
       </Get>
     </Property>
     <Property Name="Busy" Id="{b479a98e-9958-4694-a59a-b0001dec10dd}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY Busy : BOOL
+      <Declaration><![CDATA[PROPERTY Busy : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{3234e5bc-f257-4a74-b140-8484f2499c29}">
         <Declaration><![CDATA[VAR
@@ -51,8 +48,7 @@ END_VAR
       </Get>
     </Property>
     <Property Name="CommandMoveAbsolute" Id="{17406061-5f30-4bfd-8e6d-0a7558c9130d}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY CommandMoveAbsolute : BOOL
+      <Declaration><![CDATA[PROPERTY CommandMoveAbsolute : BOOL
 ]]></Declaration>
       <Set Name="Set" Id="{8c429de4-e13e-4293-b63d-f8c92c85473d}">
         <Declaration><![CDATA[VAR
@@ -64,8 +60,7 @@ END_VAR
       </Set>
     </Property>
     <Property Name="Done" Id="{d1627f6e-8ac6-41de-9dea-207b8b3ef33f}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY Done : BOOL
+      <Declaration><![CDATA[PROPERTY Done : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{7c1f7e30-aa2b-4bbe-9c26-6f1331a8d975}">
         <Declaration><![CDATA[VAR
@@ -77,8 +72,7 @@ END_VAR
       </Get>
     </Property>
     <Property Name="Error" Id="{b643a6d9-c516-44a5-83c7-7a2f58775932}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY Error : BOOL
+      <Declaration><![CDATA[PROPERTY Error : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{1ec7862e-a071-43ba-b23f-37b138e357f3}">
         <Declaration><![CDATA[VAR
@@ -99,8 +93,7 @@ END_VAR
       </Set>
     </Property>
     <Property Name="ErrorID" Id="{1be29702-3d83-4195-abd7-5a87448adc67}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY ErrorID : UDINT
+      <Declaration><![CDATA[PROPERTY ErrorID : UDINT
 ]]></Declaration>
       <Get Name="Get" Id="{9219ea96-0f16-43ea-9f73-4285d67ee42b}">
         <Declaration><![CDATA[VAR
@@ -121,8 +114,7 @@ END_VAR
       </Set>
     </Property>
     <Property Name="Message" Id="{79798b2e-2f42-416d-ac4d-ec72836a1486}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY Message : T_MAXSTRING
+      <Declaration><![CDATA[PROPERTY Message : T_MAXSTRING
 ]]></Declaration>
       <Get Name="Get" Id="{a4461c41-fc0a-49a3-ba5b-0e3e21ad9720}">
         <Declaration><![CDATA[VAR
@@ -134,16 +126,23 @@ END_VAR
       </Get>
     </Property>
     <Method Name="MoveAbsolute" Id="{0f994395-0d64-41f3-8782-3a9802c1d575}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD MoveAbsolute
+      <Declaration><![CDATA[METHOD MoveAbsolute
 VAR_INPUT
-	Position	: LREAL;
-	Velocity	: LREAL;
-	Acceleration	: LREAL := 0;
-	Deceleration	: LREAL := 0;
-	Jerk	: LREAL := 0;
-	BufferMode	: MC_BufferMode := .MC_BufferMode.MC_Aborting;
+    Position	: LREAL;
+    Velocity	: LREAL;
+    Acceleration	: LREAL := 0;
+    Deceleration	: LREAL := 0;
+    Jerk	: LREAL := 0;
+    BufferMode	: MC_BufferMode := MC_BufferMode.MC_Aborting;
 END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveAbsoluteDone" Id="{8f9988b0-62d9-4af8-b704-85a4b2006930}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD MoveAbsoluteDone
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>

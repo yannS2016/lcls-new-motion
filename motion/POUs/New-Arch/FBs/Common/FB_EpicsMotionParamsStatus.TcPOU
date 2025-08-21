@@ -1,46 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_EpicsMotionParamsStatus" Id="{9e14aba8-1e00-4525-b1a9-7974cec06878}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_EpicsMotionParamsStatus IMPLEMENTS I_EpicsMotionParamsStatus
+    <Declaration><![CDATA[//////////////////////////////////////////////////////////////////
+// Transfer NC parameter status to EPICS
+//////////////////////////////////////////////////////////////////
+FUNCTION_BLOCK FB_EpicsMotionParamsStatus IMPLEMENTS I_EpicsMotionParamsStatus
 VAR
        // EPICS Interface
     {attribute 'no_copy'}
     stMotionEpicsItf : REFERENCE TO ST_MotionEpicsInterface;
-
-    bPowerEnabled: BOOL;
-    bPowerIsEnabled: BOOL;
-    bExecute: BOOL;
-    bLimHome: BOOL;
-    bMoveBackwardEnabled: BOOL;
-    bMoveForwardEnabled: BOOL;
-    fPowerOverride: LREAL;
-    bBusy: BOOL;
-    bHomeDone: BOOL;
-    fMeasuredPositionDiff: LREAL;
-    fMeasuredPosition: LREAL;
-    fMeasuredVelocity: LREAL;
-	nMotionAxisId : UDINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[//////////////////////////////////////////////////////////////////
-// Transfer NC parameter status to EPICS
-//////////////////////////////////////////////////////////////////
-stMotionEpicsItf.stAxisStatus.bEnable:=bPowerEnabled;
-stMotionEpicsItf.stAxisStatus.bEnabled:=bPowerIsEnabled;
-stMotionEpicsItf.stAxisStatus.bExecute:=bExecute;
-stMotionEpicsItf.stAxisStatus.bHomeSensor:=bLimHome;
-
-stMotionEpicsItf.stAxisStatus.bLimitBwd:=bMoveBackwardEnabled;
-stMotionEpicsItf.stAxisStatus.bLimitFwd:=bMoveForwardEnabled;
-stMotionEpicsItf.stAxisStatus.fActDiff:=fMeasuredPositionDiff;
-stMotionEpicsItf.stAxisStatus.fActPosition:=fMeasuredPosition;
-stMotionEpicsItf.stAxisStatus.fActVelocity:=fMeasuredVelocity;
-stMotionEpicsItf.stAxisStatus.fOverride:=fPowerOverride;
-stMotionEpicsItf.stAxisStatus.bBusy:=bBusy;
-stMotionEpicsItf.stAxisStatus.bHomed:=bHomeDone;
-stMotionEpicsItf.nMotionAxisID :=nMotionAxisId;
-//stMotionEpicsInterface.stAxisStatus.bJogBwd:=bJogBwd;
+      <ST><![CDATA[//stMotionEpicsInterface.stAxisStatus.bJogBwd:=bJogBwd;
 //stMotionEpicsInterface.stAxisStatus.bJogFwd:=bJogFwd;
 stMotionEpicsItf.stAxisStatus.bReset:=stMotionEpicsItf.bReset;
 stMotionEpicsItf.stAxisStatus.bError:=stMotionEpicsItf.bError;
@@ -48,8 +20,8 @@ stMotionEpicsItf.stAxisStatus.fAcceleration:=stMotionEpicsItf.fAcceleration;
 stMotionEpicsItf.stAxisStatus.fDeceleration:=stMotionEpicsItf.fDeceleration;
 stMotionEpicsItf.stAxisStatus.fPosition:=stMotionEpicsItf.fPosition;
 stMotionEpicsItf.stAxisStatus.fVelocity:=stMotionEpicsItf.fVelocity;
-stMotionEpicsItf.stAxisStatus.nCmdData:=INT_TO_UINT(stMotionEpicsItf.nCmdData);  //Or nCmdDataLocal
-stMotionEpicsItf.stAxisStatus.nCommand:=INT_TO_UINT(stMotionEpicsItf.nCommand);  //Or nCommandLocal
+stMotionEpicsItf.stAxisStatus.nCmdData:=INT_TO_UINT(stMotionEpicsItf.nCmdData);
+stMotionEpicsItf.stAxisStatus.nCommand:=INT_TO_UINT(stMotionEpicsItf.nCommand);
 stMotionEpicsItf.stAxisStatus.nErrorId:=stMotionEpicsItf.nErrorId;]]></ST>
     </Implementation>
     <Method Name="CallAfterInit" Id="{37f41f22-86ac-4ee8-bb54-b88af0913c76}">
@@ -79,7 +51,10 @@ END_VAR]]></Declaration>
       </Implementation>
     </Method>
     <Method Name="MotionParamsAndStatus" Id="{f134f110-1d08-4330-b5d0-f1fa3db27f4f}">
-      <Declaration><![CDATA[METHOD MotionParamsAndStatus
+      <Declaration><![CDATA[//////////////////////////////////////////////
+// Transfer NC parameter status to EPICS
+//////////////////////////////////////////////
+METHOD MotionParamsAndStatus
 VAR_INPUT
     PowerEnabled	: BOOL;
     PowerIsEnabled	: BOOL;
@@ -93,23 +68,24 @@ VAR_INPUT
     PowerOverride	: LREAL;
     Busy	: BOOL;
     HomeDone	: BOOL;
-	MotionAxisId : UDINT;
+    MotionAxisId : UDINT;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.bPowerEnabled := PowerEnabled;
-THIS^.bPowerIsEnabled := PowerIsEnabled;
-THIS^.bExecute := Execute;
-THIS^.bLimHome := LimHome;
-THIS^.bMoveBackwardEnabled := MoveBackwardEnabled;
-THIS^.bMoveForwardEnabled := MoveForwardEnabled;
-THIS^.fMeasuredPositionDiff := MeasuredPositionDiff;
-THIS^.fMeasuredPosition := MeasuredPosition;
-THIS^.fMeasuredVelocity := MeasuredVelocity;
-THIS^.fPowerOverride := PowerOverride;
-THIS^.bBusy := Busy;
-THIS^.bHomeDone := HomeDone;
-THIS^.nMotionAxisId := MotionAxisId;]]></ST>
+        <ST><![CDATA[THIS^.stMotionEpicsItf.stAxisStatus.bEnable:=PowerEnabled;
+THIS^.stMotionEpicsItf.stAxisStatus.bEnabled:=PowerIsEnabled;
+THIS^.stMotionEpicsItf.stAxisStatus.bExecute:=Execute;
+THIS^.stMotionEpicsItf.stAxisStatus.bHomeSensor:=LimHome;
+
+THIS^.stMotionEpicsItf.stAxisStatus.bLimitBwd:=MoveBackwardEnabled;
+THIS^.stMotionEpicsItf.stAxisStatus.bLimitFwd:=MoveForwardEnabled;
+THIS^.stMotionEpicsItf.stAxisStatus.fActDiff:=MeasuredPositionDiff;
+THIS^.stMotionEpicsItf.stAxisStatus.fActPosition:=MeasuredPosition;
+THIS^.stMotionEpicsItf.stAxisStatus.fActVelocity:=MeasuredVelocity;
+THIS^.stMotionEpicsItf.stAxisStatus.fOverride:=PowerOverride;
+THIS^.stMotionEpicsItf.stAxisStatus.bBusy:=Busy;
+THIS^.stMotionEpicsItf.stAxisStatus.bHomed:=HomeDone;
+THIS^.stMotionEpicsItf.nMotionAxisID :=MotionAxisId;]]></ST>
       </Implementation>
     </Method>
   </POU>

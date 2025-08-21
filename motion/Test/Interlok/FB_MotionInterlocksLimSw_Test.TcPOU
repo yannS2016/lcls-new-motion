@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_MotionInterlocksLimSw_Test" Id="{da3c97b2-4b6a-442f-b566-7fa9056337b4}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionInterlocksLimSw_Test EXTENDS FB_TestSuite
+    <Declaration><![CDATA[FUNCTION_BLOCK INTERNAL FB_MotionInterlocksLimSw_Test EXTENDS FB_TestSuite
 VAR
-	fbLimSwStatus: ARRAY [1..6] OF FB_LimSwStatus_testDouble;
+    fbLimSwStatus: ARRAY [1..6] OF FB_LimSwStatus_testDouble;
     fbMotionInterlocksCommon:  ARRAY [1..6] OF  FB_MotionInterlocksCommon_TestDouble;
 END_VAR
 ]]></Declaration>
@@ -21,13 +21,13 @@ GivenLimSwStatusActiveAndAxisHomingInPosOrNegDirectionThenNoLimHitEvent_Test6();
 ]]></ST>
     </Implementation>
     <Method Name="GivenCommonInterlockErrorsThenSetLocalErrors_Test3" Id="{94ef42a6-f7bb-4549-ab69-eec32e85b91b}">
-      <Declaration><![CDATA[METHOD GivenCommonInterlockErrorsThenSetLocalErrors_Test3
+      <Declaration><![CDATA[METHOD PRIVATE GivenCommonInterlockErrorsThenSetLocalErrors_Test3
 VAR_INST
     nExpectedErrorId: UDINT := 1;
     nActErrorId: UDINT;
     sExpectedMessage: STRING := 'User enable interlock triggered!';
     sActMessage: STRING;
-	// subject under test
+    // subject under test
     fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw(iMotionInterlocksCommon:=fbMotionInterlocksCommon[3], iLimSwStatus:=fbLimSwStatus[3]);
 END_VAR
 ]]></Declaration>
@@ -60,7 +60,7 @@ TEST_FINISHED();
       </Implementation>
     </Method>
     <Method Name="GivenLimForwardAndBackwardActiveAxisMovingInNegativeDirectionIfPosiveLimishitThenNoLimHitEvent_Test4" Id="{ed589f98-23fe-4027-ac60-fcf98aa8e006}">
-      <Declaration><![CDATA[METHOD GivenLimForwardAndBackwardActiveAxisMovingInNegativeDirectionIfPosiveLimishitThenNoLimHitEvent_Test4
+      <Declaration><![CDATA[METHOD PRIVATE GivenLimForwardAndBackwardActiveAxisMovingInNegativeDirectionIfPosiveLimishitThenNoLimHitEvent_Test4
 VAR_INST
     tonLimSwStatusEvent : TON := (IN:=TRUE, PT:=T#0S);
     fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw(iMotionInterlocksCommon:=fbMotionInterlocksCommon[4], iLimSwStatus:=fbLimSwStatus[4]);
@@ -96,7 +96,7 @@ TEST_FINISHED();
       </Implementation>
     </Method>
     <Method Name="GivenLimForwardAndBackwardActiveAxisMovingInPosiveDirectionIfPosiveLimishitThenLimHitEventOccured_Test5" Id="{cde5b974-2818-4742-bb16-32a8067eb591}">
-      <Declaration><![CDATA[METHOD GivenLimForwardAndBackwardActiveAxisMovingInPosiveDirectionIfPosiveLimishitThenLimHitEventOccured_Test5
+      <Declaration><![CDATA[METHOD PRIVATE  GivenLimForwardAndBackwardActiveAxisMovingInPosiveDirectionIfPosiveLimishitThenLimHitEventOccured_Test5
 VAR_INST
     tonLimSwStatusEvent : TON := (IN:=TRUE, PT:=T#0S);
     fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw(iMotionInterlocksCommon:=fbMotionInterlocksCommon[5], iLimSwStatus:=fbLimSwStatus[5]);
@@ -130,7 +130,7 @@ TEST_FINISHED();
       </Implementation>
     </Method>
     <Method Name="GivenLimSwStatusActiveAndAxisHomingInPosOrNegDirectionThenNoLimHitEvent_Test6" Id="{48a68bdb-791b-428f-85bd-1be319b9fa11}">
-      <Declaration><![CDATA[METHOD GivenLimSwStatusActiveAndAxisHomingInPosOrNegDirectionThenNoLimHitEvent_Test6
+      <Declaration><![CDATA[METHOD PRIVATE GivenLimSwStatusActiveAndAxisHomingInPosOrNegDirectionThenNoLimHitEvent_Test6
 VAR_INST
     fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw(iMotionInterlocksCommon:=fbMotionInterlocksCommon[6], iLimSwStatus:=fbLimSwStatus[6]);
 END_VAR]]></Declaration>
@@ -158,14 +158,14 @@ AssertFalse(Condition := fbMotionInterlocksLimSw.Warning,
 
 AssertFalse(Condition := fbMotionInterlocksLimSw.LimHit,
            Message := 'Lim hit event while homing unexpected #4');
-		   
+
 TEST_FINISHED();
 
 ]]></ST>
       </Implementation>
     </Method>
     <Method Name="GivenLimSwStatusEventIfStandStillUpdateBackwardAndFowardEnable_Test2" Id="{cf0a87d6-b613-4bab-bdaf-73e10f361f1f}">
-      <Declaration><![CDATA[METHOD GivenLimSwStatusEventIfStandStillUpdateBackwardAndFowardEnable_Test2
+      <Declaration><![CDATA[METHOD PRIVATE GivenLimSwStatusEventIfStandStillUpdateBackwardAndFowardEnable_Test2
 VAR_INST
     fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw(iMotionInterlocksCommon:=fbMotionInterlocksCommon[2], iLimSwStatus:=fbLimSwStatus[2]);
 END_VAR
@@ -202,7 +202,7 @@ TEST_FINISHED();
       </Implementation>
     </Method>
     <Method Name="GivenPositiveLimHitEventIfGlobalResetOrNewMoveReqClearLocalFlags_Test1" Id="{c69f1b81-3118-4011-9ebf-118fdb3c44fe}">
-      <Declaration><![CDATA[METHOD GivenPositiveLimHitEventIfGlobalResetOrNewMoveReqClearLocalFlags_Test1
+      <Declaration><![CDATA[METHOD PRIVATE GivenPositiveLimHitEventIfGlobalResetOrNewMoveReqClearLocalFlags_Test1
 VAR_INST
     fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw(iMotionInterlocksCommon:=fbMotionInterlocksCommon[1], iLimSwStatus:=fbLimSwStatus[1]);
 END_VAR

@@ -8,6 +8,7 @@ VAR
     fbMcHalt 		: MC_Halt;
     sMessage : T_MAXSTRING;
 
+	rtError: R_TRIG;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -152,8 +153,7 @@ fbMcHalt(Execute := TRUE,
       </Implementation>
     </Method>
     <Method Name="HaltDone" Id="{22a58216-660c-4b25-a8ed-e863b8c537cb}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD HaltDone
+      <Declaration><![CDATA[METHOD HaltDone
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[// Clear previous status: MC_Halt auto clear this bit when Done is set.

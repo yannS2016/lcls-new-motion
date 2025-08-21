@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # TcXaeShell Solution File, Format Version 11.00
-VisualStudioVersion = 15.0.34829.251
+VisualStudioVersion = 17.7.34302.85
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{B1E792BE-AA5F-4E3C-8C82-674BF9C0715B}") = "lcls-motion", "lcls-motion.tsproj", "{61907616-FB73-4229-B6ED-B8F1E64CE806}"
+Project("{B1E792BE-AA5F-4E3C-8C82-674BF9C0715B}") = "lcls-twincat-motion-abstraction", "lcls-twincat-motion-abstraction.tsproj", "{61907616-FB73-4229-B6ED-B8F1E64CE806}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -73,6 +73,15 @@ END_VAR
           <ST><![CDATA[LimHome :=  bLimitHome ;]]></ST>
         </Implementation>
       </Get>
+      <Set Name="Set" Id="{ebdbd2a2-f4f7-4682-b309-b0b720a32a9c}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bLimitHome :=  LimHome ;]]></ST>
+        </Implementation>
+      </Set>
     </Property>
   </POU>
 </TcPlcObject>

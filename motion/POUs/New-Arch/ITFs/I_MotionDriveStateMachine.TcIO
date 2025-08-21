@@ -12,7 +12,6 @@
     <Method Name="StateMachine" Id="{95486653-d40f-4598-a1e5-f89d76b3879d}">
       <Declaration><![CDATA[METHOD StateMachine
 VAR_INPUT
-	InterlockEvent : BOOL;
 	Error : BOOL;
 END_VAR
 ]]></Declaration>

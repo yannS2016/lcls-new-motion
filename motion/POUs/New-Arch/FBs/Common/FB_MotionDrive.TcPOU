@@ -16,61 +16,62 @@ VAR
     iMotionInterlocks	: I_MotionInterlocks;
     {attribute 'hide'}
     iMotionLogger 		: I_MotionLogger;
-	iMotionDriveStateMachine : I_MotionDriveStateMachine;
-
+    iMotionDriveStateMachine : I_MotionDriveStateMachine;
+    {attribute 'hide'}
     sName : STRING;
-
-	bError: BOOL;
-	nErrorId: UDINT;
-	sErrorMessage: T_MAXSTRING;
-
-	rtReset: R_TRIG;
-	rtResetDone: R_TRIG;
-	rtStop: R_TRIG;
+    bError: BOOL;
+    nErrorId: UDINT;
+    sErrorMessage: T_MAXSTRING;
+    {attribute 'hide'}
+    rtReset: R_TRIG;
+    {attribute 'hide'}
+    rtStop: R_TRIG;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[// Restore axis parameters pass in a struct ref of parameters to restore
 iMoveRequest.RestoreSettings(
-	RestoreDone:=iMotionAxis.Status.bRestoreDone, 
-	SavedPosition:=iMotionAxis.Status.fSavedPosition
+    RestoreDone:=iMotionAxis.Status.bRestoreDone,
+    SavedPosition:=iMotionAxis.Status.fSavedPosition
 );
 
 // catch high priority message
 // an extended error message from FB_MotionLogger will display cyclic errors and warning
 IF iMotionAxis.Status.bError THEN
-	bError := iMotionAxis.Status.bError;
-	nErrorId := iMotionAxis.Status.nErrorID;
-	sErrorMessage:= iMotionAxis.Status.sMessage;
+    bError := iMotionAxis.Status.bError;
+    nErrorId := iMotionAxis.Status.nErrorID;
+    sErrorMessage:= iMotionAxis.Status.sMessage;
 ELSIF iMotionInterlocks.Error THEN
-	bError := iMotionInterlocks.Error;
-	nErrorId := iMotionInterlocks.ErrorID;
-	sErrorMessage:= iMotionInterlocks.Message; 
+    bError := iMotionInterlocks.Error;
+    nErrorId := iMotionInterlocks.ErrorID;
+    sErrorMessage:= iMotionInterlocks.Message;
 // Warnings have lowest priority
 ELSIF iMotionInterlocks.Warning THEN
-	sErrorMessage:= iMotionInterlocks.Message; 
+    sErrorMessage:= iMotionInterlocks.Message;
+ELSE
+	 sErrorMessage:='';
 END_IF
 
 iMoveRequest.MoveRequestError(
-	Error := bError,
-	ErrorId :=nErrorId,
-	ErrorMessage:=sErrorMessage
+    Error := bError,
+    ErrorId :=nErrorId,
+    ErrorMessage:=sErrorMessage
 );
 //
 iMoveRequest.MoveRequest(
-	EnableDone:=iMotionAxis.AxisEnabled(),
-	MoveOk:=iMotionInterlocks.MoveOk
+    EnableDone:=iMotionAxis.AxisEnabled(),
+    MoveOk:=iMotionInterlocks.MoveOk
 );
 // Forward Move requests status to interlock blocks
-iMotionInterlocks.DriveCommands(	
-	Enable:= iMoveRequest.Status.bEnable,
-	NewMoveReq:=iMoveRequest.Status.bNewMoveReq
+iMotionInterlocks.DriveCommands(
+    Enable:= iMoveRequest.Status.bEnable,
+    NewMoveReq:=iMoveRequest.Status.bNewMoveReq
 );
 // Forward Power block enable flags
 iMotionAxis.Power(
-	Enable:=iMotionInterlocks.PowerEnabled,
-	Enable_Positive:=iMoveRequest.Status.bExecHome OR iMotionInterlocks.MoveForwardEnabled,
-	Enable_Negative:=iMoveRequest.Status.bExecHome OR iMotionInterlocks.MoveBackwardEnabled,
+    Enable:=iMotionInterlocks.PowerEnabled,
+    Enable_Positive:=iMoveRequest.Status.bExecHome OR iMotionInterlocks.MoveForwardEnabled,
+    Enable_Negative:=iMoveRequest.Status.bExecHome OR iMotionInterlocks.MoveBackwardEnabled,
     Override	:= 100.0,
     BufferMode	:= MC_Aborting
 );
@@ -78,47 +79,46 @@ iMotionAxis.Power(
 // Halt the Move
 rtStop(CLK:=iMoveRequest.HaltMoveRequest(Busy:=iMotionAxis.Status.bBusy));
 IF rtStop.Q THEN
-	iMotionAxis.Halt(Deceleration:=iMoveRequest.Status.fDeceleration);
+    iMotionAxis.Halt(Deceleration:=iMoveRequest.Status.fDeceleration);
 END_IF
 // Reset
 rtReset(CLK:=iMoveRequest.Status.bReset);
 IF rtReset.Q THEN
-	bError := FALSE;
-	nErrorId := 0;
-	sErrorMessage:= '';
-	iMoveRequest.Status.bReset := FALSE;
+    bError := FALSE;
+    nErrorId := 0;
+    sErrorMessage:= '';
+    iMoveRequest.Status.bReset := FALSE;
    // Forward general reset event
    iMotionAxis.Reset();
    iMotionInterlocks.Reset();
 END_IF
 
 iMotionInterlocks.AxisStatus(
-      	HomeBusy:=iMotionAxis.Status.bHomeBusy,
-      	PositiveDirection:=iMotionAxis.Status.bPositiveMotionIsEnabled,
-       	NegativeDirection:=iMotionAxis.Status.bNegativeMotionIsEnabled 
+    HomeBusy:=iMotionAxis.Status.bHomeBusy,
+    PositiveDirection:=iMotionAxis.Status.bPositiveMotionIsEnabled,
+    NegativeDirection:=iMotionAxis.Status.bNegativeMotionIsEnabled
 );
 
 // Drive state machine
-iMotionDriveStateMachine.StateMachine(	
-		InterlockEvent:= iMotionInterlocks.InterlockEvent,
-		Error	:=bError
+iMotionDriveStateMachine.StateMachine(
+    Error := bError
 );
-						
+
 // Forward axis state to brake FB
 iBrake.AxisState := iMotionAxis.Status.eAxisState;
 
 // Read Axis Parameter
 iMotionAxis.ReadAxisParams(
-	Enable:=TRUE, 
-	RefreshDelay:=T#1S
+    Enable:=TRUE,
+    RefreshDelay:=T#1S
 );
 
 // Save and Restore
 iMotionAxis.SaveAxisParams(Enable:=TRUE);
 
 // update EPICS status
-iEpicsMotionParamsStatus.MotionParamsAndStatus( 
-	PowerEnabled := iMotionInterlocks.PowerEnabled,
+iEpicsMotionParamsStatus.MotionParamsAndStatus(
+    PowerEnabled := iMotionInterlocks.PowerEnabled,
     PowerIsEnabled := iMotionAxis.Status.bPowerIsEnabled,
     Execute := iMoveRequest.Status.bExecute,
     LimHome := iMotionInterlocks.LimHome,
@@ -130,7 +130,7 @@ iEpicsMotionParamsStatus.MotionParamsAndStatus(
     PowerOverride := iMotionAxis.Status.fPowerOverride,
     Busy := iMotionAxis.Status.bBusy,
     HomeDone := iMotionAxis.Status.bHomeDone,
-	MotionAxisId:=iMotionAxis.Status.nAxisId
+    MotionAxisId:=iMotionAxis.Status.nAxisId
 );]]></ST>
     </Implementation>
     <Method Name="CallAfterInit" Id="{f39ddf47-4815-43e7-8049-e534fb9f6092}">
@@ -142,7 +142,7 @@ VAR_INPUT
     iMotionAxis: I_MotionAxis;
     iMoveRequest : I_MoveRequest;
     iEpicsMotionParamsStatus : I_EpicsMotionParamsStatus;
-	iMotionDriveStateMachine : I_MotionDriveStateMachine;
+    iMotionDriveStateMachine : I_MotionDriveStateMachine;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -170,7 +170,7 @@ VAR_INPUT
     iMotionAxis: I_MotionAxis;
     iMoveRequest : I_MoveRequest;
     iEpicsMotionParamsStatus : I_EpicsMotionParamsStatus;
-	iMotionDriveStateMachine : I_MotionDriveStateMachine;
+    iMotionDriveStateMachine : I_MotionDriveStateMachine;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.iMotionAxis := iMotionAxis;

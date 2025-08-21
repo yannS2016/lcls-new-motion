@@ -160,8 +160,7 @@ END_VAR
       </Set>
     </Property>
     <Method Name="Reset" Id="{45939870-a895-412f-94d4-338002dacd8f}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD Reset
+      <Declaration><![CDATA[METHOD Reset
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>

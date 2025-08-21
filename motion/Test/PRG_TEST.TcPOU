@@ -19,7 +19,7 @@ VAR
         .fbAxisRef[8] := Axis_HomeNC_Test8
     '}
     fb_HomeNC_Test: FB_HomeNC_Test;
-	
+// 	
     {attribute 'TcNcAxis' := '
         .fbAxisRef[1] := Axis_McMotionBlocks_Test1;
         .fbAxisRef[2] := Axis_McMotionBlocks_Test2;
@@ -31,10 +31,28 @@ VAR
         .fbAxisRef[8] := Axis_McMotionBlocks_Test8
     '}	
 	fb_McMotionBlocks_Test:  FB_McMotionBlocks_Test;
-	fb_MotionAxisNC_Test : FB_MotionAxisNC_Test;
+ 	fb_MotionAxisNC_Test : FB_MotionAxisNC_Test;
 	fb_MotionDriveStateMachine_Test : FB_MotionDriveStateMachine_Test;
-	fb_MotionDrive_Test	:  FB_MotionDrive_Test;
-	
+ 	fb_MotionDrive_Test	:  FB_MotionDrive_Test;
+    {attribute 'TcNcAxis' := '
+        .fbAxisRef[1] := Axis_MotionStageNC_Test1;
+        .fbAxisRef[2] := Axis_MotionStageNC_Test2;
+        .fbAxisRef[3] := Axis_MotionStageNC_Test3;
+        .fbAxisRef[4] := Axis_MotionStageNC_Test4;
+        .fbAxisRef[5] := Axis_MotionStageNC_Test5;
+        .fbAxisRef[6] := Axis_MotionStageNC_Test6;
+        .fbAxisRef[7] := Axis_MotionStageNC_Test7;
+        .fbAxisRef[8] := Axis_MotionStageNC_Test8;
+	    .fbAxisRef[9] := Axis_MotionStageNC_Test9;
+	    .fbAxisRef[10] := Axis_MotionStageNC_Test10;
+	    .fbAxisRef[11] := Axis_MotionStageNC_Test11;
+	    .fbAxisRef[12] := Axis_MotionStageNC_Test12;
+	    .fbAxisRef[13] := Axis_MotionStageNC_Test13;
+	    .fbAxisRef[14] := Axis_MotionStageNC_Test14;
+	    .fbAxisRef[15] := Axis_MotionStageNC_Test15;
+	    .fbAxisRef[16] := Axis_MotionStageNC_Test16
+    '}
+ 	FB_MotionStageNc_Test :  FB_MotionStageNc_Test;
 END_VAR
 ]]></Declaration>
     <Implementation>

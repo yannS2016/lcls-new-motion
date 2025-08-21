@@ -7,6 +7,9 @@ VAR
     AxisRef : REFERENCE TO AXIS_REF;
     fbMcMoveAbsolute : MC_MoveAbsolute;
     sMessage : T_MAXSTRING;
+	// auto clear execute in case of error
+	
+	rtError: R_TRIG;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -15,6 +18,7 @@ END_VAR
 END_IF
 
 fbMcMoveAbsolute(Axis := AxisRef);
+
 ]]></ST>
     </Implementation>
     <Property Name="Aborted" Id="{e282a52e-140a-4032-b49e-bebd36434e55}">
@@ -151,16 +155,23 @@ END_VAR
                  Axis := THIS^.AxisRef);
 
 fbMcMoveAbsolute(
-		Execute := TRUE,
+        Execute := TRUE,
         Axis := THIS^.AxisRef,
-    	Position := Position,
-    	Velocity := Velocity,
-    	Acceleration := Acceleration,
-    	Deceleration := Deceleration,
-    	Jerk := Jerk,
-    	BufferMode := BufferMode
+        Position := Position,
+        Velocity := Velocity,
+        Acceleration := Acceleration,
+        Deceleration := Deceleration,
+        Jerk := Jerk,
+        BufferMode := BufferMode
 );
 ]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveAbsoluteDone" Id="{3fe76b74-fe86-4466-8693-db038a37c0ad}">
+      <Declaration><![CDATA[METHOD MoveAbsoluteDone
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbMcMoveAbsolute(Execute := FALSE, Axis := THIS^.AxisRef);]]></ST>
       </Implementation>
     </Method>
   </POU>

@@ -3,18 +3,6 @@
   <Itf Name="I_MoveAbsolute" Id="{7b52c23d-d549-4d14-b715-d0e842580738}">
     <Declaration><![CDATA[INTERFACE I_MoveAbsolute EXTENDS I_StatusEx
 ]]></Declaration>
-    <Property Name="Active" Id="{aa5e4d9b-53b9-487d-aa20-131cb555a892}">
-      <Declaration><![CDATA[PROPERTY Active : BOOL]]></Declaration>
-      <Get Name="Get" Id="{0e48ad5c-2521-41b7-88a3-39e827f8d022}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
-    <Property Name="CommandMoveAbsolute" Id="{8c97d5d2-df79-4b9c-99ac-17d60df5023f}">
-      <Declaration><![CDATA[PROPERTY CommandMoveAbsolute : BOOL]]></Declaration>
-      <Set Name="Set" Id="{b3030849-d707-42bf-a5a6-bbde2b420f1c}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Set>
-    </Property>
     <Method Name="MoveAbsolute" Id="{6ca50ed1-00a4-4a5f-9fc0-b477fbaad08d}">
       <Declaration><![CDATA[METHOD MoveAbsolute
 VAR_INPUT
@@ -25,6 +13,12 @@ VAR_INPUT
     Jerk	: LREAL := 0.0;
     BufferMode	: MC_BufferMode := MC_BufferMode.MC_Aborting;
 END_VAR]]></Declaration>
+    </Method>
+    <Method Name="MoveAbsoluteDone" Id="{6a802a6a-3cf0-40e8-a1d5-b17dc4cbc118}">
+      <Declaration><![CDATA[METHOD MoveAbsoluteDone
+VAR_INPUT
+END_VAR
+]]></Declaration>
     </Method>
   </Itf>
 </TcPlcObject>

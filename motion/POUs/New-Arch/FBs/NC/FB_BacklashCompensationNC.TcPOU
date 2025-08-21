@@ -57,15 +57,15 @@ VAR
         field: DESC Currently applied compensation
     '}
     fCurrentBacklash: LREAL;
-	{attribute 'hide'}
+    {attribute 'hide'}
     fCurrentCompensation : LREAL := 0.0;
-	{attribute 'hide'}
+    {attribute 'hide'}
     bEnable: BOOL;
-	{attribute 'hide'}
-	rtbacklashCompensation : R_TRIG;
-	{attribute 'hide'}
+    {attribute 'hide'}
+    rtbacklashCompensation : R_TRIG;
+    {attribute 'hide'}
     bLocalEnable : BOOL;
-	{attribute 'hide'}
+    {attribute 'hide'}
     sMessage : T_MAXSTRING;
 END_VAR
 ]]></Declaration>
@@ -79,15 +79,15 @@ AxisRef.ReadStatus();
 
 rtbacklashCompensation(CLK:=((fBacklash<>fCurrentCompensation) AND AxisRef.Status.NotMoving));
 IF 	rtbacklashCompensation.Q THEN
-	bEnable := FALSE;
+    bEnable := FALSE;
 END_IF
-	
+
 fbMcBacklashCompensation( Axis:=AxisRef,
     Enable:=bEnable AND bUserEnable,
     Backlash:= fBacklash,
     CompensationInPositiveDirection:=(fBacklash < 0.0),
     Ramp:=fRampVelo,
-    DisableMode	:= E_DISABLEMODE.DisableModeHold,
+    DisableMode	:= E_DISABLEMODE.DisableModeReset,
 );
 fCurrentCompensation := fBacklash;
 ]]></ST>
@@ -95,43 +95,24 @@ fCurrentCompensation := fBacklash;
     <Method Name="BacklashCompensation" Id="{72d6dae3-a62a-450e-865b-c60a18c47466}">
       <Declaration><![CDATA[METHOD BacklashCompensation
 VAR_INPUT
-	Enable	: BOOL := FALSE;
-	RampVelo	: LREAL;
+    Enable	: BOOL := FALSE;
+    RampVelo	: LREAL;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.bEnable := Enable AND THIS^.bUserEnable;
 THIS^.fRampVelo := RampVelo;
 
-fbMcBacklashCompensation( Axis:=AxisRef,
+fbMcBacklashCompensation( Axis:=THIS^.AxisRef,
     Enable:=THIS^.bEnable,
-    Ramp:=RampVelo,
-);]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="BacklashCompensationTest" Id="{5e2ffdc2-d9b7-43ca-8da1-133fa26b619c}">
-      <Declaration><![CDATA[(*DO NOT USE for Production code. this provided for unit testing*)
-METHOD INTERNAL BacklashCompensationTest
-VAR_INPUT
-	UserEnable : BOOL;
-	Compensation : LREAL;
-END_VAR
-
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[bUserEnable := UserEnable;
-fBacklash := Compensation;
-
-fbMcBacklashCompensation( Axis:=AxisRef,
-    Enable:= FALSE,
-	Backlash:=Compensation
+    Ramp:=THIS^.fRampVelo,
 );
-//fCurrentCompensation := Compensation;]]></ST>
+
+]]></ST>
       </Implementation>
     </Method>
     <Property Name="Busy" Id="{67db6598-5154-4b86-b034-ccf5383284d7}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY Busy : BOOL
+      <Declaration><![CDATA[PROPERTY Busy : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{1e5680ce-0bf7-483a-a265-b25d19a5fa6c}">
         <Declaration><![CDATA[VAR
@@ -153,8 +134,7 @@ END_VAR
       </Implementation>
     </Method>
     <Property Name="CurrentBacklash" Id="{cbe427fc-3f49-4b37-9ce2-197f792afdcd}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY CurrentBacklash : LREAL
+      <Declaration><![CDATA[PROPERTY CurrentBacklash : LREAL
 ]]></Declaration>
       <Get Name="Get" Id="{c8ce09c0-5517-4ca5-b11a-a6e73bcf0046}">
         <Declaration><![CDATA[VAR
@@ -165,6 +145,26 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="EnableBacklashCompensation" Id="{5e2ffdc2-d9b7-43ca-8da1-133fa26b619c}">
+      <Declaration><![CDATA[(*DO NOT use in production code.*)
+METHOD INTERNAL EnableBacklashCompensation
+VAR_INPUT
+    UserEnable : BOOL;
+    Compensation : LREAL;
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.bUserEnable := UserEnable;
+THIS^.fBacklash := Compensation;
+
+fbMcBacklashCompensation( Axis:=AxisRef,
+    Enable:= FALSE,
+    Backlash:=Compensation
+);
+]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="Error" Id="{0213434a-d40a-49c7-a6b4-a3e9e9a7a41a}">
       <Declaration><![CDATA[PROPERTY Error : BOOL
 ]]></Declaration>
@@ -214,8 +214,7 @@ END_VAR
       </Get>
     </Property>
     <Property Name="Status" Id="{9ab725b4-a349-4d8f-bae9-65d83e60c7e9}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY Status : BOOL
+      <Declaration><![CDATA[PROPERTY Status : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{ad2b2cf3-4280-4b71-8ab1-cdec9c65c1b4}">
         <Declaration><![CDATA[VAR

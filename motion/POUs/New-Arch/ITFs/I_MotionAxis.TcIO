@@ -46,12 +46,6 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
-    <Method Name="HaltDone" Id="{82ddacec-70b6-479e-92f4-829c8fc195ef}">
-      <Declaration><![CDATA[METHOD HaltDone
-VAR_INPUT
-END_VAR
-]]></Declaration>
-    </Method>
     <Method Name="Home" Id="{a01fdf56-b8af-4aa8-857c-a6510f1759dd}">
       <Declaration><![CDATA[METHOD  Home
 VAR_INPUT
@@ -70,6 +64,12 @@ VAR_INPUT
     Jerk	: LREAL := 0.0;
     BufferMode	: MC_BufferMode := MC_BufferMode.MC_Aborting;
 END_VAR]]></Declaration>
+    </Method>
+    <Method Name="MoveAbsoluteDone" Id="{665540cc-b90e-43d0-84fc-ce2fd1d0ba73}">
+      <Declaration><![CDATA[METHOD MoveAbsoluteDone
+VAR_INPUT
+END_VAR
+]]></Declaration>
     </Method>
     <Method Name="Power" Id="{0f111fce-47b1-4257-a122-9207c35b0527}">
       <Declaration><![CDATA[METHOD Power
@@ -98,6 +98,12 @@ END_VAR
     </Method>
     <Method Name="ResetDone" Id="{0015b9f1-a510-4692-b355-009b1830367b}">
       <Declaration><![CDATA[METHOD ResetDone
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="ResetExecute" Id="{82ddacec-70b6-479e-92f4-829c8fc195ef}">
+      <Declaration><![CDATA[METHOD ResetExecute
 VAR_INPUT
 END_VAR
 ]]></Declaration>

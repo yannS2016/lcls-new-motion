@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="FB_MotionInterlocksLimSw" Id="{158cbb88-3b97-40e2-97dc-4d7a82a1299f}" SpecialFunc="None">
+  <POU Name="FB_MotionInterlocksLimSw" Id="{3a6698ca-98dc-423f-8e31-b70e68c6cfde}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionInterlocksLimSw IMPLEMENTS I_MotionInterlocks
 VAR
     {attribute 'hide'}
@@ -82,7 +82,7 @@ IF iMotionInterlocksCommon.Error THEN
 END_IF
 ]]></ST>
     </Implementation>
-    <Method Name="AxisStatus" Id="{6d21d504-ee18-4457-abef-61e8d5df9058}">
+    <Method Name="AxisStatus" Id="{e692f6aa-69d1-4745-ae47-3d8e9c172232}">
       <Declaration><![CDATA[METHOD AxisStatus
 VAR_INPUT
     HomeBusy	: BOOL;
@@ -97,7 +97,7 @@ THIS^.bHomeBusy := HomeBusy;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="CallAfterInit" Id="{04046040-41be-4ab4-ade8-8cbc22051e82}">
+    <Method Name="CallAfterInit" Id="{d259541e-190d-451c-b2cc-cc4fe63dc10d}">
       <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
 VAR_INPUT
     iMotionInterlocksCommon : I_MotionInterlocksCommon;
@@ -109,7 +109,7 @@ END_VAR
 THIS^.iLimSwStatus := iLimSwStatus;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="DriveCommands" Id="{61a4eb92-408d-4d90-8d81-bc9594431b56}">
+    <Method Name="DriveCommands" Id="{7d2fc5f4-f440-43f4-a066-d2e570f8099b}">
       <Declaration><![CDATA[METHOD DriveCommands
 VAR_INPUT
     Enable: BOOL;
@@ -124,11 +124,11 @@ THIS^.iMotionInterlocksCommon.DriveCommands(Enable:=Enable, NewMoveReq:=NewMoveR
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="Error" Id="{e499cdfd-969f-4051-8215-bd6b1edef6bb}">
+    <Property Name="Error" Id="{04b2e547-bac8-4d7b-ae73-c09a2a0b5110}">
       <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
 PROPERTY Error : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{7238505b-9b6a-43fb-ba12-674778d8c8ff}">
+      <Get Name="Get" Id="{e875a59b-4d08-449e-8c30-aa8bbe87903a}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -137,11 +137,11 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="ErrorID" Id="{9d2ee520-34ec-43b6-bfa3-0b9c47c94f72}">
+    <Property Name="ErrorID" Id="{097f4ab2-ea11-48d4-8e76-dfc960d42126}">
       <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
 PROPERTY ErrorID : UDINT
 ]]></Declaration>
-      <Get Name="Get" Id="{a73c59e2-e172-4b19-8c08-958487d94121}">
+      <Get Name="Get" Id="{172694b8-8042-4a59-8074-f2f09388a9f6}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -150,7 +150,7 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="FB_Init" Id="{a7a90e7d-0c0f-4077-b585-b6d1f8caabad}">
+    <Method Name="FB_Init" Id="{e0695441-e16a-4d42-9e82-09383cdd3af0}">
       <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
 //The return value is not evaluated. For a specific influence, you can also declare the
 //methods explicitly and provide additional code there with the standard initialization
@@ -167,11 +167,11 @@ END_VAR]]></Declaration>
 THIS^.iLimSwStatus := iLimSwStatus;]]></ST>
       </Implementation>
     </Method>
-    <Property Name="InterlockEvent" Id="{1b30ac20-f930-48f6-8ea2-fc10757db2a2}">
+    <Property Name="InterlockEvent" Id="{90152201-0cb8-4e2b-9fb0-8f192f34ce29}">
       <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
 PROPERTY InterlockEvent : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{b809f3cc-6e7f-4e61-b45d-cf84d0c8cc87}">
+      <Get Name="Get" Id="{16e8058e-055d-48ff-8e34-1f0e748f484e}">
         <Declaration><![CDATA[
 VAR
 END_VAR
@@ -181,11 +181,11 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="LimHit" Id="{616009f9-19f9-42ea-8b14-b1761f35e869}">
+    <Property Name="LimHit" Id="{99748d3e-ad89-4681-8215-b6eb2ee6603f}">
       <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
 PROPERTY LimHit : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{b3896752-cee8-4d8e-b9d2-857fe8348810}">
+      <Get Name="Get" Id="{50f740a6-00fb-4f30-ab85-95696b18566f}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -194,10 +194,10 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="LimHome" Id="{6c566142-67f9-43df-8e4b-bb59f6a41f69}">
+    <Property Name="LimHome" Id="{d5157c5a-4054-44c2-818a-302abd310796}">
       <Declaration><![CDATA[PROPERTY LimHome : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{094be525-7bad-4a92-b899-3a12a85229d6}">
+      <Get Name="Get" Id="{dbb7e89e-2740-4276-887e-2d4fa207f175}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -206,11 +206,11 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="Message" Id="{6b1916c5-039a-4cea-99b5-b8f805042945}">
+    <Property Name="Message" Id="{8ea093d5-4ffa-4429-b651-9948334398fd}">
       <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
 PROPERTY Message : T_MAXSTRING
 ]]></Declaration>
-      <Get Name="Get" Id="{a8ad55da-d47a-4037-a50e-076da5305f40}">
+      <Get Name="Get" Id="{b77201ef-c1d0-49de-a15a-8769bd9bba40}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -219,11 +219,11 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="MoveBackwardEnabled" Id="{b178f46f-0443-44d6-a91f-16b15ef2cae5}">
+    <Property Name="MoveBackwardEnabled" Id="{dc8cd5fb-56d1-4863-af9d-74eb0c125d8d}">
       <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
 PROPERTY MoveBackwardEnabled : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{a268efd3-4ad6-49eb-932a-a234343d2af7}">
+      <Get Name="Get" Id="{96b49dc2-08c3-4914-8554-05065dc0845d}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -232,11 +232,11 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="MoveForwardEnabled" Id="{faed5261-6d75-4261-803b-7f0e96c07091}">
+    <Property Name="MoveForwardEnabled" Id="{ff4eca56-e0d7-4a4d-9767-1a2e6ba199b1}">
       <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
 PROPERTY MoveForwardEnabled : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{b3fa4ff6-04dc-4a45-b2b8-d5535c7132d2}">
+      <Get Name="Get" Id="{8a47d4a2-370c-4112-93c6-e5e40a5bf00d}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -245,11 +245,11 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="MoveOk" Id="{7e64ea4a-5623-4e42-ad55-52145a4215f0}">
+    <Property Name="MoveOk" Id="{011e6648-90be-445b-8b43-809bbb14f6d4}">
       <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
 PROPERTY MoveOk : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{bb84aff3-ebbf-450c-8040-87d9eb667555}">
+      <Get Name="Get" Id="{6d748934-4b55-4730-8c20-e8455d14e032}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -258,11 +258,11 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="PowerEnabled" Id="{9511d4c7-e78d-40e2-9d5a-6ecffc43a003}">
+    <Property Name="PowerEnabled" Id="{3b6ef10c-a9fe-440c-8397-fe5bb29ada4b}">
       <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
 PROPERTY PowerEnabled : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{69aad844-8aea-4c31-a561-377909ac709b}">
+      <Get Name="Get" Id="{bb257420-181c-4055-b13a-8105d964c13e}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -271,7 +271,7 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="Reset" Id="{66668144-4313-4150-a93e-d99692788781}">
+    <Method Name="Reset" Id="{cedcc1a5-1b9b-4d78-9375-b625cd83e0ca}">
       <Declaration><![CDATA[METHOD Reset
 ]]></Declaration>
       <Implementation>
@@ -284,11 +284,11 @@ THIS^.bWarning := FALSE;
 THIS^.iMotionInterlocksCommon.Reset();]]></ST>
       </Implementation>
     </Method>
-    <Property Name="Warning" Id="{d4f46c69-4dc7-45e7-9978-5602afa06ae3}">
+    <Property Name="Warning" Id="{ba7c0972-da36-446e-8dbf-91b3341a7d36}">
       <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
 PROPERTY Warning : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{98755ed6-4331-4fcd-ab91-87a47d6bca9e}">
+      <Get Name="Get" Id="{e6861a3a-a44e-404c-bd2f-06269abd46b3}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>

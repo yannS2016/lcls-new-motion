@@ -7,23 +7,21 @@ VAR
     nErrorID: UDINT;
     sMessage : T_MAXSTRING;
     stMotionAxisStatus : ST_MotionAxisStatus;
-	bConfigDone : BOOL;
+    bConfigDone : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
     <Method Name="AxisEnabled" Id="{5ff88de4-575e-4374-aec8-16bb330a0f21}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD AxisEnabled : BOOL
+      <Declaration><![CDATA[METHOD AxisEnabled : BOOL
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Method Name="BacklashCompensation" Id="{bf4738e3-e03f-4210-8d67-78a9614c3b23}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-(*
+      <Declaration><![CDATA[(*
     Handle positive/negative backlash compensation
     User needs to set the direction of backlash from the sign of the compensation value
     Backlash compensation is disabled during referencing (homing).
@@ -32,8 +30,8 @@ METHOD AxisEnabled : BOOL
 *)
 METHOD BacklashCompensation
 VAR_INPUT
-	Enable	: BOOL := FALSE;
-	RampVelo	: LREAL;
+    Enable	: BOOL := FALSE;
+    RampVelo	: LREAL;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -60,20 +58,18 @@ END_VAR
       </Set>
     </Property>
     <Method Name="DisablePower" Id="{67d4c7d5-e408-429b-a2fc-f12a8f2f307b}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD DisablePower
+      <Declaration><![CDATA[METHOD DisablePower
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Method Name="DriveCommands" Id="{4809421a-ad9b-4ec0-8380-a16bbba1e8bf}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD DriveCommands
+      <Declaration><![CDATA[METHOD DriveCommands
 VAR_INPUT
-	HomeCmd	: BOOL;
-	NewMoveReq	: BOOL;
-	EnableMode	: E_StageEnableMode;
+    HomeCmd	: BOOL;
+    NewMoveReq	: BOOL;
+    EnableMode	: E_StageEnableMode;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -81,32 +77,22 @@ END_VAR
       </Implementation>
     </Method>
     <Method Name="Halt" Id="{24817d88-4d3a-4531-867f-0a5b18e50cb3}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD Halt
+      <Declaration><![CDATA[METHOD Halt
 VAR_INPUT
-	Deceleration	: LREAL := 0;
-	Jerk	: LREAL := 0;
-	BufferMode	: MC_BufferMode := .MC_BufferMode.MC_Aborting;
+    Deceleration	: LREAL := 0;
+    Jerk	: LREAL := 0;
+    BufferMode	: MC_BufferMode := MC_BufferMode.MC_Aborting;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
-    <Method Name="HaltDone" Id="{6142ed56-20e6-4b7e-84d7-6bb060eaad96}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD HaltDone
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="Home" Id="{2de1c4e2-757b-47b6-84b3-d845676f9de7}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD Home
+      <Declaration><![CDATA[METHOD Home
 VAR_INPUT
-	Position	: LREAL := .DEFAULT_HOME_POSITION;
-	BufferMode	: MC_BufferMode;
+    Position	: LREAL := DEFAULT_HOME_POSITION;
+    BufferMode	: MC_BufferMode;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -116,7 +102,7 @@ END_VAR
     <Method Name="ModeConfigDone" Id="{6077f8c2-be17-4f2f-80dd-8118e460311b}">
       <Declaration><![CDATA[METHOD ModeConfigDone : BOOL
 VAR_INPUT
-	Mode	: E_EpicsMotorCmd;
+    Mode	: E_EpicsMotorCmd;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -124,10 +110,9 @@ END_VAR
       </Implementation>
     </Method>
     <Method Name="ModeOfOperation" Id="{25325ca5-88b7-4b07-9393-8478c4f92c31}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD ModeOfOperation : BOOL
+      <Declaration><![CDATA[METHOD ModeOfOperation : BOOL
 VAR_INPUT
-	RecentModeOfOperation	: E_DS402OpMode;
+    RecentModeOfOperation	: E_DS402OpMode;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -135,30 +120,36 @@ END_VAR
       </Implementation>
     </Method>
     <Method Name="MoveAbsolute" Id="{f7b91bdc-abd6-487d-ab94-c50c85da6522}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD MoveAbsolute
+      <Declaration><![CDATA[METHOD MoveAbsolute
 VAR_INPUT
-	Position	: LREAL;
-	Velocity	: LREAL;
-	Acceleration	: LREAL := 0;
-	Deceleration	: LREAL := 0;
-	Jerk	: LREAL := 0;
-	BufferMode	: MC_BufferMode := .MC_BufferMode.MC_Aborting;
+    Position	: LREAL;
+    Velocity	: LREAL;
+    Acceleration	: LREAL := 0;
+    Deceleration	: LREAL := 0;
+    Jerk	: LREAL := 0;
+    BufferMode	: MC_BufferMode := MC_BufferMode.MC_Aborting;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Power" Id="{1e779a14-4cae-4521-9b22-ad50ad5385f0}">
+    <Method Name="MoveAbsoluteDone" Id="{0bb447ab-d9ed-4e91-a19a-a163d0bc4848}">
       <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD Power
+METHOD MoveAbsoluteDone
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Power" Id="{1e779a14-4cae-4521-9b22-ad50ad5385f0}">
+      <Declaration><![CDATA[METHOD Power
 VAR_INPUT
-	Enable	: BOOL;
-	Enable_Positive	: BOOL;
-	Enable_Negative	: BOOL;
-	Override	: LREAL;
-	BufferMode	: MC_BufferMode;
+    Enable	: BOOL;
+    Enable_Positive	: BOOL;
+    Enable_Negative	: BOOL;
+    Override	: LREAL;
+    BufferMode	: MC_BufferMode;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -166,11 +157,10 @@ END_VAR
       </Implementation>
     </Method>
     <Method Name="ReadAxisParams" Id="{2d424ed8-d634-4f2e-8986-7cb9406ca020}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD ReadAxisParams
+      <Declaration><![CDATA[METHOD ReadAxisParams
 VAR_INPUT
-	Enable	: BOOL;
-	RefreshDelay	: TIME;
+    Enable	: BOOL;
+    RefreshDelay	: TIME;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -178,26 +168,30 @@ END_VAR
       </Implementation>
     </Method>
     <Method Name="Reset" Id="{7cb8bf4f-c204-4086-b9cb-fb4943a5f116}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD Reset
+      <Declaration><![CDATA[METHOD Reset
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Method Name="ResetDone" Id="{f1ca130c-0662-4c62-acfc-87bcc67bab0c}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD ResetDone
+      <Declaration><![CDATA[METHOD ResetDone
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ResetExecute" Id="{6142ed56-20e6-4b7e-84d7-6bb060eaad96}">
+      <Declaration><![CDATA[METHOD ResetExecute
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Method Name="SaveAxisParams" Id="{4650e62c-6837-41f8-8765-7a4b80e5af78}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD SaveAxisParams
+      <Declaration><![CDATA[METHOD SaveAxisParams
 VAR_INPUT
-	Enable	: BOOL;
+    Enable	: BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -205,8 +199,7 @@ END_VAR
       </Implementation>
     </Method>
     <Property Name="Status" Id="{20cf4b89-8254-4cea-914b-f8629ff8572c}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY Status : REFERENCE TO ST_MotionAxisStatus
+      <Declaration><![CDATA[PROPERTY Status : REFERENCE TO ST_MotionAxisStatus
 ]]></Declaration>
       <Get Name="Get" Id="{f5013c20-1dbd-4c70-820e-5e55d7d634b3}">
         <Declaration><![CDATA[VAR

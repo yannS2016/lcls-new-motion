@@ -14,16 +14,19 @@ VAR
     iEncoderScaling : I_EncoderScaling;
     iAxisStatus : I_AxisStatus;
     iBacklashCompensation : I_BacklashCompensation;
-	{attribute 'hide'}
+    {attribute 'hide'}
     bError: BOOL;
-	{attribute 'hide'}
+    {attribute 'hide'}
     nErrorID: UDINT;
-	{attribute 'hide'}
+    {attribute 'hide'}
     sMessage : T_MAXSTRING;
-	{attribute 'hide'}
+    {attribute 'hide'}
     rtAbortDone : R_TRIG;
-	{attribute 'hide'}
+    {attribute 'hide'}
     stMotionAxisStatus : ST_MotionAxisStatus;
+	rtMoveAbsoluteError: R_TRIG;
+	rtHaltError: R_TRIG;
+	rtResetError: R_TRIG;
 END_VAR
 
 ]]></Declaration>
@@ -43,6 +46,7 @@ stMotionAxisStatus.bHaltBusy := iHalt.Busy;
 stMotionAxisStatus.bHaltDone := iHalt.Done;
 stMotionAxisStatus.bHomeBusy := iHome.Busy;
 stMotionAxisStatus.bHomeDone := iHome.Done;
+stMotionAxisStatus.bLimHomeDone := iHome.LimHomeDone;
 stMotionAxisStatus.eHomeMode := iHome.Mode;
 stMotionAxisStatus.bInTargetPosition := iAxisStatus.Done;
 stMotionAxisStatus.nAxisId := iAxisStatus.AxisID;
@@ -58,6 +62,7 @@ stMotionAxisStatus.bMoveAbsoluteBusy := iMoveAbsolute.Busy;
 stMotionAxisStatus.bMoveAbsoluteDone := iMoveAbsolute.Done;
 stMotionAxisStatus.bNegativeMotionIsEnabled := iAxisStatus.NegativeMotionIsEnabled;
 stMotionAxisStatus.bPositiveMotionIsEnabled := iAxisStatus.PositiveMotionIsEnabled;
+stMotionAxisStatus.bDirectionalPowerEnabled := iPower.DirectionalPowerEnabled;
 stMotionAxisStatus.bPowerActive := iPower.PowerIsEnabled;
 stMotionAxisStatus.fPowerOverride := iPower.Override;
 stMotionAxisStatus.bResetBusy := iReset.Busy;
@@ -70,6 +75,20 @@ stMotionAxisStatus.bBusy := iHome.Busy OR iMoveAbsolute.Busy;
 stMotionAxisStatus.bDone := iHome.Done OR iMoveAbsolute.Done;
 stMotionAxisStatus.bError := bError;
 stMotionAxisStatus.nErrorID := nErrorID;
+
+// auto-Reset Execute after error
+rtMoveAbsoluteError(CLK:=iMoveAbsolute.Error);
+rtHaltError(CLK:=iHalt.Error);
+rtResetError(CLK:=iReset.Error);
+
+IF rtMoveAbsoluteError.Q THEN
+	iMoveAbsolute.MoveAbsoluteDone();	
+ELSIF rtHaltError.Q THEN
+	iHalt.HaltDone();	
+ELSIF rtResetError.Q THEN
+	iReset.ResetDone();	
+END_IF
+
 ]]></ST>
     </Implementation>
     <Method Name="AxisEnabled" Id="{cc4bbafd-6987-498c-9fa8-c674abc392f5}">
@@ -91,13 +110,13 @@ END_VAR
 *)
 METHOD BacklashCompensation
 VAR_INPUT
-	Enable : BOOL := FALSE;
-	RampVelo : LREAL;
+    Enable : BOOL := FALSE;
+    RampVelo : LREAL;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.iBacklashCompensation.BacklashCompensation(	Enable:=Enable,
-													RampVelo:=RampVelo
+                                                    RampVelo:=RampVelo
                                                 );
 
  ]]></ST>
@@ -189,7 +208,9 @@ ELSIF THIS^.iAxisStatus.Error  THEN
     bError:=THIS^.iAxisStatus.Error;
     nErrorId:=THIS^.iAxisStatus.ErrorID;
     sMessage := THIS^.iAxisStatus.Message;
-ELSIF THIS^.iReadParameter.Error THEN
+	// dont report this erro if absolute/home move is busy
+ELSIF THIS^.iReadParameter.Error 
+	AND (NOT THIS^.iMoveAbsolute.Busy OR NOT THIS^.iHome.Busy) THEN
     bError := THIS^.iReadParameter.Error;
     nErrorId := THIS^.iReadParameter.ErrorID;
     sMessage := THIS^.iReadParameter.Message;
@@ -260,14 +281,6 @@ END_VAR
                     BufferMode:=BufferMode );]]></ST>
       </Implementation>
     </Method>
-    <Method Name="HaltDone" Id="{10092d88-8263-4453-9e57-d2d8fd2128e6}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD HaltDone
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[THIS^.iHalt.HaltDone();]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="Home" Id="{19a4a42c-65d0-44c2-9ba0-43e7fa25e791}">
       <Declaration><![CDATA[METHOD Home
 VAR_INPUT
@@ -277,7 +290,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[//
-THIS^.iHome.Home(Position:=0.0,BufferMode:=MC_BufferMode.MC_Aborting);]]></ST>
+THIS^.iHome.Home(Position:=Position,BufferMode:=MC_BufferMode.MC_Aborting);]]></ST>
       </Implementation>
     </Method>
     <Method Name="MoveAbsolute" Id="{4f09799f-35f4-498c-b47e-65f81ea0c180}">
@@ -299,6 +312,14 @@ END_VAR
                                     Jerk := Jerk,
                                     BufferMode := BufferMode);
 ]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveAbsoluteDone" Id="{127bbfb4-8244-48a3-8c7a-84752ee460fc}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD MoveAbsoluteDone
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iMoveAbsolute.MoveAbsoluteDone();]]></ST>
       </Implementation>
     </Method>
     <Method Name="Power" Id="{ec1783df-e1a3-46f4-829a-9762b3ca588d}">
@@ -365,6 +386,13 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.iReset.ResetDone();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ResetExecute" Id="{10092d88-8263-4453-9e57-d2d8fd2128e6}">
+      <Declaration><![CDATA[METHOD ResetExecute
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iHalt.HaltDone();]]></ST>
       </Implementation>
     </Method>
     <Method Name="SaveAxisParams" Id="{e5a35223-1f28-40e0-a094-53d1b9164718}">

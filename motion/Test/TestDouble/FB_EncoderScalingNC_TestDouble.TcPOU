@@ -34,8 +34,7 @@
       </CFC>
     </Implementation>
     <Property Name="EncoderCount" Id="{58ecbc98-356a-4ee2-b9ec-aa8c2efc18bc}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY EncoderCount : UDINT
+      <Declaration><![CDATA[PROPERTY EncoderCount : UDINT
 ]]></Declaration>
       <Get Name="Get" Id="{a01045c9-3059-4366-aa1d-36f7b5ffd107}">
         <Declaration><![CDATA[VAR
@@ -86,8 +85,7 @@ END_VAR
       </Get>
     </Property>
     <Method Name="EncoderScaling" Id="{3ac4197f-c191-40c5-8820-fb0a9b2c5a9d}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD EncoderScaling : UDINT
+      <Declaration><![CDATA[METHOD EncoderScaling : UDINT
 ]]></Declaration>
       <Implementation>
         <CFC>

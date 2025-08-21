@@ -10,11 +10,11 @@ END_VAR
       <ST><![CDATA[GivenEpicsEnableAndHardwareEnableIfNotUserEnableThenResetPowerEnableAndMoveOk_Test1();
 GivenEpicsEnablehardwareEnableAndUserEnableUpdatePowerEnableAndMoveOk_Test2();
 GivenhardwareEnableAndUserEnableIfNotEpicsEnableResetPowerEnable_Test3();
-GivenUserEnableAndEpicsEnableIfNothardwareEnableThenResetPowerEnableAndMoveOk_Test4();
+GivenUserEnableAndDriveEnableIfNothardwareEnableThenTriggerHardwareEnableInterlockAndRemoveMoveOk_Test4();
 GivenInterlockEventIFGlobalResetClearErrors_Test5();]]></ST>
     </Implementation>
     <Method Name="GivenEpicsEnableAndHardwareEnableIfNotUserEnableThenResetPowerEnableAndMoveOk_Test1" Id="{2fccb30b-fa43-4cab-8f2c-adfb09669aa8}">
-      <Declaration><![CDATA[METHOD GivenEpicsEnableAndHardwareEnableIfNotUserEnableThenResetPowerEnableAndMoveOk_Test1
+      <Declaration><![CDATA[METHOD PRIVATE GivenEpicsEnableAndHardwareEnableIfNotUserEnableThenResetPowerEnableAndMoveOk_Test1
 VAR
     fbMotionInterlocksCommon : FB_MotionInterlocksCommon(iMotionLogger:=fbMotionLogger[1]);
     sExpectedUserEnableMessage : STRING := 'User enable interlock triggered!';
@@ -43,7 +43,7 @@ TEST_FINISHED();]]></ST>
       </Implementation>
     </Method>
     <Method Name="GivenEpicsEnablehardwareEnableAndUserEnableUpdatePowerEnableAndMoveOk_Test2" Id="{29a6cbb8-e701-4efa-8b8e-943b61227a98}">
-      <Declaration><![CDATA[METHOD GivenEpicsEnablehardwareEnableAndUserEnableUpdatePowerEnableAndMoveOk_Test2
+      <Declaration><![CDATA[METHOD PRIVATE GivenEpicsEnablehardwareEnableAndUserEnableUpdatePowerEnableAndMoveOk_Test2
 VAR
     fbMotionInterlocksCommon : FB_MotionInterlocksCommon(iMotionLogger:=fbMotionLogger[2]);
     sExpectedMessage : STRING := '';
@@ -81,7 +81,7 @@ TEST_FINISHED();]]></ST>
       </Implementation>
     </Method>
     <Method Name="GivenhardwareEnableAndUserEnableIfNotEpicsEnableResetPowerEnable_Test3" Id="{71eb458d-3e16-42c1-906d-1967152b9a7a}">
-      <Declaration><![CDATA[METHOD GivenhardwareEnableAndUserEnableIfNotEpicsEnableResetPowerEnable_Test3
+      <Declaration><![CDATA[METHOD PRIVATE GivenhardwareEnableAndUserEnableIfNotEpicsEnableResetPowerEnable_Test3
 VAR
     fbMotionInterlocksCommon : FB_MotionInterlocksCommon(iMotionLogger:=fbMotionLogger[3]);
     sExpectedMessage : STRING := '';
@@ -119,7 +119,7 @@ TEST_FINISHED();]]></ST>
       </Implementation>
     </Method>
     <Method Name="GivenInterlockEventIFGlobalResetClearErrors_Test5" Id="{26b812f8-7691-4546-890b-17127a999f93}">
-      <Declaration><![CDATA[METHOD GivenInterlockEventIFGlobalResetClearErrors_Test5
+      <Declaration><![CDATA[METHOD PRIVATE GivenInterlockEventIFGlobalResetClearErrors_Test5
 VAR
     fbMotionInterlocksCommon : FB_MotionInterlocksCommon(iMotionLogger:=fbMotionLogger[5]);
     sExpectedMessage : STRING := '';
@@ -138,7 +138,7 @@ fbMotionInterlocksCommon();
 
 AssertTRUE(Condition := fbMotionInterlocksCommon.Error,
            Message := 'HardwareEnable Error must be set #1');
-		   
+
 // Test Global Reset to clear internal flags
 fbMotionInterlocksCommon.HardwareEnable := TRUE;
 fbMotionInterlocksCommon.Reset();
@@ -153,13 +153,13 @@ AssertEquals ( Expected:=sExpectedMessage, Actual:=sActMessage,
 TEST_FINISHED();]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GivenUserEnableAndEpicsEnableIfNothardwareEnableThenResetPowerEnableAndMoveOk_Test4" Id="{0b67d0e3-11d8-4176-a42c-58d4ebf9caa3}">
-      <Declaration><![CDATA[METHOD GivenUserEnableAndEpicsEnableIfNothardwareEnableThenResetPowerEnableAndMoveOk_Test4
+    <Method Name="GivenUserEnableAndDriveEnableIfNothardwareEnableThenTriggerHardwareEnableInterlockAndRemoveMoveOk_Test4" Id="{0b67d0e3-11d8-4176-a42c-58d4ebf9caa3}">
+      <Declaration><![CDATA[METHOD PRIVATE GivenUserEnableAndDriveEnableIfNothardwareEnableThenTriggerHardwareEnableInterlockAndRemoveMoveOk_Test4
 VAR
     fbMotionInterlocksCommon : FB_MotionInterlocksCommon(iMotionLogger:=fbMotionLogger[4]);
     sExpectedHardwareEnableMessage : STRING := 'Hardware enbale interlocks triggered!';
     sActHardwareEnableMessage : STRING;
-    nExpectedErrorId : UDINT := 1;
+    nExpectedErrorId : UDINT := 11;
     nActErrorId : UDINT;
 END_VAR
 ]]></Declaration>
@@ -181,12 +181,10 @@ AssertTrue(Condition := fbMotionInterlocksCommon.Error,
            Message := 'Hardware Interlock triggered Error must be set #3');
 
 nActErrorId := fbMotionInterlocksCommon.ErrorID;
-AssertEquals ( Expected:=nExpectedErrorId, Actual:=nActErrorId ,
-            Message:='Incorrect Hardware trigger ErrorID #4');
+AssertEquals ( Expected:=nExpectedErrorId, Actual:=nActErrorId , Message:='Incorrect Hardware trigger ErrorID #4');
 
 sActHardwareEnableMessage := fbMotionInterlocksCommon.Message;
-AssertEquals ( Expected:=sExpectedHardwareEnableMessage, Actual:=sActHardwareEnableMessage ,
-            Message:='Incorrect Hardware trigger Error Msg #5');
+AssertEquals ( Expected:=sExpectedHardwareEnableMessage, Actual:=sActHardwareEnableMessage , Message:='Incorrect Hardware trigger Error Msg #5');
 
 TEST_FINISHED();]]></ST>
       </Implementation>

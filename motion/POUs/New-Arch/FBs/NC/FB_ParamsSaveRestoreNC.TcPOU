@@ -5,61 +5,61 @@
 VAR
     {attribute 'no_copy'}
     AxisRef : REFERENCE TO AXIS_REF;
-	{attribute 'hide'}
+    {attribute 'hide'}
     iPersistentDataStorage : I_PersistentDataStorage;
     // save and restore
-	{attribute 'hide'}
+    {attribute 'hide'}
     fbSetPos: MC_SetPosition;
-	{attribute 'hide'}
+    {attribute 'hide'}
     bClearPositionLag : BOOL := TRUE;
-	{attribute 'hide'}
+    {attribute 'hide'}
     nLatchErrId : BOOL;
-	{attribute 'hide'}
+    {attribute 'hide'}
     bRestoreDone 	: BOOL;
-	{attribute 'hide'}
+    {attribute 'hide'}
     bRestoreError 	: BOOL;
-	{attribute 'hide'}
+    {attribute 'hide'}
     nRestoreErrorID : UDINT;
-	{attribute 'hide'}
+    {attribute 'hide'}
     // save and Restore
     RestoreTimer: TON;
-	{attribute 'hide'}
+    {attribute 'hide'}
     bRestoreInit: BOOL;
-	{attribute 'hide'}
+    {attribute 'hide'}
     bRestoreLoad: BOOL;
-	{attribute 'hide'}
+    {attribute 'hide'}
     nLatchError: UDINT;
-	{attribute 'hide'}
+    {attribute 'hide'}
     bEncError: BOOL;
-	{attribute 'hide'}
+    {attribute 'hide'}
     tRetryDelay: TIME := T#1S;
-	{attribute 'hide'}
+    {attribute 'hide'}
     tRefreshDelay: TIME := T#1S;
-	{attribute 'hide'}
+    {attribute 'hide'}
     bUpdateEnable : BOOL;
-	{attribute 'hide'}
+    {attribute 'hide'}
     bExecute : BOOL;
-	{attribute 'hide'}
+    {attribute 'hide'}
     nMaxRetries: UINT := 10;
-	{attribute 'hide'}
+    {attribute 'hide'}
     nCurrTries: UINT := 0;
-	{attribute 'hide'}
+    {attribute 'hide'}
     bRestoreWaitRetry: BOOL;
-	{attribute 'hide'}
+    {attribute 'hide'}
     tonRestoreRetry: TON;
-	{attribute 'hide'}
+    {attribute 'hide'}
     tRefreshTime : TIME := T#1S;
-	{attribute 'hide'}
+    {attribute 'hide'}
     bError				: BOOL;
-	{attribute 'hide'}
+    {attribute 'hide'}
     nErrorId			: UDINT:=0;
-	{attribute 'hide'}
+    {attribute 'hide'}
     sMessage : T_MAXSTRING;
-	{attribute 'hide'}
+    {attribute 'hide'}
     bSaveEnabled	: BOOL := TRUE;
-	{attribute 'hide'}
+    {attribute 'hide'}
     bDone : BOOL;
-	{attribute 'hide'}
+    {attribute 'hide'}
     bBusy    : BOOL;
 END_VAR
 
@@ -70,13 +70,13 @@ VAR PERSISTENT
     fSavedPosition: LREAL;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF NOT __ISVALIDREF(THIS^.AxisRef) THEN
+      <ST><![CDATA[IF NOT __ISVALIDREF(AxisRef) THEN
     RETURN;
 END_IF
 
-RestoreAxisParams();
-
 AxisRef.ReadStatus();
+
+RestoreAxisParams();
 
 // Save Encoder position
 // needs some pre-conditions to use persistent storage
@@ -211,8 +211,8 @@ IF fbSetPos.Error THEN
     nLatchError := fbSetPos.ErrorID;
     nCurrTries := nCurrTries + 1;
     IF nCurrTries >= nMaxRetries THEN
-    	// Alert the user that something has gone wrong
-    	bError := TRUE;
+        // Alert the user that something has gone wrong
+        bError := TRUE;
         nErrorId := nLatchError;
         sMessage := 'Error loading previously saved position.';
     ELSE

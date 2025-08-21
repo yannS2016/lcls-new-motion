@@ -9,24 +9,24 @@ VAR
     fbBrake 				: FB_Brake_TestDouble;
     fbMotionInterlocks	: FB_MotionInterlocksLimSw_TestDouble;
     fbMotionLogger 		: FB_MotionLogger_TestDouble;
-	fbMotionDriveStateMachine : FB_MotionDriveStateMachine_TestDouble;
+    fbMotionDriveStateMachine : FB_MotionDriveStateMachine_TestDouble;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[NoCrashTest();]]></ST>
     </Implementation>
     <Method Name="NoCrashTest" Id="{75361fae-01d6-457b-bd6b-fe3e29169e9e}">
-      <Declaration><![CDATA[METHOD NoCrashTest
+      <Declaration><![CDATA[METHOD PRIVATE NoCrashTest
 VAR_INST
-	fbMotionDrive : FB_MotionDrive(
-									iMotionAxis := fbMotionAxis,
-									iMotionLogger:=fbMotionLogger,
-									iBrake:=fbBrake,
-									iMotionInterlocks:=fbMotionInterlocks,
-									iMoveRequest :=fbMoveRequest,
-									iEpicsMotionParamsStatus := fbEpicsMotionParamsStatus,
-									iMotionDriveStateMachine := fbMotionDriveStateMachine
-								);
+    fbMotionDrive : FB_MotionDrive(
+                                    iMotionAxis := fbMotionAxis,
+                                    iMotionLogger:=fbMotionLogger,
+                                    iBrake:=fbBrake,
+                                    iMotionInterlocks:=fbMotionInterlocks,
+                                    iMoveRequest :=fbMoveRequest,
+                                    iEpicsMotionParamsStatus := fbEpicsMotionParamsStatus,
+                                    iMotionDriveStateMachine := fbMotionDriveStateMachine
+                                );
 
 
 END_VAR

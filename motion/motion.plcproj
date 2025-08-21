@@ -102,9 +102,6 @@
       <SubType>Code</SubType>
       <ExcludeFromBuild>false</ExcludeFromBuild>
     </Compile>
-    <Compile Include="POUs\New-Arch\FBs\Common\FB_MotionDriveOld.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\New-Arch\FBs\Common\FB_MotionInterlocksCommon.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -144,10 +141,6 @@
     </Compile>
     <Compile Include="POUs\New-Arch\FBs\NC\FB_HomeNC.TcPOU">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\New-Arch\FBs\NC\FB_MotionAxisNCOld.TcPOU">
-      <SubType>Code</SubType>
-      <ExcludeFromBuild>true</ExcludeFromBuild>
     </Compile>
     <Compile Include="POUs\New-Arch\FBs\NC\FB_MotionAxisNC.TcPOU">
       <SubType>Code</SubType>
@@ -257,6 +250,9 @@
     <Compile Include="POUs\New-Arch\ITFs\I_WriteParameter.TcIO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Test\Containers\FB_MotionStageNC_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Test\Interlok\FB_MotionInterlocksCommon_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -285,9 +281,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Test\NC\FB_MotionAxisNC_Test.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Test\NC\FB_MotionAxisNCShrink_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Test\PRG_TEST.TcPOU">
@@ -380,6 +373,7 @@
     <Folder Include="Test\Interlok" />
     <Folder Include="Test\MotionDrive" />
     <Folder Include="Test\NC" />
+    <Folder Include="Test\Containers" />
     <Folder Include="Test\TestDouble" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />

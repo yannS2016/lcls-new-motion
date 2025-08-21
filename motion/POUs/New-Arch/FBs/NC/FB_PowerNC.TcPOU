@@ -42,9 +42,20 @@ END_VAR
         <ST><![CDATA[THIS^.AxisRef REF= AxisRef;]]></ST>
       </Implementation>
     </Method>
+    <Property Name="DirectionalPowerEnabled" Id="{7a9de88a-7f63-40af-aa61-9a69c778429e}">
+      <Declaration><![CDATA[PROPERTY DirectionalPowerEnabled : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{f16f58a1-b69c-43f4-b2cf-b36c150216b6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[DirectionalPowerEnabled := THIS^.fbMcPower.Enable_Negative AND THIS^.fbMcPower.Enable_Positive;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="DisablePower" Id="{577374a6-9c8d-40f0-8c0b-b6bac87de3d0}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD DisablePower
+      <Declaration><![CDATA[METHOD DisablePower
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[(*Use to remove power in DURING_MOTION driving mode *)

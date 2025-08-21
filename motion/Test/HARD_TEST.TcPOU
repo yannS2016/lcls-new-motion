@@ -4,125 +4,40 @@
     <Declaration><![CDATA[PROGRAM HARD_TEST
 VAR
     fbAxisRef : AXIS_REF;
-    fbLimSwStatus : FB_LimSwStatus_TestDouble := (LimBackward:=TRUE, LimForward:=TRUE);
-    fbMotionLogger : FB_MotionLogger;
-    fbMoveAbsolute : FB_MoveAbsoluteNC(AxisRef := fbAxisRef);
-    fbPower : FB_PowerNC(AxisRef := fbAxisRef);
+	fbPower: FB_PowerNC(AxisRef:=fbAxisRef);
+    fbMcHome : MC_Home;
+    fbMcSetPosition : MC_SetPosition;
+	bLimPositive : BOOL := TRUE;
+	bLimNegative : BOOL := TRUE;
 	bTriggerHome : BOOL;
 	bHomingOverride: BOOL := TRUE;
-
-	// Subject under tests										
-    fbBacklashCompensation : FB_BacklashCompensationNC(AxisRef := fbAxisRef);
-
     nTestStep : INT;
-
-	fBacklashCompensationPosFwd: LREAL;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
-fbPower.Power(	Enable:=TRUE,
-                            Enable_Positive:=bHomingOverride OR fbLimSwStatus.LimForward,
-                            Enable_Negative:=bHomingOverride OR fbLimSwStatus.LimBackward,
-                            Override:=100.0);
-					  
+fbPower.Power(	
+	Enable:=TRUE,
+	Enable_Positive:=bHomingOverride OR bLimPositive,
+	Enable_Negative:=bHomingOverride OR bLimNegative,
+	Override:=100.0
+);
+fbMcHome.bCalibrationCam := NOT bLimNegative;
+				  
 CASE nTestStep OF
     0:
-
-		fbBacklashCompensation.BacklashCompensationTest(UserEnable:=TRUE, Compensation:=1.0);
+        fbMcHome.HomingMode := MC_HomingMode.MC_DefaultHoming;
+        fbMcHome.Options.SearchDirection := MC_Direction.MC_Negative_Direction;
+        fbMcHome.Options.SyncDirection := MC_Direction.MC_Positive_Direction;
+        fbMcHome.Options.ClearPositionLag := TRUE;
+		fbMcHome.Execute := TRUE;
 		nTestStep := nTestStep + 1;
 
-	1:
-		IF NOT fbBacklashCompensation.Status THEN
-			fbBacklashCompensation.BacklashCompensation(Enable:=FALSE, RampVelo:=10.0);
-			nTestStep := nTestStep + 1;		
-		END_IF
-
-	2: 
-		IF fbBacklashCompensation.Busy AND fbPower.PowerIsEnabled THEN
-			// Initate Positive backlash compensation
-			fbMoveAbsolute.MoveAbsolute(	Position := 150.0,
-											Velocity := 100,
-											Acceleration := 200,
-											Deceleration := 200
-										);
-			nTestStep := nTestStep + 1;
-		END_IF
-	3:
- 		IF fbMoveAbsolute.Done THEN
-			IF (fbAxisRef.NcToPlc.ActPos - fbAxisRef.NcToPlc.ActPosWithoutPosCorrection)= 0 THEN
-				nTestStep := nTestStep + 1;
-			END_IF
-		END_IF
-	4:
-		// reverse movement
-		fbMoveAbsolute.MoveAbsolute(	Position := 100.0,
-                                   		Velocity := 10,
-                                  		Acceleration := 200,
-                                 		Deceleration := 200
-									);
-		nTestStep := nTestStep + 1;
-	5:
- 		IF fbMoveAbsolute.Done THEN
-			IF (fbAxisRef.NcToPlc.ActPos - fbAxisRef.NcToPlc.ActPosWithoutPosCorrection)= 1 THEN
-				nTestStep := nTestStep + 1;
-			END_IF
-		END_IF
-	6:
-		 // Initiate compensation for Negative Backlash
-		 // this will first reset the enable input.
-		fbBacklashCompensation.BacklashCompensationTest(UserEnable:=TRUE, Compensation:=-4.0);
-		nTestStep := nTestStep + 1;
-
-	7:
-		// after resetting compensation block with new backslash value
-		// enable it  back for an absolute move
-		IF NOT fbBacklashCompensation.Status THEN
-				fbBacklashCompensation.BacklashCompensation(Enable:=FALSE,  RampVelo:=10.0);
-				nTestStep := nTestStep + 1;	
-		END_IF
-
-	8: 
-		IF fbBacklashCompensation.Busy THEN
-			fbMoveAbsolute.MoveAbsolute(	Position := 50.0,
-                             			Velocity := 25,
-                                 		Acceleration := 100,
-										Deceleration := 100
-									);
-			nTestStep := nTestStep + 1;			
-		END_IF
-	9:
-	 	// No compensation in this direction
-		IF fbMoveAbsolute.Done THEN
-			IF (fbAxisRef.NcToPlc.ActPos - fbAxisRef.NcToPlc.ActPosWithoutPosCorrection)= 0 THEN
-				nTestStep := nTestStep + 1;
-			END_IF
-		END_IF
-	10:
-	 	// this move will be compensated
-		fbMoveAbsolute.MoveAbsolute(	Position := 80.0,
-                             			Velocity := 25,
-                                 		Acceleration := 100,
-										Deceleration := 100
-									);
-		nTestStep := nTestStep + 1;
-	11:
-		IF fbMoveAbsolute.Busy THEN
-			nTestStep := nTestStep + 1;	
-		END_IF
-	12:
-		IF fbMoveAbsolute.Done THEN
-			IF (fbAxisRef.NcToPlc.ActPos - fbAxisRef.NcToPlc.ActPosWithoutPosCorrection) = 4 THEN
-				nTestStep := nTestStep + 1;
-			END_IF
-		END_IF
 END_CASE
 
-fbLimSwStatus();
-fbLimSwStatus();
-fbMotionLogger();
-fbBacklashCompensation();
-fbMoveAbsolute();]]></ST>
+fbMcHome( Axis := fbAxisRef, Position := 5.0  );
+fbMcSetPosition.Execute:=fbMcHome.Done;
+]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>

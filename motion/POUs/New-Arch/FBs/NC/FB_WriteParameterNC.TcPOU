@@ -11,7 +11,7 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[(*Do not change a moving axis parameter*)
-fbMcWriteParameter(	Axis:=THIS^.AxisRef );]]></ST>
+fbMcWriteParameter(	Axis:=AxisRef );]]></ST>
     </Implementation>
     <Property Name="Busy" Id="{689d767c-9451-409d-982f-e679c1698c39}">
       <Declaration><![CDATA[PROPERTY Busy : BOOL
