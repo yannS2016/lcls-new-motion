@@ -8,7 +8,7 @@ FUNCTION_BLOCK FB_EpicsMotionParamsStatus IMPLEMENTS I_EpicsMotionParamsStatus
 VAR
        // EPICS Interface
     {attribute 'no_copy'}
-    stMotionEpicsItf : REFERENCE TO ST_MotionEpicsInterface;
+    stMotionEpicsItf : REFERENCE TO ST_MotionStage;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -27,7 +27,7 @@ stMotionEpicsItf.stAxisStatus.nErrorId:=stMotionEpicsItf.nErrorId;]]></ST>
     <Method Name="CallAfterInit" Id="{37f41f22-86ac-4ee8-bb54-b88af0913c76}">
       <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
 VAR_INPUT
-    stMotionEpicsItf : REFERENCE TO ST_MotionEpicsInterface;
+    stMotionEpicsItf : REFERENCE TO ST_MotionStage;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -44,7 +44,7 @@ METHOD FB_Init: BOOL
 VAR_INPUT
     bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
-    stMotionEpicsItf : REFERENCE TO ST_MotionEpicsInterface;
+    stMotionEpicsItf : REFERENCE TO ST_MotionStage;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.stMotionEpicsItf REF=stMotionEpicsItf;]]></ST>

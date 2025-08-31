@@ -9,7 +9,7 @@
     <WriteProductVersion>false</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
     <Name>motion</Name>
-    <ProgramVersion>3.1.4026.15</ProgramVersion>
+    <ProgramVersion>3.1.4026.17</ProgramVersion>
     <Application>{33d664b0-6516-4278-a609-945dc6212735}</Application>
     <TypeSystem>{c65f0172-be58-4007-8d8b-64ba0ae68ce0}</TypeSystem>
     <Implicit_Task_Info>{0e3edc62-cc3b-47a4-b014-ded5a500659f}</Implicit_Task_Info>
@@ -18,9 +18,10 @@
     <LibraryReferences>{4e753108-02f3-49a6-bba6-07c1c7eb77be}</LibraryReferences>
     <Company>SLAC</Company>
     <Released>false</Released>
-    <AllowChecksForLibrary>false</AllowChecksForLibrary>
     <POUsForPropertyAccessIncluded>false</POUsForPropertyAccessIncluded>
     <GlobalVersionStructureIncluded>false</GlobalVersionStructureIncluded>
+    <ProjectVersion>2.0.0</ProjectVersion>
+    <Title>LCLS_OMotion</Title>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DemoTask.TcTTO">
@@ -74,7 +75,7 @@
     <Compile Include="DUTs\ST_MotionAxisStatus.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\ST_MotionEpicsInterface.TcDUT">
+    <Compile Include="DUTs\ST_MotionStage.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\ST_MotionEpicsItf.TcDUT">

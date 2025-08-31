@@ -8,12 +8,13 @@ VAR
     {attribute 'no_copy'}
     AxisRef : REFERENCE TO AXIS_REF;
     {attribute 'no_copy'}
-    stMotionEpicsItf : REFERENCE TO ST_MotionEpicsInterface;
+    stMotionEpicsItf : REFERENCE TO ST_MotionStage;
     iPersistentDataStorage : I_PersistentDataStorage;
 
     //Brakes : brake fb participate in sync comm with fbMotionDrive, fbMotionAxis and fbMotionInterlocks
     fbBrake : FB_BrakeNC := (BrakeMode := E_StageBrakeMode.IF_MOVING);
     // common interlocks
+	{attribute 'pytmc' := 'pv:'}
     fbMotionInterlocksCommon : FB_MotionInterlocksCommon(iMotionLogger := iMotionLogger);
     // stage with Limit switches
     fbLimSwStatus : FB_LimSwStatus();
@@ -24,10 +25,13 @@ VAR
     fbReset : FB_ResetNC(AxisRef:=AxisRef);
     fbMoveAbsolute : FB_MoveAbsoluteNC(AxisRef:=AxisRef);
     fbAxisStatus : FB_AxisStatusNC(AxisRef:=AxisRef);
+	{attribute 'pytmc' := 'pv:'}
     fbReadParameter : FB_ReadParameterNC(AxisRef:=AxisRef);
     fbWriteParameter  : FB_WriteParameterNC(AxisRef:=AxisRef);
     fbParamsSaveRestore: FB_ParamsSaveRestoreNC(AxisRef:=AxisRef, iPersistentDataStorage := iPersistentDataStorage);
+	{attribute 'pytmc' := 'pv:'}
     fbEncoderScaling : FB_EncoderScaling();
+	{attribute 'pytmc' := 'pv:'}
     fbBacklashCompensation : FB_BacklashCompensationNC(AxisRef:=AxisRef);
     fbMotionAxis : FB_MotionAxisNC(
         iHome := fbHome,
@@ -43,6 +47,7 @@ VAR
         iBacklashCompensation :=fbBacklashCompensation,
     );
     // Motion Requests
+	{attribute 'pytmc' := 'pv:'}
     fbMoveRequest : FB_EpicsMoveRequest(stMotionEpicsItf:=stMotionEpicsItf);
     fbEpicsMotionParamsStatus : FB_EpicsMotionParamsStatus(stMotionEpicsItf:=stMotionEpicsItf);
     // Motion StateMachine
@@ -63,10 +68,6 @@ VAR
     // Drive Name
     {attribute 'hide'}
     sName : T_MaxString;
-    // Non EPICS/Local User Interface ( avoid digging into child FBs)
-//     eBrakeMode : E_StageBrakeMode;
-//     eEnableMode : E_StageEnableMode;
-//     eHomeMode: E_EpicsHomeCmd :=E_EpicsHomeCmd.NONE;
 	bHomeCmd:BOOL;
 	bMoveCmd:BOOL;
 END_VAR
@@ -252,7 +253,7 @@ VAR_INPUT
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
     iMotionLogger : I_MotionLogger;
     AxisRef : REFERENCE TO AXIS_REF;
-    stMotionEpicsItf : REFERENCE TO ST_MotionEpicsInterface;
+    stMotionEpicsItf : REFERENCE TO ST_MotionStage;
     iPersistentDataStorage : I_PersistentDataStorage;
     sName : T_MaxString;
 END_VAR]]></Declaration>

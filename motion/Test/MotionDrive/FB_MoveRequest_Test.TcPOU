@@ -3,7 +3,7 @@
   <POU Name="FB_MoveRequest_Test" Id="{05d79949-1f03-4557-a858-9a547a52b2be}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MoveRequest_Test EXTENDS FB_TestSuite
 VAR
-        stMotionEpicsItf :  ARRAY[1..2] OF ST_MotionEpicsInterface;
+        stMotionEpicsItf :  ARRAY[1..2] OF ST_MotionStage;
 END_VAR
 ]]></Declaration>
     <Implementation>

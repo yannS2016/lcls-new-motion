@@ -7,7 +7,7 @@ VAR
     fbMotionLogger : FB_MotionLogger;
     // Persistant storage
     fbPersistentDataStorage : FB_PersistentDataStorage;
-    M1 : ST_MotionEpicsInterface;
+    M1 : ST_MotionStage;
 
     fbMotionStage : FB_MotionStageNC(	sName := 'NC',
                                         stMotionEpicsItf := M1,

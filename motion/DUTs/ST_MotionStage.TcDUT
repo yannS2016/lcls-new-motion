@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <DUT Name="ST_MotionEpicsInterface" Id="{95b7e1f5-e810-48fa-b0fa-436eb26bcc03}">
-    <Declaration><![CDATA[TYPE ST_MotionEpicsInterface :
+  <DUT Name="ST_MotionStage" Id="{95b7e1f5-e810-48fa-b0fa-436eb26bcc03}">
+    <Declaration><![CDATA[TYPE ST_MotionStage :
     // Defines the EPICS interface to moving a motor in TwinCAT
 STRUCT
     // Name to use for log messages, fast faults, etc.

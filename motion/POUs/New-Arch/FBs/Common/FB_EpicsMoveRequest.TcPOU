@@ -6,7 +6,7 @@ FUNCTION_BLOCK FB_EpicsMoveRequest IMPLEMENTS I_MoveRequest
 VAR
    // EPICS Interface
     {attribute 'no_copy'}
-    stMotionEpicsItf : REFERENCE TO ST_MotionEpicsInterface;
+    stMotionEpicsItf : REFERENCE TO ST_MotionStage;
 
     eEnableMode: E_StageEnableMode:=E_StageEnableMode.DURING_MOTION;
     bMoveCmd	: BOOL;
@@ -124,7 +124,7 @@ stMotionRequestStatus.bExecHome:=stMotionRequestStatus.bExecute AND stMotionRequ
 stMotionRequestStatus.bExecMove:=stMotionRequestStatus.bExecute AND NOT stMotionRequestStatus.bExecHome;
 
 // Declare axis busy earlier and clear previous done state
-rtExecute(CLK:=stMotionRequestStatus.bExecute);
+rtExecute(CLK:=stMotionEpicsItf.bExecute);
 IF rtExecute.Q THEN
 	InitMoveRequest();
 END_IF
@@ -162,7 +162,7 @@ stMotionRequestStatus.fDeceleration:= stMotionEpicsItf.fDeceleration;
     <Method Name="CallAfterInit" Id="{c5f4a41a-2a36-4ec0-b020-e8f39761af26}">
       <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
 VAR_INPUT
-    stMotionEpicsItf : REFERENCE TO ST_MotionEpicsInterface;
+    stMotionEpicsItf : REFERENCE TO ST_MotionStage;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -226,7 +226,7 @@ METHOD FB_Init: BOOL
 VAR_INPUT
     bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
-    stMotionEpicsItf : REFERENCE TO ST_MotionEpicsInterface;
+    stMotionEpicsItf : REFERENCE TO ST_MotionStage;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.stMotionEpicsItf REF=stMotionEpicsItf;]]></ST>
@@ -382,6 +382,7 @@ END_IF
         <ST><![CDATA[IF stMotionRequestStatus.bPrepareDisable THEN
     IF THIS^.eEnableMode=E_StageEnableMode.DURING_MOTION THEN
         THIS^.stMotionEpicsItf.bEnable := FALSE;
+		THIS^.stMotionRequestStatus.bEnable := FALSE;
     END_IF
     THIS^.stMotionRequestStatus.bPrepareDisable := FALSE;
 END_IF]]></ST>

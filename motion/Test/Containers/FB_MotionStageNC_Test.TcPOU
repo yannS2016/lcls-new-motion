@@ -7,7 +7,7 @@ VAR
     fbMotionLogger : ARRAY[1..16] OF FB_MotionLogger;
     // Persistant storage
     fbPersistentDataStorage :  ARRAY[1..16] OF FB_PersistentDataStorage;
-    stMotionEpicsInterface :  ARRAY[1..16] OF ST_MotionEpicsInterface;
+    stMotionEpicsInterface :  ARRAY[1..16] OF ST_MotionStage;
  	fbAxisRef :   ARRAY[1..16] OF AXIS_REF;
  
 END_VAR
@@ -660,7 +660,7 @@ END_IF]]></ST>
     <Method Name="GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7" Id="{2b0e18de-bb60-4f66-8435-2821190f306d}">
       <Declaration><![CDATA[METHOD PRIVATE GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7
 VAR_INST
-   fbMotionStage : FB_MotionStageNC(	sName := 'Test6',
+   fbMotionStage : FB_MotionStageNC(	sName := 'Test7',
                                         stMotionEpicsItf := stMotionEpicsInterface[7],
                                         AxisRef := fbAxisRef[7],
                                         iMotionLogger := fbMotionLogger[7],
@@ -689,9 +689,9 @@ CASE nTestStep OF
 	1:
 		// init backlash free absolute move.
 		 stMotionEpicsInterface[7].fPosition := 40.0;
-		 stMotionEpicsInterface[7].fVelocity := 50.0;
-		 stMotionEpicsInterface[7].fAcceleration := 100.0;
-		 stMotionEpicsInterface[7].fDeceleration := 100.0;
+		 stMotionEpicsInterface[7].fVelocity := 200.0;
+		 stMotionEpicsInterface[7].fAcceleration := 400.0;
+		 stMotionEpicsInterface[7].fDeceleration := 400.0;
 		 fbMotionStage.UserCmds(MoveCmd:=TRUE, HomeCmd:=FALSE);
 		 nTestStep := nTestStep + 1;
 	2:
@@ -703,9 +703,9 @@ CASE nTestStep OF
     3:
 		// reverse.
 		stMotionEpicsInterface[7].fPosition := 80.0;
-		stMotionEpicsInterface[7].fVelocity := 50.0;
-		stMotionEpicsInterface[7].fAcceleration := 200.0;
-		stMotionEpicsInterface[7].fDeceleration := 200.0;
+		stMotionEpicsInterface[7].fVelocity := 200.0;
+		stMotionEpicsInterface[7].fAcceleration := 400.0;
+		stMotionEpicsInterface[7].fDeceleration := 400.0;
 		fbMotionStage.UserCmds(MoveCmd:=TRUE, HomeCmd:=FALSE);
 		nTestStep := nTestStep + 1;
     4:
@@ -719,9 +719,9 @@ CASE nTestStep OF
 		nTestStep := nTestStep + 1;
 	6:
 		stMotionEpicsInterface[7].fPosition := 120.0;
-		stMotionEpicsInterface[7].fVelocity := 50.0;
-		stMotionEpicsInterface[7].fAcceleration := 200.0;
-		stMotionEpicsInterface[7].fDeceleration := 200.0;
+		stMotionEpicsInterface[7].fVelocity := 200.0;
+		stMotionEpicsInterface[7].fAcceleration := 400.0;
+		stMotionEpicsInterface[7].fDeceleration := 400.0;
 		fbMotionStage.UserCmds(MoveCmd:=TRUE, HomeCmd:=FALSE);
 		nTestStep := nTestStep + 1;
 	7:
@@ -735,9 +735,9 @@ CASE nTestStep OF
 		nTestStep := nTestStep + 1;
 	9:
 		stMotionEpicsInterface[7].fPosition := 160.0;
-		stMotionEpicsInterface[7].fVelocity := 50.0;
-		stMotionEpicsInterface[7].fAcceleration := 200.0;
-		stMotionEpicsInterface[7].fDeceleration := 200.0;
+		stMotionEpicsInterface[7].fVelocity := 200.0;
+		stMotionEpicsInterface[7].fAcceleration := 400.0;
+		stMotionEpicsInterface[7].fDeceleration := 400.0;
 		fbMotionStage.UserCmds(MoveCmd:=TRUE, HomeCmd:=FALSE);
 		nTestStep := nTestStep + 1;
 	10:
@@ -751,9 +751,9 @@ CASE nTestStep OF
 		nTestStep := nTestStep + 1;
 	12:
 		stMotionEpicsInterface[7].fPosition := 180.0;
-		stMotionEpicsInterface[7].fVelocity := 50.0;
-		stMotionEpicsInterface[7].fAcceleration := 200.0;
-		stMotionEpicsInterface[7].fDeceleration := 200.0;
+		stMotionEpicsInterface[7].fVelocity := 200.0;
+		stMotionEpicsInterface[7].fAcceleration := 400.0;
+		stMotionEpicsInterface[7].fDeceleration := 400.0;
 		fbMotionStage.UserCmds(MoveCmd:=TRUE, HomeCmd:=FALSE);
 		nTestStep := nTestStep + 1;
 	13:
