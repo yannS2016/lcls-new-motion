@@ -116,7 +116,7 @@ END_VAR
 ]]></Declaration>
     </Method>
     <Property Name="Status" Id="{b89efbc7-c2e9-4624-9647-415c5f6f8096}">
-      <Declaration><![CDATA[PROPERTY Status : REFERENCE TO ST_MotionAxisStatus]]></Declaration>
+      <Declaration><![CDATA[PROPERTY Status : REFERENCE TO ST_AxisStatus]]></Declaration>
       <Get Name="Get" Id="{be45ae84-a32d-46d4-a431-423c59c47349}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>

@@ -3,5 +3,37 @@
   <Itf Name="I_MotionLogger" Id="{ba839cec-9291-4692-8f1c-76e0f27d3db4}">
     <Declaration><![CDATA[INTERFACE I_MotionLogger
 ]]></Declaration>
+    <Method Name="Clear" Id="{7bbc559f-d817-41f1-8220-7fbb6113d4af}">
+      <Declaration><![CDATA[METHOD Clear
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="ErrorCodeLookup" Id="{55ed6a2c-beff-40b2-b277-6cb853ad11a8}">
+      <Declaration><![CDATA[METHOD ErrorCodeLookup : STRING
+VAR_INPUT
+	 nErrorId: UDINT;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="GetAllMessages" Id="{0d8456d8-a972-467e-aec8-f7544ecc3e0f}">
+      <Declaration><![CDATA[METHOD GetAllMessages : STRING(1024)
+]]></Declaration>
+    </Method>
+    <Method Name="GetMessageCount" Id="{96dae5b2-bee3-4a4a-af42-11e4dbc3e083}">
+      <Declaration><![CDATA[METHOD GetMessageCount : UINT
+VAR_OUTPUT
+    nCount : UINT;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Logger" Id="{d06a0d50-48f4-4261-869e-95d5c3b0e14a}">
+      <Declaration><![CDATA[METHOD Logger
+VAR_INPUT
+    Message : STRING;
+    Level   : E_MotionLogLevel := E_MotionLogLevel.INFO;
+    Source  : STRING := '';
+END_VAR]]></Declaration>
+    </Method>
   </Itf>
 </TcPlcObject>

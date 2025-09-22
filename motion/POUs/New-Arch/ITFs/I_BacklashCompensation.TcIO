@@ -23,6 +23,14 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
+    <Method Name="EnableBacklashCompensation" Id="{e97f2fd7-00e3-4003-9a19-7946698414f6}">
+      <Declaration><![CDATA[METHOD EnableBacklashCompensation
+VAR_INPUT
+    UserEnable : BOOL;
+    Compensation : LREAL;
+END_VAR
+]]></Declaration>
+    </Method>
     <Property Name="Status" Id="{dd023d24-4958-4a64-8af6-f09a6b1978e9}">
       <Declaration><![CDATA[PROPERTY Status : BOOL]]></Declaration>
       <Get Name="Get" Id="{2244ed4b-ffad-4d7c-8cbb-2047985c42a1}">

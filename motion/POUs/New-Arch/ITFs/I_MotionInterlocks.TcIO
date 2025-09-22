@@ -16,10 +16,9 @@ END_VAR
     <Method Name="DriveCommands" Id="{4eadfef4-5c7c-464f-b3d8-85555ae4b8ba}">
       <Declaration><![CDATA[METHOD DriveCommands
 VAR_INPUT
-	Enable: BOOL;
-	NewMoveReq : BOOL;
+    MoveEnable: BOOL;
+    NewMoveReq : BOOL;
 END_VAR
-
 ]]></Declaration>
     </Method>
     <Property Name="Error" Id="{cb8c4f4f-26d3-4070-a3b0-01084a7b31fd}">
