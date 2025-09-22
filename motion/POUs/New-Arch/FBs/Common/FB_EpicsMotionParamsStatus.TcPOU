@@ -8,30 +8,20 @@ FUNCTION_BLOCK FB_EpicsMotionParamsStatus IMPLEMENTS I_EpicsMotionParamsStatus
 VAR
        // EPICS Interface
     {attribute 'no_copy'}
-    stMotionEpicsItf : REFERENCE TO ST_MotionStage;
+    stMotionEpicsItf : REFERENCE TO ST_MotionCommand;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[//stMotionEpicsInterface.stAxisStatus.bJogBwd:=bJogBwd;
-//stMotionEpicsInterface.stAxisStatus.bJogFwd:=bJogFwd;
-stMotionEpicsItf.stAxisStatus.bReset:=stMotionEpicsItf.bReset;
-stMotionEpicsItf.stAxisStatus.bError:=stMotionEpicsItf.bError;
-stMotionEpicsItf.stAxisStatus.fAcceleration:=stMotionEpicsItf.fAcceleration;
-stMotionEpicsItf.stAxisStatus.fDeceleration:=stMotionEpicsItf.fDeceleration;
-stMotionEpicsItf.stAxisStatus.fPosition:=stMotionEpicsItf.fPosition;
-stMotionEpicsItf.stAxisStatus.fVelocity:=stMotionEpicsItf.fVelocity;
-stMotionEpicsItf.stAxisStatus.nCmdData:=INT_TO_UINT(stMotionEpicsItf.nCmdData);
-stMotionEpicsItf.stAxisStatus.nCommand:=INT_TO_UINT(stMotionEpicsItf.nCommand);
-stMotionEpicsItf.stAxisStatus.nErrorId:=stMotionEpicsItf.nErrorId;]]></ST>
+      <ST><![CDATA[]]></ST>
     </Implementation>
     <Method Name="CallAfterInit" Id="{37f41f22-86ac-4ee8-bb54-b88af0913c76}">
       <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
 VAR_INPUT
-    stMotionEpicsItf : REFERENCE TO ST_MotionStage;
+    stMotionItf : REFERENCE TO ST_MotionCommand;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.stMotionEpicsItf REF=stMotionEpicsItf;
+        <ST><![CDATA[THIS^.stMotionEpicsItf REF=stMotionItf;
 ]]></ST>
       </Implementation>
     </Method>
@@ -44,10 +34,10 @@ METHOD FB_Init: BOOL
 VAR_INPUT
     bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
-    stMotionEpicsItf : REFERENCE TO ST_MotionStage;
+    stMotionInterface : REFERENCE TO ST_MotionCommand;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.stMotionEpicsItf REF=stMotionEpicsItf;]]></ST>
+        <ST><![CDATA[THIS^.stMotionEpicsItf REF=stMotionInterface;]]></ST>
       </Implementation>
     </Method>
     <Method Name="MotionParamsAndStatus" Id="{f134f110-1d08-4330-b5d0-f1fa3db27f4f}">
@@ -72,20 +62,20 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.stMotionEpicsItf.stAxisStatus.bEnable:=PowerEnabled;
-THIS^.stMotionEpicsItf.stAxisStatus.bEnabled:=PowerIsEnabled;
-THIS^.stMotionEpicsItf.stAxisStatus.bExecute:=Execute;
-THIS^.stMotionEpicsItf.stAxisStatus.bHomeSensor:=LimHome;
-
-THIS^.stMotionEpicsItf.stAxisStatus.bLimitBwd:=MoveBackwardEnabled;
-THIS^.stMotionEpicsItf.stAxisStatus.bLimitFwd:=MoveForwardEnabled;
-THIS^.stMotionEpicsItf.stAxisStatus.fActDiff:=MeasuredPositionDiff;
-THIS^.stMotionEpicsItf.stAxisStatus.fActPosition:=MeasuredPosition;
-THIS^.stMotionEpicsItf.stAxisStatus.fActVelocity:=MeasuredVelocity;
-THIS^.stMotionEpicsItf.stAxisStatus.fOverride:=PowerOverride;
-THIS^.stMotionEpicsItf.stAxisStatus.bBusy:=Busy;
-THIS^.stMotionEpicsItf.stAxisStatus.bHomed:=HomeDone;
-THIS^.stMotionEpicsItf.nMotionAxisID :=MotionAxisId;]]></ST>
+        <ST><![CDATA[// THIS^.stMotionEpicsItf.stAxisStatus.bEnabled:=PowerIsEnabled;
+// THIS^.stMotionEpicsItf.stAxisStatus.bHomeSensor:=LimHome;
+// THIS^.stMotionEpicsItf.stAxisStatus.bLimitBwd:=MoveBackwardEnabled;
+// THIS^.stMotionEpicsItf.stAxisStatus.bLimitFwd:=MoveForwardEnabled;
+// THIS^.stMotionEpicsItf.stAxisStatus.fActDiff:=MeasuredPositionDiff;
+// THIS^.stMotionEpicsItf.stAxisStatus.fActPosition:=MeasuredPosition;
+// THIS^.stMotionEpicsItf.stAxisStatus.fActVelocity:=MeasuredVelocity;
+// THIS^.stMotionEpicsItf.stAxisStatus.fOverride:=PowerOverride;
+// THIS^.stMotionEpicsItf.stAxisStatus.bBusy:=Busy;
+// THIS^.stMotionEpicsItf.stAxisStatus.bDone:=Done;
+// THIS^.stMotionEpicsItf.stAxisStatus.bHomed:=HomeDone;
+// THIS^.stMotionEpicsItf.stAxisStatus.bError:=Error;
+// THIS^.stMotionEpicsItf.stAxisStatus.nErrorId:=ErrorId;
+// THIS^.stMotionEpicsItf.stAxisStatus.sErrorMessage:=ErrorMessage;]]></ST>
       </Implementation>
     </Method>
   </POU>

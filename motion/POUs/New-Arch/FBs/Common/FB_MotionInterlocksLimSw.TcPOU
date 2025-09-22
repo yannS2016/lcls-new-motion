@@ -3,6 +3,8 @@
   <POU Name="FB_MotionInterlocksLimSw" Id="{3a6698ca-98dc-423f-8e31-b70e68c6cfde}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionInterlocksLimSw IMPLEMENTS I_MotionInterlocks
 VAR
+    {attribute 'no_copy'}
+    stMotionInterface : REFERENCE TO ST_MotionCommand;
     {attribute 'hide'}
     iMotionInterlocksCommon : I_MotionInterlocksCommon;
     {attribute 'hide'}
@@ -49,10 +51,9 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[// Read Limits status and update shared space
-bMoveBackwardEnabled := iLimSwStatus.LimBackward;
-bMoveForwardEnabled := iLimSwStatus.LimForward;
+bMoveBackwardEnabled := iLimSwStatus.LimitBackwardEnable;
+bMoveForwardEnabled := iLimSwStatus.LimitForwardEnable;
 
-rtReset(CLK:=bReset);
 rtUserExec (CLK:=bNewMoveReq);
 ftForwardEnabled(CLK:=bMoveForwardEnabled);
 ftBackwardEnabled (CLK:=bMoveBackwardEnabled);
@@ -106,21 +107,22 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.iMotionInterlocksCommon := iMotionInterlocksCommon;
-THIS^.iLimSwStatus := iLimSwStatus;]]></ST>
+THIS^.iLimSwStatus := iLimSwStatus;
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="DriveCommands" Id="{7d2fc5f4-f440-43f4-a066-d2e570f8099b}">
       <Declaration><![CDATA[METHOD DriveCommands
 VAR_INPUT
-    Enable: BOOL;
+    MoveEnable: BOOL;
     NewMoveReq : BOOL;
 END_VAR
 
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[bNewMoveReq:=NewMoveReq;
+        <ST><![CDATA[THIS^.bNewMoveReq:=NewMoveReq;
 // Forward drive cmds to Generic interlocks and lim status FB
-THIS^.iMotionInterlocksCommon.DriveCommands(Enable:=Enable, NewMoveReq:=NewMoveReq);
+THIS^.iMotionInterlocksCommon.DriveCommands(MoveEnable:=MoveEnable, NewMoveReq:=NewMoveReq);
 ]]></ST>
       </Implementation>
     </Method>
@@ -164,7 +166,8 @@ VAR_INPUT
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.iMotionInterlocksCommon  := iMotionInterlocksCommon ;
-THIS^.iLimSwStatus := iLimSwStatus;]]></ST>
+THIS^.iLimSwStatus := iLimSwStatus;
+]]></ST>
       </Implementation>
     </Method>
     <Property Name="InterlockEvent" Id="{90152201-0cb8-4e2b-9fb0-8f192f34ce29}">
@@ -202,7 +205,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[LimHome := iLimSwStatus.LimHome;]]></ST>
+          <ST><![CDATA[LimHome := iLimSwStatus.LimitHome;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -280,7 +283,6 @@ THIS^.bLimHitMoving := bLimHit;
 THIS^.bLimHitIdling := bLimHit;
 THIS^.sMessage := '';
 THIS^.bWarning := FALSE;
-
 THIS^.iMotionInterlocksCommon.Reset();]]></ST>
       </Implementation>
     </Method>

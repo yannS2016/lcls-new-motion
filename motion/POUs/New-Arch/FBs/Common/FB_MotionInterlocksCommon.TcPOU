@@ -7,28 +7,8 @@ VAR
     iMotionLogger 		: I_MotionLogger;
     {attribute 'hide'}
     bPowerEnabled: BOOL:=FALSE;
-   // NC STO Input: TRUE if ok to move
-    {attribute 'pytmc' := '
-        pv: PLC:bHardwareEnable
-        io: i
-        field: ZNAM FALSE
-        field: ONAM TRUE
-        field: DESC TRUE if STO not hit
-    '}
-    bHardwareEnable AT %I*: BOOL ;
-
-    // Used by the IOC to disable an axis
-    {attribute 'pytmc' := '
-        pv: PLC:bUserEnable
-        io: io
-        field: ZNAM DISABLE
-        field: ONAM ENABLE
-        field: DESC Used to disable power entirely for an axis
-    '}
-    bUserEnable: BOOL := TRUE;
-
     {attribute 'hide'}
-    bEnable: BOOL;
+    bMoveEnable: BOOL;
     {attribute 'hide'}
     bReset : BOOL;
     {attribute 'hide'}
@@ -39,6 +19,24 @@ VAR
     nErrorID : UDINT;
     {attribute 'hide'}
     bMoveOk : BOOL;
+    // Used by the IOC to disable an axis
+    {attribute 'pytmc' := '
+        pv: PLC:bUserEnable
+        io: io
+        field: ZNAM DISABLE
+        field: ONAM ENABLE
+        field: DESC Used to disable power entirely for an axis
+    '}
+    bUserEnable: BOOL := TRUE;	
+   // NC STO Input: TRUE if ok to move
+    {attribute 'pytmc' := '
+        pv: PLC:bHardwareEnable
+        io: i
+        field: ZNAM FALSE
+        field: ONAM TRUE
+        field: DESC TRUE if STO not hit
+    '}
+    bHardwareEnable AT %I*: BOOL ;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -47,7 +45,7 @@ END_VAR
     RETURN;
 END_IF
 
-bPowerEnabled := bEnable AND bHardwareEnable;
+bPowerEnabled := bMoveEnable AND bHardwareEnable;
 bPowerEnabled R= NOT bUserEnable;
 
 (*test additional pre-move conditions here*)
@@ -67,25 +65,37 @@ END_IF
     </Implementation>
     <Method Name="CallAfterInit" Id="{bb25ce30-2def-4497-bead-4e7295fc730f}">
       <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
-VAR_INPUT
+VAR_INPUT	
     iMotionLogger : I_MotionLogger;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.iMotionLogger := iMotionLogger;]]></ST>
+        <ST><![CDATA[THIS^.iMotionLogger := iMotionLogger;
+]]></ST>
       </Implementation>
     </Method>
-    <Method Name="DriveCommands" Id="{6d01eab2-7989-4c7e-b542-03db7614d447}">
+    <Method Name="DriveCommands" Id="{6faab4fd-6838-4650-b9c4-4c56bc16ce71}">
       <Declaration><![CDATA[METHOD DriveCommands
 VAR_INPUT
-    Enable: BOOL;
+    MoveEnable: BOOL;
     NewMoveReq : BOOL;
 END_VAR
-
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.bEnable := Enable;
-THIS^.bPowerEnabled := bEnable AND bHardwareEnable;
+        <ST><![CDATA[THIS^.bMoveEnable:=MoveEnable;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="EnableInterlocks" Id="{1e1fe8ee-cf9f-43d2-8525-931c42a0cb84}">
+      <Declaration><![CDATA[METHOD EnableInterlocks
+VAR_INPUT
+	UserEnable : BOOL;
+	HardwareEnable : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bUserEnable := UserEnable;
+bHardwareEnable := HardwareEnable;
 ]]></ST>
       </Implementation>
     </Method>
@@ -123,35 +133,14 @@ METHOD FB_Init: BOOL
 VAR_INPUT
     bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
-
     iMotionLogger 		: I_MotionLogger;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.iMotionLogger := iMotionLogger;
+
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="HardwareEnable" Id="{d61e5b05-94b6-4b80-bfd7-0d1f07731219}">
-      <Declaration><![CDATA[PROPERTY HardwareEnable : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{de4ec138-0ec0-4fe4-93ac-6a00a13d21e6}">
-        <Declaration><![CDATA[
-VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[]]></ST>
-        </Implementation>
-      </Get>
-      <Set Name="Set" Id="{997b3317-ecd2-4d78-ab35-890e6b79db96}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[bHardwareEnable := HardwareEnable;]]></ST>
-        </Implementation>
-      </Set>
-    </Property>
     <Property Name="Message" Id="{fff95902-de95-4707-8ab7-164e983a966f}">
       <Declaration><![CDATA[PROPERTY Message : T_MAXSTRING
 ]]></Declaration>
@@ -199,17 +188,5 @@ THIS^.nErrorID:= 0;
 THIS^.sMessage:='';]]></ST>
       </Implementation>
     </Method>
-    <Property Name="UserEnable" Id="{3dd63e54-e47f-4503-9258-eaac8ea1f82e}">
-      <Declaration><![CDATA[PROPERTY UserEnable : BOOL
-]]></Declaration>
-      <Set Name="Set" Id="{1bc1daba-a9ae-4d73-a148-bfc9f891f3f2}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[bUserEnable := UserEnable;]]></ST>
-        </Implementation>
-      </Set>
-    </Property>
   </POU>
 </TcPlcObject>

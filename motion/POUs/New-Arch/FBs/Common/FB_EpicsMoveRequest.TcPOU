@@ -6,17 +6,12 @@ FUNCTION_BLOCK FB_EpicsMoveRequest IMPLEMENTS I_MoveRequest
 VAR
    // EPICS Interface
     {attribute 'no_copy'}
-    stMotionEpicsItf : REFERENCE TO ST_MotionStage;
-
+    stMotionCommand : REFERENCE TO ST_MotionCommand;
+	{attribute 'no_copy'}
+	stMotionStatus:  REFERENCE TO ST_MotionStatus;
+	
     eEnableMode: E_StageEnableMode:=E_StageEnableMode.DURING_MOTION;
     bMoveCmd	: BOOL;
-    // Start the homing routine
-    {attribute 'pytmc' := '
-        pv: PLC:bHomeCmd
-        io: io
-        field: DESC Start the homing routine
-    '}
-    bHomeCmd: BOOL;
     {attribute 'hide'}
     eHomeMode	: E_EpicsHomeCmd := E_EpicsHomeCmd.NONE;
     {attribute 'hide'}
@@ -51,38 +46,38 @@ END_VAR
 
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF NOT __ISVALIDREF( stMotionEpicsItf ) THEN
+      <ST><![CDATA[IF NOT __ISVALIDREF( stMotionCommand ) OR NOT  __ISVALIDREF( stMotionStatus ) THEN
    RETURN;
 END_IF
 (* Check for the plc shortcut commands
    Used for testing or to circumvent motor record issues*)
 rtMoveCmdShortcut(CLK:=bMoveCmd);
-rtHomeCmdShortcut(CLK:=bHomeCmd);
+rtHomeCmdShortcut(CLK:=stMotionCommand.bHomeCmd);
 
 (* Execute on rising edge*)
-IF rtMoveCmdShortcut.Q AND NOT stMotionEpicsItf.bExecute THEN
-    stMotionEpicsItf.bExecute:=TRUE;
-    stMotionEpicsItf.nCommand := E_EpicsMotorCmd.MOVE_ABSOLUTE;
+IF rtMoveCmdShortcut.Q AND NOT stMotionCommand.bExecute THEN
+    stMotionCommand.bExecute:=TRUE;
+    stMotionCommand.nCommand := E_EpicsMotorCmd.MOVE_ABSOLUTE;
 
-ELSIF rtHomeCmdShortcut.Q AND NOT stMotionEpicsItf.bExecute THEN
+ELSIF rtHomeCmdShortcut.Q AND NOT stMotionCommand.bExecute THEN
 
     IF (*( eHomeMode = E_EpicsHomeCmd.ABSOLUTE_SET )  OR*) ( eHomeMode = E_EpicsHomeCmd.NONE) THEN
-       stMotionEpicsItf.bExecute:= FALSE;
+       stMotionCommand.bExecute:= FALSE;
     ELSE
-       stMotionEpicsItf.bExecute:= TRUE;
+       stMotionCommand.bExecute:= TRUE;
     END_IF
-    stMotionEpicsItf.nCommand:=E_EpicsMotorCmd.HOME;
+    stMotionCommand.nCommand:=E_EpicsMotorCmd.HOME;
     (* Automatically fill the correct nCmdData for homing*)
-    stMotionEpicsItf.nCmdData:=eHomeMode;
+    stMotionCommand.nCmdData:=eHomeMode;
 END_IF
 
 (* entry point for local and EPICS main execs *)
-rtUserExec(CLK:=stMotionEpicsItf.bExecute);
+rtUserExec(CLK:=stMotionCommand.bExecute);
 (* if a Move/Home Goal is comfirmed and there is no persistant
    error conditions, then we have a valid move request.*)
-stMotionRequestStatus.bNewMoveReq S= NOT stMotionEpicsItf.bBusy AND rtUserExec.Q AND NOT stMotionEpicsItf.bError AND bMoveOk;;
+stMotionRequestStatus.bNewMoveReq S= NOT stMotionStatus.bBusy AND rtUserExec.Q AND NOT stMotionStatus.bError AND bMoveOk;;
 (* this Move request is valid till an error occurs or the currently move is done *)
-stMotionRequestStatus.bNewMoveReq R= NOT stMotionEpicsItf.bExecute OR stMotionEpicsItf.bError;
+stMotionRequestStatus.bNewMoveReq R= NOT stMotionCommand.bExecute OR stMotionStatus.bError;
 stMotionRequestStatus.bPrepareDisable R= stMotionRequestStatus.bNewMoveReq;
 rtNewMoveReq(CLK:=stMotionRequestStatus.bNewMoveReq);
 
@@ -90,15 +85,13 @@ rtNewMoveReq(CLK:=stMotionRequestStatus.bNewMoveReq);
    if bservo not set, manual step moves will be performed *)
 IF rtUserExec.Q THEN
     // Transfer nCommand and nCmdData to local copies at rising edge of bExecute (avoid issues if nCommand or nCmdData are changed during a command)
-    stMotionRequestStatus.nCmdData:=stMotionEpicsItf.nCmdData;
-    stMotionRequestStatus.nCommand:=stMotionEpicsItf.nCommand;
-
-    stMotionRequestStatus.bReset := FALSE;
-    IF NOT bHomeCmd THEN
+    stMotionRequestStatus.nCmdData:=stMotionCommand.nCmdData;
+    stMotionRequestStatus.nCommand:=stMotionCommand.nCommand;
+    IF NOT stMotionCommand.bHomeCmd THEN
         (* attempting to move an axis without homing first? *)
-        IF eHomeMode <> E_EpicsHomeCmd.NONE AND NOT stMotionEpicsItf.bHomed THEN
+        IF eHomeMode <> E_EpicsHomeCmd.NONE AND NOT stMotionStatus.bHomed THEN
             (* one can just set bHome here even though no homing was done?*)
-            stMotionEpicsItf.sErrorMessage:='Axis homing mode set, but homing routine pending';
+            stMotionStatus.sErrorMessage:='Axis homing mode set, but homing routine pending';
         END_IF
     END_IF
 END_IF
@@ -109,64 +102,53 @@ CASE eEnableMode OF
     (* Not recommended, not tested *)
     E_StageEnableMode.ALWAYS:
         // if no latching interlock condition, No errors
-        stMotionEpicsItf.bEnable:= NOT stMotionEpicsItf.bError AND bMoveOk;
+        stMotionRequestStatus.bEnable:= NOT stMotionStatus.bError AND bMoveOk;
     E_StageEnableMode.DURING_MOTION:
         IF rtEnableMode.Q THEN
-            stMotionEpicsItf.bEnable := FALSE;
+            stMotionRequestStatus.bEnable := FALSE;
         END_IF
         IF rtNewMoveReq.Q THEN
-            stMotionEpicsItf.bEnable S= stMotionRequestStatus.bNewMoveReq;
+            stMotionRequestStatus.bEnable S= stMotionRequestStatus.bNewMoveReq;
         END_IF
 END_CASE
 
-stMotionRequestStatus.bExecute := NOT stMotionEpicsItf.bError AND stMotionEpicsItf.bExecute AND bEnableDone;
+stMotionRequestStatus.bExecute := NOT stMotionStatus.bError AND stMotionCommand.bExecute AND bEnableDone;
 stMotionRequestStatus.bExecHome:=stMotionRequestStatus.bExecute AND stMotionRequestStatus.nCommand = 10;
 stMotionRequestStatus.bExecMove:=stMotionRequestStatus.bExecute AND NOT stMotionRequestStatus.bExecHome;
 
 // Declare axis busy earlier and clear previous done state
-rtExecute(CLK:=stMotionEpicsItf.bExecute);
+rtExecute(CLK:=stMotionCommand.bExecute);
 IF rtExecute.Q THEN
 	InitMoveRequest();
 END_IF
 
 // release epics and local interface
 bMoveCmd := FALSE;
-bHomeCmd := FALSE;
+stMotionCommand.bHomeCmd := FALSE;
 
 // Move done, or aborted? prepare disable.
 // we'll wait for axis to be in standstill and this state machine to be idling.
-ftStopExec(CLK:=stMotionEpicsItf.bExecute);
+ftStopExec(CLK:=stMotionCommand.bExecute);
 stMotionRequestStatus.bPrepareDisable S= (eEnableMode=E_StageEnableMode.DURING_MOTION) AND ftStopExec.Q;
-//
-IF stMotionEpicsItf.bReset THEN
-   ClearMoveRequest();
-   ClearMoveRequestErrors();
-   stMotionEpicsItf.bReset := FALSE;
-   // Forward reset status
-   stMotionRequestStatus.bReset := TRUE;
+
+IF stMotionStatus.bBusy THEN
+    stMotionStatus.sErrorMessage := '';
 END_IF
 
-IF stMotionEpicsItf.bBusy THEN
-    stMotionEpicsItf.sErrorMessage := '';
-END_IF
+//ftstop(CLK:=stMotionInterface.bExecute);
 
-ftstop(CLK:=stMotionEpicsItf.bExecute);
-stMotionRequestStatus.bEnable := stMotionEpicsItf.bEnable;
-stMotionRequestStatus.fHomeOffset:= stMotionEpicsItf.fHomePosition;
-stMotionRequestStatus.fPosition := stMotionEpicsItf.fPosition;
-stMotionRequestStatus.fVelocity:= stMotionEpicsItf.fVelocity;
-stMotionRequestStatus.fAcceleration:= stMotionEpicsItf.fAcceleration;
-stMotionRequestStatus.fDeceleration:= stMotionEpicsItf.fDeceleration;
 ]]></ST>
     </Implementation>
     <Method Name="CallAfterInit" Id="{c5f4a41a-2a36-4ec0-b020-e8f39761af26}">
       <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
 VAR_INPUT
-    stMotionEpicsItf : REFERENCE TO ST_MotionStage;
+    stMotionCommand : REFERENCE TO ST_MotionCommand;
+	stMotionStatus:  REFERENCE TO ST_MotionStatus;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.stMotionEpicsItf REF=stMotionEpicsItf;
+        <ST><![CDATA[THIS^.stMotionCommand REF=stMotionCommand;
+THIS^.stMotionStatus REF=stMotionStatus;
 ]]></ST>
       </Implementation>
     </Method>
@@ -176,12 +158,12 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[// falling edge here when target is reached, move halted
-THIS^.stMotionEpicsItf.bExecute := FALSE;
-THIS^.stMotionEpicsItf.bDone := FALSE;
-THIS^.stMotionEpicsItf.bBusy := FALSE;
+stMotionCommand.bExecute := FALSE;
+stMotionStatus.bDone := FALSE;
+stMotionStatus.bBusy := FALSE;
 // release the cmds
-THIS^.bHomeCmd:=FALSE;
-THIS^.bMoveCmd:=FALSE;
+stMotionCommand.bHomeCmd:=FALSE;
+bMoveCmd:=FALSE;
 
 
 ]]></ST>
@@ -191,9 +173,9 @@ THIS^.bMoveCmd:=FALSE;
       <Declaration><![CDATA[METHOD ClearMoveRequestErrors
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[stMotionEpicsItf.bError := FALSE;
-stMotionEpicsItf.nErrorId := 0;
-stMotionEpicsItf.sErrorMessage := '';
+        <ST><![CDATA[stMotionStatus.bError := FALSE;
+stMotionStatus.nErrorId := 0;
+stMotionStatus.sErrorMessage := '';
 stMotionRequestStatus.bExecute := FALSE;]]></ST>
       </Implementation>
     </Method>
@@ -226,10 +208,12 @@ METHOD FB_Init: BOOL
 VAR_INPUT
     bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
-    stMotionEpicsItf : REFERENCE TO ST_MotionStage;
+    stMotionCommand : REFERENCE TO ST_MotionCommand;
+	stMotionStatus:  REFERENCE TO ST_MotionStatus;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.stMotionEpicsItf REF=stMotionEpicsItf;]]></ST>
+        <ST><![CDATA[THIS^.stMotionCommand REF=stMotionCommand;
+THIS^.stMotionStatus REF=stMotionStatus;]]></ST>
       </Implementation>
     </Method>
     <Method Name="HaltMoveRequest" Id="{71c9e391-cb0d-4362-ab43-3cfd1f6c0962}">
@@ -240,7 +224,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[// Halt is always a user stop but not an interlock event or a reset.
-HaltMoveRequest := NOT stMotionRequestStatus.bReset AND ftstop.Q
+HaltMoveRequest := NOT stMotionCommand.bReset AND ftstop.Q
                         AND ((Busy AND (stMotionRequestStatus.nCommand=10))
                         OR (Busy AND (stMotionRequestStatus.nCommand=3)));
 ]]></ST>
@@ -254,7 +238,7 @@ VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[bHomeCmd := HomeCmd;]]></ST>
+          <ST><![CDATA[stMotionCommand.bHomeCmd := HomeCmd;]]></ST>
         </Implementation>
       </Set>
     </Property>
@@ -274,10 +258,10 @@ END_VAR
       <Declaration><![CDATA[METHOD InitMoveRequest
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.stMotionEpicsItf.bBusy := TRUE;
-THIS^.stMotionEpicsItf.bDone := FALSE;
+        <ST><![CDATA[stMotionStatus.bBusy := TRUE;
+stMotionStatus.bDone := FALSE;
 // reset error flag
-THIS^.stMotionEpicsItf.sErrorMessage := '';]]></ST>
+stMotionStatus.sErrorMessage := '';]]></ST>
       </Implementation>
     </Method>
     <Property Name="MoveCmd" Id="{00f2db26-21fd-456b-8b0d-f7ac8b74db84}">
@@ -319,7 +303,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.bHomeCmd := HomeCmd;
+        <ST><![CDATA[THIS^.stMotionCommand.bHomeCmd := HomeCmd;
 THIS^.eHomeMode := HomeMode;
 THIS^.eEnableMode := EnableMode;
 THIS^.bMoveCmd	:= MoveCmd;
@@ -334,9 +318,9 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.stMotionEpicsItf.bHomed := HomeDone;
-THIS^.ClearMoveRequest();
-THIS^.MoveRequestDone(Done:=MoveDone OR HomeDone);
+        <ST><![CDATA[stMotionStatus.bHomed := HomeDone;
+ClearMoveRequest();
+MoveRequestDone(Done:=MoveDone OR HomeDone);
 
 ]]></ST>
       </Implementation>
@@ -347,7 +331,7 @@ VAR_INPUT
     Done : BOOL;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[stMotionEpicsItf.bDone := Done;]]></ST>
+        <ST><![CDATA[stMotionStatus.bDone := Done;]]></ST>
       </Implementation>
     </Method>
     <Method Name="MoveRequestError" Id="{674719eb-75b4-4cc3-924b-ecc3d1af31ff}">
@@ -358,12 +342,12 @@ VAR_INPUT
     ErrorMessage:T_MAXSTRING;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.stMotionEpicsItf.bError := Error;
-THIS^.stMotionEpicsItf.nErrorId := ErrorId;
-THIS^.stMotionEpicsItf.sErrorMessage:= ErrorMessage;
+        <ST><![CDATA[stMotionStatus.bError := Error;
+stMotionStatus.nErrorId := ErrorId;
+stMotionStatus.sErrorMessage:= ErrorMessage;
 
 IF Error THEN
-    THIS^.ClearMoveRequest();
+	ClearMoveRequest();
 END_IF
 ]]></ST>
       </Implementation>
@@ -372,7 +356,7 @@ END_IF
       <Declaration><![CDATA[METHOD MoveResetDone
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.stMotionRequestStatus.bReset := FALSE;]]></ST>
+        <ST><![CDATA[THIS^.stMotionCommand.bReset := FALSE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="ResetMoveEnable" Id="{f28760d0-5752-4bf4-b850-362b1de6a659}">
@@ -381,8 +365,7 @@ END_IF
       <Implementation>
         <ST><![CDATA[IF stMotionRequestStatus.bPrepareDisable THEN
     IF THIS^.eEnableMode=E_StageEnableMode.DURING_MOTION THEN
-        THIS^.stMotionEpicsItf.bEnable := FALSE;
-		THIS^.stMotionRequestStatus.bEnable := FALSE;
+        THIS^.stMotionRequestStatus.bEnable := FALSE;
     END_IF
     THIS^.stMotionRequestStatus.bPrepareDisable := FALSE;
 END_IF]]></ST>
@@ -409,7 +392,7 @@ END_VAR]]></Declaration>
 CASE eRestoreSettingsState OF
     RestoreSettingWaiting:
         IF RestoreDone THEN
-            THIS^.stMotionEpicsItf.fPosition := SavedPosition;
+            THIS^.stMotionCommand.fPosition := SavedPosition;
             eRestoreSettingsState := RestoreSettingDone;
         END_IF
     RestoreSettingDone:;

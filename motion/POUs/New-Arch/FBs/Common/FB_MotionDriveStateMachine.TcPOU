@@ -3,7 +3,7 @@
   <POU Name="FB_MotionDriveStateMachine" Id="{8cb7b5f0-c2e7-431f-bb79-fb3574afad8a}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionDriveStateMachine IMPLEMENTS I_MotionDriveStateMachine
 VAR
-
+	stMotionInterface : REFERENCE TO ST_MotionCommand;
     {attribute 'hide'}
     iMoveRequest : I_MoveRequest;
     {attribute 'hide'}
@@ -64,27 +64,27 @@ CASE eMoveState OF
                 // Activate backlash compensation
                 iMotionAxis.BacklashCompensation(
                     Enable:=TRUE,
-                    RampVelo:=iMoveRequest.Status.fVelocity/10.0
+                    RampVelo:=stMotionInterface.fVelocity/10.0
                 );
 
                 IF __QUERYINTERFACE(iMotionAxis, iMotionAxisDS402) THEN
                     // prepare piezo axis for motion
                     IF iMotionAxisDS402.ModeConfigDone(Mode:=E_EpicsMotorCmd.MOVE_ABSOLUTE) THEN
                         iMotionAxis.MoveAbsolute(
-                            Position:=iMoveRequest.Status.fPosition,
-                            Velocity := iMoveRequest.Status.fVelocity,
-                            Acceleration := iMoveRequest.Status.fAcceleration,
-                            Deceleration := iMoveRequest.Status.fDeceleration
+                            Position:=stMotionInterface.fPosition,
+                            Velocity := stMotionInterface.fVelocity,
+                            Acceleration := stMotionInterface.fAcceleration,
+                            Deceleration := stMotionInterface.fDeceleration
                         );
 
                         eMoveState := E_MoveState.STARTED;
                     END_IF
                 ELSE
                     iMotionAxis.MoveAbsolute(
-                        Position:=iMoveRequest.Status.fPosition,
-                        Velocity := iMoveRequest.Status.fVelocity,
-                        Acceleration := iMoveRequest.Status.fAcceleration,
-                        Deceleration := iMoveRequest.Status.fDeceleration
+                        Position:=stMotionInterface.fPosition,
+                        Velocity := stMotionInterface.fVelocity,
+                        Acceleration := stMotionInterface.fAcceleration,
+                        Deceleration := stMotionInterface.fDeceleration
                     );
                     eMoveState := E_MoveState.STARTED;
                 END_IF
@@ -94,20 +94,20 @@ CASE eMoveState OF
                 // Deactivate backlash compensation
                 iMotionAxis.BacklashCompensation(
                     Enable:=FALSE,
-                    RampVelo:=iMoveRequest.Status.fVelocity/10.0
+                    RampVelo:=stMotionInterface.fVelocity/10.0
                 );
 
                 IF __QUERYINTERFACE(iMotionAxis, iMotionAxisDS402) THEN
                     IF iMotionAxisDS402.ModeConfigDone(Mode:=E_EpicsMotorCmd.HOME) THEN
                         iMotionAxis.home(
-                                Position:=iMoveRequest.Status.fHomeOffset,
+                                Position:=stMotionInterface.fHomePosition,
                                 BufferMode:=MC_Aborting
                         );
                         eMoveState := E_MoveState.STARTED;
                     END_IF
                 ELSE
                     iMotionAxis.home(
-                            Position:=iMoveRequest.Status.fHomeOffset,
+                            Position:=stMotionInterface.fHomePosition,
                             BufferMode:=MC_Aborting
                     );
                     eMoveState := E_MoveState.STARTED;
@@ -201,13 +201,14 @@ END_IF]]></ST>
 VAR_INPUT
     iMotionAxis: I_MotionAxis;
     iMoveRequest : I_MoveRequest;
+	stMotionInterface : REFERENCE TO ST_MotionCommand;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 THIS^.iMotionAxis := iMotionAxis;
 THIS^.iMoveRequest :=iMoveRequest;
-]]></ST>
+THIS^.stMotionInterface REF=stMotionInterface;]]></ST>
       </Implementation>
     </Method>
     <Method Name="FB_Init" Id="{294adae6-d914-4615-a1d2-fba496fbc903}">
@@ -221,16 +222,32 @@ VAR_INPUT
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
     iMotionAxis: I_MotionAxis;
     iMoveRequest : I_MoveRequest;
+	stMotionInterface : REFERENCE TO ST_MotionCommand;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 THIS^.iMotionAxis := iMotionAxis;
 THIS^.iMoveRequest :=iMoveRequest;
-
-
-]]></ST>
+THIS^.stMotionInterface REF=stMotionInterface;]]></ST>
       </Implementation>
     </Method>
+    <Property Name="Idling" Id="{81fbbd86-d58e-4ccc-aada-ec68eb49454d}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Idling : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{0e6ed222-832b-452a-8e44-460f723c90c1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IF eMoveState =  E_MOVESTATE.IDLING THEN
+	Idling := TRUE;
+ELSE
+	Idling := FALSE;
+END_IF]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="MoveState" Id="{e4b86fb5-39ba-415c-bea9-8752f5b3590f}">
       <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
 PROPERTY MoveState : E_MOVESTATE

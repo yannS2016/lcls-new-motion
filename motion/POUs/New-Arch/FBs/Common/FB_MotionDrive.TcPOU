@@ -3,10 +3,9 @@
   <POU Name="FB_MotionDrive" Id="{60d91316-04e3-4af1-aaa1-6a890af932f7}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionDrive IMPLEMENTS I_MotionDrive
 VAR
+	stMotionInterface : REFERENCE TO ST_MotionCommand;
     {attribute 'hide'}
     iMoveRequest : I_MoveRequest;
-    {attribute 'hide'}
-    iEpicsMotionParamsStatus : I_EpicsMotionParamsStatus;
     {attribute 'hide'}
     iMotionAxis: I_MotionAxis;
     iMotionAxisDS402: I_MotionAxisDS402;
@@ -79,15 +78,17 @@ iMotionAxis.Power(
 // Halt the Move
 rtStop(CLK:=iMoveRequest.HaltMoveRequest(Busy:=iMotionAxis.Status.bBusy));
 IF rtStop.Q THEN
-    iMotionAxis.Halt(Deceleration:=iMoveRequest.Status.fDeceleration);
+    iMotionAxis.Halt(Deceleration:=THIS^.stMotionInterface.fDeceleration);
 END_IF
-// Reset
-rtReset(CLK:=iMoveRequest.Status.bReset);
-IF rtReset.Q THEN
-    bError := FALSE;
-    nErrorId := 0;
-    sErrorMessage:= '';
-    iMoveRequest.Status.bReset := FALSE;
+
+//Reset
+IF stMotionInterface.bReset THEN
+   bError := FALSE;
+   nErrorId := 0;
+   sErrorMessage:= '';
+   iMoveRequest.ClearMoveRequest();
+   iMoveRequest.ClearMoveRequestErrors();
+   stMotionInterface.bReset := FALSE;
    // Forward general reset event
    iMotionAxis.Reset();
    iMotionInterlocks.Reset();
@@ -117,31 +118,32 @@ iMotionAxis.ReadAxisParams(
 iMotionAxis.SaveAxisParams(Enable:=TRUE);
 
 // update EPICS status
-iEpicsMotionParamsStatus.MotionParamsAndStatus(
-    PowerEnabled := iMotionInterlocks.PowerEnabled,
-    PowerIsEnabled := iMotionAxis.Status.bPowerIsEnabled,
-    Execute := iMoveRequest.Status.bExecute,
-    LimHome := iMotionInterlocks.LimHome,
-    MoveBackwardEnabled := iMotionInterlocks.MoveBackwardEnabled,
-    MoveForwardEnabled := iMotionInterlocks.MoveForwardEnabled,
-    MeasuredPositionDiff := iMotionAxis.Status.fMeasuredPositionDiff,
-    MeasuredPosition := iMotionAxis.Status.fMeasuredPosition,
-    MeasuredVelocity := iMotionAxis.Status.fMeasuredVelocity,
-    PowerOverride := iMotionAxis.Status.fPowerOverride,
-    Busy := iMotionAxis.Status.bBusy,
-    HomeDone := iMotionAxis.Status.bHomeDone,
-    MotionAxisId:=iMotionAxis.Status.nAxisId
-);]]></ST>
+THIS^.stMotionInterface.stAxisStatus.bEnabled := iMotionInterlocks.PowerEnabled;
+THIS^.stMotionInterface.stAxisStatus.bHomeSensor := iMotionInterlocks.LimHome;
+THIS^.stMotionInterface.stAxisStatus.bLimitBwd := iMotionInterlocks.MoveBackwardEnabled;
+THIS^.stMotionInterface.stAxisStatus.bLimitFwd := iMotionInterlocks.MoveForwardEnabled;
+THIS^.stMotionInterface.stAxisStatus.fActDiff := iMotionAxis.Status.fMeasuredPositionDiff;
+THIS^.stMotionInterface.stAxisStatus.fActPosition := iMotionAxis.Status.fMeasuredPosition;
+THIS^.stMotionInterface.stAxisStatus.fActVelocity := iMotionAxis.Status.fMeasuredVelocity;
+THIS^.stMotionInterface.stAxisStatus.fOverride := iMotionAxis.Status.fPowerOverride;
+THIS^.stMotionInterface.stAxisStatus.bBusy:=iMotionAxis.Status.bBusy;
+// this handle by the state machine
+// THIS^.stMotionInterface.stAxisStatus.bDone:=;
+THIS^.stMotionInterface.stAxisStatus.bHomed:=iMotionAxis.Status.bHomeDone;
+THIS^.stMotionInterface.stAxisStatus.bError:=bError;
+THIS^.stMotionInterface.stAxisStatus.nErrorId:=nErrorId;
+THIS^.stMotionInterface.stAxisStatus.sErrorMessage:=sErrorMessage;
+]]></ST>
     </Implementation>
     <Method Name="CallAfterInit" Id="{f39ddf47-4815-43e7-8049-e534fb9f6092}">
       <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
 VAR_INPUT
+	stMotionInterface : REFERENCE TO ST_MotionCommand;
     iBrake : I_Brake;
     iMotionInterlocks : I_MotionInterlocks;
     iMotionLogger : I_MotionLogger;
     iMotionAxis: I_MotionAxis;
     iMoveRequest : I_MoveRequest;
-    iEpicsMotionParamsStatus : I_EpicsMotionParamsStatus;
     iMotionDriveStateMachine : I_MotionDriveStateMachine;
 END_VAR
 ]]></Declaration>
@@ -151,8 +153,8 @@ THIS^.iMotionLogger:=iMotionLogger;
 THIS^.iBrake:=iBrake;
 THIS^.iMotionInterlocks:=iMotionInterlocks;
 THIS^.iMoveRequest :=iMoveRequest;
-THIS^.iEpicsMotionParamsStatus := iEpicsMotionParamsStatus;
-THIS^.iMotionDriveStateMachine := iMotionDriveStateMachine;]]></ST>
+THIS^.iMotionDriveStateMachine := iMotionDriveStateMachine;
+THIS^.stMotionInterface REF= stMotionInterface;]]></ST>
       </Implementation>
     </Method>
     <Method Name="FB_Init" Id="{927f7c72-9006-42d1-8ac3-5d4ce66d6511}">
@@ -165,11 +167,11 @@ VAR_INPUT
     bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
     iBrake : I_Brake;
+	stMotionInterface : REFERENCE TO ST_MotionCommand;
     iMotionInterlocks : I_MotionInterlocks;
     iMotionLogger : I_MotionLogger;
     iMotionAxis: I_MotionAxis;
     iMoveRequest : I_MoveRequest;
-    iEpicsMotionParamsStatus : I_EpicsMotionParamsStatus;
     iMotionDriveStateMachine : I_MotionDriveStateMachine;
 END_VAR]]></Declaration>
       <Implementation>
@@ -178,8 +180,8 @@ THIS^.iMotionLogger:=iMotionLogger;
 THIS^.iBrake:=iBrake;
 THIS^.iMotionInterlocks:=iMotionInterlocks;
 THIS^.iMoveRequest :=iMoveRequest;
-THIS^.iEpicsMotionParamsStatus := iEpicsMotionParamsStatus;
 THIS^.iMotionDriveStateMachine := iMotionDriveStateMachine;
+THIS^.stMotionInterface REF= stMotionInterface;
 
 ]]></ST>
       </Implementation>
