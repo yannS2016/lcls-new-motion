@@ -70,15 +70,15 @@ END_VAR
       <Implementation>
         <ST><![CDATA[TEST(__POUNAME());
 tonLimSwStatusEvent();
-fbLimSwStatus[4].LimForward := TRUE;
-fbLimSwStatus[4].LimBackward := TRUE;
+fbLimSwStatus[4].LimitForwardEnable := TRUE;
+fbLimSwStatus[4].LimitBackwardEnable := TRUE;
 fbLimSwStatus[4]();
 fbMotionInterlocksLimSw.AxisStatus(HomeBusy:=FALSE, PositiveDirection:=FALSE, NegativeDirection:=TRUE);
 fbMotionInterlocksLimSw();
 
 
 IF tonLimSwStatusEvent.Q THEN
-    fbLimSwStatus[4].LimForward := FALSE;
+    fbLimSwStatus[4].LimitForwardEnable := FALSE;
     fbLimSwStatus[4]();
     tonLimSwStatusEvent.IN:=FALSE;
 END_IF
@@ -106,14 +106,14 @@ END_VAR
       <Implementation>
         <ST><![CDATA[TEST(__POUNAME());
 tonLimSwStatusEvent();
-fbLimSwStatus[5].LimForward := TRUE;
-fbLimSwStatus[5].LimBackward := TRUE;
+fbLimSwStatus[5].LimitForwardEnable := TRUE;
+fbLimSwStatus[5].LimitBackwardEnable := TRUE;
 fbMotionInterlocksLimSw.AxisStatus(HomeBusy:=FALSE, PositiveDirection:=TRUE, NegativeDirection:=FALSE);
 fbLimSwStatus[5]();
 fbMotionInterlocksLimSw();
 
 IF tonLimSwStatusEvent.Q THEN
-    fbLimSwStatus[5].LimForward := FALSE;
+    fbLimSwStatus[5].LimitForwardEnable := FALSE;
     tonLimSwStatusEvent.IN := FALSE;
 END_IF
 
@@ -137,8 +137,8 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST(__POUNAME());
 
-fbLimSwStatus[6].LimForward := TRUE;
-fbLimSwStatus[6].LimBackward := TRUE;
+fbLimSwStatus[6].LimitForwardEnable := TRUE;
+fbLimSwStatus[6].LimitBackwardEnable := TRUE;
 fbMotionInterlocksLimSw.AxisStatus(HomeBusy:=TRUE, PositiveDirection:=TRUE, NegativeDirection:=FALSE);
 fbLimSwStatus[6]();
 fbMotionInterlocksLimSw();
@@ -173,8 +173,8 @@ END_VAR
       <Implementation>
         <ST><![CDATA[TEST(__POUNAME());
 // Test LimSwStatus Events and update backward and forward Enable
-fbLimSwStatus[2].LimForward := TRUE;
-fbLimSwStatus[2].LimBackward := TRUE;
+fbLimSwStatus[2].LimitForwardEnable := TRUE;
+fbLimSwStatus[2].LimitBackwardEnable := TRUE;
 fbMotionInterlocksLimSw.AxisStatus(HomeBusy:=FALSE, PositiveDirection:=FALSE, NegativeDirection:=FALSE);
 fbLimSwStatus[2]();
 fbMotionInterlocksLimSw();
@@ -185,8 +185,8 @@ AssertTrue(Condition := fbMotionInterlocksLimSw.MoveBackwardEnabled,
 AssertTrue(Condition := fbMotionInterlocksLimSw.MoveForwardEnabled,
            Message := 'MoveForwardwardEnabled must be set #2');
 
-fbLimSwStatus[2].LimForward := FALSE;
-fbLimSwStatus[2].LimBackward := FALSE;
+fbLimSwStatus[2].LimitForwardEnable := FALSE;
+fbLimSwStatus[2].LimitBackwardEnable := FALSE;
 fbMotionInterlocksLimSw.AxisStatus(HomeBusy:=FALSE, PositiveDirection:=FALSE, NegativeDirection:=FALSE);
 fbLimSwStatus[2]();
 fbMotionInterlocksLimSw();
@@ -209,14 +209,14 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST(__POUNAME());
-fbLimSwStatus[1].LimForward := TRUE;
-fbLimSwStatus[1].LimBackward := TRUE;
+fbLimSwStatus[1].LimitForwardEnable := TRUE;
+fbLimSwStatus[1].LimitBackwardEnable := TRUE;
 fbMotionInterlocksLimSw.AxisStatus(HomeBusy:=FALSE, PositiveDirection:=TRUE, NegativeDirection:=FALSE);
 fbLimSwStatus[1]();
 fbMotionInterlocksLimSw();
 
 // Create Forward limit hit event
-fbLimSwStatus[1].LimForward := FALSE;
+fbLimSwStatus[1].LimitForwardEnable := FALSE;
 fbLimSwStatus[1]();
 fbMotionInterlocksLimSw();
 
@@ -233,10 +233,10 @@ AssertFalse(Condition := fbMotionInterlocksLimSw.LimHit,
 
 
 //Rest axis
-fbLimSwStatus[1].LimForward := TRUE;
-fbLimSwStatus[1].LimBackward := TRUE;
+fbLimSwStatus[1].LimitForwardEnable := TRUE;
+fbLimSwStatus[1].LimitBackwardEnable := TRUE;
 fbLimSwStatus[1]();
-fbMotionInterlocksLimSw.DriveCommands(Enable:=FALSE, NewMoveReq:=FALSE);
+fbMotionInterlocksLimSw.DriveCommands(MoveEnable:=FALSE, NewMoveReq:=FALSE);
 fbMotionInterlocksLimSw.AxisStatus(HomeBusy:=FALSE, PositiveDirection:=FALSE, NegativeDirection:=FALSE);
 fbMotionInterlocksLimSw();
 
@@ -245,7 +245,7 @@ fbMotionInterlocksLimSw.AxisStatus(HomeBusy:=FALSE, PositiveDirection:=FALSE, Ne
 fbMotionInterlocksLimSw();
 
 // Create backward limit hit event
-fbLimSwStatus[1].LimBackward := FALSE;
+fbLimSwStatus[1].LimitBackwardEnable := FALSE;
 fbLimSwStatus[1]();
 fbMotionInterlocksLimSw();
 
@@ -261,10 +261,10 @@ AssertFalse(Condition := fbMotionInterlocksLimSw.LimHit,
 
 
 //Rest axis
-fbLimSwStatus[1].LimForward := TRUE;
-fbLimSwStatus[1].LimBackward := TRUE;
+fbLimSwStatus[1].LimitForwardEnable := TRUE;
+fbLimSwStatus[1].LimitBackwardEnable := TRUE;
 fbLimSwStatus[1]();
-fbMotionInterlocksLimSw.DriveCommands(Enable:=FALSE, NewMoveReq:=FALSE);
+fbMotionInterlocksLimSw.DriveCommands(MoveEnable:=FALSE, NewMoveReq:=FALSE);
 fbMotionInterlocksLimSw.AxisStatus(HomeBusy:=FALSE, PositiveDirection:=FALSE, NegativeDirection:=FALSE);
 fbMotionInterlocksLimSw();
 
@@ -273,12 +273,12 @@ fbMotionInterlocksLimSw.AxisStatus(HomeBusy:=FALSE, PositiveDirection:=TRUE, Neg
 fbMotionInterlocksLimSw();
 
 // Create forward limit hit event
-fbLimSwStatus[1].LimForward := FALSE;
+fbLimSwStatus[1].LimitForwardEnable := FALSE;
 fbLimSwStatus[1]();
 fbMotionInterlocksLimSw();
 
 // clear Flags from global reset
-fbMotionInterlocksLimSw.DriveCommands(Enable:=FALSE, NewMoveReq:=TRUE);
+fbMotionInterlocksLimSw.DriveCommands(MoveEnable:=FALSE, NewMoveReq:=TRUE);
 fbMotionInterlocksLimSw();
 
 AssertFalse(Condition := fbMotionInterlocksLimSw.Warning,

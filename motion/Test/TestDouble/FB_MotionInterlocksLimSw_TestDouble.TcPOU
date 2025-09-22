@@ -23,8 +23,8 @@ END_VAR
     <Method Name="DriveCommands" Id="{33f79738-8853-40d3-b276-fd3ec975ee74}">
       <Declaration><![CDATA[METHOD DriveCommands
 VAR_INPUT
-    Enable	: BOOL;
-    NewMoveReq	: BOOL;
+    MoveEnable: BOOL;
+    NewMoveReq : BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>

@@ -14,15 +14,15 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Property Name="LimBackward" Id="{28e716fb-4cd1-40e4-8576-b647717a5062}">
-      <Declaration><![CDATA[PROPERTY LimBackward : BOOL
+    <Property Name="LimitBackwardEnable" Id="{28e716fb-4cd1-40e4-8576-b647717a5062}">
+      <Declaration><![CDATA[PROPERTY LimitBackwardEnable : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{b69eedf2-23f9-4507-93d5-1b56ab38615d}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[LimBackward := bLimitBackwardEnable;]]></ST>
+          <ST><![CDATA[LimitBackwardEnable := bLimitBackwardEnable;]]></ST>
         </Implementation>
       </Get>
       <Set Name="Set" Id="{96af2482-9e4a-46c5-954f-4aa47f4efe5b}">
@@ -31,19 +31,19 @@ VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[bLimitBackwardEnable := LimBackward;]]></ST>
+          <ST><![CDATA[bLimitBackwardEnable := LimitBackwardEnable;]]></ST>
         </Implementation>
       </Set>
     </Property>
-    <Property Name="LimForward" Id="{94d01c11-2835-4a77-869c-e37196b02038}">
-      <Declaration><![CDATA[PROPERTY LimForward : BOOL
+    <Property Name="LimitForwardEnable" Id="{94d01c11-2835-4a77-869c-e37196b02038}">
+      <Declaration><![CDATA[PROPERTY LimitForwardEnable : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{dcbc549b-c86c-4198-ad11-9e83448e0922}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[LimForward := bLimitForwardEnable;]]></ST>
+          <ST><![CDATA[LimitForwardEnable := bLimitForwardEnable;]]></ST>
         </Implementation>
       </Get>
       <Set Name="Set" Id="{55b3cb2d-deb6-4811-a76c-1c504a6f46c0}">
@@ -52,19 +52,19 @@ VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[bLimitForwardEnable := LimForward;]]></ST>
+          <ST><![CDATA[bLimitForwardEnable := LimitForwardEnable;]]></ST>
         </Implementation>
       </Set>
     </Property>
-    <Property Name="LimHome" Id="{e76f8bd1-7a05-4eac-bf90-76b44ef399a2}">
-      <Declaration><![CDATA[PROPERTY LimHome : BOOL
+    <Property Name="LimitHome" Id="{e76f8bd1-7a05-4eac-bf90-76b44ef399a2}">
+      <Declaration><![CDATA[PROPERTY LimitHome : BOOL
 ]]></Declaration>
       <Get Name="Get" Id="{a49f8d60-57a6-4b05-b188-1b8613fd3fb4}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[ LimHome := bHome;]]></ST>
+          <ST><![CDATA[ LimitHome := bHome;]]></ST>
         </Implementation>
       </Get>
       <Set Name="Set" Id="{2cf8e61a-e230-43f8-95fa-8485ce107d19}">
@@ -73,7 +73,7 @@ VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[ bHome := LimHome;]]></ST>
+          <ST><![CDATA[ bHome := LimitHome;]]></ST>
         </Implementation>
       </Set>
     </Property>

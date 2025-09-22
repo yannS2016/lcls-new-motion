@@ -11,7 +11,7 @@ VAR
     iMoveAbsolute : I_MoveAbsolute;
     iReadParameter : I_ReadParameter;
     iWriteParameter  : I_WriteParameter;
-    iParamSaveRestore: I_ParamSaveRestore;
+    iParamSaveRestore: I_ParamsSaveRestore;
     iEncoderScaling : I_EncoderScaling;
     iAxisStatus : I_AxisStatus;
     iBacklashCompensation : I_BacklashCompensation;
@@ -19,7 +19,7 @@ VAR
     bError: BOOL;
     nErrorID: UDINT;
     sMessage : T_MAXSTRING;
-    stMotionAxisStatus : ST_MotionAxisStatus;
+    stMotionAxisStatus : ST_AxisStatus;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -172,7 +172,7 @@ END_VAR
       </Implementation>
     </Method>
     <Property Name="Status" Id="{152d912b-c05d-4102-8524-db7ba5871690}">
-      <Declaration><![CDATA[PROPERTY Status : REFERENCE TO ST_MotionAxisStatus
+      <Declaration><![CDATA[PROPERTY Status : REFERENCE TO ST_AxisStatus
 ]]></Declaration>
       <Get Name="Get" Id="{fabf8fb6-6654-4bc7-ab15-a87d1fed9a17}">
         <Declaration><![CDATA[VAR

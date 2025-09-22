@@ -94,6 +94,18 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
+    <Method Name="EnableBacklashCompensation" Id="{b7f027ca-a1a0-4384-9375-588f1229eaa3}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD EnableBacklashCompensation
+VAR_INPUT
+	UserEnable	: BOOL;
+	Compensation	: LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="Error" Id="{b0357fa8-7313-4690-929f-eefb5e8d200b}">
       <Declaration><![CDATA[PROPERTY Error : BOOL
 ]]></Declaration>

@@ -6,7 +6,7 @@ VAR
     bError: BOOL;
     nErrorID: UDINT;
     sMessage : T_MAXSTRING;
-    stMotionAxisStatus : ST_MotionAxisStatus;
+    stMotionAxisStatus : ST_AxisStatus;
     bConfigDone : BOOL;
 END_VAR
 ]]></Declaration>
@@ -199,7 +199,7 @@ END_VAR
       </Implementation>
     </Method>
     <Property Name="Status" Id="{20cf4b89-8254-4cea-914b-f8629ff8572c}">
-      <Declaration><![CDATA[PROPERTY Status : REFERENCE TO ST_MotionAxisStatus
+      <Declaration><![CDATA[PROPERTY Status : REFERENCE TO ST_AxisStatus
 ]]></Declaration>
       <Get Name="Get" Id="{f5013c20-1dbd-4c70-820e-5e55d7d634b3}">
         <Declaration><![CDATA[VAR

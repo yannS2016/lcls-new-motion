@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_ParamSaveRestoreNC_TestDouble" Id="{634c36c5-150a-4764-a0a6-c7ecdf090bad}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_ParamSaveRestoreNC_TestDouble IMPLEMENTS I_ParamSaveRestore
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_ParamSaveRestoreNC_TestDouble IMPLEMENTS I_ParamsSaveRestore
 VAR
     bError : BOOL;
     nErrorID : UDINT := 27000;

@@ -8,6 +8,19 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
+    <Property Name="Idling" Id="{4d1775a0-7b36-4458-b6bc-000998f7c70b}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Idling : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{0ae0842e-3354-4ebf-a230-b2374daccdd0}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="MoveState" Id="{5b8ab468-efd2-474c-930c-53db7f21c503}">
       <Declaration><![CDATA[PROPERTY MoveState : E_MOVESTATE
 ]]></Declaration>

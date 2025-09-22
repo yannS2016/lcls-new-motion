@@ -4,7 +4,8 @@
     <Declaration><![CDATA[PROGRAM HARD_TEST
 VAR
     fbAxisRef : AXIS_REF;
-	fbPower: FB_PowerNC(AxisRef:=fbAxisRef);
+	fbMotionLogger : FB_MotionLogger_TestDouble;
+	fbPower: FB_PowerNC(AxisRef:=fbAxisRef, iMotionLogger:=fbMotionLogger);
     fbMcHome : MC_Home;
     fbMcSetPosition : MC_SetPosition;
 	bLimPositive : BOOL := TRUE;

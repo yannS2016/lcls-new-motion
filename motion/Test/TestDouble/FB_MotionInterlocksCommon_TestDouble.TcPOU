@@ -23,14 +23,27 @@ END_VAR
     <Method Name="DriveCommands" Id="{01a235bb-6a8d-4b51-8c0a-3d8136ab49a6}">
       <Declaration><![CDATA[METHOD DriveCommands
 VAR_INPUT
-    Enable: BOOL;
+    MoveEnable: BOOL;
     NewMoveReq : BOOL;
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.bEnable := MoveEnable;
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="EnableInterlocks" Id="{55d66cb8-994d-4b8e-b57a-3c76e5fb91ea}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD EnableInterlocks
+VAR_INPUT
+	UserEnable	: BOOL;
+	HardwareEnable	: BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.bEnable := Enable;
-
-]]></ST>
+        <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Property Name="Error" Id="{68ade204-75fc-4d54-adb8-ed5abf657582}">
