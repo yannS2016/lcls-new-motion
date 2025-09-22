@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.17" ClassName="CNestedPlcProjDef" TcProjectVariant="Demo">
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.13" ClassName="CNestedPlcProjDef" TcProjectVariant="UnitTesting">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{CBC83B73-B816-4597-A9E5-2B03263CA131}" Namespace="MC" TcBaseType="true" HideType="true" IecDeclaration="DWORD;">NCTOPLC_AXIS_REF_STATE</Name>
@@ -983,219 +983,11 @@ External Setpoint Generation:
 		</DataType>
 	</DataTypes>
 	<Project GUID="{DA380EE4-C409-4A84-97B8-4D1FBAEE5CC8}" Name="motion" PrjFilePath="..\..\motion\motion.plcproj" TmcFilePath="..\..\motion\motion.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{D7AC3D2C-CDF7-5EE0-0ADE-98FE0D1B4FED}" TmcPath="motion\motion.tmc">
+		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{497E86A3-8B4A-E82A-235C-F50A9727BF90}" TmcPath="motion\motion.tmc">
 			<Name>motion Instance</Name>
 			<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 			<Vars VarGrpType="2" ContextId="2" AreaNo="33">
 				<Name>UnitTestTask Outputs</Name>
-				<Var>
-					<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[1].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[2].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[3].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[4].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[5].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[6].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[7].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[8].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[1].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[2].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[3].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[4].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[5].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[6].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[7].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[8].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[1].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[2].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[3].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[4].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[5].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[6].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[7].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[8].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[9].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[10].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[11].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[12].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[13].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[14].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[15].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[16].PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDANDABSOLUTESETANDMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST8__FBMOTIONSTAGE.fbBrake.bBrakeRelease</Name>
-					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHIGHLIMITMODEFORWARDSWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST11__FBMOTIONSTAGE.fbBrake.bBrakeRelease</Name>
-					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIAHIGHMODEFORWARDSWPULSEBEFOREHOMESWPULSETHENMOVETOUSERDEFINEPOSITION_TEST14__FBMOTIONSTAGE.fbBrake.bBrakeRelease</Name>
-					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIAHIGHMODEHOMESWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST13__FBMOTIONSTAGE.fbBrake.bBrakeRelease</Name>
-					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIALOWMODEBACKWARDSWPULSEBEFOREHOMESWPULSETHENMOVETOUSERDEFINEPOSITION_TEST15__FBMOTIONSTAGE.fbBrake.bBrakeRelease</Name>
-					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIALOWMODEHOMESWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST12__FBMOTIONSTAGE.fbBrake.bBrakeRelease</Name>
-					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDLOWLIMITMODEANDRESETTHENABORTHOMING_TEST16__FBMOTIONSTAGE.fbBrake.bBrakeRelease</Name>
-					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDLOWLIMITMODEBACKWARDSWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST10__FBMOTIONSTAGE.fbBrake.bBrakeRelease</Name>
-					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDNONEANDMOVEOKTHENSETHOMEFLAG_TEST9__FBMOTIONSTAGE.fbBrake.bBrakeRelease</Name>
-					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKANDNEGATIVEBACKLASHENABLEDTHENMOVETOTARGETWITHCOMPENSATION_TEST7__FBMOTIONSTAGE.fbBrake.bBrakeRelease</Name>
-					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKANDPOSITIVEBACKLASHENABLEDTHENMOVETOTARGETWITHCOMPENSATION_TEST6__FBMOTIONSTAGE.fbBrake.bBrakeRelease</Name>
-					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKIFHALTTHENABORTMOVE_TEST2__FBMOTIONSTAGE.fbBrake.bBrakeRelease</Name>
-					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKIFRESETTHENABORTMOVE_TEST1__FBMOTIONSTAGE.fbBrake.bBrakeRelease</Name>
-					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKMOVETOTARGET1THENTARGET2_TEST3__FBMOTIONSTAGE.fbBrake.bBrakeRelease</Name>
-					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDVALIDINTERLOCKSTHENMOVETOTARGET_TEST4__FBMOTIONSTAGE.fbBrake.bBrakeRelease</Name>
-					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDVALIDINTERLOCKANDWRONGMOTIONPARAMSTHENGOTOERRORSTATEIFRESETTHENGOTOINITSTATE_TEST5__FBMOTIONSTAGE.fbBrake.bBrakeRelease</Name>
-					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
 				<Var>
 					<Name>NcAxis_GVL.MCS2.PlcToNc</Name>
 					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
@@ -1204,783 +996,143 @@ External Setpoint Generation:
 					<Name>NcAxis_GVL.E727.PlcToNc</Name>
 					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[1].PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[2].PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[3].PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[4].PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[5].PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[6].PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[7].PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[8].PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[9].PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[10].PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[11].PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[12].PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[13].PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[14].PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[15].PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[16].PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
 			</Vars>
 			<Vars VarGrpType="1" ContextId="2" AreaNo="32">
 				<Name>UnitTestTask Inputs</Name>
-				<Var>
-					<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[1].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[2].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[3].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[4].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[5].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[6].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[7].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_HomeNC_Test.fbAxisRef[8].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[1].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[2].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[3].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[4].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[5].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[6].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[7].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[8].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[1].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[2].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[3].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[4].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[5].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[6].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[7].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[8].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[9].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[10].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[11].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[12].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[13].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[14].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[15].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[16].NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDANDABSOLUTESETANDMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST8__FBMOTIONSTAGE.fbMotionInterlocksCommon.bHardwareEnable</Name>
-					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDANDABSOLUTESETANDMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST8__FBMOTIONSTAGE.fbLimSwStatus.bLimitForwardEnable</Name>
-					<Comment><![CDATA[ Hardware 
- NC Forward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDANDABSOLUTESETANDMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST8__FBMOTIONSTAGE.fbLimSwStatus.bLimitBackwardEnable</Name>
-					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDANDABSOLUTESETANDMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST8__FBMOTIONSTAGE.fbLimSwStatus.bLimitHome</Name>
-					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDANDABSOLUTESETANDMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST8__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderULINT</Name>
-					<Type>ULINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDANDABSOLUTESETANDMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST8__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderUINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
-					<Type>UINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDANDABSOLUTESETANDMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST8__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
-					<Type>INT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDANDABSOLUTESETANDMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST8__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderDINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
-					<Type>DINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHIGHLIMITMODEFORWARDSWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST11__FBMOTIONSTAGE.fbMotionInterlocksCommon.bHardwareEnable</Name>
-					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHIGHLIMITMODEFORWARDSWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST11__FBMOTIONSTAGE.fbLimSwStatus.bLimitForwardEnable</Name>
-					<Comment><![CDATA[ Hardware 
- NC Forward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHIGHLIMITMODEFORWARDSWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST11__FBMOTIONSTAGE.fbLimSwStatus.bLimitBackwardEnable</Name>
-					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHIGHLIMITMODEFORWARDSWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST11__FBMOTIONSTAGE.fbLimSwStatus.bLimitHome</Name>
-					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHIGHLIMITMODEFORWARDSWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST11__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderULINT</Name>
-					<Type>ULINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHIGHLIMITMODEFORWARDSWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST11__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderUINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
-					<Type>UINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHIGHLIMITMODEFORWARDSWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST11__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
-					<Type>INT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHIGHLIMITMODEFORWARDSWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST11__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderDINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
-					<Type>DINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIAHIGHMODEFORWARDSWPULSEBEFOREHOMESWPULSETHENMOVETOUSERDEFINEPOSITION_TEST14__FBMOTIONSTAGE.fbMotionInterlocksCommon.bHardwareEnable</Name>
-					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIAHIGHMODEFORWARDSWPULSEBEFOREHOMESWPULSETHENMOVETOUSERDEFINEPOSITION_TEST14__FBMOTIONSTAGE.fbLimSwStatus.bLimitForwardEnable</Name>
-					<Comment><![CDATA[ Hardware 
- NC Forward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIAHIGHMODEFORWARDSWPULSEBEFOREHOMESWPULSETHENMOVETOUSERDEFINEPOSITION_TEST14__FBMOTIONSTAGE.fbLimSwStatus.bLimitBackwardEnable</Name>
-					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIAHIGHMODEFORWARDSWPULSEBEFOREHOMESWPULSETHENMOVETOUSERDEFINEPOSITION_TEST14__FBMOTIONSTAGE.fbLimSwStatus.bLimitHome</Name>
-					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIAHIGHMODEFORWARDSWPULSEBEFOREHOMESWPULSETHENMOVETOUSERDEFINEPOSITION_TEST14__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderULINT</Name>
-					<Type>ULINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIAHIGHMODEFORWARDSWPULSEBEFOREHOMESWPULSETHENMOVETOUSERDEFINEPOSITION_TEST14__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderUINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
-					<Type>UINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIAHIGHMODEFORWARDSWPULSEBEFOREHOMESWPULSETHENMOVETOUSERDEFINEPOSITION_TEST14__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
-					<Type>INT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIAHIGHMODEFORWARDSWPULSEBEFOREHOMESWPULSETHENMOVETOUSERDEFINEPOSITION_TEST14__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderDINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
-					<Type>DINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIAHIGHMODEHOMESWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST13__FBMOTIONSTAGE.fbMotionInterlocksCommon.bHardwareEnable</Name>
-					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIAHIGHMODEHOMESWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST13__FBMOTIONSTAGE.fbLimSwStatus.bLimitForwardEnable</Name>
-					<Comment><![CDATA[ Hardware 
- NC Forward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIAHIGHMODEHOMESWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST13__FBMOTIONSTAGE.fbLimSwStatus.bLimitBackwardEnable</Name>
-					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIAHIGHMODEHOMESWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST13__FBMOTIONSTAGE.fbLimSwStatus.bLimitHome</Name>
-					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIAHIGHMODEHOMESWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST13__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderULINT</Name>
-					<Type>ULINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIAHIGHMODEHOMESWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST13__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderUINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
-					<Type>UINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIAHIGHMODEHOMESWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST13__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
-					<Type>INT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIAHIGHMODEHOMESWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST13__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderDINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
-					<Type>DINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIALOWMODEBACKWARDSWPULSEBEFOREHOMESWPULSETHENMOVETOUSERDEFINEPOSITION_TEST15__FBMOTIONSTAGE.fbMotionInterlocksCommon.bHardwareEnable</Name>
-					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIALOWMODEBACKWARDSWPULSEBEFOREHOMESWPULSETHENMOVETOUSERDEFINEPOSITION_TEST15__FBMOTIONSTAGE.fbLimSwStatus.bLimitForwardEnable</Name>
-					<Comment><![CDATA[ Hardware 
- NC Forward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIALOWMODEBACKWARDSWPULSEBEFOREHOMESWPULSETHENMOVETOUSERDEFINEPOSITION_TEST15__FBMOTIONSTAGE.fbLimSwStatus.bLimitBackwardEnable</Name>
-					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIALOWMODEBACKWARDSWPULSEBEFOREHOMESWPULSETHENMOVETOUSERDEFINEPOSITION_TEST15__FBMOTIONSTAGE.fbLimSwStatus.bLimitHome</Name>
-					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIALOWMODEBACKWARDSWPULSEBEFOREHOMESWPULSETHENMOVETOUSERDEFINEPOSITION_TEST15__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderULINT</Name>
-					<Type>ULINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIALOWMODEBACKWARDSWPULSEBEFOREHOMESWPULSETHENMOVETOUSERDEFINEPOSITION_TEST15__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderUINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
-					<Type>UINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIALOWMODEBACKWARDSWPULSEBEFOREHOMESWPULSETHENMOVETOUSERDEFINEPOSITION_TEST15__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
-					<Type>INT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIALOWMODEBACKWARDSWPULSEBEFOREHOMESWPULSETHENMOVETOUSERDEFINEPOSITION_TEST15__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderDINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
-					<Type>DINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIALOWMODEHOMESWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST12__FBMOTIONSTAGE.fbMotionInterlocksCommon.bHardwareEnable</Name>
-					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIALOWMODEHOMESWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST12__FBMOTIONSTAGE.fbLimSwStatus.bLimitForwardEnable</Name>
-					<Comment><![CDATA[ Hardware 
- NC Forward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIALOWMODEHOMESWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST12__FBMOTIONSTAGE.fbLimSwStatus.bLimitBackwardEnable</Name>
-					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIALOWMODEHOMESWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST12__FBMOTIONSTAGE.fbLimSwStatus.bLimitHome</Name>
-					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIALOWMODEHOMESWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST12__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderULINT</Name>
-					<Type>ULINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIALOWMODEHOMESWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST12__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderUINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
-					<Type>UINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIALOWMODEHOMESWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST12__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
-					<Type>INT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDHOMEVIALOWMODEHOMESWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST12__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderDINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
-					<Type>DINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDLOWLIMITMODEANDRESETTHENABORTHOMING_TEST16__FBMOTIONSTAGE.fbMotionInterlocksCommon.bHardwareEnable</Name>
-					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDLOWLIMITMODEANDRESETTHENABORTHOMING_TEST16__FBMOTIONSTAGE.fbLimSwStatus.bLimitForwardEnable</Name>
-					<Comment><![CDATA[ Hardware 
- NC Forward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDLOWLIMITMODEANDRESETTHENABORTHOMING_TEST16__FBMOTIONSTAGE.fbLimSwStatus.bLimitBackwardEnable</Name>
-					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDLOWLIMITMODEANDRESETTHENABORTHOMING_TEST16__FBMOTIONSTAGE.fbLimSwStatus.bLimitHome</Name>
-					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDLOWLIMITMODEANDRESETTHENABORTHOMING_TEST16__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderULINT</Name>
-					<Type>ULINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDLOWLIMITMODEANDRESETTHENABORTHOMING_TEST16__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderUINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
-					<Type>UINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDLOWLIMITMODEANDRESETTHENABORTHOMING_TEST16__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
-					<Type>INT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDLOWLIMITMODEANDRESETTHENABORTHOMING_TEST16__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderDINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
-					<Type>DINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDLOWLIMITMODEBACKWARDSWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST10__FBMOTIONSTAGE.fbMotionInterlocksCommon.bHardwareEnable</Name>
-					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDLOWLIMITMODEBACKWARDSWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST10__FBMOTIONSTAGE.fbLimSwStatus.bLimitForwardEnable</Name>
-					<Comment><![CDATA[ Hardware 
- NC Forward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDLOWLIMITMODEBACKWARDSWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST10__FBMOTIONSTAGE.fbLimSwStatus.bLimitBackwardEnable</Name>
-					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDLOWLIMITMODEBACKWARDSWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST10__FBMOTIONSTAGE.fbLimSwStatus.bLimitHome</Name>
-					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDLOWLIMITMODEBACKWARDSWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST10__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderULINT</Name>
-					<Type>ULINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDLOWLIMITMODEBACKWARDSWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST10__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderUINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
-					<Type>UINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDLOWLIMITMODEBACKWARDSWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST10__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
-					<Type>INT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDLOWLIMITMODEBACKWARDSWPULSEMOVEOKTHENMOVETOUSERDEFINEDHOMEPOSITION_TEST10__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderDINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
-					<Type>DINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDNONEANDMOVEOKTHENSETHOMEFLAG_TEST9__FBMOTIONSTAGE.fbMotionInterlocksCommon.bHardwareEnable</Name>
-					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDNONEANDMOVEOKTHENSETHOMEFLAG_TEST9__FBMOTIONSTAGE.fbLimSwStatus.bLimitForwardEnable</Name>
-					<Comment><![CDATA[ Hardware 
- NC Forward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDNONEANDMOVEOKTHENSETHOMEFLAG_TEST9__FBMOTIONSTAGE.fbLimSwStatus.bLimitBackwardEnable</Name>
-					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDNONEANDMOVEOKTHENSETHOMEFLAG_TEST9__FBMOTIONSTAGE.fbLimSwStatus.bLimitHome</Name>
-					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDNONEANDMOVEOKTHENSETHOMEFLAG_TEST9__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderULINT</Name>
-					<Type>ULINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDNONEANDMOVEOKTHENSETHOMEFLAG_TEST9__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderUINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
-					<Type>UINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDNONEANDMOVEOKTHENSETHOMEFLAG_TEST9__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
-					<Type>INT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENHOMECMDNONEANDMOVEOKTHENSETHOMEFLAG_TEST9__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderDINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
-					<Type>DINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKANDNEGATIVEBACKLASHENABLEDTHENMOVETOTARGETWITHCOMPENSATION_TEST7__FBMOTIONSTAGE.fbMotionInterlocksCommon.bHardwareEnable</Name>
-					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKANDNEGATIVEBACKLASHENABLEDTHENMOVETOTARGETWITHCOMPENSATION_TEST7__FBMOTIONSTAGE.fbLimSwStatus.bLimitForwardEnable</Name>
-					<Comment><![CDATA[ Hardware 
- NC Forward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKANDNEGATIVEBACKLASHENABLEDTHENMOVETOTARGETWITHCOMPENSATION_TEST7__FBMOTIONSTAGE.fbLimSwStatus.bLimitBackwardEnable</Name>
-					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKANDNEGATIVEBACKLASHENABLEDTHENMOVETOTARGETWITHCOMPENSATION_TEST7__FBMOTIONSTAGE.fbLimSwStatus.bLimitHome</Name>
-					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKANDNEGATIVEBACKLASHENABLEDTHENMOVETOTARGETWITHCOMPENSATION_TEST7__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderULINT</Name>
-					<Type>ULINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKANDNEGATIVEBACKLASHENABLEDTHENMOVETOTARGETWITHCOMPENSATION_TEST7__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderUINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
-					<Type>UINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKANDNEGATIVEBACKLASHENABLEDTHENMOVETOTARGETWITHCOMPENSATION_TEST7__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
-					<Type>INT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKANDNEGATIVEBACKLASHENABLEDTHENMOVETOTARGETWITHCOMPENSATION_TEST7__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderDINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
-					<Type>DINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKANDPOSITIVEBACKLASHENABLEDTHENMOVETOTARGETWITHCOMPENSATION_TEST6__FBMOTIONSTAGE.fbMotionInterlocksCommon.bHardwareEnable</Name>
-					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKANDPOSITIVEBACKLASHENABLEDTHENMOVETOTARGETWITHCOMPENSATION_TEST6__FBMOTIONSTAGE.fbLimSwStatus.bLimitForwardEnable</Name>
-					<Comment><![CDATA[ Hardware 
- NC Forward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKANDPOSITIVEBACKLASHENABLEDTHENMOVETOTARGETWITHCOMPENSATION_TEST6__FBMOTIONSTAGE.fbLimSwStatus.bLimitBackwardEnable</Name>
-					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKANDPOSITIVEBACKLASHENABLEDTHENMOVETOTARGETWITHCOMPENSATION_TEST6__FBMOTIONSTAGE.fbLimSwStatus.bLimitHome</Name>
-					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKANDPOSITIVEBACKLASHENABLEDTHENMOVETOTARGETWITHCOMPENSATION_TEST6__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderULINT</Name>
-					<Type>ULINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKANDPOSITIVEBACKLASHENABLEDTHENMOVETOTARGETWITHCOMPENSATION_TEST6__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderUINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
-					<Type>UINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKANDPOSITIVEBACKLASHENABLEDTHENMOVETOTARGETWITHCOMPENSATION_TEST6__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
-					<Type>INT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKANDPOSITIVEBACKLASHENABLEDTHENMOVETOTARGETWITHCOMPENSATION_TEST6__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderDINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
-					<Type>DINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKIFHALTTHENABORTMOVE_TEST2__FBMOTIONSTAGE.fbMotionInterlocksCommon.bHardwareEnable</Name>
-					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKIFHALTTHENABORTMOVE_TEST2__FBMOTIONSTAGE.fbLimSwStatus.bLimitForwardEnable</Name>
-					<Comment><![CDATA[ Hardware 
- NC Forward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKIFHALTTHENABORTMOVE_TEST2__FBMOTIONSTAGE.fbLimSwStatus.bLimitBackwardEnable</Name>
-					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKIFHALTTHENABORTMOVE_TEST2__FBMOTIONSTAGE.fbLimSwStatus.bLimitHome</Name>
-					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKIFHALTTHENABORTMOVE_TEST2__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderULINT</Name>
-					<Type>ULINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKIFHALTTHENABORTMOVE_TEST2__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderUINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
-					<Type>UINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKIFHALTTHENABORTMOVE_TEST2__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
-					<Type>INT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKIFHALTTHENABORTMOVE_TEST2__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderDINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
-					<Type>DINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKIFRESETTHENABORTMOVE_TEST1__FBMOTIONSTAGE.fbMotionInterlocksCommon.bHardwareEnable</Name>
-					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKIFRESETTHENABORTMOVE_TEST1__FBMOTIONSTAGE.fbLimSwStatus.bLimitForwardEnable</Name>
-					<Comment><![CDATA[ Hardware 
- NC Forward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKIFRESETTHENABORTMOVE_TEST1__FBMOTIONSTAGE.fbLimSwStatus.bLimitBackwardEnable</Name>
-					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKIFRESETTHENABORTMOVE_TEST1__FBMOTIONSTAGE.fbLimSwStatus.bLimitHome</Name>
-					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKIFRESETTHENABORTMOVE_TEST1__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderULINT</Name>
-					<Type>ULINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKIFRESETTHENABORTMOVE_TEST1__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderUINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
-					<Type>UINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKIFRESETTHENABORTMOVE_TEST1__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
-					<Type>INT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKIFRESETTHENABORTMOVE_TEST1__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderDINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
-					<Type>DINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKMOVETOTARGET1THENTARGET2_TEST3__FBMOTIONSTAGE.fbMotionInterlocksCommon.bHardwareEnable</Name>
-					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKMOVETOTARGET1THENTARGET2_TEST3__FBMOTIONSTAGE.fbLimSwStatus.bLimitForwardEnable</Name>
-					<Comment><![CDATA[ Hardware 
- NC Forward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKMOVETOTARGET1THENTARGET2_TEST3__FBMOTIONSTAGE.fbLimSwStatus.bLimitBackwardEnable</Name>
-					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKMOVETOTARGET1THENTARGET2_TEST3__FBMOTIONSTAGE.fbLimSwStatus.bLimitHome</Name>
-					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKMOVETOTARGET1THENTARGET2_TEST3__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderULINT</Name>
-					<Type>ULINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKMOVETOTARGET1THENTARGET2_TEST3__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderUINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
-					<Type>UINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKMOVETOTARGET1THENTARGET2_TEST3__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
-					<Type>INT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDMOVEOKMOVETOTARGET1THENTARGET2_TEST3__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderDINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
-					<Type>DINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDVALIDINTERLOCKSTHENMOVETOTARGET_TEST4__FBMOTIONSTAGE.fbMotionInterlocksCommon.bHardwareEnable</Name>
-					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDVALIDINTERLOCKSTHENMOVETOTARGET_TEST4__FBMOTIONSTAGE.fbLimSwStatus.bLimitForwardEnable</Name>
-					<Comment><![CDATA[ Hardware 
- NC Forward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDVALIDINTERLOCKSTHENMOVETOTARGET_TEST4__FBMOTIONSTAGE.fbLimSwStatus.bLimitBackwardEnable</Name>
-					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDVALIDINTERLOCKSTHENMOVETOTARGET_TEST4__FBMOTIONSTAGE.fbLimSwStatus.bLimitHome</Name>
-					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDVALIDINTERLOCKSTHENMOVETOTARGET_TEST4__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderULINT</Name>
-					<Type>ULINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDVALIDINTERLOCKSTHENMOVETOTARGET_TEST4__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderUINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
-					<Type>UINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDVALIDINTERLOCKSTHENMOVETOTARGET_TEST4__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
-					<Type>INT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDANDVALIDINTERLOCKSTHENMOVETOTARGET_TEST4__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderDINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
-					<Type>DINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDVALIDINTERLOCKANDWRONGMOTIONPARAMSTHENGOTOERRORSTATEIFRESETTHENGOTOINITSTATE_TEST5__FBMOTIONSTAGE.fbMotionInterlocksCommon.bHardwareEnable</Name>
-					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDVALIDINTERLOCKANDWRONGMOTIONPARAMSTHENGOTOERRORSTATEIFRESETTHENGOTOINITSTATE_TEST5__FBMOTIONSTAGE.fbLimSwStatus.bLimitForwardEnable</Name>
-					<Comment><![CDATA[ Hardware 
- NC Forward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDVALIDINTERLOCKANDWRONGMOTIONPARAMSTHENGOTOERRORSTATEIFRESETTHENGOTOINITSTATE_TEST5__FBMOTIONSTAGE.fbLimSwStatus.bLimitBackwardEnable</Name>
-					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDVALIDINTERLOCKANDWRONGMOTIONPARAMSTHENGOTOERRORSTATEIFRESETTHENGOTOINITSTATE_TEST5__FBMOTIONSTAGE.fbLimSwStatus.bLimitHome</Name>
-					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDVALIDINTERLOCKANDWRONGMOTIONPARAMSTHENGOTOERRORSTATEIFRESETTHENGOTOINITSTATE_TEST5__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderULINT</Name>
-					<Type>ULINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDVALIDINTERLOCKANDWRONGMOTIONPARAMSTHENGOTOERRORSTATEIFRESETTHENGOTOINITSTATE_TEST5__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderUINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
-					<Type>UINT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDVALIDINTERLOCKANDWRONGMOTIONPARAMSTHENGOTOERRORSTATEIFRESETTHENGOTOINITSTATE_TEST5__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
-					<Type>INT</Type>
-				</Var>
-				<Var>
-					<Name>PRG_TEST.FB_MotionStageNc_Test.__FB_MOTIONSTAGENC_TEST__GIVENMOVECMDVALIDINTERLOCKANDWRONGMOTIONPARAMSTHENGOTOERRORSTATEIFRESETTHENGOTOINITSTATE_TEST5__FBMOTIONSTAGE.fbEncoderScaling.nRawEncoderDINT</Name>
-					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
-					<Type>DINT</Type>
-				</Var>
 				<Var>
 					<Name>NcAxis_GVL.MCS2.NcToPlc</Name>
 					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 				</Var>
 				<Var>
 					<Name>NcAxis_GVL.E727.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[1].NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[2].NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[3].NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[4].NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[5].NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[6].NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[7].NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[8].NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[9].NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[10].NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[11].NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[12].NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[13].NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[14].NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[15].NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[16].NcToPlc</Name>
 					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 				</Var>
 			</Vars>
@@ -2179,133 +1331,69 @@ External Setpoint Generation:
 	</Project>
 	<Mappings>
 		<OwnerA Name="motion Instance">
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Test1">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[1].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[1].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axes_MotionAxis_Test1">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[1].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[1].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
 			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Test2">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[2].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[2].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axes_MotionAxis_Test10">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[10].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[10].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
 			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Test3">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[3].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[3].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axes_MotionAxis_Test11">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[11].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[11].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
 			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Test4">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[4].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[4].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axes_MotionAxis_Test12">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[12].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[12].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
 			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Test5">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[5].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[5].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axes_MotionAxis_Test13">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[13].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[13].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
 			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Test6">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[6].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[6].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axes_MotionAxis_Test14">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[14].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[14].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
 			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Test7">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[7].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[7].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axes_MotionAxis_Test15">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[15].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[15].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
 			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_HomeNC_Test8">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[8].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_HomeNC_Test.fbAxisRef[8].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axes_MotionAxis_Test16">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[16].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[16].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
 			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_McMotionBlocks_Test1">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[1].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[1].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axes_MotionAxis_Test2">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[2].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[2].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
 			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_McMotionBlocks_Test2">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[2].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[2].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axes_MotionAxis_Test3">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[3].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[3].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
 			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_McMotionBlocks_Test3">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[3].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[3].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axes_MotionAxis_Test4">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[4].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[4].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
 			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_McMotionBlocks_Test4">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[4].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[4].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axes_MotionAxis_Test5">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[5].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[5].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
 			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_McMotionBlocks_Test5">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[5].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[5].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axes_MotionAxis_Test6">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[6].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[6].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
 			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_McMotionBlocks_Test6">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[6].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[6].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axes_MotionAxis_Test7">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[7].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[7].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
 			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_McMotionBlocks_Test7">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[7].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[7].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axes_MotionAxis_Test8">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[8].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[8].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
 			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_McMotionBlocks_Test8">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[8].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_McMotionBlocks_Test.fbAxisRef[8].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_MotionStageNC_Test1">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[1].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[1].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_MotionStageNC_Test10">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[10].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[10].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_MotionStageNC_Test11">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[11].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[11].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_MotionStageNC_Test12">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[12].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[12].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_MotionStageNC_Test13">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[13].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[13].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_MotionStageNC_Test14">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[14].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[14].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_MotionStageNC_Test15">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[15].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[15].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_MotionStageNC_Test16">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[16].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[16].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_MotionStageNC_Test2">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[2].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[2].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_MotionStageNC_Test3">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[3].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[3].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_MotionStageNC_Test4">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[4].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[4].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_MotionStageNC_Test5">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[5].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[5].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_MotionStageNC_Test6">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[6].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[6].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_MotionStageNC_Test7">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[7].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[7].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_MotionStageNC_Test8">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[8].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[8].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis_MotionStageNC_Test9">
-				<Link VarA="UnitTestTask Inputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[9].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
-				<Link VarA="UnitTestTask Outputs^PRG_TEST.FB_MotionStageNc_Test.fbAxisRef[9].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axes_MotionAxis_Test9">
+				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[9].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
+				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[9].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
 			</OwnerB>
 		</OwnerA>
 	</Mappings>

@@ -27,13 +27,25 @@
     <Compile Include="DemoTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\E_LCLSMotionError.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\E_MotionLogLevel.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MOTION_LOGGER_MSG.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\ST_ExtendedMotionStatus.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\E_HomeStates.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\E_Module.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\ST_AxisStatus.TcDUT">
+    <Compile Include="DUTs\ST_MotionStatus.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\ENUM_StageEnableMode.TcDUT">
@@ -72,13 +84,13 @@
     <Compile Include="DUTs\ST_DS402DriveStatus.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\ST_MotionAxisStatus.TcDUT">
+    <Compile Include="DUTs\ST_AxisStatus.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\ST_MotionStage.TcDUT">
+    <Compile Include="DUTs\ST_MotionCommand.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\ST_MotionEpicsItf.TcDUT">
+    <Compile Include="DUTs\ST_MotionLogMessage.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\ST_MoveRequestStatus.TcDUT">
@@ -101,7 +113,7 @@
     </Compile>
     <Compile Include="POUs\New-Arch\FBs\Common\FB_MotionDrive.TcPOU">
       <SubType>Code</SubType>
-      <ExcludeFromBuild>false</ExcludeFromBuild>
+      <ExcludeFromBuild>true</ExcludeFromBuild>
     </Compile>
     <Compile Include="POUs\New-Arch\FBs\Common\FB_MotionInterlocksCommon.TcPOU">
       <SubType>Code</SubType>
@@ -124,12 +136,17 @@
     <Compile Include="POUs\New-Arch\FBs\Containers\FB_MotionStageNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\New-Arch\FBs\Containers\FB_MotionStageNC_1.TcPOU">
+      <SubType>Code</SubType>
+      <ExcludeFromBuild>true</ExcludeFromBuild>
+    </Compile>
     <Compile Include="POUs\New-Arch\FBs\DS402\FB_HomeDS402.TcPOU">
       <SubType>Code</SubType>
       <ExcludeFromBuild>true</ExcludeFromBuild>
     </Compile>
     <Compile Include="POUs\New-Arch\FBs\NC\FB_AxisStatusNC.TcPOU">
       <SubType>Code</SubType>
+      <ExcludeFromBuild>true</ExcludeFromBuild>
     </Compile>
     <Compile Include="POUs\New-Arch\FBs\NC\FB_BacklashCompensationNC.TcPOU">
       <SubType>Code</SubType>
@@ -218,6 +235,9 @@
     <Compile Include="POUs\New-Arch\ITFs\I_MotionLogger.TcIO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_MotionStage.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\New-Arch\ITFs\I_MoveAbsolute.TcIO">
       <SubType>Code</SubType>
     </Compile>
@@ -230,7 +250,7 @@
     <Compile Include="POUs\New-Arch\ITFs\I_Status.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\New-Arch\ITFs\I_ParamSaveRestore.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_ParamsSaveRestore.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\New-Arch\ITFs\I_PersistentDataStorage.TcIO">
@@ -253,32 +273,35 @@
     </Compile>
     <Compile Include="Test\Containers\FB_MotionStageNC_Test.TcPOU">
       <SubType>Code</SubType>
+      <External>false</External>
+      <ExcludeFromBuild>false</ExcludeFromBuild>
     </Compile>
     <Compile Include="Test\Interlok\FB_MotionInterlocksCommon_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Test\Interlok\FB_MotionInterlocksLimSw_Test.TcPOU">
       <SubType>Code</SubType>
+      <ExcludeFromBuild>false</ExcludeFromBuild>
     </Compile>
     <Compile Include="Test\HARD_TEST.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Test\MotionDrive\FB_BrakeNC_Test.TcPOU">
+    <Compile Include="Test\Orchetration\FB_BrakeNC_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Test\MotionDrive\FB_MotionDriveStateMachine_Test.TcPOU">
+    <Compile Include="Test\Orchetration\FB_MotionDriveStateMachine_Test.TcPOU">
       <SubType>Code</SubType>
+      <ExcludeFromBuild>false</ExcludeFromBuild>
     </Compile>
-    <Compile Include="Test\MotionDrive\FB_MotionDrive_Test.TcPOU">
+    <Compile Include="Test\Orchetration\FB_MotionDrive_Test.TcPOU">
       <SubType>Code</SubType>
+      <ExcludeFromBuild>true</ExcludeFromBuild>
     </Compile>
-    <Compile Include="Test\MotionDrive\FB_MoveRequest_Test.TcPOU">
+    <Compile Include="Test\Orchetration\FB_MoveRequest_Test.TcPOU">
       <SubType>Code</SubType>
+      <ExcludeFromBuild>false</ExcludeFromBuild>
     </Compile>
-    <Compile Include="Test\NC\FB_HomeNC_Test.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Test\NC\FB_McMotionBlocks_Test.TcPOU">
+    <Compile Include="Test\NC\FB_NcMotionBlocks_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Test\NC\FB_MotionAxisNC_Test.TcPOU">
@@ -341,6 +364,9 @@
     <Compile Include="Test\TestDouble\FB_ParamSaveRestoreNC_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Test\TestDouble\FB_PersistentDataStorage_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Test\TestDouble\FB_PowerNC_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -351,6 +377,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Test\TestDouble\FB_WriteParameterNC_TestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\Utils\FB_MotionLogger_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UnitTestTask.TcTTO">
@@ -371,8 +400,13 @@
     <Folder Include="POUs\New-Arch\FBs\NC" />
     <Folder Include="POUs\New-Arch\ITFs" />
     <Folder Include="Test" />
-    <Folder Include="Test\Interlok" />
-    <Folder Include="Test\MotionDrive" />
+    <Folder Include="Test\Interlok">
+      <ExcludeFromBuild>false</ExcludeFromBuild>
+    </Folder>
+    <Folder Include="Test\Utils" />
+    <Folder Include="Test\Orchetration">
+      <ExcludeFromBuild>false</ExcludeFromBuild>
+    </Folder>
     <Folder Include="Test\NC" />
     <Folder Include="Test\Containers" />
     <Folder Include="Test\TestDouble" />
@@ -418,6 +452,53 @@
     <None Include="motion.tmc">
       <SubType>Content</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <SubObject Include="FB_MotionStageNC_Test.GivenHomeCmdAndAbsoluteSetAndMoveOkThenMoveToUserDefinedHomePosition_Test8">
+      <ExcludeFromBuild>true</ExcludeFromBuild>
+    </SubObject>
+    <SubObject Include="FB_MotionStageNC_Test.GivenHomeCmdHighLimitModeForwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test11">
+      <ExcludeFromBuild>true</ExcludeFromBuild>
+    </SubObject>
+    <SubObject Include="FB_MotionStageNC_Test.GivenHomeCmdHomeViaHighModeForwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test14">
+      <ExcludeFromBuild>true</ExcludeFromBuild>
+    </SubObject>
+    <SubObject Include="FB_MotionStageNC_Test.GivenHomeCmdHomeViaHighModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test13">
+      <ExcludeFromBuild>true</ExcludeFromBuild>
+    </SubObject>
+    <SubObject Include="FB_MotionStageNC_Test.GivenHomeCmdHomeViaLowModeBackwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test15">
+      <ExcludeFromBuild>true</ExcludeFromBuild>
+    </SubObject>
+    <SubObject Include="FB_MotionStageNC_Test.GivenHomeCmdHomeViaLowModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test12">
+      <ExcludeFromBuild>true</ExcludeFromBuild>
+    </SubObject>
+    <SubObject Include="FB_MotionStageNC_Test.GivenHomeCmdLowLimitModeAndResetThenAbortHoming_Test16">
+      <ExcludeFromBuild>true</ExcludeFromBuild>
+    </SubObject>
+    <SubObject Include="FB_MotionStageNC_Test.GivenHomeCmdLowLimitModeBackwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test10">
+      <ExcludeFromBuild>true</ExcludeFromBuild>
+    </SubObject>
+    <SubObject Include="FB_MotionStageNC_Test.GivenHomeCmdNoneAndMoveOkThenSetHomeFlag_Test9">
+      <ExcludeFromBuild>true</ExcludeFromBuild>
+    </SubObject>
+    <SubObject Include="FB_MotionStageNC_Test.GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7">
+      <ExcludeFromBuild>true</ExcludeFromBuild>
+    </SubObject>
+    <SubObject Include="FB_MotionStageNC_Test.GivenMoveCmdAndMoveOkAndPositiveBacklashEnabledThenMoveToTargetWithCompensation_Test6">
+      <ExcludeFromBuild>true</ExcludeFromBuild>
+    </SubObject>
+    <SubObject Include="FB_MotionStageNC_Test.GivenMoveCmdAndMoveOkIfHaltThenAbortMove_Test2">
+      <ExcludeFromBuild>true</ExcludeFromBuild>
+    </SubObject>
+    <SubObject Include="FB_MotionStageNC_Test.GivenMoveCmdAndMoveOkMoveToTarget1ThenTarget2_Test3">
+      <ExcludeFromBuild>true</ExcludeFromBuild>
+    </SubObject>
+    <SubObject Include="FB_MotionStageNC_Test.GivenMoveCmdAndValidInterlocksThenMoveToTarget_Test4">
+      <ExcludeFromBuild>true</ExcludeFromBuild>
+    </SubObject>
+    <SubObject Include="FB_MotionStageNC_Test.GivenMoveCmdValidInterlockAndWrongMotionParamsThenGotoErrorStateIfResetThenGotoInitState_Test5">
+      <ExcludeFromBuild>true</ExcludeFromBuild>
+    </SubObject>
   </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>

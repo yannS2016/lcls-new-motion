@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.17" ClassName="CNcSafTaskDef" SubType="0" TcProjectVariant="Demo">
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.13" ClassName="CNcSafTaskDef" SubType="0" TcProjectVariant="UnitTesting">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-000000000035}" TcBaseType="true" HideType="true">UINTARR2</Name>
@@ -1441,26 +1441,26 @@ External Setpoint Generation:
 			<Name>NC-Task 1 SVB</Name>
 		</SvbTask>
 		<AxisFolder Name="UnitTesting">
-			<SubFolder Name="Axis_HomeNC_Tests"/>
-			<SubFolder Name="Axis_McMotionBlocks_Test"/>
+			<SubFolder Name="Axes_MotionAxis_Test"/>
 			<SubFolder Name="Containers"/>
 		</AxisFolder>
-		<Axis File="Axis_HomeNC_Test8.xti" Id="15"/>
-		<Axis File="Axis_HomeNC_Test7.xti" Id="14"/>
-		<Axis File="Axis_HomeNC_Test6.xti" Id="2"/>
-		<Axis File="Axis_HomeNC_Test5.xti" Id="7"/>
-		<Axis File="Axis_HomeNC_Test4.xti" Id="6"/>
-		<Axis File="Axis_HomeNC_Test3.xti" Id="5"/>
-		<Axis File="Axis_HomeNC_Test2.xti" Id="4"/>
-		<Axis File="Axis_HomeNC_Test1.xti" Id="3"/>
-		<Axis File="Axis_McMotionBlocks_Test1.xti" Id="9"/>
-		<Axis File="Axis_McMotionBlocks_Test2.xti" Id="10"/>
-		<Axis File="Axis_McMotionBlocks_Test3.xti" Id="11"/>
-		<Axis File="Axis_McMotionBlocks_Test4.xti" Id="12"/>
-		<Axis File="Axis_McMotionBlocks_Test8.xti" Id="17"/>
-		<Axis File="Axis_McMotionBlocks_Test7.xti" Id="1"/>
-		<Axis File="Axis_McMotionBlocks_Test6.xti" Id="16"/>
-		<Axis File="Axis_McMotionBlocks_Test5.xti" Id="13"/>
+		<Axis File="Axes_MotionAxis_Test17.xti" Id="34"/>
+		<Axis File="Axes_MotionAxis_Test16.xti" Id="9"/>
+		<Axis File="Axes_MotionAxis_Test15.xti" Id="10"/>
+		<Axis File="Axes_MotionAxis_Test14.xti" Id="11"/>
+		<Axis File="Axes_MotionAxis_Test13.xti" Id="12"/>
+		<Axis File="Axes_MotionAxis_Test11.xti" Id="17"/>
+		<Axis File="Axes_MotionAxis_Test12.xti" Id="1"/>
+		<Axis File="Axes_MotionAxis_Test10.xti" Id="16"/>
+		<Axis File="Axes_MotionAxis_Test9.xti" Id="13"/>
+		<Axis File="Axes_MotionAxis_Test8.xti" Id="15"/>
+		<Axis File="Axes_MotionAxis_Test7.xti" Id="14"/>
+		<Axis File="Axes_MotionAxis_Test6.xti" Id="2"/>
+		<Axis File="Axes_MotionAxis_Test5.xti" Id="7"/>
+		<Axis File="Axes_MotionAxis_Test4.xti" Id="6"/>
+		<Axis File="Axes_MotionAxis_Test3.xti" Id="5"/>
+		<Axis File="Axes_MotionAxis_Test2.xti" Id="4"/>
+		<Axis File="Axes_MotionAxis_Test1.xti" Id="3"/>
 		<Axis File="Axis_MotionStageNC_Test2.xti" Id="19"/>
 		<Axis File="Axis_MotionStageNC_Test16.xti" Id="33"/>
 		<Axis File="Axis_MotionStageNC_Test15.xti" Id="32"/>
@@ -1477,7 +1477,7 @@ External Setpoint Generation:
 		<Axis File="Axis_MotionStageNC_Test4.xti" Id="21"/>
 		<Axis File="Axis_MotionStageNC_Test3.xti" Id="20"/>
 		<Axis File="Axis_MotionStageNC_Test1.xti" Id="18"/>
-		<Axis Id="8" CreateSymbols="true" AxisType="1" AxisFolder="UnitTesting" GroupId="17">
+		<Axis Id="8" Disabled="true" CreateSymbols="true" AxisType="1" AxisFolder="UnitTesting" GroupId="17">
 			<Name>Axis_Hard_Test</Name>
 			<ProjectVariant PvUseDisable="true">
 				<Variant>
