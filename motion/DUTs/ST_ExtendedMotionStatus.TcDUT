@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_ExtendedMotionStatus" Id="{d26462d3-7950-4793-9585-9f556ce43578}">
+    <Declaration><![CDATA[TYPE ST_ExtendedMotionStatus :
+STRUCT
+	bMotionAxisError : BOOL;
+	nMotionAxisErrorId : UDINT;
+	bInterlocksError : BOOL;
+	nInterlocksError : UDINT;
+	eDriveState : E_MoveState;
+	bDriveWatchDogStatus : BOOL;
+	bAbortDone : BOOL;
+	bAborted : BOOL;
+	bLimHomeDone : BOOL;
+	bNewMoveReq : BOOL;
+	bEnable : BOOL;
+	bIdling : BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

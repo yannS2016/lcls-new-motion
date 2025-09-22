@@ -3,6 +3,7 @@
   <DUT Name="ST_MoveRequestStatus" Id="{a07ca9a6-ee49-49b8-ab2e-03bd2d0e53c7}">
     <Declaration><![CDATA[TYPE ST_MoveRequestStatus :
 STRUCT
+    bEnable: BOOL;
     bNewMoveReq: BOOL;
     nCmdData: INT;
     nCommand: INT;
@@ -10,15 +11,7 @@ STRUCT
     bExecHome: BOOL;
 	bHomeEnablewOverride : BOOL;
     bExecMove: BOOL;
-	bStop : BOOL;
-	bReset : BOOL;
-	bEnable : BOOL;
 	bPrepareDisable : BOOL;
-	fPosition:LREAL;
-	fVelocity :LREAL;
-	fAcceleration :LREAL;
-	fDeceleration :LREAL;
-	fHomeOffset : LREAL;
 END_STRUCT
 END_TYPE
 ]]></Declaration>

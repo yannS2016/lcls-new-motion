@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_MotionStage" Id="{e70d39c3-0a78-4585-bccf-8dc4205f7d43}">
+    <Declaration><![CDATA[INTERFACE I_MotionStage
+]]></Declaration>
+    <Method Name="AbsoluteMove" Id="{2011cf23-7904-4737-a6a0-b143c8fb9016}">
+      <Declaration><![CDATA[METHOD AbsoluteMove
+VAR_INPUT
+	Position :LREAL;
+	Velocity :LREAL;
+	Acceleration :LREAL;
+	Deceleration :LREAL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="ExMotionStatus" Id="{27f8593a-8fe9-40da-86a4-233d57089aba}">
+      <Declaration><![CDATA[PROPERTY ExMotionStatus : REFERENCE TO ST_ExtendedMotionStatus]]></Declaration>
+      <Get Name="Get" Id="{5d029bcf-a2b0-4556-b6ff-6bafa16fd17d}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="Halt" Id="{8f721796-f851-4eec-af96-2681a21359d1}">
+      <Declaration><![CDATA[METHOD Halt
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Home" Id="{c958a13c-5d38-4350-8e0b-a772cb5b80d0}">
+      <Declaration><![CDATA[METHOD Home
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="MotionInterface" Id="{a020c6dd-0fce-4bed-96e1-b266caf931a8}">
+      <Declaration><![CDATA[PROPERTY MotionInterface : REFERENCE TO ST_MotionCommand]]></Declaration>
+      <Get Name="Get" Id="{1202f2ab-b61e-4594-a4e4-9fb83a8ce3d0}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="Reset" Id="{3872691d-974f-48d7-b1ec-fa1f41c3188e}">
+      <Declaration><![CDATA[METHOD Reset
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="StateMove" Id="{c0f3b55a-12cb-4b52-9910-d9422a92c5c0}">
+      <Declaration><![CDATA[METHOD StateMove
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>
