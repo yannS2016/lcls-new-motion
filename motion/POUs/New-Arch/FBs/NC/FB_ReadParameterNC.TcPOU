@@ -8,6 +8,7 @@ FUNCTION_BLOCK FB_ReadParameterNC IMPLEMENTS I_ReadParameter
 VAR
     {attribute 'no_copy'}
     AxisRef : REFERENCE TO AXIS_REF;
+	iMotionLogger : I_MotionLogger := 0;
     // NC parameters that are exposed with pytmc pragmas
     {attribute 'pytmc' := '
         pv: PLC:AxisPar
@@ -55,7 +56,10 @@ stAxisParametersExposed.fEncScaleFactorInternal       := stAxisParameters.fEncSc
 
 bExecParamsRead R= fbMcReadParams.Done OR fbMcReadParams.Error;
 bAxisParamsInit S= fbMcReadParams.Done;
-]]></ST>
+
+IF fbMcReadParams.Error THEN
+	iMotionLogger.Logger(Message := iMotionLogger.ErrorCodeLookup(fbMcReadParams.ErrorID), Level := E_MotionLogLevel.ERROR, Source := 'ReadParams');	
+END_IF]]></ST>
     </Implementation>
     <Property Name="AxisReadParamsInit" Id="{0109e5c1-4895-4b1a-9b52-46a0b8e2477f}">
       <Declaration><![CDATA[PROPERTY AxisReadParamsInit : BOOL
@@ -85,12 +89,12 @@ END_VAR
       <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
 VAR_INPUT
     AxisRef : REFERENCE TO AXIS_REF;
+	iMotionLogger : I_MotionLogger;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.AxisRef REF= AxisRef;
-
-]]></ST>
+THIS^.iMotionLogger := iMotionLogger;]]></ST>
       </Implementation>
     </Method>
     <Property Name="Done" Id="{e98d6c07-6b86-4458-b10f-56cbec3afbe1}">
@@ -139,10 +143,11 @@ VAR_INPUT
     bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
     AxisRef : REFERENCE TO AXIS_REF;
+	iMotionLogger : I_MotionLogger := 0;	
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.AxisRef REF= AxisRef;
-]]></ST>
+THIS^.iMotionLogger := iMotionLogger;]]></ST>
       </Implementation>
     </Method>
     <Property Name="Message" Id="{87c74a72-7209-4ca3-a50c-82afcaba9293}">

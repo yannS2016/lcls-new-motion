@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_ParamsSaveRestoreNC" Id="{7f8d36cc-18a1-4d6c-99dd-bd0795394dcd}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_ParamsSaveRestoreNC IMPLEMENTS I_ParamSaveRestore
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_ParamsSaveRestoreNC IMPLEMENTS I_ParamsSaveRestore
 VAR
     {attribute 'no_copy'}
     AxisRef : REFERENCE TO AXIS_REF;
     {attribute 'hide'}
-    iPersistentDataStorage : I_PersistentDataStorage;
+    iPersistentDataStorage : I_PersistentDataStorage := 0;
+	iMotionLogger : I_MotionLogger := 0;
     // save and restore
     {attribute 'hide'}
     fbSetPos: MC_SetPosition;
@@ -115,11 +116,13 @@ END_VAR
 VAR_INPUT
     AxisRef : REFERENCE TO AXIS_REF;
     iPersistentDataStorage : I_PersistentDataStorage;
+	iMotionLogger : I_MotionLogger;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.AxisRef REF= AxisRef;
 THIS^.iPersistentDataStorage := iPersistentDataStorage;
+THIS^.iMotionLogger := iMotionLogger;
 ]]></ST>
       </Implementation>
     </Method>
@@ -170,11 +173,12 @@ VAR_INPUT
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
     AxisRef : REFERENCE TO AXIS_REF;
     iPersistentDataStorage : I_PersistentDataStorage;
+	iMotionLogger : I_MotionLogger;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.AxisRef REF= AxisRef;
 THIS^.iPersistentDataStorage := iPersistentDataStorage;
-]]></ST>
+THIS^.iMotionLogger := iMotionLogger;]]></ST>
       </Implementation>
     </Method>
     <Property Name="Message" Id="{32b322a0-2932-4424-b95e-453b6c119c35}">

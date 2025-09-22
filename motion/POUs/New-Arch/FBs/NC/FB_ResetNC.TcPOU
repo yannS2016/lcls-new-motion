@@ -5,6 +5,7 @@
 VAR
     {attribute 'no_copy'}
     AxisRef : REFERENCE TO AXIS_REF;
+	iMotionLogger : I_MotionLogger;
     fbMcReset 	: MC_Reset;
 END_VAR
 ]]></Declaration>
@@ -15,7 +16,9 @@ END_IF
 
 fbMcReset( Axis := AxisRef );
 
-]]></ST>
+IF fbMcReset.Error THEN
+	iMotionLogger.Logger(Message := iMotionLogger.ErrorCodeLookup(fbMcReset.ErrorID), Level := E_MotionLogLevel.ERROR, Source := 'Reset');	
+END_IF]]></ST>
     </Implementation>
     <Property Name="Aborted" Id="{2aa8b146-892b-4eda-90ec-32907f9020a6}">
       <Declaration><![CDATA[PROPERTY Aborted : BOOL
@@ -57,10 +60,12 @@ END_VAR
       <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
 VAR_INPUT
     AxisRef : REFERENCE TO AXIS_REF;
+	iMotionLogger : I_MotionLogger;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;]]></ST>
+        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;
+THIS^.iMotionLogger := iMotionLogger;]]></ST>
       </Implementation>
     </Method>
     <Property Name="Done" Id="{83716cc5-e3e4-4a0e-9a01-85c819af47e4}">
@@ -105,10 +110,12 @@ VAR_INPUT
     bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
     bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
     AxisRef : REFERENCE TO AXIS_REF;
+	iMotionLogger : I_MotionLogger;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;]]></ST>
+        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;
+THIS^.iMotionLogger := iMotionLogger;]]></ST>
       </Implementation>
     </Method>
     <Property Name="Message" Id="{a5706ef5-f74c-4bf4-9005-1b34aba004a5}">

@@ -3,93 +3,107 @@
   <POU Name="FB_MotionAxisNC" Id="{b2082997-3f19-4e96-8959-1acebaf0fbc0}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionAxisNC IMPLEMENTS I_MotionAxis
 VAR
-    iHome : I_Home;
+	{attribute 'no_copy'}
+	AxisRef : REFERENCE TO AXIS_REF; // main axis reference
+	iHome : I_Home;
     iHalt : I_Halt;
     iPower : I_Power;
     iReset : I_Reset;
     iMoveAbsolute : I_MoveAbsolute;
     iReadParameter : I_ReadParameter;
     iWriteParameter  : I_WriteParameter;
-    iParamSaveRestore: I_ParamSaveRestore;
+    iParamsSaveRestore: I_ParamsSaveRestore;
     iEncoderScaling : I_EncoderScaling;
     iAxisStatus : I_AxisStatus;
     iBacklashCompensation : I_BacklashCompensation;
-    {attribute 'hide'}
-    bError: BOOL;
-    {attribute 'hide'}
-    nErrorID: UDINT;
-    {attribute 'hide'}
-    sMessage : T_MAXSTRING;
-    {attribute 'hide'}
+    iMotionLogger : I_MotionLogger := 0; // logger interface, optional
+
+    // Axis status and error aggregation
+    bError : BOOL := FALSE;
+    nErrorID : UDINT := 0;
+    sMessage : T_MAXSTRING := '';
+
+    // Triggers for error/abort conditions
     rtAbortDone : R_TRIG;
-    {attribute 'hide'}
-    stMotionAxisStatus : ST_MotionAxisStatus;
-	rtMoveAbsoluteError: R_TRIG;
-	rtHaltError: R_TRIG;
-	rtResetError: R_TRIG;
+    rtMoveAbsoluteError : R_TRIG;
+    rtHaltError : R_TRIG;
+    rtResetError : R_TRIG;
+
+    // Aggregated axis status structure
+    stMotionAxisStatus : ST_AxisStatus;
 END_VAR
 
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
+      <ST><![CDATA[// 0. Validate reference first
+IF NOT __ISVALIDREF(AxisRef) THEN
+    bError := TRUE;
+    nErrorID := 999;
+    RETURN;
+END_IF
+
+// 1. Read axis hardware status *FIRST*
+AxisRef.ReadStatus();
+
+
+
+// 3. Error Handling — now FBs' error/status are up-to-date
 ErrorHandling();
 
-// update Motion Axis Outputs
-stMotionAxisStatus.bAbortDone := iHalt.Done OR iReset.Done;
-stMotionAxisStatus.bABorted := iMoveAbsolute.Aborted;
-stMotionAxisStatus.bAxisEnable:=iAxisStatus.AxisEnabled();
-stMotionAxisStatus.bAxisReadParamsInit := iReadParameter.AxisReadParamsInit;
-stMotionAxisStatus.eAxisState := iAxisStatus.AxisState;
+// 4. Update outputs/status
+stMotionAxisStatus.bAbortDone                := iHalt.Done OR iReset.Done;
+stMotionAxisStatus.bAborted                  := iMoveAbsolute.Aborted;
+stMotionAxisStatus.bAxisEnable               := AxisEnabled();
+stMotionAxisStatus.bAxisReadParamsInit       := iReadParameter.AxisReadParamsInit;
+stMotionAxisStatus.eAxisState                := AxisRef.Status.MotionState;
 stMotionAxisStatus.bBacklashCompensationStatus := iBacklashCompensation.Status;
-stMotionAxisStatus.bHaltActive := iHalt.Active;
-stMotionAxisStatus.bHaltBusy := iHalt.Busy;
-stMotionAxisStatus.bHaltDone := iHalt.Done;
-stMotionAxisStatus.bHomeBusy := iHome.Busy;
-stMotionAxisStatus.bHomeDone := iHome.Done;
-stMotionAxisStatus.bLimHomeDone := iHome.LimHomeDone;
-stMotionAxisStatus.eHomeMode := iHome.Mode;
-stMotionAxisStatus.bInTargetPosition := iAxisStatus.Done;
-stMotionAxisStatus.nAxisId := iAxisStatus.AxisID;
-stMotionAxisStatus.fMeasuredAcceleration := iAxisStatus.MeasuredAcceleration;
-stMotionAxisStatus.fMeasuredCompensation := iBacklashCompensation.CurrentBacklash;
-stMotionAxisStatus.fMeasuredPosition := iAxisStatus.MeasuredPosition;
-stMotionAxisStatus.fMeasuredPositionDiff := iAxisStatus.MeasuredPositionDiff;
-stMotionAxisStatus.fMeasuredVelocity := iAxisStatus.MeasuredVelocity;
-stMotionAxisStatus.sMessage :=sMessage;
-stMotionAxisStatus.bMoveAbsoluteAborted := iMoveAbsolute.Aborted;
-stMotionAxisStatus.bMoveAbsoluteActive := iMoveAbsolute.Active;
-stMotionAxisStatus.bMoveAbsoluteBusy := iMoveAbsolute.Busy;
-stMotionAxisStatus.bMoveAbsoluteDone := iMoveAbsolute.Done;
-stMotionAxisStatus.bNegativeMotionIsEnabled := iAxisStatus.NegativeMotionIsEnabled;
-stMotionAxisStatus.bPositiveMotionIsEnabled := iAxisStatus.PositiveMotionIsEnabled;
-stMotionAxisStatus.bDirectionalPowerEnabled := iPower.DirectionalPowerEnabled;
-stMotionAxisStatus.bPowerActive := iPower.PowerIsEnabled;
-stMotionAxisStatus.fPowerOverride := iPower.Override;
-stMotionAxisStatus.bResetBusy := iReset.Busy;
-stMotionAxisStatus.bResetDone := iReset.Done;
-stMotionAxisStatus.bRestoreDone := iParamSaveRestore.Done;
-stMotionAxisStatus.fSavedPosition := iParamSaveRestore.SavedPosition;
-stMotionAxisStatus.nScaledEncoderCount := iEncoderScaling.EncoderCount;
-stMotionAxisStatus.bStandStill := iAxisStatus.StandStill;
-stMotionAxisStatus.bBusy := iHome.Busy OR iMoveAbsolute.Busy;
-stMotionAxisStatus.bDone := iHome.Done OR iMoveAbsolute.Done;
-stMotionAxisStatus.bError := bError;
-stMotionAxisStatus.nErrorID := nErrorID;
+stMotionAxisStatus.bHaltActive               := iHalt.Active;
+stMotionAxisStatus.bHaltBusy                 := iHalt.Busy;
+stMotionAxisStatus.bHaltDone                 := iHalt.Done;
+stMotionAxisStatus.bHomeBusy                 := iHome.Busy;
+stMotionAxisStatus.bHomeDone                 := iHome.Done;
+stMotionAxisStatus.bLimHomeDone              := iHome.LimHomeDone;
+stMotionAxisStatus.eHomeMode                 := iHome.Mode;
+stMotionAxisStatus.bInTargetPosition         := AxisRef.Status.InTargetPosition;
+stMotionAxisStatus.nAxisId                   := AxisRef.NcToPlc.AxisId;
+stMotionAxisStatus.fMeasuredAcceleration     := AxisRef.NcToPlc.ActAcc;
+stMotionAxisStatus.fMeasuredCompensation     := iBacklashCompensation.CurrentBacklash;
+stMotionAxisStatus.fMeasuredPosition         := AxisRef.NcToPlc.ActPos;
+stMotionAxisStatus.fMeasuredPositionDiff     := AxisRef.NcToPlc.PosDiff;
+stMotionAxisStatus.fMeasuredVelocity         := AxisRef.NcToPlc.ActVelo;
+stMotionAxisStatus.sMessage                  := sMessage;
+stMotionAxisStatus.bMoveAbsoluteAborted      := iMoveAbsolute.Aborted;
+stMotionAxisStatus.bMoveAbsoluteActive       := iMoveAbsolute.Active;
+stMotionAxisStatus.bMoveAbsoluteBusy         := iMoveAbsolute.Busy;
+stMotionAxisStatus.bMoveAbsoluteDone         := iMoveAbsolute.Done;
+stMotionAxisStatus.bNegativeMotionIsEnabled  := AxisRef.Status.NegativeDirection;
+stMotionAxisStatus.bPositiveMotionIsEnabled  := AxisRef.Status.PositiveDirection;
+stMotionAxisStatus.bDirectionalPowerEnabled  := iPower.DirectionalPowerEnabled;
+stMotionAxisStatus.bPowerActive              := iPower.PowerIsEnabled;
+stMotionAxisStatus.fPowerOverride            := iPower.Override;
+stMotionAxisStatus.bResetBusy                := iReset.Busy;
+stMotionAxisStatus.bResetDone                := iReset.Done;
+stMotionAxisStatus.bRestoreDone              := iParamsSaveRestore.Done;
+stMotionAxisStatus.fSavedPosition            := iParamsSaveRestore.SavedPosition;
+stMotionAxisStatus.nScaledEncoderCount       := iEncoderScaling.EncoderCount;
+stMotionAxisStatus.bStandStill               := AxisRef.Status.StandStill;
+stMotionAxisStatus.bBusy                     := iHome.Busy OR iMoveAbsolute.Busy;
+stMotionAxisStatus.bDone                     := iHome.Done OR iMoveAbsolute.Done;
+stMotionAxisStatus.bError                    := bError;
+stMotionAxisStatus.nErrorID                  := nErrorID;
 
-// auto-Reset Execute after error
+// 5. Auto-reset triggers for internal error recovery
 rtMoveAbsoluteError(CLK:=iMoveAbsolute.Error);
 rtHaltError(CLK:=iHalt.Error);
 rtResetError(CLK:=iReset.Error);
 
 IF rtMoveAbsoluteError.Q THEN
-	iMoveAbsolute.MoveAbsoluteDone();	
+    iMoveAbsolute.MoveAbsoluteDone();    
 ELSIF rtHaltError.Q THEN
-	iHalt.HaltDone();	
+    iHalt.HaltDone();    
 ELSIF rtResetError.Q THEN
-	iReset.ResetDone();	
-END_IF
-
-]]></ST>
+    iReset.ResetDone();    
+END_IF]]></ST>
     </Implementation>
     <Method Name="AxisEnabled" Id="{cc4bbafd-6987-498c-9fa8-c674abc392f5}">
       <Declaration><![CDATA[METHOD AxisEnabled : BOOL
@@ -97,7 +111,14 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[AxisEnabled:=THIS^.iAxisStatus.AxisEnabled();]]></ST>
+        <ST><![CDATA[// Get a definitive bEnabled reading
+CASE THIS^.AxisRef.Status.MotionState OF
+    // We are not enabled if there is an issue
+    MC_AXISSTATE_UNDEFINED, MC_AXISSTATE_DISABLED, MC_AXISSTATE_ERRORSTOP:
+        AxisEnabled := FALSE;
+    ELSE
+        AxisEnabled := TRUE;
+END_CASE]]></ST>
       </Implementation>
     </Method>
     <Method Name="BacklashCompensation" Id="{47b7a29c-5a46-4b34-82e5-46809c891caa}">
@@ -125,6 +146,8 @@ END_VAR
     <Method Name="CallAfterInit" Id="{9b35c028-bf1f-45b2-b785-efd534d69557}">
       <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
 VAR_INPUT
+	AxisRef : REFERENCE TO AXIS_REF; // main axis reference
+	iMotionLogger : I_MotionLogger;
     iHome : I_Home;
     iHalt : I_Halt;
     iPower : I_Power;
@@ -132,24 +155,25 @@ VAR_INPUT
     iMoveAbsolute : I_MoveAbsolute;
     iReadParameter : I_ReadParameter;
     iWriteParameter  : I_WriteParameter;
-    iParamSaveRestore: I_ParamSaveRestore;
+    iParamsSaveRestore: I_ParamsSaveRestore;
     iEncoderScaling : I_EncoderScaling;
-    iAxisStatus : I_AxisStatus;
     iBacklashCompensation : I_BacklashCompensation;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.iHome := iHome;
+        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;
+THIS^.iMotionLogger := iMotionLogger;
+THIS^.iHome := iHome;
 THIS^.iHalt := iHalt;
 THIS^.iPower := iPower;
 THIS^.iReset := iReset;
 THIS^.iMoveAbsolute := iMoveAbsolute;
 THIS^.iReadParameter := iReadParameter ;
 THIS^.iWriteParameter  := iWriteParameter;
-THIS^.iParamSaveRestore:= iParamSaveRestore;
+THIS^.iParamsSaveRestore:= iParamsSaveRestore;
 THIS^.iEncoderScaling := iEncoderScaling;
-THIS^.iAxisStatus := iAxisStatus;
-THIS^.iBacklashCompensation  := iBacklashCompensation ;]]></ST>
+THIS^.iBacklashCompensation  := iBacklashCompensation ;
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="DisablePower" Id="{d431613d-dd04-4413-bd5f-ff595b13e90c}">
@@ -171,8 +195,20 @@ END_VAR
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
+    <Method Name="EnableBacklashCompensation" Id="{efdf6621-04bc-4c66-aa33-43b9ca53e1d5}">
+      <Declaration><![CDATA[METHOD  EnableBacklashCompensation
+VAR_INPUT
+    UserEnable : BOOL;
+    Compensation : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iBacklashCompensation.EnableBacklashCompensation(UserEnable:=UserEnable, Compensation:=Compensation);
+]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="ErrorHandling" Id="{47e04ad9-0158-4554-a680-9fdc3b3acad9}">
-      <Declaration><![CDATA[METHOD ErrorHandling
+      <Declaration><![CDATA[METHOD INTERNAL ErrorHandling
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[(*
@@ -204,10 +240,10 @@ ELSIF THIS^.iHome.Error (*Homing error*) THEN
     bError:=THIS^.iHome.Error;
     nErrorId:=THIS^.iHome.ErrorID;
     sMessage := THIS^.iHome.Message;
-ELSIF THIS^.iAxisStatus.Error  THEN
-    bError:=THIS^.iAxisStatus.Error;
-    nErrorId:=THIS^.iAxisStatus.ErrorID;
-    sMessage := THIS^.iAxisStatus.Message;
+ELSIF THIS^.AxisRef.Status.Error  THEN
+    bError:=THIS^.AxisRef.Status.Error;
+    nErrorId:=THIS^.AxisRef.Status.ErrorID;
+    sMessage := THIS^.iMotionLogger.ErrorCodeLookup(THIS^.AxisRef.Status.ErrorID);
 	// dont report this erro if absolute/home move is busy
 ELSIF THIS^.iReadParameter.Error 
 	AND (NOT THIS^.iMoveAbsolute.Busy OR NOT THIS^.iHome.Busy) THEN
@@ -218,10 +254,10 @@ ELSIF THIS^.iWriteParameter.Error THEN
     bError := THIS^.iWriteParameter.Error;
     nErrorId := THIS^.iWriteParameter.ErrorID;
     sMessage := THIS^.iWriteParameter.Message;
-ELSIF THIS^.iParamSaveRestore.Error THEN
-    bError := THIS^.iParamSaveRestore.Error;
-    nErrorId := THIS^.iParamSaveRestore.ErrorID;
-    sMessage := THIS^.iParamSaveRestore.Message;
+ELSIF THIS^.iParamsSaveRestore.Error THEN
+    bError := THIS^.iParamsSaveRestore.Error;
+    nErrorId := THIS^.iParamsSaveRestore.ErrorID;
+    sMessage := THIS^.iParamsSaveRestore.Message;
 ELSE
     bError:=FALSE;
     nErrorId:=0;
@@ -239,6 +275,8 @@ VAR_INPUT
     bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
 
+	AxisRef : REFERENCE TO AXIS_REF; // main axis reference
+	iMotionLogger : I_MotionLogger;
     iHome : I_Home;
     iHalt : I_Halt;
     iPower : I_Power;
@@ -246,25 +284,23 @@ VAR_INPUT
     iMoveAbsolute : I_MoveAbsolute;
     iReadParameter : I_ReadParameter;
     iWriteParameter  : I_WriteParameter;
-    iParamSaveRestore: I_ParamSaveRestore;
+    iParamsSaveRestore: I_ParamsSaveRestore;
     iEncoderScaling : I_EncoderScaling;
-    iAxisStatus : I_AxisStatus;
     iBacklashCompensation : I_BacklashCompensation;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.iHome := iHome;
+        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;
+THIS^.iMotionLogger := iMotionLogger;
+THIS^.iHome := iHome;
 THIS^.iHalt := iHalt;
 THIS^.iPower := iPower;
 THIS^.iReset := iReset;
 THIS^.iMoveAbsolute := iMoveAbsolute;
 THIS^.iReadParameter := iReadParameter ;
 THIS^.iWriteParameter  := iWriteParameter;
-THIS^.iParamSaveRestore:= iParamSaveRestore;
+THIS^.iParamsSaveRestore:= iParamsSaveRestore;
 THIS^.iEncoderScaling := iEncoderScaling;
-THIS^.iAxisStatus := iAxisStatus;
-THIS^.iBacklashCompensation  := iBacklashCompensation ;
-
-]]></ST>
+THIS^.iBacklashCompensation  := iBacklashCompensation ;]]></ST>
       </Implementation>
     </Method>
     <Method Name="Halt" Id="{669b312b-74c8-481c-b6f9-68179672a70f}">
@@ -315,8 +351,7 @@ END_VAR
       </Implementation>
     </Method>
     <Method Name="MoveAbsoluteDone" Id="{127bbfb4-8244-48a3-8c7a-84752ee460fc}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD MoveAbsoluteDone
+      <Declaration><![CDATA[METHOD MoveAbsoluteDone
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.iMoveAbsolute.MoveAbsoluteDone();]]></ST>
@@ -402,11 +437,11 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.iParamSaveRestore.SaveAxisParams(Enable:=Enable);]]></ST>
+        <ST><![CDATA[THIS^.iParamsSaveRestore.SaveAxisParams(Enable:=Enable);]]></ST>
       </Implementation>
     </Method>
     <Property Name="Status" Id="{e57f34f0-4782-4fdb-b236-ad33acfccad4}">
-      <Declaration><![CDATA[PROPERTY Status : REFERENCE TO ST_MotionAxisStatus
+      <Declaration><![CDATA[PROPERTY Status : REFERENCE TO ST_AxisStatus
 ]]></Declaration>
       <Get Name="Get" Id="{19f70767-a91a-4512-8e71-3365cb03cfc5}">
         <Declaration><![CDATA[VAR

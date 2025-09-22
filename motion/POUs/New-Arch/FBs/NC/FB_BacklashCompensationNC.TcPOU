@@ -12,27 +12,28 @@ FUNCTION_BLOCK FB_BacklashCompensationNC IMPLEMENTS I_BacklashCompensation
 VAR
     {attribute 'no_copy'}
     AxisRef : REFERENCE TO AXIS_REF;
+	iMotionLogger : I_MotionLogger := 0;
     fbMcBacklashCompensation: MC_BacklashCompensation;
     (* Other status information for users of the IOC *)
     // Enabled axis backlash compensation
     {attribute 'pytmc' := '
-        pv: PLC:bBacklashCompUserEn
+        pv: PLC:bBacklashEnable
         io: io
         field: ZNAM FALSE
         field: ONAM TRUE
         field: DESC Enable Backlash compensation
     '}
-    bUserEnable: BOOL;
+    bBacklashEnable: BOOL;
 
     // backlash compensation status
     {attribute 'pytmc' := '
-        pv: PLC:bBacklashCompStatus
+        pv: PLC:bBacklashStatus
         io: i
         field: ZNAM DISABLED
         field: ONAM ENABLED
         field: DESC Backlash compensation status
     '}
-    bBacklashCompStatus: BOOL;
+    bBacklashStatus: BOOL;
 
     // Backlash compensation value
     {attribute 'pytmc' := '
@@ -83,13 +84,17 @@ IF 	rtbacklashCompensation.Q THEN
 END_IF
 
 fbMcBacklashCompensation( Axis:=AxisRef,
-    Enable:=bEnable AND bUserEnable,
+    Enable:=bEnable AND bBacklashEnable,
     Backlash:= fBacklash,
     CompensationInPositiveDirection:=(fBacklash < 0.0),
     Ramp:=fRampVelo,
     DisableMode	:= E_DISABLEMODE.DisableModeReset,
 );
 fCurrentCompensation := fBacklash;
+
+IF fbMcBacklashCompensation.Error THEN
+	iMotionLogger.Logger(Message := iMotionLogger.ErrorCodeLookup(fbMcBacklashCompensation.ErrorID), Level := E_MotionLogLevel.ERROR, Source := 'BacklashCompensation');	
+END_IF
 ]]></ST>
     </Implementation>
     <Method Name="BacklashCompensation" Id="{72d6dae3-a62a-450e-865b-c60a18c47466}">
@@ -100,7 +105,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.bEnable := Enable AND THIS^.bUserEnable;
+        <ST><![CDATA[THIS^.bEnable := Enable AND THIS^.bBacklashEnable;
 THIS^.fRampVelo := RampVelo;
 
 fbMcBacklashCompensation( Axis:=THIS^.AxisRef,
@@ -127,10 +132,12 @@ END_VAR
       <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
 VAR_INPUT
     AxisRef : REFERENCE TO AXIS_REF;
+	iMotionLogger : I_MotionLogger;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;]]></ST>
+        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;
+THIS^.iMotionLogger := iMotionLogger;]]></ST>
       </Implementation>
     </Method>
     <Property Name="CurrentBacklash" Id="{cbe427fc-3f49-4b37-9ce2-197f792afdcd}">
@@ -147,7 +154,7 @@ END_VAR
     </Property>
     <Method Name="EnableBacklashCompensation" Id="{5e2ffdc2-d9b7-43ca-8da1-133fa26b619c}">
       <Declaration><![CDATA[(*DO NOT use in production code.*)
-METHOD INTERNAL EnableBacklashCompensation
+METHOD EnableBacklashCompensation
 VAR_INPUT
     UserEnable : BOOL;
     Compensation : LREAL;
@@ -155,7 +162,7 @@ END_VAR
 
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.bUserEnable := UserEnable;
+        <ST><![CDATA[THIS^.bBacklashEnable := UserEnable;
 THIS^.fBacklash := Compensation;
 
 fbMcBacklashCompensation( Axis:=AxisRef,
@@ -195,10 +202,12 @@ VAR_INPUT
     bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
     bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
     AxisRef : REFERENCE TO AXIS_REF;
+	iMotionLogger : I_MotionLogger;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;]]></ST>
+        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;
+THIS^.iMotionLogger := iMotionLogger;]]></ST>
       </Implementation>
     </Method>
     <Property Name="Message" Id="{799861dc-10f6-42dd-a8b5-747f46787023}">

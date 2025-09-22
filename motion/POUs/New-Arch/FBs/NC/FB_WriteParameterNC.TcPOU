@@ -5,13 +5,17 @@
 VAR
     {attribute 'no_copy'}
     AxisRef : REFERENCE TO AXIS_REF;
+	iMotionLogger : I_MotionLogger;
     fbMcWriteParameter : MC_WriteParameter;
 
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[(*Do not change a moving axis parameter*)
-fbMcWriteParameter(	Axis:=AxisRef );]]></ST>
+fbMcWriteParameter(	Axis:=AxisRef );
+IF fbMcWriteParameter.Error THEN
+	iMotionLogger.Logger(Message := iMotionLogger.ErrorCodeLookup(fbMcWriteParameter.ErrorID), Level := E_MotionLogLevel.ERROR, Source := 'WriteParameter');	
+END_IF]]></ST>
     </Implementation>
     <Property Name="Busy" Id="{689d767c-9451-409d-982f-e679c1698c39}">
       <Declaration><![CDATA[PROPERTY Busy : BOOL
@@ -29,12 +33,12 @@ END_VAR
       <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
 VAR_INPUT
     AxisRef : REFERENCE TO AXIS_REF;
+	iMotionLogger : I_MotionLogger;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.AxisRef REF= AxisRef;
-
-]]></ST>
+THIS^.iMotionLogger := iMotionLogger;]]></ST>
       </Implementation>
     </Method>
     <Property Name="Done" Id="{f44dcb9d-0f8d-47a5-8e58-9c89c3d77b1f}">
@@ -83,10 +87,11 @@ VAR_INPUT
     bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
     AxisRef : REFERENCE TO AXIS_REF;
+	iMotionLogger : I_MotionLogger;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.AxisRef REF= AxisRef;
-]]></ST>
+THIS^.iMotionLogger := iMotionLogger;]]></ST>
       </Implementation>
     </Method>
     <Property Name="Message" Id="{ea739561-c14f-4498-86ea-fb7bf263407f}">

@@ -6,7 +6,7 @@ VAR
     {attribute 'no_copy'}
     AxisRef : REFERENCE TO AXIS_REF;
     fbMcPower : MC_Power;
-
+	iMotionLogger : I_MotionLogger := 0;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -18,7 +18,11 @@ AxisRef.ReadStatus();
 
 fbMcPower(
     Axis := AxisRef,
-);]]></ST>
+);
+
+IF fbMcPower.Error THEN
+	iMotionLogger.Logger(Message := iMotionLogger.ErrorCodeLookup(fbMcPower.ErrorID), Level := E_MotionLogLevel.ERROR, Source := 'Power');	
+END_IF]]></ST>
     </Implementation>
     <Property Name="Busy" Id="{1d88cc85-9bbc-4836-b583-4a9d93ccadc7}">
       <Declaration><![CDATA[PROPERTY Busy : BOOL
@@ -36,10 +40,12 @@ END_VAR
       <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
 VAR_INPUT
     AxisRef : REFERENCE TO AXIS_REF;
+	iMotionLogger : I_MotionLogger;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;]]></ST>
+        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;
+THIS^.iMotionLogger := iMotionLogger;]]></ST>
       </Implementation>
     </Method>
     <Property Name="DirectionalPowerEnabled" Id="{7a9de88a-7f63-40af-aa61-9a69c778429e}">
@@ -112,9 +118,11 @@ VAR_INPUT
     bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
     AxisRef : REFERENCE TO AXIS_REF;
+	iMotionLogger : I_MotionLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;]]></ST>
+        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;
+THIS^.iMotionLogger := iMotionLogger;]]></ST>
       </Implementation>
     </Method>
     <Property Name="Message" Id="{8449188f-1930-49b3-8fe2-2e40bd14ae5f}">

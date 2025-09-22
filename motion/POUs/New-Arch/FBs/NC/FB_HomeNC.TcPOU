@@ -6,7 +6,7 @@ VAR
     {attribute 'no_copy'}
     AxisRef : REFERENCE TO AXIS_REF;
     {attribute 'hide'}
-    iMotionLogger : I_MotionLogger;
+    iMotionLogger : I_MotionLogger := 0;
     {attribute 'hide'}
     iLimSwStatus : I_LimSwStatus;
     fbMcHome : MC_Home;
@@ -50,7 +50,7 @@ CASE eHomeMode OF
         fbMcHome.Options.SearchDirection := MC_Direction.MC_Negative_Direction;
         fbMcHome.Options.SyncDirection := MC_Direction.MC_Positive_Direction;
         fbMcHome.Options.ClearPositionLag := TRUE;
-        fbMcHome.bCalibrationCam := NOT iLimSwStatus.LimBackward;
+        fbMcHome.bCalibrationCam := NOT iLimSwStatus.LimitBackwardEnable;
         fbMcSetPosition.Execute:=fbMcHome.Done;
         bHomeDone := fbMcHome.Done AND fbMcSetPosition.Done;
        // bMove := TRUE;
@@ -59,11 +59,11 @@ CASE eHomeMode OF
         fbMcHome.Options.SearchDirection := MC_Direction.MC_Positive_Direction;
         fbMcHome.Options.SyncDirection := MC_Direction.MC_Negative_Direction;
         //fbMcHome.Options.ClearPositionLag := TRUE;
-        fbMcHome.bCalibrationCam := NOT iLimSwStatus.LimForward;
+        fbMcHome.bCalibrationCam := NOT iLimSwStatus.LimitForwardEnable;
         fbMcSetPosition.Execute:=fbMcHome.Done;
         bHomeDone := fbMcHome.Done AND fbMcSetPosition.Done;
     E_EpicsHomeCmd.HOME_VIA_LOW:
-        fbMcHome.bCalibrationCam := iLimSwStatus.LimHome OR NOT iLimSwStatus.LimBackward;
+        fbMcHome.bCalibrationCam := iLimSwStatus.LimitHome OR NOT iLimSwStatus.LimitBackwardEnable;
         CASE nHomeState OF
             0:// Default Search Home, if found then MC_Home register the index pulse
                 fbMcHome.HomingMode := MC_HomingMode.MC_DefaultHoming;
@@ -76,8 +76,8 @@ CASE eHomeMode OF
             1:
                 // IF HL was hit before the home switch, register that event and allow the homing to complete
                 // on the HL. then we will initiate another Homing move backwad.
-                ftBackwardSwHitFirst(CLK:=iLimSwStatus.LimBackward);
-                rtHomeSwHitFirst(CLK:=iLimSwStatus.LimHome);
+                ftBackwardSwHitFirst(CLK:=iLimSwStatus.LimitBackwardEnable);
+                rtHomeSwHitFirst(CLK:=iLimSwStatus.LimitHome);
 
                 IF fbMcHome.Busy THEN
                     IF ftBackwardSwHitFirst.Q THEN
@@ -110,7 +110,7 @@ CASE eHomeMode OF
                 END_IF
         END_CASE
     E_EpicsHomeCmd.HOME_VIA_HIGH:
-        fbMcHome.bCalibrationCam := iLimSwStatus.LimHome OR NOT iLimSwStatus.LimForward;
+        fbMcHome.bCalibrationCam := iLimSwStatus.LimitHome OR NOT iLimSwStatus.LimitForwardEnable;
         CASE nHomeState OF
             0:// Default Search Home, if found then MC_Home register the index pulse
                 fbMcHome.HomingMode := MC_HomingMode.MC_DefaultHoming;
@@ -124,8 +124,8 @@ CASE eHomeMode OF
             1:
                 // IF HL was hit before the home switch, register that event and allow the homing to complete
                 // on the HL. then we will initiate another Homing move backwad.
-                ftFowardSwHitFirst(CLK:=iLimSwStatus.LimForward);
-                rtHomeSwHitFirst(CLK:=iLimSwStatus.LimHome);
+                ftFowardSwHitFirst(CLK:=iLimSwStatus.LimitForwardEnable);
+                rtHomeSwHitFirst(CLK:=iLimSwStatus.LimitHome);
 
                 IF fbMcHome.Busy THEN
                     IF ftFowardSwHitFirst.Q THEN
@@ -170,7 +170,11 @@ END_CASE
 
 fbMcHome(Axis := AxisRef);
 fbMcSetPosition(Axis := AxisRef, Mode:=0, Position:=fPosition);
-]]></ST>
+IF fbMcHome.Error THEN
+	iMotionLogger.Logger(Message := iMotionLogger.ErrorCodeLookup(fbMcHome.ErrorID), Level := E_MotionLogLevel.ERROR, Source := 'Home');
+ELSIF  fbMcSetPosition.Error THEN
+	iMotionLogger.Logger(Message := iMotionLogger.ErrorCodeLookup(fbMcSetPosition.ErrorID), Level := E_MotionLogLevel.ERROR, Source := 'Home');	
+END_IF]]></ST>
     </Implementation>
     <Property Name="Aborted" Id="{b3440598-2192-4aa3-bd94-648810782f1d}">
       <Declaration><![CDATA[PROPERTY Aborted : BOOL
@@ -289,7 +293,7 @@ END_VAR
         <ST><![CDATA[THIS^.fPosition := Position;
 fbMcHome(Execute := FALSE, Axis := THIS^.AxisRef, Done=>bHomeDone);
 // dont start homing unless hardware limits are in correct state.
-fbMcHome(	Execute := iLimSwStatus.LimBackward AND iLimSwStatus.LimForward AND NOT iLimSwStatus.LimHome,
+fbMcHome(	Execute := iLimSwStatus.LimitBackwardEnable AND iLimSwStatus.LimitForwardEnable AND NOT iLimSwStatus.LimitHome,
             Axis := THIS^.AxisRef,
             Position := Position,
             BufferMode:=BufferMode
