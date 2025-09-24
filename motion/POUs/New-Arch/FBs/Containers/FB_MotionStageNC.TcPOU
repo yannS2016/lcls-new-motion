@@ -7,7 +7,6 @@ VAR
     iMotionLogger : I_MotionLogger;
     {attribute 'no_copy'}
     AxisRef : REFERENCE TO AXIS_REF;
-   {attribute 'hide'}
    {attribute 'pytmc' := 'pv:'}
     stMotionCommand : ST_MotionCommand;
     // Misc axis status information for the IOC
@@ -35,7 +34,8 @@ VAR
 	
     fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw ( 
 		iMotionInterlocksCommon:=fbMotionInterlocksCommon, 
-		iLimSwStatus:=fbLimSwStatus
+		iLimSwStatus:=fbLimSwStatus,
+		iMotionLogger := iMotionLogger
 	);
 	
 	fbHome : FB_HomeNC(
@@ -112,9 +112,10 @@ VAR
 	);
 
     fbStateMachine  : FB_MotionDriveStateMachine(
-		    stMotionInterface:=stMotionCommand,
+		    stMotionCommand:=stMotionCommand,
             iMotionAxis:=fbMotionAxis,
-            iMoveRequest:=fbMoveRequest
+            iMoveRequest:=fbMoveRequest,
+			iMotionLogger := iMotionLogger
     );
     // Name to use for log messages, fast faults, etc.
     {attribute 'hide'}
@@ -125,11 +126,31 @@ VAR
     nErrorId : UDINT;
     {attribute 'hide'}
     sErrorMessage : STRING;
+    {attribute 'hide'}
+	rtRestoreDone : R_TRIG;
+    {attribute 'hide'}
+    rtStop : R_TRIG;
+    {attribute 'hide'}
+    ftstop: F_TRIG;
+	bHandleHalt : BOOL;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// 1. Read hardware limit switches (always first)
-fbLimSwStatus();
+      <ST><![CDATA[// 1. Coordination/orchestration logic; these now use status from axis/interlocks
+HandleMoveRequest();
+// 2. High-level coordination blocks (requests, state machine, brake)
+fbMoveRequest();
+// 3. Send Request status to interlocks
+SendRequestStatusToInterlocks();
 
+// 4. Read hardware limit switches (always first)
+fbLimSwStatus();
+// 3. Interlocks: update with latest axis status
+fbMotionInterlocksCommon();
+fbMotionInterlocksLimSw();
+
+HandleHalt();
+HandleReset();
+HandlePowerControl();
 // 2. Axis block — calls all its internal NC FBs and aggregates status
 fbReset();
 fbHalt();
@@ -141,37 +162,24 @@ fbReadParameter();
 fbWriteParameter();
 fbParamsSaveRestore();
 fbEncoderScaling();
-
-fbMotionAxis(); 
-
-// 3. Interlocks: update with latest axis status
-UpdateInterlockUserEnable();
+fbMotionAxis();
+ 
+//-- Interlocks: update with latest axis status
 UpdateInterlockAxisStatus();
-fbMotionInterlocksCommon();
-fbMotionInterlocksLimSw();
 
-// 4. Coordination/orchestration logic (was fbMotionDrive); these now use status from axis/interlocks
-HandleErrorPropagation();
-HandleMoveRequest();
-HandlePowerControl();
-HandleHalt();
-HandleReset();
-
-// 5. High-level coordination blocks (requests, state machine, brake)
-fbMoveRequest();
-SendDriveCommandsToInterlocks();
+HandleStateMachine();
 fbStateMachine();
 fbBrake();
-
-// 6. Periodic parameter read/save, if required
+// Periodic parameter read/save, if required
 ReadAndSaveAxisParameters();
-
-// 7. Diagnostics/EPICS status block (always last)
-UpdateMotionInterfaceStatus();]]></ST>
+HandleErrorPropagation();
+// Diagnostics/EPICS status block (always last)
+UpdateMotionInterfaceStatus();
+//
+RestoreSettings();]]></ST>
     </Implementation>
     <Method Name="AbsoluteMove" Id="{6b96bfb8-b32d-4334-81ff-c0392805e3a2}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD AbsoluteMove
+      <Declaration><![CDATA[METHOD AbsoluteMove
 VAR_INPUT
 	Position :LREAL;
 	Velocity :LREAL;
@@ -184,8 +192,28 @@ stMotionCommand.fVelocity := Velocity;
 stMotionCommand.fAcceleration := Acceleration;
 stMotionCommand.fDeceleration := Deceleration;
 stMotionCommand.fDeceleration := Deceleration;
-fbMoveRequest.MoveCmd := TRUE;
+stMotionCommand.bMoveCmd := TRUE;
 //stMotionInterface.bExecute:=TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AbsoluteMoveWithBacklashCompensation" Id="{f62f2af9-f0af-4e16-9630-d424e844c1e4}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD AbsoluteMoveWithBacklashCompensation
+VAR_INPUT
+	Position	: LREAL;
+	Velocity	: LREAL;
+	Acceleration	: LREAL;
+	Deceleration	: LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ AbsoluteMove(	
+	Position	:= Position,
+	Velocity	:= Velocity,
+	Acceleration	:= Acceleration,
+	Deceleration	:= Deceleration
+);
+fbBacklashCompensation.BacklashCompensation(Enable := TRUE, RampVelo := Velocity/10.0);]]></ST>
       </Implementation>
     </Method>
     <Method Name="CallAfterInit" Id="{e7a5e1c3-8324-4257-a302-ab714cb009e4}">
@@ -198,7 +226,8 @@ METHOD PRIVATE CallAfterInit]]></Declaration>
 //fbLimSwStatus.CallAfterInit(iMotionLogger := THIS^.iMotionLogger);
 fbMotionInterlocksLimSw.CallAfterInit(
 	iMotionInterlocksCommon := THIS^.fbMotionInterlocksCommon,
-	iLimSwStatus := THIS^.fbLimSwStatus
+	iLimSwStatus := THIS^.fbLimSwStatus,
+	iMotionLogger := THIS^.iMotionLogger
 );
 
 // Pass correctly initialized Motion axis dependencies
@@ -273,7 +302,8 @@ fbMoveRequest.CallAfterInit(
 fbStateMachine.CallAfterInit(
 	iMotionAxis:=THIS^.fbMotionAxis, 
 	iMoveRequest:=THIS^.fbMoveRequest, 
-	stMotionInterface:=THIS^.stMotionCommand
+	stMotionCommand:=THIS^.stMotionCommand,
+	iMotionLogger := THIS^.iMotionLogger
 );]]></ST>
       </Implementation>
     </Method>
@@ -304,11 +334,15 @@ END_VAR
     <Method Name="EnableLimits" Id="{a4eaf3aa-cc7c-4de6-ad38-357755265135}">
       <Declaration><![CDATA[METHOD INTERNAL EnableLimits
 VAR_INPUT
+	ForwardEnable : BOOL;
+	BackwardEnable : BOOL;
+	HomeEnable : BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[fbLimSwStatus.LimitBackwardEnable := TRUE;
-fbLimSwStatus.LimitForwardEnable:=TRUE;]]></ST>
+        <ST><![CDATA[fbLimSwStatus.LimitBackwardEnable := BackwardEnable;
+fbLimSwStatus.LimitForwardEnable:=ForwardEnable;
+fbLimSwStatus.LimitHome := HomeEnable ;]]></ST>
       </Implementation>
     </Method>
     <Property Name="ExMotionStatus" Id="{128987fe-11fc-46a5-8fc4-06563e725a71}">
@@ -361,10 +395,10 @@ THIS^.sName := sName;
     bError := fbMotionAxis.Status.bError;
     nErrorId := fbMotionAxis.Status.nErrorID;
     sErrorMessage := fbMotionAxis.Status.sMessage;
-ELSIF fbMotionInterlocksLimSw.Error THEN
-    bError := fbMotionInterlocksLimSw.Error;
-    nErrorId := fbMotionInterlocksLimSw.ErrorID;
-    sErrorMessage := fbMotionInterlocksLimSw.Message;
+ELSIF fbMotionInterlocksCommon.Error THEN
+    bError := fbMotionInterlocksCommon.Error;
+    nErrorId := fbMotionInterlocksCommon.ErrorID;
+    sErrorMessage := fbMotionInterlocksCommon.Message;
 ELSIF fbMotionInterlocksLimSw.Warning THEN
     THIS^.bError := FALSE;
     THIS^.nErrorId := 0;
@@ -384,15 +418,25 @@ fbMoveRequest.MoveRequestError(
     </Method>
     <Method Name="HandleHalt" Id="{90c9a875-6d6e-4f45-a0af-4ce30421ce05}">
       <Declaration><![CDATA[METHOD PRIVATE HandleHalt : BOOL
-VAR
-    rtStop : R_TRIG;
-END_VAR
+
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[rtStop(CLK := fbMoveRequest.HaltMoveRequest(Busy := fbMotionAxis.Status.bBusy));
+        <ST><![CDATA[// Halt is always a user stop but not an interlock event or a reset.
+ftstop(CLK:=stMotionCommand.bExecute);
+
+bHandleHalt := NOT stMotionCommand.bReset AND ftstop.Q
+                        AND ((fbMotionAxis.Status.bBusy AND (fbMoveRequest.Status.nCommand=10))
+                        OR (fbMotionAxis.Status.bBusy AND (fbMoveRequest.Status.nCommand=3)));
+rtStop(CLK := bHandleHalt );
+
 IF rtStop.Q THEN
-    fbMotionAxis.Halt(Deceleration := stMotionCommand.fDeceleration);
-END_IF]]></ST>
+	IF fbHome.Busy THEN
+		fbHome.StopHome();
+	END_IF
+    fbHalt.Halt(Deceleration := stMotionCommand.fDeceleration);
+END_IF
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="HandleMoveRequest" Id="{37d9518e-1194-4c89-95b2-43e2fec1cf96}">
@@ -432,8 +476,12 @@ END_VAR
     fbMoveRequest.ClearMoveRequest();
     fbMoveRequest.ClearMoveRequestErrors();
     stMotionCommand.bReset := FALSE;
-    fbMotionAxis.Reset();
+    fbReset.Reset();
     fbMotionInterlocksLimSw.Reset();
+	fbStateMachine.Reset();
+	IF fbHome.Busy THEN
+		fbHome.StopHome();
+	END_IF
 END_IF]]></ST>
       </Implementation>
     </Method>
@@ -450,22 +498,40 @@ fbBrake.AxisState := fbMotionAxis.Status.eAxisState;]]></ST>
       </Implementation>
     </Method>
     <Method Name="Home" Id="{a2ae8eea-a6b7-4c20-82db-35228737cd92}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD Home
-]]></Declaration>
+      <Declaration><![CDATA[METHOD Home
+VAR_INPUT
+	HomePosition	: LREAL;
+	HomeMode	: INT;
+END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[THIS^.stMotionCommand.fHomePosition := HomePosition;
+THIS^.stMotionCommand.nCmdData := HomeMode;
+THIS^.stMotionCommand.bHomeCmd := TRUE;
+]]></ST>
       </Implementation>
     </Method>
-    <Property Name="MotionInterface" Id="{cff885f3-b2ab-45e5-a718-4e59c9412c91}">
-      <Declaration><![CDATA[PROPERTY MotionInterface : REFERENCE TO ST_MotionCommand
+    <Property Name="MotionCmd" Id="{cff885f3-b2ab-45e5-a718-4e59c9412c91}">
+      <Declaration><![CDATA[PROPERTY MotionCmd : REFERENCE TO ST_MotionCommand
 ]]></Declaration>
       <Get Name="Get" Id="{90db2be8-cd32-4e3f-90bd-a14ca62895a8}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[MotionInterface REF= stMotionCommand;]]></ST>
+          <ST><![CDATA[MotionCmd REF= stMotionCommand;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MotionStatus" Id="{c60f6c35-3f3b-4a35-9111-e841cc53b467}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY MotionStatus : REFERENCE TO ST_MotionStatus
+]]></Declaration>
+      <Get Name="Get" Id="{fdf66257-32b2-45e6-ab38-2579c576b03c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MotionStatus REF= stMotionStatus;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -491,17 +557,23 @@ METHOD Reset
         <ST><![CDATA[stMotionCommand.bReset:=TRUE;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Run" Id="{6ca1e02c-3306-4ecc-8060-83926b98feb8}">
-      <Declaration><![CDATA[METHOD  Run
+    <Method Name="RestoreSettings" Id="{2dee1569-47ee-484d-bba0-b50581ae3c52}">
+      <Declaration><![CDATA[METHOD PRIVATE RestoreSettings
 VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[// no needed in production since the actualposition is already set on the axis
+// and epics status will get that last position
+// use this to restore anything thats not an axisref paramter.
+rtRestoreDone(CLK:= THIS^.fbMotionAxis.Status.bRestoreDone);
+IF rtRestoreDone.Q THEN
+    THIS^.stMotionCommand.fPosition := THIS^.fbMotionAxis.Status.fSavedPosition;
+END_IF]]></ST>
       </Implementation>
     </Method>
-    <Method Name="SendDriveCommandsToInterlocks" Id="{1e0bb777-d9f8-420a-9d39-9a0db3dfaf76}">
-      <Declaration><![CDATA[METHOD PRIVATE SendDriveCommandsToInterlocks
+    <Method Name="SendRequestStatusToInterlocks" Id="{de44592c-bd13-4b62-b6bf-ebf407d3bbaa}">
+      <Declaration><![CDATA[METHOD PRIVATE SendRequestStatusToInterlocks
 VAR_INPUT
 END_VAR
 ]]></Declaration>
@@ -551,10 +623,15 @@ END_VAR
     <Method Name="UpdateInterlockUserEnable" Id="{c607da76-5703-454d-b750-0323f82d2b59}">
       <Declaration><![CDATA[METHOD PRIVATE UpdateInterlockUserEnable
 VAR_INPUT
+	UserEnable : BOOL;
+	HardwareEnable : BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[fbMotionInterlocksCommon.EnableInterlocks(
+	UserEnable:=UserEnable,
+	HardwareEnable:=HardwareEnable
+);]]></ST>
       </Implementation>
     </Method>
     <Method Name="UpdateMotionInterfaceStatus" Id="{d66d426b-be69-4f86-acf2-a262bf3e8386}">
@@ -574,6 +651,7 @@ stMotionStatus.fActVelocity:= fbMotionAxis.Status.fMeasuredVelocity;
 stMotionStatus.fOverride   := fbMotionAxis.Status.fPowerOverride;
 stMotionStatus.bBusy       := fbMotionAxis.Status.bBusy;
 stMotionStatus.bHomed      := fbMotionAxis.Status.bHomeDone;
+//stMotionStatus.bDone       := fbMotionAxis.Status.bDone;
 stMotionStatus.bError      := THIS^.bError;
 stMotionStatus.nErrorId    := THIS^.nErrorId;
 stMotionStatus.sErrorMessage:= THIS^.sErrorMessage;
@@ -591,18 +669,6 @@ stExMotionStatus.bDriveWatchDogStatus := fbStateMachine.WatchDogStatus;
 stExMotionStatus.bNewMoveReq := fbMoveRequest.Status.bNewMoveReq;
 stExMotionStatus.bEnable := fbMoveRequest.Status.bEnable;
 stExMotionStatus.bIdling:= fbStateMachine.Idling;]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="UserCmds" Id="{11a63b1a-6a72-4e18-b829-4ce12aeabb4f}">
-      <Declaration><![CDATA[METHOD INTERNAL UserCmds
-VAR_INPUT
-	MoveCmd : BOOL;
-	HomeCmd : BOOL;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[THIS^.fbMoveRequest.MoveCmd := MoveCmd;
-THIS^.fbMoveRequest.HomeCmd := HomeCmd;]]></ST>
       </Implementation>
     </Method>
   </POU>

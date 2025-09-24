@@ -20,7 +20,7 @@ STRUCT
 	bHomeBusy : BOOL;
 	bHomeDone : BOOL;
 	bLimHomeDone : BOOL;
-	eHomeMode : E_EpicsHomeCmd;
+	nHomeMode : INT;
 	bInTargetPosition : BOOL;
 	fMeasuredAcceleration : LREAL;
 	fMeasuredCompensation : LREAL;

@@ -15,7 +15,7 @@ TYPE E_EpicsHomeCmd :
     AUTOZERO := -1,
     CURRENT_POSITION_METHOD := 37,
     NONE := -99 // Do not home, ever
-) := NONE;
+) INT := NONE;
 END_TYPE
 ]]></Declaration>
   </DUT>

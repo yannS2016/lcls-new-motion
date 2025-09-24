@@ -20,6 +20,12 @@ STRUCT
         io: io
         field: DESC Used internally and by the IOC to pick what kind of move to do
     '}
+    {attribute 'pytmc' := '
+        pv: PLC:bMoveCmd
+        io: io
+        field: DESC Start an AbsoluteMove
+    '}
+    bMoveCmd	: BOOL;
     // Start the homing routine
     {attribute 'pytmc' := '
         pv: PLC:bHomeCmd
