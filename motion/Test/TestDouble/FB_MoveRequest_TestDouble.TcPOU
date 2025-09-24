@@ -86,6 +86,15 @@ END_VAR
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
+    <Method Name="IsValidHomeCmd" Id="{8e681608-1d57-4074-b1d3-a2edfc6defe3}">
+      <Declaration><![CDATA[METHOD IsValidHomeCmd : BOOL
+VAR_INPUT
+    CmdData : INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="MoveRequest" Id="{e51e3678-c3aa-4bd6-8679-36a860fb753b}">
       <Declaration><![CDATA[METHOD MoveRequest
 VAR_INPUT

@@ -17,8 +17,7 @@ METHOD Clear
       </Implementation>
     </Method>
     <Method Name="ErrorCodeLookup" Id="{57c70c9e-79a8-4868-91f2-6ad94f2941a5}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD ErrorCodeLookup : STRING
+      <Declaration><![CDATA[METHOD ErrorCodeLookup : STRING
 VAR_INPUT
 	nErrorId	: UDINT;
 END_VAR

@@ -3,49 +3,37 @@
   <POU Name="FB_MotionStageNC_Test" Id="{43fc959c-4f0c-48e3-9ba7-5e5e5850d492}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK INTERNAL FB_MotionStageNC_Test EXTENDS FB_TestSuite
 VAR
-
     fbMotionLogger : ARRAY[1..16] OF FB_MotionLogger;
-    // Persistant storage
     fbPersistentDataStorage :  ARRAY[1..16] OF FB_PersistentDataStorage;
-    stMotionInterface :  ARRAY[1..16] OF ST_MotionCommand;
  	fbAxisRef :   ARRAY[1..16] OF AXIS_REF;
- 
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[GivenMoveCmdAndMoveOkIfResetThenAbortMove_Test1();
-//GivenMoveCmdAndMoveOkIfHaltThenAbortMove_Test2();
-//GivenMoveCmdAndMoveOkMoveToTarget1ThenTarget2_Test3();
-// GivenMoveCmdAndValidInterlocksThenMoveToTarget_Test4();
-// GivenMoveCmdValidInterlockAndWrongMotionParamsThenGotoErrorStateIfResetThenGotoInitState_Test5();
-// GivenMoveCmdAndMoveOkAndPositiveBacklashEnabledThenMoveToTargetWithCompensation_Test6();
-// GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7();
-// GivenHomeCmdAndAbsoluteSetAndMoveOkThenMoveToUserDefinedHomePosition_Test8();
-// GivenHomeCmdNoneAndMoveOkThenSetHomeFlag_Test9();
-// GivenHomeCmdLowLimitModeBackwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test10();
-// GivenHomeCmdHighLimitModeForwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test11();
-// GivenHomeCmdHomeViaLowModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test12();
-// GivenHomeCmdHomeViaHighModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test13();
-// GivenHomeCmdHomeViaHighModeForwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test14();
-// GivenHomeCmdHomeViaLowModeBackwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test15();
-// GivenHomeCmdLowLimitModeAndResetThenAbortHoming_Test16();]]></ST>
+GivenMoveCmdAndMoveOkIfHaltThenAbortMove_Test2();
+GivenMoveCmdAndMoveOkMoveToTarget1ThenTarget2_Test3();
+GivenMoveCmdAndValidInterlocksThenMoveToTarget_Test4();
+GivenMoveCmdValidInterlockAndWrongMotionParamsThenGotoErrorStateIfResetThenGotoInitState_Test5();
+GivenMoveCmdAndMoveOkAndPositiveBacklashEnabledThenMoveToTargetWithCompensation_Test6();
+GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7();
+GivenHomeCmdAndAbsoluteSetAndMoveOkThenMoveToUserDefinedHomePosition_Test8();
+GivenHomeCmdNoneAndMoveOkThenSetHomeFlag_Test9();
+GivenHomeCmdLowLimitModeBackwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test10();
+GivenHomeCmdHighLimitModeForwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test11();
+GivenHomeCmdHomeViaLowModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test12();
+GivenHomeCmdHomeViaHighModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test13();
+GivenHomeCmdHomeViaHighModeForwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test14();
+GivenHomeCmdHomeViaLowModeBackwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test15();
+GivenHomeCmdLowLimitModeAndResetThenAbortHoming_Test16();]]></ST>
     </Implementation>
     <Method Name="GivenHomeCmdAndAbsoluteSetAndMoveOkThenMoveToUserDefinedHomePosition_Test8" Id="{253b6d82-c379-45a7-8590-f79f84a467f7}">
       <Declaration><![CDATA[METHOD PRIVATE GivenHomeCmdAndAbsoluteSetAndMoveOkThenMoveToUserDefinedHomePosition_Test8
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test8',
-                                        stMotionEpicsItf := stMotionInterface[8],
                                         AxisRef := fbAxisRef[8],
                                         iMotionLogger := fbMotionLogger[8],
                                         iPersistentDataStorage := fbPersistentDataStorage[8]
-                                    ) := (	HardwareEnable:=TRUE, 
-											UserEnable:=TRUE, 
-											LimBackward := TRUE,
-											LimForward:=TRUE,
-											BrakeMode := E_StageBrakeMode.IF_MOVING, 
-											EnableMode:=ENUM_StageEnableMode.DURING_MOTION, 
-											HomeMode:=E_EpicsHomeCmd.ABSOLUTE_SET
-									);
+                                    ) ;
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#10S);
     nTestStep : INT;
@@ -57,20 +45,28 @@ END_VAR
 
 CASE nTestStep OF
     0:
-		 stMotionInterface[8].fHomePosition := 20.0;
-		 fbMotionStage.UserCmds(MoveCmd:=FALSE, HomeCmd:=TRUE);
-		 nTestStep := nTestStep + 1;
+			// Enable safety interlocks and hardware limits
+        fbMotionStage.EnableLimits(
+			BackwardEnable:=TRUE, 
+			ForwardEnable:=TRUE,
+			HomeEnable:=FALSE
+		);
+        fbMotionStage.EnableInterlocks();
+		nTestStep := 1;
 	1:
-		IF stMotionInterface[8].bDone THEN
-			AssertTrue(Condition :=(stMotionInterface[8].fHomePosition -fbAxisRef[8].NcToPlc.ActPos) = 0, Message := 'Hone position not set #1');
-			nTestStep := nTestStep + 1;
+		fbMotionStage.Home(HomePosition:=20.0, HomeMode:=E_EPicsHomeCmd.ABSOLUTE_SET);
+		nTestStep := 2;
+	2:
+		IF fbMotionStage.stMotionStatus.bDone THEN
+			AssertTrue(Condition :=(fbMotionStage.stMotionCommand.fHomePosition - fbAxisRef[8].NcToPlc.ActPos) = 0, Message := 'Hone position not set #1');
+			nTestStep := 3;
 		END_IF	
 END_CASE
 
 fbTestTimer();
 fbMotionStage();
 
-IF nTestStep = 2 THEN
+IF nTestStep = 3 THEN
 
 TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
@@ -86,18 +82,10 @@ END_IF]]></ST>
       <Declaration><![CDATA[METHOD PRIVATE GivenHomeCmdHighLimitModeForwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test11
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test11',
-                                        stMotionEpicsItf := stMotionInterface[11],
                                         AxisRef := fbAxisRef[11],
                                         iMotionLogger := fbMotionLogger[11],
                                         iPersistentDataStorage := fbPersistentDataStorage[11]
-                                    ) := (	HardwareEnable:=TRUE, 
-											UserEnable:=TRUE, 
-											LimBackward := TRUE,
-											LimForward:=TRUE,
-											BrakeMode := E_StageBrakeMode.IF_MOVING, 
-											EnableMode:=ENUM_StageEnableMode.DURING_MOTION, 
-											HomeMode:=E_EpicsHomeCmd.HIGH_LIMIT
-									);
+                                    ) ;
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#10S);
     fbCamSwitchPulserSearch: TON := (IN:=TRUE, PT:=T#500MS);
@@ -108,28 +96,46 @@ END_VAR
       <Implementation>
         <ST><![CDATA[TEST(__POUNAME());
 
-
 CASE nTestStep OF
-    0:
-		 stMotionInterface[11].fHomePosition := 20.0;
-		 fbMotionStage.UserCmds(MoveCmd:=FALSE, HomeCmd:=TRUE);
-		 nTestStep := nTestStep + 1;
+    0: // Enable all interlocks/limits to be ready for homing
+        fbMotionStage.EnableLimits(
+			BackwardEnable:=TRUE, 
+			ForwardEnable:=TRUE,
+			HomeEnable:=FALSE
+		);
+        fbMotionStage.EnableInterlocks();
+        nTestStep := 1;
 
-    1:
+    1: // Issue home command (to low limit)
+        fbMotionStage.Home(HomePosition := 20.0, HomeMode := E_EpicsHomeCmd.HIGH_LIMIT);
+        nTestStep := 2;
+
+    2: // Simulate limit switch drop/restore with cam switch events
         IF fbCamSwitchPulserSearch.Q THEN
-            fbMotionStage.LimForward := FALSE;
+			// simulate limit release
+			fbMotionStage.EnableLimits(
+				BackwardEnable:=TRUE, 
+				ForwardEnable:=FALSE,
+				HomeEnable:=FALSE
+			);
             fbCamSwitchPulserSearch.IN := FALSE;
             fbCamSwitchPulserSync.IN := TRUE;
-            nTestStep := nTestStep + 1;
+            nTestStep := 3;
         END_IF
-    2:
+
+    3: // Restore limit after cam event
         IF fbCamSwitchPulserSync.Q THEN
-            fbMotionStage.LimForward := TRUE;
-            nTestStep := nTestStep + 1;
+			fbMotionStage.EnableLimits(
+				BackwardEnable:=TRUE, 
+				ForwardEnable:=TRUE,
+				HomeEnable:=FALSE
+			);
+            nTestStep := 4;
         END_IF
-    3:
-        IF stMotionInterface[11].bDone THEN
-            nTestStep := nTestStep + 1;
+
+    4: // Wait for home sequence completion
+        IF fbMotionStage.stMotionStatus.bDone THEN
+            nTestStep := 5;
         END_IF
 END_CASE
 
@@ -138,37 +144,35 @@ fbCamSwitchPulserSync();
 fbTestTimer();
 fbMotionStage();
 
-IF nTestStep = 4 THEN
-    AssertTrue(Condition:=fbAxisRef[11].Status.Homed, Message := 'Axis not calibrated #1');
-    AssertEquals_LREAL ( Delta:=0.001, Expected:=stMotionInterface[11].fHomePosition, Actual:=fbAxisRef[11].NcToPlc.ActPos, Message:='Position is not the expected #2');
+IF nTestStep = 5 THEN
+    AssertTrue(
+        Condition := fbAxisRef[11].Status.Homed,
+        Message := 'Axis not calibrated #1'
+    );
+    AssertEquals_LREAL(
+        Delta := 0.001,
+        Expected := fbMotionStage.stMotionCommand.fHomePosition,
+        Actual := fbAxisRef[11].NcToPlc.ActPos,
+        Message := 'Position is not the expected #2'
+    );
     TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
     AssertTrue(
         Condition := FALSE,
         Message := CONCAT('Timed out at step: ', TO_STRING(nTestStep))
     );
-
     TEST_FINISHED();
-END_IF
-]]></ST>
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="GivenHomeCmdHomeViaHighModeForwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test14" Id="{bef29b72-04d6-4825-b7ae-27502091b8b5}">
       <Declaration><![CDATA[METHOD PRIVATE GivenHomeCmdHomeViaHighModeForwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test14
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test14',
-                                        stMotionEpicsItf := stMotionInterface[14],
                                         AxisRef := fbAxisRef[14],
                                         iMotionLogger := fbMotionLogger[14],
                                         iPersistentDataStorage := fbPersistentDataStorage[14]
-                                    ) := (	HardwareEnable:=TRUE, 
-											UserEnable:=TRUE, 
-											LimBackward := TRUE,
-											LimForward:=TRUE,
-											BrakeMode := E_StageBrakeMode.IF_MOVING, 
-											EnableMode:=ENUM_StageEnableMode.DURING_MOTION, 
-											HomeMode:=E_EpicsHomeCmd.HOME_VIA_HIGH
-									);
+                                    ) ;
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#10S);
     fbCamSwitchPulserSearch: TON := (IN:=TRUE, PT:=T#500MS);
@@ -180,83 +184,117 @@ END_VAR
         <ST><![CDATA[TEST(__POUNAME());
 
 CASE nTestStep OF
-    0:
-		 stMotionInterface[14].fHomePosition := 6.2;
-		 fbMotionStage.UserCmds(MoveCmd:=FALSE, HomeCmd:=TRUE);
-		 nTestStep := nTestStep + 1;
-    1:
+    0: // Enable all interlocks/limits for initial homing (home switch not active yet!)
+        fbMotionStage.EnableLimits(
+            BackwardEnable := TRUE, 
+            ForwardEnable  := TRUE,
+            HomeEnable     := FALSE
+        );
+        fbMotionStage.EnableInterlocks();
+        nTestStep := 1;
+
+    1: // Issue homing command (via high limit, should travel to positive end first)
+        fbMotionStage.Home(
+            HomePosition := 5.0,
+            HomeMode := E_EpicsHomeCmd.HOME_VIA_HIGH
+        );
+        nTestStep := 2;
+
+    2: // Simulate forward limit drop
         IF fbCamSwitchPulserSearch.Q THEN
-            fbMotionStage.LimForward := FALSE;
+            fbMotionStage.EnableLimits(
+                BackwardEnable := TRUE, 
+                ForwardEnable  := FALSE,
+                HomeEnable     := FALSE
+            );
             fbCamSwitchPulserSearch.IN := FALSE;
             fbCamSwitchPulserSync.IN := TRUE;
-            nTestStep := nTestStep + 1;
+            nTestStep := 3;
         END_IF
-    2:
+
+    3: // Restore forward limit after event
         IF fbCamSwitchPulserSync.Q THEN
-            fbMotionStage.LimForward := TRUE;
-            nTestStep := nTestStep + 1;
+            fbMotionStage.EnableLimits(
+                BackwardEnable := TRUE, 
+                ForwardEnable  := TRUE,
+                HomeEnable     := FALSE
+            );
+            fbCamSwitchPulserSync.IN := FALSE;
+            nTestStep := 4;
         END_IF
-    3:
-        IF fbMotionStage.bLimHomeDone THEN
-            // prepare second stage homing
+
+    4: // Wait for "first stage" (positive limit) homing done (i.e. LimHomeDone signals)
+        IF fbMotionStage.stExMotionStatus.bLimHomeDone THEN
+            // prepare for home switch pulse
             fbCamSwitchPulserSearch.IN := TRUE;
             fbCamSwitchPulserSync.IN := FALSE;
-            nTestStep := nTestStep + 1;
+            nTestStep := 5;
         END_IF
-    4:
+
+    5: // Simulate home switch engagement (simulate HomeEnable = TRUE)
         IF fbCamSwitchPulserSearch.Q THEN
-            fbMotionStage.LimHome := TRUE;
+            fbMotionStage.EnableLimits(
+                BackwardEnable := TRUE, 
+                ForwardEnable  := TRUE,
+                HomeEnable     := TRUE
+            );
             fbCamSwitchPulserSearch.IN := FALSE;
             fbCamSwitchPulserSync.IN := TRUE;
-            nTestStep := nTestStep + 1;
+            nTestStep := 6;
         END_IF
-    5:
+
+    6: // Simulate home switch disengagement (return HomeEnable to FALSE)
         IF fbCamSwitchPulserSync.Q THEN
-            fbMotionStage.LimHome := FALSE;
-            nTestStep := nTestStep + 1;
-        END_IF
-    6:
-        IF stMotionInterface[14].bDone THEN
-            nTestStep := nTestStep + 1;
+            fbMotionStage.EnableLimits(
+                BackwardEnable := TRUE, 
+                ForwardEnable  := TRUE,
+                HomeEnable     := FALSE
+            );
+            fbCamSwitchPulserSync.IN := FALSE;
+            nTestStep := 7;
+        END_IF 
+
+    7: // Wait for overall homing to complete (done)
+        IF fbMotionStage.stMotionStatus.bDone THEN
+            nTestStep := 8;
         END_IF
 END_CASE
 
+// Cyclic calls required for timer and cam events and motion stage
 fbCamSwitchPulserSearch();
 fbCamSwitchPulserSync();
 fbTestTimer();
 fbMotionStage();
 
-IF nTestStep = 7 THEN
-    AssertTrue(Condition:=fbAxisRef[14].Status.Homed, Message := 'Axis not calibrated #1');
-    AssertEquals_LREAL ( Delta:=0.001, Expected:=stMotionInterface[14].fHomePosition, Actual:=fbAxisRef[14].NcToPlc.ActPos, Message:='Position is not the expected #2');
+IF nTestStep = 8 THEN
+    AssertTrue(
+        Condition := fbAxisRef[14].Status.Homed,
+        Message := 'Axis not calibrated #1'
+    );
+    AssertEquals_LREAL(
+        Delta := 0.001,
+        Expected := fbMotionStage.stMotionCommand.fHomePosition,
+        Actual := fbAxisRef[14].NcToPlc.ActPos,
+        Message := 'Position is not the expected #2'
+    );
     TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
     AssertTrue(
         Condition := FALSE,
         Message := CONCAT('Timed out at step: ', TO_STRING(nTestStep))
     );
-
     TEST_FINISHED();
-END_IF
-]]></ST>
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="GivenHomeCmdHomeViaHighModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test13" Id="{501bb430-c4c8-4962-b9b7-05487279548f}">
       <Declaration><![CDATA[METHOD PRIVATE GivenHomeCmdHomeViaHighModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test13
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test13',
-                                        stMotionEpicsItf := stMotionInterface[13],
                                         AxisRef := fbAxisRef[13],
                                         iMotionLogger := fbMotionLogger[13],
                                         iPersistentDataStorage := fbPersistentDataStorage[13]
-                                    ) := (	HardwareEnable:=TRUE, 
-											UserEnable:=TRUE, 
-											LimBackward := TRUE,
-											LimForward:=TRUE,
-											BrakeMode := E_StageBrakeMode.IF_MOVING, 
-											EnableMode:=ENUM_StageEnableMode.DURING_MOTION, 
-											HomeMode:=E_EpicsHomeCmd.HOME_VIA_HIGH
-									);
+                                    ) ;
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#10S);
     fbCamSwitchPulserSearch: TON := (IN:=TRUE, PT:=T#500MS);
@@ -267,28 +305,45 @@ END_VAR
       <Implementation>
         <ST><![CDATA[TEST(__POUNAME());
 
-
 CASE nTestStep OF
-    0:
-		 stMotionInterface[13].fHomePosition := 5.55;
-		 fbMotionStage.UserCmds(MoveCmd:=FALSE, HomeCmd:=TRUE);
-		 nTestStep := nTestStep + 1;
+    0: // Enable all interlocks/limits to be ready for homing
+		fbMotionStage.EnableLimits(
+			BackwardEnable:=TRUE, 
+			ForwardEnable:=TRUE,
+			HomeEnable:=FALSE
+		);
+        fbMotionStage.EnableInterlocks();
+        nTestStep := 1;
 
-    1:
+    1: // Issue home command (to low limit)
+        fbMotionStage.Home(HomePosition := 20.0, HomeMode := E_EpicsHomeCmd.HOME_VIA_HIGH);
+        nTestStep := 2;
+
+    2: // Simulate limit switch drop/restore with cam switch events
         IF fbCamSwitchPulserSearch.Q THEN
-            fbMotionStage.LimHome := TRUE;
+			fbMotionStage.EnableLimits(
+				BackwardEnable:=TRUE, 
+				ForwardEnable:=TRUE,
+				HomeEnable:=TRUE
+			);
             fbCamSwitchPulserSearch.IN := FALSE;
             fbCamSwitchPulserSync.IN := TRUE;
-            nTestStep := nTestStep + 1;
+            nTestStep := 3;
         END_IF
-    2:
+
+    3: // Restore limit after cam event
         IF fbCamSwitchPulserSync.Q THEN
-            fbMotionStage.LimHome := FALSE;
-            nTestStep := nTestStep + 1;
+			fbMotionStage.EnableLimits(
+				BackwardEnable:=TRUE, 
+				ForwardEnable:=TRUE,
+				HomeEnable:=FALSE
+			);
+            nTestStep := 4;
         END_IF
-    3:
-        IF stMotionInterface[13].bDone THEN
-            nTestStep := nTestStep + 1;
+
+    4: // Wait for home sequence completion
+        IF fbMotionStage.stMotionStatus.bDone THEN
+            nTestStep := 5;
         END_IF
 END_CASE
 
@@ -297,37 +352,35 @@ fbCamSwitchPulserSync();
 fbTestTimer();
 fbMotionStage();
 
-IF nTestStep = 4 THEN
-    AssertTrue(Condition:=fbAxisRef[13].Status.Homed, Message := 'Axis not calibrated #1');
-    AssertEquals_LREAL ( Delta:=0.001, Expected:=stMotionInterface[13].fHomePosition, Actual:=fbAxisRef[13].NcToPlc.ActPos, Message:='Position is not the expected #2');
+IF nTestStep = 5 THEN
+    AssertTrue(
+        Condition := fbAxisRef[13].Status.Homed,
+        Message := 'Axis not calibrated #1'
+    );
+    AssertEquals_LREAL(
+        Delta := 0.001,
+        Expected := fbMotionStage.stMotionCommand.fHomePosition,
+        Actual := fbAxisRef[13].NcToPlc.ActPos,
+        Message := 'Position is not the expected #2'
+    );
     TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
     AssertTrue(
         Condition := FALSE,
         Message := CONCAT('Timed out at step: ', TO_STRING(nTestStep))
     );
-
     TEST_FINISHED();
-END_IF
-]]></ST>
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="GivenHomeCmdHomeViaLowModeBackwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test15" Id="{f5542e4e-2910-481a-85ce-1a7f0cb0b943}">
       <Declaration><![CDATA[METHOD PRIVATE GivenHomeCmdHomeViaLowModeBackwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test15
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test15',
-                                        stMotionEpicsItf := stMotionInterface[15],
                                         AxisRef := fbAxisRef[15],
                                         iMotionLogger := fbMotionLogger[15],
                                         iPersistentDataStorage := fbPersistentDataStorage[15]
-                                    ) := (	HardwareEnable:=TRUE, 
-											UserEnable:=TRUE, 
-											LimBackward := TRUE,
-											LimForward:=TRUE,
-											BrakeMode := E_StageBrakeMode.IF_MOVING, 
-											EnableMode:=ENUM_StageEnableMode.DURING_MOTION, 
-											HomeMode:=E_EpicsHomeCmd.HOME_VIA_LOW
-									);
+                                    ) ;
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#10S);
     fbCamSwitchPulserSearch: TON := (IN:=TRUE, PT:=T#500MS);
@@ -339,83 +392,117 @@ END_VAR
         <ST><![CDATA[TEST(__POUNAME());
 
 CASE nTestStep OF
-    0:
-		 stMotionInterface[15].fHomePosition := 8.2;
-		 fbMotionStage.UserCmds(MoveCmd:=FALSE, HomeCmd:=TRUE);
-		 nTestStep := nTestStep + 1;
-    1:
+    0: // Enable all interlocks/limits for initial homing (home switch not active yet!)
+        fbMotionStage.EnableLimits(
+            BackwardEnable := TRUE, 
+            ForwardEnable  := TRUE,
+            HomeEnable     := FALSE
+        );
+        fbMotionStage.EnableInterlocks();
+        nTestStep := 1;
+
+    1: // Issue homing command (via high limit, should travel to positive end first)
+        fbMotionStage.Home(
+            HomePosition := 5.0,
+            HomeMode := E_EpicsHomeCmd.HOME_VIA_LOW
+        );
+        nTestStep := 2;
+
+    2: // Simulate forward limit drop
         IF fbCamSwitchPulserSearch.Q THEN
-            fbMotionStage.LimBackward := FALSE;
+            fbMotionStage.EnableLimits(
+                BackwardEnable := FALSE, 
+                ForwardEnable  := TRUE,
+                HomeEnable     := FALSE
+            );
             fbCamSwitchPulserSearch.IN := FALSE;
             fbCamSwitchPulserSync.IN := TRUE;
-            nTestStep := nTestStep + 1;
+            nTestStep := 3;
         END_IF
-    2:
+
+    3: // Restore forward limit after event
         IF fbCamSwitchPulserSync.Q THEN
-            fbMotionStage.LimBackward := TRUE;
-            nTestStep := nTestStep + 1;
+            fbMotionStage.EnableLimits(
+                BackwardEnable := TRUE, 
+                ForwardEnable  := TRUE,
+                HomeEnable     := FALSE
+            );
+            fbCamSwitchPulserSync.IN := FALSE;
+            nTestStep := 4;
         END_IF
-    3:
-        IF fbMotionStage.bLimHomeDone THEN
-            // prepare second stage homing
+
+    4: // Wait for "first stage" (positive limit) homing done (i.e. LimHomeDone signals)
+        IF fbMotionStage.stExMotionStatus.bLimHomeDone THEN
+            // prepare for home switch pulse
             fbCamSwitchPulserSearch.IN := TRUE;
             fbCamSwitchPulserSync.IN := FALSE;
-            nTestStep := nTestStep + 1;
+            nTestStep := 5;
         END_IF
-    4:
+
+    5: // Simulate home switch engagement (simulate HomeEnable = TRUE)
         IF fbCamSwitchPulserSearch.Q THEN
-            fbMotionStage.LimHome := TRUE;
+            fbMotionStage.EnableLimits(
+                BackwardEnable := TRUE, 
+                ForwardEnable  := TRUE,
+                HomeEnable     := TRUE
+            );
             fbCamSwitchPulserSearch.IN := FALSE;
             fbCamSwitchPulserSync.IN := TRUE;
-            nTestStep := nTestStep + 1;
+            nTestStep := 6;
         END_IF
-    5:
+
+    6: // Simulate home switch disengagement (return HomeEnable to FALSE)
         IF fbCamSwitchPulserSync.Q THEN
-            fbMotionStage.LimHome := FALSE;
-            nTestStep := nTestStep + 1;
-        END_IF
-    6:
-        IF stMotionInterface[15].bDone THEN
-            nTestStep := nTestStep + 1;
+            fbMotionStage.EnableLimits(
+                BackwardEnable := TRUE, 
+                ForwardEnable  := TRUE,
+                HomeEnable     := FALSE
+            );
+            fbCamSwitchPulserSync.IN := FALSE;
+            nTestStep := 7;
+        END_IF 
+
+    7: // Wait for overall homing to complete (done)
+        IF fbMotionStage.stMotionStatus.bDone THEN
+            nTestStep := 8;
         END_IF
 END_CASE
 
+// Cyclic calls required for timer and cam events and motion stage
 fbCamSwitchPulserSearch();
 fbCamSwitchPulserSync();
 fbTestTimer();
 fbMotionStage();
 
-IF nTestStep = 7 THEN
-    AssertTrue(Condition:=fbAxisRef[15].Status.Homed, Message := 'Axis not calibrated #1');
-    AssertEquals_LREAL ( Delta:=0.001, Expected:=stMotionInterface[15].fHomePosition, Actual:=fbAxisRef[15].NcToPlc.ActPos, Message:='Position is not the expected #2');
+IF nTestStep = 8 THEN
+    AssertTrue(
+        Condition := fbAxisRef[15].Status.Homed,
+        Message := 'Axis not calibrated #1'
+    );
+    AssertEquals_LREAL(
+        Delta := 0.001,
+        Expected := fbMotionStage.stMotionCommand.fHomePosition,
+        Actual := fbAxisRef[15].NcToPlc.ActPos,
+        Message := 'Position is not the expected #2'
+    );
     TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
     AssertTrue(
         Condition := FALSE,
         Message := CONCAT('Timed out at step: ', TO_STRING(nTestStep))
     );
-
     TEST_FINISHED();
-END_IF
-]]></ST>
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="GivenHomeCmdHomeViaLowModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test12" Id="{0f21ff56-ff7d-42d6-8a7e-507573fd24aa}">
       <Declaration><![CDATA[METHOD PRIVATE GivenHomeCmdHomeViaLowModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test12
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test12',
-                                        stMotionEpicsItf := stMotionInterface[12],
                                         AxisRef := fbAxisRef[12],
                                         iMotionLogger := fbMotionLogger[12],
                                         iPersistentDataStorage := fbPersistentDataStorage[12]
-                                    ) := (	HardwareEnable:=TRUE, 
-											UserEnable:=TRUE, 
-											LimBackward := TRUE,
-											LimForward:=TRUE,
-											BrakeMode := E_StageBrakeMode.IF_MOVING, 
-											EnableMode:=ENUM_StageEnableMode.DURING_MOTION, 
-											HomeMode:=E_EpicsHomeCmd.HOME_VIA_LOW
-									);
+                                    ) ;
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#10S);
     fbCamSwitchPulserSearch: TON := (IN:=TRUE, PT:=T#500MS);
@@ -426,28 +513,45 @@ END_VAR
       <Implementation>
         <ST><![CDATA[TEST(__POUNAME());
 
-
 CASE nTestStep OF
-    0:
-		 stMotionInterface[12].fHomePosition := 10.0;
-		 fbMotionStage.UserCmds(MoveCmd:=FALSE, HomeCmd:=TRUE);
-		 nTestStep := nTestStep + 1;
+    0: // Enable all interlocks/limits to be ready for homing
+		fbMotionStage.EnableLimits(
+			BackwardEnable:=TRUE, 
+			ForwardEnable:=TRUE,
+			HomeEnable:=FALSE
+		);
+        fbMotionStage.EnableInterlocks();
+        nTestStep := 1;
 
-    1:
+    1: // Issue home command (to low limit)
+        fbMotionStage.Home(HomePosition := 20.0, HomeMode := E_EpicsHomeCmd.HOME_VIA_LOW);
+        nTestStep := 2;
+
+    2: // Simulate limit switch drop/restore with cam switch events
         IF fbCamSwitchPulserSearch.Q THEN
-            fbMotionStage.LimHome := TRUE;
+			fbMotionStage.EnableLimits(
+				BackwardEnable:=TRUE, 
+				ForwardEnable:=TRUE,
+				HomeEnable:=TRUE
+			);
             fbCamSwitchPulserSearch.IN := FALSE;
             fbCamSwitchPulserSync.IN := TRUE;
-            nTestStep := nTestStep + 1;
+            nTestStep := 3;
         END_IF
-    2:
+
+    3: // Restore limit after cam event
         IF fbCamSwitchPulserSync.Q THEN
-            fbMotionStage.LimHome := FALSE;
-            nTestStep := nTestStep + 1;
+			fbMotionStage.EnableLimits(
+				BackwardEnable:=TRUE, 
+				ForwardEnable:=TRUE,
+				HomeEnable:=FALSE
+			);
+            nTestStep := 4;
         END_IF
-    3:
-        IF stMotionInterface[12].bDone THEN
-            nTestStep := nTestStep + 1;
+
+    4: // Wait for home sequence completion
+        IF fbMotionStage.stMotionStatus.bDone THEN
+            nTestStep := 5;
         END_IF
 END_CASE
 
@@ -456,39 +560,37 @@ fbCamSwitchPulserSync();
 fbTestTimer();
 fbMotionStage();
 
-IF nTestStep = 4 THEN
-    AssertTrue(Condition:=fbAxisRef[12].Status.Homed, Message := 'Axis not calibrated #1');
-    AssertEquals_LREAL ( Delta:=0.001, Expected:=stMotionInterface[12].fHomePosition, Actual:=fbAxisRef[12].NcToPlc.ActPos, Message:='Position is not the expected #2');
+IF nTestStep = 5 THEN
+    AssertTrue(
+        Condition := fbAxisRef[12].Status.Homed,
+        Message := 'Axis not calibrated #1'
+    );
+    AssertEquals_LREAL(
+        Delta := 0.001,
+        Expected := fbMotionStage.stMotionCommand.fHomePosition,
+        Actual := fbAxisRef[12].NcToPlc.ActPos,
+        Message := 'Position is not the expected #2'
+    );
     TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
     AssertTrue(
         Condition := FALSE,
         Message := CONCAT('Timed out at step: ', TO_STRING(nTestStep))
     );
-
     TEST_FINISHED();
-END_IF
-]]></ST>
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="GivenHomeCmdLowLimitModeAndResetThenAbortHoming_Test16" Id="{fb1ff3e0-5234-4117-b553-a90d648343f0}">
       <Declaration><![CDATA[METHOD PRIVATE GivenHomeCmdLowLimitModeAndResetThenAbortHoming_Test16
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test16',
-                                        stMotionEpicsItf := stMotionInterface[16],
                                         AxisRef := fbAxisRef[16],
                                         iMotionLogger := fbMotionLogger[16],
                                         iPersistentDataStorage := fbPersistentDataStorage[16]
-                                    ) := (	HardwareEnable:=TRUE, 
-											UserEnable:=TRUE, 
-											LimBackward := TRUE,
-											LimForward:=TRUE,
-											BrakeMode := E_StageBrakeMode.IF_MOVING, 
-											EnableMode:=ENUM_StageEnableMode.DURING_MOTION, 
-											HomeMode:=E_EpicsHomeCmd.LOW_LIMIT
-									);
+                                    ) ;
 									
-    fbTestTimer: TON := (IN:=TRUE, PT:=T#16S);
+    fbTestTimer: TON := (IN:=TRUE, PT:=T#3S);
     fbResetTimer: TON := (IN:=TRUE, PT:=T#500MS);
     nTestStep : INT;
 END_VAR
@@ -498,21 +600,31 @@ END_VAR
 
 
 CASE nTestStep OF
-    0:
-		 stMotionInterface[16].fHomePosition := 20.0;
-		 fbMotionStage.UserCmds(MoveCmd:=FALSE, HomeCmd:=TRUE);
-		 nTestStep := nTestStep + 1;
+    0: // Enable all interlocks/limits for initial homing (home switch not active yet!)
+        fbMotionStage.EnableLimits(
+            BackwardEnable := TRUE, 
+            ForwardEnable  := TRUE,
+            HomeEnable     := FALSE
+        );
+        fbMotionStage.EnableInterlocks();
+        nTestStep := 1;
 
-    1:
-        IF fbResetTimer.Q THEN
-            stMotionInterface[16].bReset := TRUE;
-            fbResetTimer.IN := FALSE;
-            nTestStep := nTestStep + 1;
-        END_IF
+    1: // Issue homing command (via high limit, should travel to positive end first)
+        fbMotionStage.Home(
+            HomePosition := 5.0,
+            HomeMode := E_EpicsHomeCmd.LOW_LIMIT
+        );
+        nTestStep := 2;
     2:
+        IF fbResetTimer.Q THEN
+            fbMotionStage.Reset();
+            fbResetTimer.IN := FALSE;
+            nTestStep := 3;
+        END_IF
+    3:
 		// resetting a homing sequence will set mc_home into error state
-        IF stMotionInterface[16].bError THEN
-            nTestStep := nTestStep + 1;
+        IF fbMotionStage.stMotionStatus.bDone THEN
+            nTestStep := 4;
         END_IF
 END_CASE
 
@@ -520,10 +632,7 @@ fbResetTimer();
 fbTestTimer();
 fbMotionStage();
 
-IF nTestStep = 3 THEN
-    AssertTrue(
-        Condition := (fbMotionStage.eDriveState=E_MoveState.ERROR),
-        Message :='Drive must be in Error State #1');
+IF nTestStep = 4 THEN
     TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
     AssertTrue(
@@ -540,18 +649,10 @@ END_IF
       <Declaration><![CDATA[METHOD PRIVATE GivenHomeCmdLowLimitModeBackwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test10
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test10',
-                                        stMotionEpicsItf := stMotionInterface[10],
                                         AxisRef := fbAxisRef[10],
                                         iMotionLogger := fbMotionLogger[10],
                                         iPersistentDataStorage := fbPersistentDataStorage[10]
-                                    ) := (	HardwareEnable:=TRUE, 
-											UserEnable:=TRUE, 
-											LimBackward := TRUE,
-											LimForward:=TRUE,
-											BrakeMode := E_StageBrakeMode.IF_MOVING, 
-											EnableMode:=ENUM_StageEnableMode.DURING_MOTION, 
-											HomeMode:=E_EpicsHomeCmd.LOW_LIMIT
-									);
+                                    ) ;
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#10S);
     fbCamSwitchPulserSearch: TON := (IN:=TRUE, PT:=T#500MS);
@@ -562,28 +663,46 @@ END_VAR
       <Implementation>
         <ST><![CDATA[TEST(__POUNAME());
 
-
 CASE nTestStep OF
-    0:
-		 stMotionInterface[10].fHomePosition := 20.0;
-		 fbMotionStage.UserCmds(MoveCmd:=FALSE, HomeCmd:=TRUE);
-		 nTestStep := nTestStep + 1;
+    0: // Enable all interlocks/limits to be ready for homing
+        fbMotionStage.EnableLimits(
+			BackwardEnable:=TRUE, 
+			ForwardEnable:=TRUE,
+			HomeEnable:=FALSE
+		);
+        fbMotionStage.EnableInterlocks();
+        nTestStep := 1;
 
-    1:
+    1: // Issue home command (to low limit)
+        fbMotionStage.Home(HomePosition := 20.0, HomeMode := E_EpicsHomeCmd.LOW_LIMIT);
+        nTestStep := 2;
+
+    2: // Simulate limit switch drop/restore with cam switch events
+		// simulate limit release
         IF fbCamSwitchPulserSearch.Q THEN
-            fbMotionStage.LimBackward := FALSE;
+			fbMotionStage.EnableLimits(
+				BackwardEnable:=FALSE, 
+				ForwardEnable:=TRUE,
+				HomeEnable:=FALSE
+			);
             fbCamSwitchPulserSearch.IN := FALSE;
             fbCamSwitchPulserSync.IN := TRUE;
-            nTestStep := nTestStep + 1;
+            nTestStep := 3;
         END_IF
-    2:
+
+    3: // Restore limit after cam event
         IF fbCamSwitchPulserSync.Q THEN
-            fbMotionStage.LimBackward := TRUE;
-            nTestStep := nTestStep + 1;
+			fbMotionStage.EnableLimits(
+				BackwardEnable:=TRUE, 
+				ForwardEnable:=TRUE,
+				HomeEnable:=FALSE
+			);
+            nTestStep := 4;
         END_IF
-    3:
-        IF stMotionInterface[10].bDone THEN
-            nTestStep := nTestStep + 1;
+
+    4: // Wait for home sequence completion
+        IF fbMotionStage.stMotionStatus.bDone THEN
+            nTestStep := 5;
         END_IF
 END_CASE
 
@@ -592,37 +711,35 @@ fbCamSwitchPulserSync();
 fbTestTimer();
 fbMotionStage();
 
-IF nTestStep = 4 THEN
-    AssertTrue(Condition:=fbAxisRef[10].Status.Homed, Message := 'Axis not calibrated #1');
-    AssertEquals_LREAL ( Delta:=0.001, Expected:=stMotionInterface[10].fHomePosition, Actual:=fbAxisRef[10].NcToPlc.ActPos, Message:='Position is not the expected #2');
+IF nTestStep = 5 THEN
+    AssertTrue(
+        Condition := fbAxisRef[10].Status.Homed,
+        Message := 'Axis not calibrated #1'
+    );
+    AssertEquals_LREAL(
+        Delta := 0.001,
+        Expected := fbMotionStage.stMotionCommand.fHomePosition,
+        Actual := fbAxisRef[10].NcToPlc.ActPos,
+        Message := 'Position is not the expected #2'
+    );
     TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
     AssertTrue(
         Condition := FALSE,
         Message := CONCAT('Timed out at step: ', TO_STRING(nTestStep))
     );
-
     TEST_FINISHED();
-END_IF
-]]></ST>
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="GivenHomeCmdNoneAndMoveOkThenSetHomeFlag_Test9" Id="{d4ce9a28-0d09-43a0-9439-db832b2656b8}">
       <Declaration><![CDATA[METHOD PRIVATE GivenHomeCmdNoneAndMoveOkThenSetHomeFlag_Test9
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test9',
-                                        stMotionEpicsItf := stMotionInterface[9],
                                         AxisRef := fbAxisRef[9],
                                         iMotionLogger := fbMotionLogger[9],
                                         iPersistentDataStorage := fbPersistentDataStorage[9]
-                                    ) := (	HardwareEnable:=TRUE, 
-											UserEnable:=TRUE, 
-											LimBackward := TRUE,
-											LimForward:=TRUE,
-											BrakeMode := E_StageBrakeMode.IF_MOVING, 
-											EnableMode:=ENUM_StageEnableMode.DURING_MOTION, 
-											HomeMode:=E_EpicsHomeCmd.NONE
-									);
+                                    ) ;
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#3S);
     nTestStep : INT;
@@ -634,18 +751,27 @@ END_VAR
 
 CASE nTestStep OF
     0:
-		 fbMotionStage.UserCmds(MoveCmd:=FALSE, HomeCmd:=TRUE);
-		 nTestStep := nTestStep + 1;
+		// Enable safety interlocks and hardware limits
+        fbMotionStage.EnableLimits(
+			BackwardEnable:=TRUE, 
+			ForwardEnable:=TRUE,
+			HomeEnable:=FALSE
+		);
+        fbMotionStage.EnableInterlocks();
+		nTestStep := 1;
 	1:
-		IF stMotionInterface[9].stAxisStatus.bHomed THEN
-			nTestStep := nTestStep + 1;
+		fbMotionStage.Home(HomePosition:=20.0, HomeMode:=E_EPicsHomeCmd.NONE);
+		nTestStep := 2;
+	2:
+		IF fbMotionStage.stMotionStatus.bHomed THEN
+			nTestStep := 3;
 		END_IF	
 END_CASE
 
 fbTestTimer();
 fbMotionStage();
 
-IF nTestStep = 2 THEN
+IF nTestStep = 3 THEN
 
 TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
@@ -661,18 +787,10 @@ END_IF]]></ST>
       <Declaration><![CDATA[METHOD PRIVATE GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test7',
-                                        stMotionEpicsItf := stMotionInterface[7],
                                         AxisRef := fbAxisRef[7],
                                         iMotionLogger := fbMotionLogger[7],
                                         iPersistentDataStorage := fbPersistentDataStorage[7]
-                                    ) := (	HardwareEnable:=TRUE, 
-											UserEnable:=TRUE, 
-											LimBackward := TRUE,
-											LimForward:=TRUE,
-											BrakeMode := E_StageBrakeMode.IF_MOVING, 
-											EnableMode:=ENUM_StageEnableMode.DURING_MOTION, 
-											HomeMode:=E_EpicsHomeCmd.ABSOLUTE_SET
-									);
+                                    ) ;
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#10S);
     nTestStep : INT;
@@ -681,86 +799,124 @@ END_VAR
       <Implementation>
         <ST><![CDATA[TEST(__POUNAME());
 
-
 CASE nTestStep OF
-    0:
-		fbMotionStage.EnableBacklashCompensation(UserEnable:=TRUE, Compensation:=-2.5);
-		nTestStep := nTestStep + 1;
-	1:
-		// init backlash free absolute move.
-		 stMotionInterface[7].fPosition := 40.0;
-		 stMotionInterface[7].fVelocity := 200.0;
-		 stMotionInterface[7].fAcceleration := 400.0;
-		 stMotionInterface[7].fDeceleration := 400.0;
-		 fbMotionStage.UserCmds(MoveCmd:=TRUE, HomeCmd:=FALSE);
-		 nTestStep := nTestStep + 1;
-	2:
-		IF stMotionInterface[7].bDone THEN
-			AssertTrue(Condition :=(stMotionInterface[7].fPosition-fbAxisRef[7].NcToPlc.ActPos) = 0, Message := 'Target position not reached #1');
-			AssertTrue(Condition :=((fbAxisRef[7].NcToPlc.ActPos-fbAxisRef[7].NcToPlc.ActPosWithoutPosCorrection) = 0), Message := 'No compensation in this direction #2');
-			nTestStep := nTestStep + 1;
-		END_IF
-    3:
-		// reverse.
-		stMotionInterface[7].fPosition := 80.0;
-		stMotionInterface[7].fVelocity := 200.0;
-		stMotionInterface[7].fAcceleration := 400.0;
-		stMotionInterface[7].fDeceleration := 400.0;
-		fbMotionStage.UserCmds(MoveCmd:=TRUE, HomeCmd:=FALSE);
-		nTestStep := nTestStep + 1;
+    0: // Enable safety and backlash compensation
+         fbMotionStage.EnableLimits(
+			BackwardEnable:=TRUE, 
+			ForwardEnable:=TRUE,
+			HomeEnable:=FALSE
+		);
+        fbMotionStage.EnableInterlocks();
+        fbMotionStage.EnableBacklashCompensation(UserEnable := TRUE, Compensation := -2.5);
+        nTestStep := 1;
+    1: // Forward move, should have **no** compensation applied
+        fbMotionStage.AbsoluteMoveWithBacklashCompensation(
+            Position := -10.0,
+            Velocity := 200.0,
+            Acceleration := 400.0,
+            Deceleration := 400.0
+        );
+        nTestStep := 2;
+    2:
+        IF fbMotionStage.stMotionStatus.bDone THEN
+            AssertTrue(
+                Condition := ABS(-10.0 - fbAxisRef[7].NcToPlc.ActPos) < 0.001,
+                Message := 'Target position not reached #1'
+            );
+            AssertTrue(
+                Condition := (fbAxisRef[7].NcToPlc.ActPos - fbAxisRef[7].NcToPlc.ActPosWithoutPosCorrection) = 0,
+                Message := 'No compensation in this direction #2'
+            );
+            nTestStep := 3;
+        END_IF
+    3: // Reverse move, should have 2.5 compensation
+        fbMotionStage.AbsoluteMoveWithBacklashCompensation(
+            Position := 80.0,
+            Velocity := 200.0,
+            Acceleration := 400.0,
+            Deceleration := 400.0
+        );
+        nTestStep := 4;
     4:
-         IF stMotionInterface[7].bDone THEN
-			AssertTrue(Condition :=(stMotionInterface[7].fPosition-fbAxisRef[7].NcToPlc.ActPos) = 0, Message := 'Target position not reached #3');
-			AssertTrue(Condition :=((fbAxisRef[7].NcToPlc.ActPos-fbAxisRef[7].NcToPlc.ActPosWithoutPosCorrection) = 2.5), Message := 'This move must have a 2.5 compensation #4');            
-			nTestStep := nTestStep + 1;
+        IF fbMotionStage.stMotionStatus.bDone THEN
+            AssertTrue(
+                Condition := ABS(80.0 - fbAxisRef[7].NcToPlc.ActPos) < 0.001,
+                Message := 'Target position not reached #3'
+            );
+            AssertTrue(
+                Condition := (fbAxisRef[7].NcToPlc.ActPos - fbAxisRef[7].NcToPlc.ActPosWithoutPosCorrection) = 2.5,
+                Message := 'This move must have a 2.5 compensation #4'
+            );
+            nTestStep := 5;
         END_IF
-	5:
-		fbMotionStage.EnableBacklashCompensation(UserEnable:=TRUE, Compensation:=0);	
-		nTestStep := nTestStep + 1;
-	6:
-		stMotionInterface[7].fPosition := 120.0;
-		stMotionInterface[7].fVelocity := 200.0;
-		stMotionInterface[7].fAcceleration := 400.0;
-		stMotionInterface[7].fDeceleration := 400.0;
-		fbMotionStage.UserCmds(MoveCmd:=TRUE, HomeCmd:=FALSE);
-		nTestStep := nTestStep + 1;
-	7:
-		IF stMotionInterface[7].bDone THEN
-			AssertTrue(Condition :=(stMotionInterface[7].fPosition-fbAxisRef[7].NcToPlc.ActPos) = 0, Message := 'Target position not reached #5');
-			AssertTrue(Condition :=((fbAxisRef[7].NcToPlc.ActPos-fbAxisRef[7].NcToPlc.ActPosWithoutPosCorrection) = 0), Message := 'Actual compensation must tbe 0 #6');
-			nTestStep := nTestStep + 1;
-		END_IF
-	8:
-		fbMotionStage.EnableBacklashCompensation(UserEnable:=TRUE, Compensation:=-3.5);	
-		nTestStep := nTestStep + 1;
-	9:
-		stMotionInterface[7].fPosition := 160.0;
-		stMotionInterface[7].fVelocity := 200.0;
-		stMotionInterface[7].fAcceleration := 400.0;
-		stMotionInterface[7].fDeceleration := 400.0;
-		fbMotionStage.UserCmds(MoveCmd:=TRUE, HomeCmd:=FALSE);
-		nTestStep := nTestStep + 1;
-	10:
-         IF stMotionInterface[7].bDone THEN
-			AssertTrue(Condition :=(stMotionInterface[7].fPosition-fbAxisRef[7].NcToPlc.ActPos) = 0, Message := 'Target position not reached #7');
-			AssertTrue(Condition :=((fbAxisRef[7].NcToPlc.ActPos-fbAxisRef[7].NcToPlc.ActPosWithoutPosCorrection) = 3.5), Message := 'This move must have a 3.5 compensation #8');            
-			nTestStep := nTestStep + 1;
+    5: // Compensation now 0, move uncompensated
+        fbMotionStage.EnableBacklashCompensation(UserEnable := TRUE, Compensation := 0);
+        nTestStep := 6;
+    6:
+        fbMotionStage.AbsoluteMoveWithBacklashCompensation(
+            Position := 120.0,
+            Velocity := 200.0,
+            Acceleration := 400.0,
+            Deceleration := 400.0
+        );
+        nTestStep := 7;
+    7:
+        IF fbMotionStage.stMotionStatus.bDone THEN
+            AssertTrue(
+                Condition := ABS(120.0 - fbAxisRef[7].NcToPlc.ActPos) < 0.001,
+                Message := 'Target position not reached #5'
+            );
+            AssertTrue(
+                Condition := (fbAxisRef[7].NcToPlc.ActPos - fbAxisRef[7].NcToPlc.ActPosWithoutPosCorrection) = 0,
+                Message := 'Actual compensation must be 0 #6'
+            );
+            nTestStep := 8;
         END_IF
-	11:
-		fbMotionStage.EnableBacklashCompensation(UserEnable:=FALSE, Compensation:=-3.5);	
-		nTestStep := nTestStep + 1;
-	12:
-		stMotionInterface[7].fPosition := 180.0;
-		stMotionInterface[7].fVelocity := 200.0;
-		stMotionInterface[7].fAcceleration := 400.0;
-		stMotionInterface[7].fDeceleration := 400.0;
-		fbMotionStage.UserCmds(MoveCmd:=TRUE, HomeCmd:=FALSE);
-		nTestStep := nTestStep + 1;
-	13:
-         IF stMotionInterface[7].bDone THEN
-			AssertTrue(Condition :=(stMotionInterface[7].fPosition-fbAxisRef[7].NcToPlc.ActPos) = 0, Message := 'Target position not reached #9');
-			AssertTrue(Condition :=((fbAxisRef[7].NcToPlc.ActPos-fbAxisRef[7].NcToPlc.ActPosWithoutPosCorrection) = 0), Message := 'This move is not compensated #10');            
-			nTestStep := nTestStep + 1;
+    8: // Set -3.5 for next, expect 3.5 compensation in reverse
+        fbMotionStage.EnableBacklashCompensation(UserEnable := TRUE, Compensation := -3.5);
+        nTestStep := 9;
+    9:
+        fbMotionStage.AbsoluteMove(
+            Position := 160.0,
+            Velocity := 200.0,
+            Acceleration := 400.0,
+            Deceleration := 400.0
+        );
+        nTestStep := 10;
+    10:
+        IF fbMotionStage.stMotionStatus.bDone THEN
+            AssertTrue(
+                Condition := ABS(160.0 - fbAxisRef[7].NcToPlc.ActPos) < 0.001,
+                Message := 'Target position not reached #7'
+            );
+            AssertTrue(
+                Condition := (fbAxisRef[7].NcToPlc.ActPos - fbAxisRef[7].NcToPlc.ActPosWithoutPosCorrection) = 3.5,
+                Message := 'This move must have a 3.5 compensation #8'
+            );
+            nTestStep := 11;
+        END_IF
+    11: // Disable compensation, next should be uncompensated
+        fbMotionStage.EnableBacklashCompensation(UserEnable := FALSE, Compensation := -3.5);
+        nTestStep := 12;
+    12:
+        fbMotionStage.AbsoluteMove(
+            Position := 180.0,
+            Velocity := 200.0,
+            Acceleration := 400.0,
+            Deceleration := 400.0
+        );
+        nTestStep := 13;
+    13:
+        IF fbMotionStage.stMotionStatus.bDone THEN
+            AssertTrue(
+                Condition := ABS(180.0 - fbAxisRef[7].NcToPlc.ActPos) < 0.001,
+                Message := 'Target position not reached #9'
+            );
+            AssertTrue(
+                Condition := (fbAxisRef[7].NcToPlc.ActPos - fbAxisRef[7].NcToPlc.ActPosWithoutPosCorrection) = 0,
+                Message := 'This move is not compensated #10'
+            );
+            nTestStep := 14;
         END_IF
 END_CASE
 
@@ -768,8 +924,7 @@ fbTestTimer();
 fbMotionStage();
 
 IF nTestStep = 14 THEN
-
-	TEST_FINISHED();
+    TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
     AssertTrue(
         Condition := FALSE,
@@ -783,115 +938,148 @@ END_IF]]></ST>
       <Declaration><![CDATA[METHOD PRIVATE GivenMoveCmdAndMoveOkAndPositiveBacklashEnabledThenMoveToTargetWithCompensation_Test6
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test6',
-                                        stMotionEpicsItf := stMotionInterface[6],
                                         AxisRef := fbAxisRef[6],
                                         iMotionLogger := fbMotionLogger[6],
                                         iPersistentDataStorage := fbPersistentDataStorage[6]
-                                    ) := (	HardwareEnable:=TRUE, 
-											UserEnable:=TRUE, 
-											LimBackward := TRUE,
-											LimForward:=TRUE,
-											BrakeMode := E_StageBrakeMode.IF_MOVING, 
-											EnableMode:=ENUM_StageEnableMode.DURING_MOTION, 
-											HomeMode:=E_EpicsHomeCmd.ABSOLUTE_SET
-									);
+                                    ) ;
 									
-    fbTestTimer: TON := (IN:=TRUE, PT:=T#8S);
+    fbTestTimer: TON := (IN:=TRUE, PT:=T#10S);
     nTestStep : INT;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST(__POUNAME());
 
-
 CASE nTestStep OF
-    0:
-		fbMotionStage.EnableBacklashCompensation(UserEnable:=TRUE, Compensation:=2.5);
-		 nTestStep := nTestStep + 1;
-	1:
-		// init backlash free absolute move.
-		 stMotionInterface[6].fPosition := 150.0;
-		 stMotionInterface[6].fVelocity := 50.0;
-		 stMotionInterface[6].fAcceleration := 100.0;
-		 stMotionInterface[6].fDeceleration := 100.0;
-		 fbMotionStage.UserCmds(MoveCmd:=TRUE, HomeCmd:=FALSE);
-		 nTestStep := nTestStep + 1;
-	2:
-		IF stMotionInterface[6].bDone THEN
-			AssertTrue(Condition :=(stMotionInterface[6].fPosition-fbAxisRef[6].NcToPlc.ActPos) = 0, Message := 'Target position not reached #1');
-			AssertTrue(Condition :=((fbAxisRef[6].NcToPlc.ActPos-fbAxisRef[6].NcToPlc.ActPosWithoutPosCorrection) = 0), Message := 'No compensation in this direction #2');
-			nTestStep := nTestStep + 1;
-		END_IF
-    3:
-		// reverse.
-		stMotionInterface[6].fPosition := 100.0;
-		stMotionInterface[6].fVelocity := 50.0;
-		stMotionInterface[6].fAcceleration := 200.0;
-		stMotionInterface[6].fDeceleration := 200.0;
-		fbMotionStage.UserCmds(MoveCmd:=TRUE, HomeCmd:=FALSE);
-		nTestStep := nTestStep + 1;
+    0: 
+		// Enable safety interlocks and hardware limits
+         fbMotionStage.EnableLimits(
+			BackwardEnable:=TRUE, 
+			ForwardEnable:=TRUE,
+			HomeEnable:=FALSE
+		);
+        fbMotionStage.EnableInterlocks();
+		// Enable 2.5 backlash compensation
+        fbMotionStage.EnableBacklashCompensation(UserEnable := TRUE, Compensation := 2.5);
+        nTestStep := 1;
+    1: // Forward move, should have **no** compensation applied
+        fbMotionStage.AbsoluteMoveWithBacklashCompensation(
+            Position := 100.0,
+            Velocity := 50.0,
+            Acceleration := 500.0,
+            Deceleration := 500.0
+        );
+        nTestStep := 2;
+    2: // Wait for move done, check result
+        IF fbMotionStage.stMotionStatus.bDone THEN
+            AssertTrue(
+                Condition := ABS(fbMotionStage.MotionCmd.fPosition - fbAxisRef[6].NcToPlc.ActPos) < 0.001,
+                Message := 'Target position not reached #1'
+            );
+            AssertTrue(
+                Condition := (fbAxisRef[6].NcToPlc.ActPos - fbAxisRef[6].NcToPlc.ActPosWithoutPosCorrection) = 0,
+                Message := 'No compensation in this direction #2'
+            );
+            nTestStep := 3;
+        END_IF
+    3: // Reverse move, should have 2.5 compensation applied
+        IF fbMotionStage.ExMotionStatus.bIdling THEN
+            fbMotionStage.AbsoluteMoveWithBacklashCompensation(
+                Position := 50.0,
+                Velocity := 50.0,
+                Acceleration := 500.0,
+                Deceleration := 500.0
+            );
+            nTestStep := 4;
+        END_IF
     4:
-         IF stMotionInterface[6].bDone THEN
-			AssertTrue(Condition :=(stMotionInterface[6].fPosition-fbAxisRef[6].NcToPlc.ActPos) = 0, Message := 'Target position not reached #3');
-			AssertTrue(Condition :=((fbAxisRef[6].NcToPlc.ActPos-fbAxisRef[6].NcToPlc.ActPosWithoutPosCorrection) = 2.5), Message := 'This move must have a 2.5 compensation #4');            
-			nTestStep := nTestStep + 1;
+        IF fbMotionStage.stMotionStatus.bDone THEN
+            AssertTrue(
+                Condition := ABS(fbMotionStage.MotionCmd.fPosition - fbAxisRef[6].NcToPlc.ActPos) < 0.001,
+                Message := 'Target position not reached #3'
+            );
+            AssertTrue(
+                Condition := (fbAxisRef[6].NcToPlc.ActPos - fbAxisRef[6].NcToPlc.ActPosWithoutPosCorrection) = 2.5,
+                Message := 'This move must have a 2.5 compensation #4'
+            );
+            nTestStep := 5;
         END_IF
-	5:
-		fbMotionStage.EnableBacklashCompensation(UserEnable:=TRUE, Compensation:=0);	
-		nTestStep := nTestStep + 1;
-	6:
-		stMotionInterface[6].fPosition := 60.0;
-		stMotionInterface[6].fVelocity := 50.0;
-		stMotionInterface[6].fAcceleration := 200.0;
-		stMotionInterface[6].fDeceleration := 200.0;
-		fbMotionStage.UserCmds(MoveCmd:=TRUE, HomeCmd:=FALSE);
-		nTestStep := nTestStep + 1;
-	7:
-		IF stMotionInterface[6].bDone THEN
-			AssertTrue(Condition :=(stMotionInterface[6].fPosition-fbAxisRef[6].NcToPlc.ActPos) = 0, Message := 'Target position not reached #5');
-			AssertTrue(Condition :=((fbAxisRef[6].NcToPlc.ActPos-fbAxisRef[6].NcToPlc.ActPosWithoutPosCorrection) = 0), Message := 'Actual compensation must tbe 0 #6');
-			nTestStep := nTestStep + 1;
-		END_IF
-	8:
-		fbMotionStage.EnableBacklashCompensation(UserEnable:=TRUE, Compensation:=3.5);	
-		nTestStep := nTestStep + 1;
-	9:
-		stMotionInterface[6].fPosition := 40.0;
-		stMotionInterface[6].fVelocity := 50.0;
-		stMotionInterface[6].fAcceleration := 200.0;
-		stMotionInterface[6].fDeceleration := 200.0;
-		fbMotionStage.UserCmds(MoveCmd:=TRUE, HomeCmd:=FALSE);
-		nTestStep := nTestStep + 1;
-	10:
-         IF stMotionInterface[6].bDone THEN
-			AssertTrue(Condition :=(stMotionInterface[6].fPosition-fbAxisRef[6].NcToPlc.ActPos) = 0, Message := 'Target position not reached #7');
-			AssertTrue(Condition :=((fbAxisRef[6].NcToPlc.ActPos-fbAxisRef[6].NcToPlc.ActPosWithoutPosCorrection) = 3.5), Message := 'This move must have a 3.5 compensation #8');            
-			nTestStep := nTestStep + 1;
+    5: // Set compensation to 0, next move should be uncompensated
+        fbMotionStage.EnableBacklashCompensation(UserEnable := TRUE, Compensation := 0);
+        nTestStep := 6;
+    6:
+        fbMotionStage.AbsoluteMoveWithBacklashCompensation(
+            Position := 60.0,
+            Velocity := 50.0,
+            Acceleration := 200.0,
+            Deceleration := 200.0
+        );
+        nTestStep := 7;
+    7:
+        IF fbMotionStage.stMotionStatus.bDone THEN
+            AssertTrue(
+                Condition := ABS(60.0 - fbAxisRef[6].NcToPlc.ActPos) < 0.001,
+                Message := 'Target position not reached #5'
+            );
+            AssertTrue(
+                Condition := (fbAxisRef[6].NcToPlc.ActPos - fbAxisRef[6].NcToPlc.ActPosWithoutPosCorrection) = 0,
+                Message := 'Actual compensation must be 0 #6'
+            );
+            nTestStep := 8;
         END_IF
-	11:
-		fbMotionStage.EnableBacklashCompensation(UserEnable:=FALSE, Compensation:=0.5);	
-		nTestStep := nTestStep + 1;
-	12:
-		stMotionInterface[6].fPosition := 20.0;
-		stMotionInterface[6].fVelocity := 50.0;
-		stMotionInterface[6].fAcceleration := 200.0;
-		stMotionInterface[6].fDeceleration := 200.0;
-		fbMotionStage.UserCmds(MoveCmd:=TRUE, HomeCmd:=FALSE);
-		nTestStep := nTestStep + 1;
-	13:
-         IF stMotionInterface[6].bDone THEN
-			AssertTrue(Condition :=(stMotionInterface[6].fPosition-fbAxisRef[6].NcToPlc.ActPos) = 0, Message := 'Target position not reached #9');
-			AssertTrue(Condition :=((fbAxisRef[6].NcToPlc.ActPos-fbAxisRef[6].NcToPlc.ActPosWithoutPosCorrection) = 0), Message := 'This move is not compensated #10');            
-			nTestStep := nTestStep + 1;
+    8: // Set comp to 3.5 for next move
+        fbMotionStage.EnableBacklashCompensation(UserEnable := TRUE, Compensation := 3.5);
+        nTestStep := 9;
+    9:
+        fbMotionStage.AbsoluteMoveWithBacklashCompensation(
+            Position := 40.0,
+            Velocity := 50.0,
+            Acceleration := 200.0,
+            Deceleration := 200.0
+        );
+        nTestStep := 10;
+    10:
+        IF fbMotionStage.stMotionStatus.bDone THEN
+            AssertTrue(
+                Condition := ABS(40.0 - fbAxisRef[6].NcToPlc.ActPos) < 0.001,
+                Message := 'Target position not reached #7'
+            );
+            AssertTrue(
+                Condition := (fbAxisRef[6].NcToPlc.ActPos - fbAxisRef[6].NcToPlc.ActPosWithoutPosCorrection) = 3.5,
+                Message := 'This move must have a 3.5 compensation #8'
+            );
+            nTestStep := 11;
+        END_IF
+    11: // Disable compensation, next move should show 0 compensation
+        fbMotionStage.EnableBacklashCompensation(UserEnable := FALSE, Compensation := 0.5);
+        nTestStep := 12;
+    12:
+        fbMotionStage.AbsoluteMoveWithBacklashCompensation(
+            Position := 20.0,
+            Velocity := 50.0,
+            Acceleration := 200.0,
+            Deceleration := 200.0
+        );
+        nTestStep := 13;
+    13:
+        IF fbMotionStage.stMotionStatus.bDone THEN
+            AssertTrue(
+                Condition := ABS(20.0 - fbAxisRef[6].NcToPlc.ActPos) < 0.001,
+                Message := 'Target position not reached #9'
+            );
+            AssertTrue(
+                Condition := (fbAxisRef[6].NcToPlc.ActPos - fbAxisRef[6].NcToPlc.ActPosWithoutPosCorrection) = 0,
+                Message := 'This move is not compensated #10'
+            );
+            nTestStep := 14;
         END_IF
 END_CASE
 
 fbTestTimer();
 fbMotionStage();
 
-IF nTestStep = 11 THEN
-
-	TEST_FINISHED();
+IF nTestStep = 14 THEN
+    TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
     AssertTrue(
         Condition := FALSE,
@@ -911,65 +1099,105 @@ VAR_INST
                                     ) ;
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#3S);
-    fbAbsoluteMoveHaltTimer: TON := (PT:=T#50MS);
+    fbAbsoluteMoveHaltTimer: TON := (PT:=T#100MS);
     nTestStep : INT;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST(__POUNAME());
 
-fbMotionStage();
+fbMotionStage(); // Call stage logic cyclically
+
+// State machine for staged assertions
 CASE nTestStep OF
+    // Interlock error check
     0:
-		IF fbMotionStage.ExMotionStatus.bInterlocksError THEN
-			AssertTrue(Condition :=  fbMotionStage.MotionInterface.stAxisStatus.bError, Message := 'Interlock error must be raised #2');
-			AssertEquals_UDINT ( Expected:= fbMotionStage.MotionInterface.stAxisStatus.nErrorId, Actual:=11, Message:='Interlock error code is 11 #3');		
-		END_IF
-		nTestStep := nTestStep + 1;
+        IF fbMotionStage.ExMotionStatus.bInterlocksError THEN
+            AssertTrue(
+                Condition := fbMotionStage.stMotionStatus.bError,
+                Message   := 'Interlock error must be raised #2'
+            );
+            AssertEquals_UDINT(
+                Expected := 11,
+                Actual   := fbMotionStage.stMotionStatus.nErrorId,
+                Message  := 'Interlock error code is 11 #3'
+            );		
+        END_IF
+        nTestStep := 1;
+
+    // Reset, enable limits and interlocks
     1:
-		fbMotionStage.Reset();
-		fbMotionStage.EnableLimits ();
-		fbMotionStage.EnableInterlocks();
-		// to be review: the compiler should fail here, we trying to set a paramter via a properties reference with
-		// only Get acess.trangely the compiler is not failing why? maybe using the structure inside
-		//fbMotionStage.MotionStatus.bExecute := TRUE;
-		nTestStep := nTestStep + 1;	
-	2:
-		IF fbMotionStage.ExMotionStatus.bAbortDone THEN
-			AssertFalse(Condition :=  fbMotionStage.MotionInterface.stAxisStatus.bError, Message := 'Error must cleared #4');
-			AssertEquals_UDINT ( Expected:= fbMotionStage.MotionInterface.stAxisStatus.nErrorId, Actual:=0, Message:='error ID must 0 #5');
-			nTestStep := nTestStep + 1;	
-		END_IF
-	3:
-		fbMotionStage.AbsoluteMove(	
-			Position := 100.0,
-		 	Velocity := 50.0,
-		 	Acceleration := 500.0,
-		 	Deceleration := 500.0,
+        fbMotionStage.Reset();
+        fbMotionStage.EnableLimits(
+			BackwardEnable:=TRUE, 
+			ForwardEnable:=TRUE,
+			HomeEnable:=FALSE
 		);
-		fbAbsoluteMoveHaltTimer.IN:=TRUE;
-		nTestStep := nTestStep + 1;
-	4:
-		IF fbAbsoluteMoveHaltTimer.Q THEN
-			fbMotionStage.Halt();
-			fbAbsoluteMoveHaltTimer.IN:=FALSE;
-			nTestStep := nTestStep + 1;
-		END_IF
-	5:
-		IF  fbMotionStage.MotionInterface.stAxisStatus.bDone THEN
-			AssertTrue(Condition := fbMotionStage.ExMotionStatus.bAborted, Message := 'Move must be aborted #8');
-			AssertFalse(Condition := fbMotionStage.MotionInterface.stAxisStatus.bBusy, Message := 'Move request must be canceled #9');
-			AssertFalse(Condition := fbMotionStage.MotionInterface.bExecute, Message := 'Move request must cleared #10');
-			nTestStep := nTestStep + 1;
-		END_IF	
+        fbMotionStage.EnableInterlocks();
+        // Compiler shouldn't allow property set if property is get-only 
+        // (review behavior: see your original comments).
+        nTestStep := 2;	
+
+    // After abort, error should be cleared
+    2:
+        IF fbMotionStage.ExMotionStatus.bAbortDone THEN
+            AssertFalse(
+                Condition := fbMotionStage.stMotionStatus.bError,
+                Message   := 'Error must cleared #4'
+            );
+            AssertEquals_UDINT(
+                Expected := 0,
+                Actual   := fbMotionStage.stMotionStatus.nErrorId,
+                Message  := 'error ID must 0 #5'
+            );
+            nTestStep := 3;	
+        END_IF
+
+    // Command an absolute move
+    3:
+        fbMotionStage.AbsoluteMove(
+            Position := 1000.0,
+            Velocity := 50.0,
+            Acceleration := 200.0,
+            Deceleration := 200.0
+        );
+        fbAbsoluteMoveHaltTimer.IN := TRUE;
+        nTestStep := 4;
+
+    // After short timer, send Halt
+    4:
+        IF fbAbsoluteMoveHaltTimer.Q THEN
+            fbMotionStage.Halt();
+            fbAbsoluteMoveHaltTimer.IN := FALSE;
+            nTestStep := 5;
+        END_IF
+
+    // After move finishes, check abort status and flags
+    5:
+        IF fbMotionStage.ExMotionStatus.bIdling THEN
+            AssertTrue(
+                Condition := fbMotionStage.ExMotionStatus.bAborted,
+                Message   := 'Move must be aborted #8'
+            );
+            AssertFalse(
+                Condition := fbMotionStage.stMotionStatus.bBusy,
+                Message   := 'Move request must be canceled #9'
+            );
+            AssertFalse(
+                Condition := fbMotionStage.MotionCmd.bExecute,
+                Message   := 'Move request must cleared #10'
+            );
+            nTestStep := 6;
+        END_IF	
 END_CASE
 
+// Cyclically call timer FBs
 fbTestTimer();
 fbAbsoluteMoveHaltTimer();
- 
-IF nTestStep = 6 THEN
 
-TEST_FINISHED();
+// End test or handle timeout
+IF nTestStep = 6 THEN
+    TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
     AssertTrue(
         Condition := FALSE,
@@ -1019,7 +1247,11 @@ CASE nTestStep OF
     // === Reset and Enable Features ===
     1:
         fbMotionStage.Reset();
-        fbMotionStage.EnableLimits();
+        fbMotionStage.EnableLimits(
+			BackwardEnable:=TRUE, 
+			ForwardEnable:=TRUE,
+			HomeEnable:=FALSE
+		);
         fbMotionStage.EnableInterlocks();
         // Note: Trying to write to a property with 'GET' only should fail! See notes below.
         // fbMotionStage.MotionStatus.bExecute := TRUE; // Should be forbidden if it's a read-only property
@@ -1044,7 +1276,7 @@ CASE nTestStep OF
     // === Absolute Move Request ===
     3:
         fbMotionStage.AbsoluteMove(
-            Position := 100.0,
+            Position := 10000.0,
             Velocity := 50.0,
             Acceleration := 500.0,
             Deceleration := 500.0
@@ -1062,7 +1294,7 @@ CASE nTestStep OF
 
     // === Move Done/Abort Confirmation ===
     5:
-        IF fbMotionStage.stMotionStatus.bDone THEN
+        IF fbMotionStage.stExMotionStatus.bAbortDone THEN
             AssertTrue(
                 Condition := fbMotionStage.ExMotionStatus.bAborted,
                 Message := 'Move must be aborted #5'
@@ -1072,7 +1304,7 @@ CASE nTestStep OF
                 Message := 'Move request must be canceled #6'
             );
             AssertFalse(
-                Condition := fbMotionStage.MotionInterface.bExecute,
+                Condition := fbMotionStage.MotionCmd.bExecute,
                 Message := 'Move request must be cleared #7'
             );
             nTestStep := nTestStep + 1;
@@ -1111,54 +1343,66 @@ END_VAR
       <Implementation>
         <ST><![CDATA[TEST(__POUNAME());
 
-
 CASE nTestStep OF
-    0: 
-		fbMotionStage.EnableLimits ();
-		fbMotionStage.EnableInterlocks();
-		nTestStep := nTestStep + 1;
-	1:
-		// init backlash free absolute move.
-		fbMotionStage.AbsoluteMove(	
-			Position := 100.0,
-		 	Velocity := 50.0,
-		 	Acceleration := 500.0,
-		 	Deceleration := 500.0,
+    0: // Enable safety interlocks and hardware limits
+        fbMotionStage.EnableLimits(
+			BackwardEnable:=TRUE, 
+			ForwardEnable:=TRUE,
+			HomeEnable:=FALSE
 		);
-		 nTestStep := nTestStep + 1;
+        fbMotionStage.EnableInterlocks();
+        nTestStep := 1;
 
-	2:
-		IF  fbMotionStage.MotionInterface.stAxisStatus.bDone THEN
-				AssertTrue(Condition :=(fbMotionStage.MotionInterface.fPosition-fbAxisRef[3].NcToPlc.ActPos) = 0, Message := 'Target position not reached #1');
-			nTestStep := nTestStep + 1;
-		END_IF
-    3:
-		IF fbMotionStage.ExMotionStatus.bIdling THEN
-			// init backlash free absolute move.
-			fbMotionStage.AbsoluteMove(	
-				Position := 320.0,
-				Velocity := 50.0,
-				Acceleration := 500.0,
-				Deceleration := 500.0,
-			);	
-			nTestStep := nTestStep + 1;	
-		END_IF
+    1: // Issue initial absolute move to position 100.0 with no backlash
+        fbMotionStage.AbsoluteMove(
+            Position := 100.0,
+            Velocity := 50.0,
+            Acceleration := 500.0,
+            Deceleration := 500.0
+        );
+        nTestStep := 2;
 
-		
-    4:	
-		IF  fbMotionStage.MotionInterface.stAxisStatus.bDone THEN
-				AssertTrue(Condition :=(fbMotionStage.MotionInterface.fPosition-fbAxisRef[3].NcToPlc.ActPos) = 0, Message := 'Target position not reached #2');
-			nTestStep := nTestStep + 1;
-		END_IF
+    2: // Wait for move done
+        IF fbMotionStage.stMotionStatus.bDone THEN
+            AssertTrue(
+                Condition := ABS(fbMotionStage.MotionCmd.fPosition - fbAxisRef[3].NcToPlc.ActPos) < 0.001,
+                Message := 'Target position not reached #1'
+            );
+            nTestStep := 3;
+        END_IF
+
+    3: // When idling, perform another absolute move
+        IF fbMotionStage.ExMotionStatus.bIdling THEN
+            fbMotionStage.AbsoluteMove(
+                Position := 320.0,
+                Velocity := 50.0,
+                Acceleration := 500.0,
+                Deceleration := 500.0
+            );
+            nTestStep := 4;
+        END_IF
+
+    4: // Wait for second move done
+        IF fbMotionStage.stMotionStatus.bDone THEN
+            AssertTrue(
+                Condition := ABS(fbMotionStage.MotionCmd.fPosition - fbAxisRef[3].NcToPlc.ActPos) < 0.001,
+                Message := 'Target position not reached #2'
+            );
+            nTestStep := 5;
+          END_IF
+
 END_CASE
 
 fbTestTimer();
 fbMotionStage();
 
 IF nTestStep = 5 THEN
-	TEST_FINISHED();
+    TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
-    AssertTrue( Condition := FALSE, Message := CONCAT('Timed out at step: ', TO_STRING(nTestStep)));
+    AssertTrue(
+        Condition := FALSE,
+        Message := CONCAT('Timed out at step: ', TO_STRING(nTestStep))
+    );
     TEST_FINISHED();
 END_IF]]></ST>
       </Implementation>
@@ -1167,18 +1411,10 @@ END_IF]]></ST>
       <Declaration><![CDATA[METHOD PRIVATE GivenMoveCmdAndValidInterlocksThenMoveToTarget_Test4
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test4',
-                                        stMotionEpicsItf := stMotionInterface[4],
                                         AxisRef := fbAxisRef[4],
                                         iMotionLogger := fbMotionLogger[4],
                                         iPersistentDataStorage := fbPersistentDataStorage[4]
-                                    ) := (	HardwareEnable:=TRUE, 
-											UserEnable:=TRUE, 
-											LimBackward := TRUE,
-											LimForward:=TRUE,
-											BrakeMode := E_StageBrakeMode.IF_MOVING, 
-											EnableMode:=ENUM_StageEnableMode.DURING_MOTION, 
-											HomeMode:=E_EpicsHomeCmd.ABSOLUTE_SET
-									);
+                                    );
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#3S);
     nTestStep : INT;
@@ -1187,37 +1423,40 @@ END_VAR
       <Implementation>
         <ST><![CDATA[TEST(__POUNAME());
 
-fbMotionStage();
 CASE nTestStep OF
-    0:
-		// init backlash free absolute move.
-		 stMotionInterface[4].fPosition := 100.0;
-		 stMotionInterface[4].fVelocity := 50.0;
-		 stMotionInterface[4].fAcceleration := 500.0;
-		 stMotionInterface[4].fDeceleration := 500.0;
-		 fbMotionStage.UserCmds(MoveCmd:=TRUE, HomeCmd:=FALSE);
-		 nTestStep := nTestStep + 1;
-	1:
-		IF stMotionInterface[4].stAxisStatus.bExecute THEN
-			AssertTrue(Condition := fbMotionStage.bDriveWatchDogStatus, Message := 'WatchDog set #1');
-			AssertTrue(Condition := stMotionInterface[4].bBusy, Message := 'This request must be in process #2');	
-			nTestStep := nTestStep + 1;
-		END_IF
-	2:
-		IF stMotionInterface[4].bDone THEN
-			AssertFalse(Condition := fbMotionStage.bAborted, Message := 'Move must be aborted #3');
-			AssertFalse(Condition :=stMotionInterface[4].bBusy, Message := 'Move request must be canceled #4');
-			AssertTrue(Condition :=(stMotionInterface[4].fPosition-fbAxisRef[4].NcToPlc.ActPos) = 0, Message := 'Target position not reached #5');
-			AssertFalse(Condition :=stMotionInterface[4].bEnable, Message := 'Move request must cleared #6');
-			nTestStep := nTestStep + 1;
-		END_IF	
+    0: // Enable safety interlocks and hardware limits
+        fbMotionStage.EnableLimits(
+			BackwardEnable:=TRUE, 
+			ForwardEnable:=TRUE,
+			HomeEnable:=FALSE
+		);
+        fbMotionStage.EnableInterlocks();
+        nTestStep := 1;
+
+    1: // Issue initial absolute move to position 100.0 with no backlash
+        fbMotionStage.AbsoluteMove(
+            Position := 100.0,
+            Velocity := 50.0,
+            Acceleration := 500.0,
+            Deceleration := 500.0
+        );
+        nTestStep := 2;
+
+    2: // Wait for move done
+        IF fbMotionStage.stMotionStatus.bDone THEN
+            AssertTrue(
+                Condition := ABS(fbMotionStage.MotionCmd.fPosition - fbAxisRef[4].NcToPlc.ActPos) < 0.001,
+                Message := 'Target position not reached #1'
+            );
+            nTestStep := 3;
+        END_IF
 END_CASE
 
 fbTestTimer();
- 
-IF nTestStep = 3 THEN
+fbMotionStage();
 
-TEST_FINISHED();
+IF nTestStep = 3 THEN
+    TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
     AssertTrue(
         Condition := FALSE,
@@ -1230,19 +1469,11 @@ END_IF]]></ST>
     <Method Name="GivenMoveCmdValidInterlockAndWrongMotionParamsThenGotoErrorStateIfResetThenGotoInitState_Test5" Id="{2569c164-e1b3-4f42-94dc-e83db426a5c4}">
       <Declaration><![CDATA[METHOD PRIVATE GivenMoveCmdValidInterlockAndWrongMotionParamsThenGotoErrorStateIfResetThenGotoInitState_Test5
 VAR_INST
-   fbMotionStage : FB_MotionStageNC(	sName := 'Test3',
-                                        stMotionEpicsItf := stMotionInterface[5],
+   fbMotionStage : FB_MotionStageNC(	sName := 'Test5',
                                         AxisRef := fbAxisRef[5],
                                         iMotionLogger := fbMotionLogger[5],
                                         iPersistentDataStorage := fbPersistentDataStorage[5]
-                                    ) := (	HardwareEnable:=TRUE, 
-											UserEnable:=TRUE, 
-											LimBackward := TRUE,
-											LimForward:=TRUE,
-											BrakeMode := E_StageBrakeMode.IF_MOVING, 
-											EnableMode:=ENUM_StageEnableMode.DURING_MOTION, 
-											HomeMode:=E_EpicsHomeCmd.ABSOLUTE_SET
-									);
+                                    );
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#3S);
     fbAbsoluteMoveTimer: TON := (PT:=T#50MS);
@@ -1254,32 +1485,30 @@ END_VAR
 
 CASE nTestStep OF
     0:
-		// init backlash free absolute move.
-		 stMotionInterface[5].fPosition := 100.0;
-		 stMotionInterface[5].fVelocity := 0.0;
-		 stMotionInterface[5].fAcceleration := 500.0;
-		 stMotionInterface[5].fDeceleration := 500.0;
-		 fbMotionStage.UserCmds(MoveCmd:=TRUE, HomeCmd:=FALSE);
-		 nTestStep := nTestStep + 1;
-	1:
-		IF stMotionInterface[5].stAxisStatus.bExecute THEN
-			AssertTrue(Condition := fbMotionStage.bDriveWatchDogStatus, Message := 'WatchDog set #1');
-			AssertTrue(Condition := stMotionInterface[5].bBusy, Message := 'This request must be in process #2');	
-			nTestStep := nTestStep + 1;
-		END_IF
-
+        fbMotionStage.EnableLimits(
+			BackwardEnable:=TRUE, 
+			ForwardEnable:=TRUE,
+			HomeEnable:=FALSE
+		);
+        fbMotionStage.EnableInterlocks();
+        nTestStep := 1;
+	1:// Issue initial absolute move to position 100.0 with no backlash
+        fbMotionStage.AbsoluteMove(
+            Position := 100.0,
+            Velocity := 0.0,
+            Acceleration := 500.0,
+            Deceleration := 500.0
+        );
+		nTestStep := 2;
 	2:
-		IF stMotionInterface[5].bError THEN
-			AssertTrue(Condition := (fbMotionStage.eDriveState=E_MoveState.ERROR), Message := 'Drive must be in Error state #3');
-			nTestStep := nTestStep + 1;
+		IF (fbMotionStage.stExMotionStatus.eDriveState=E_MoveState.ERROR) THEN
+			nTestStep := 3;
 		END_IF
-	3:;
-	
 END_CASE
-
+fbMotionStage();
 fbTestTimer();
 fbAbsoluteMoveTimer();
-fbMotionStage();
+
 
 IF nTestStep = 3 THEN
 

@@ -128,11 +128,20 @@ END_VAR
       </Set>
     </Property>
     <Method Name="Home" Id="{bc29fe62-0c4c-48ff-8558-6e754cb5aa62}">
-      <Declaration><![CDATA[METHOD Home
+      <Declaration><![CDATA[METHOD Home : BOOL
 VAR_INPUT
-    Position	: LREAL := DEFAULT_HOME_POSITION;
-    BufferMode	: MC_BufferMode;
+    Position        : LREAL         := DEFAULT_HOME_POSITION;
+    BufferMode      : MC_BufferMode;
+ 	HomeMode: INT :=E_EpicsHomeCmd.NONE;
 END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="HomeDone" Id="{e4fad1f8-e907-44d7-9745-338f99316fa0}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD HomeDone
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
@@ -163,7 +172,7 @@ END_VAR
       </Get>
     </Property>
     <Property Name="Mode" Id="{477415f6-c414-4767-9416-e8409357d862}">
-      <Declaration><![CDATA[PROPERTY Mode : E_EpicsHomeCmd
+      <Declaration><![CDATA[PROPERTY Mode : INT
 ]]></Declaration>
       <Get Name="Get" Id="{d0c6ac43-f2bf-4458-aef8-1136ed6998ac}">
         <Declaration><![CDATA[VAR
@@ -206,6 +215,14 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
+    <Method Name="StopHome" Id="{cb75a298-de6d-4f31-9892-05161968d767}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD StopHome
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <ObjectProperties>
       <XmlArchive>
         <Data>

@@ -5,6 +5,7 @@
 VAR
     fbLimSwStatus: ARRAY [1..6] OF FB_LimSwStatus_testDouble;
     fbMotionInterlocksCommon:  ARRAY [1..6] OF  FB_MotionInterlocksCommon_TestDouble;
+    fbMotionLogger : ARRAY [1..16] OF FB_MotionLogger_TestDouble;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -28,7 +29,11 @@ VAR_INST
     sExpectedMessage: STRING := 'User enable interlock triggered!';
     sActMessage: STRING;
     // subject under test
-    fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw(iMotionInterlocksCommon:=fbMotionInterlocksCommon[3], iLimSwStatus:=fbLimSwStatus[3]);
+    fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw(
+		iMotionInterlocksCommon:=fbMotionInterlocksCommon[3], 
+		iLimSwStatus:=fbLimSwStatus[3],
+		iMotionLogger := fbMotionLogger[3]
+	);
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -63,7 +68,11 @@ TEST_FINISHED();
       <Declaration><![CDATA[METHOD PRIVATE GivenLimForwardAndBackwardActiveAxisMovingInNegativeDirectionIfPosiveLimishitThenNoLimHitEvent_Test4
 VAR_INST
     tonLimSwStatusEvent : TON := (IN:=TRUE, PT:=T#0S);
-    fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw(iMotionInterlocksCommon:=fbMotionInterlocksCommon[4], iLimSwStatus:=fbLimSwStatus[4]);
+    fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw(
+		iMotionInterlocksCommon:=fbMotionInterlocksCommon[4], 
+		iLimSwStatus:=fbLimSwStatus[4],
+		iMotionLogger := fbMotionLogger[4]
+	);
 END_VAR
 
 ]]></Declaration>
@@ -99,7 +108,11 @@ TEST_FINISHED();
       <Declaration><![CDATA[METHOD PRIVATE  GivenLimForwardAndBackwardActiveAxisMovingInPosiveDirectionIfPosiveLimishitThenLimHitEventOccured_Test5
 VAR_INST
     tonLimSwStatusEvent : TON := (IN:=TRUE, PT:=T#0S);
-    fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw(iMotionInterlocksCommon:=fbMotionInterlocksCommon[5], iLimSwStatus:=fbLimSwStatus[5]);
+    fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw(
+		iMotionInterlocksCommon:=fbMotionInterlocksCommon[5], 
+		iLimSwStatus:=fbLimSwStatus[5],
+		iMotionLogger := fbMotionLogger[5]
+	);
 END_VAR
 
 ]]></Declaration>
@@ -132,7 +145,11 @@ TEST_FINISHED();
     <Method Name="GivenLimSwStatusActiveAndAxisHomingInPosOrNegDirectionThenNoLimHitEvent_Test6" Id="{48a68bdb-791b-428f-85bd-1be319b9fa11}">
       <Declaration><![CDATA[METHOD PRIVATE GivenLimSwStatusActiveAndAxisHomingInPosOrNegDirectionThenNoLimHitEvent_Test6
 VAR_INST
-    fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw(iMotionInterlocksCommon:=fbMotionInterlocksCommon[6], iLimSwStatus:=fbLimSwStatus[6]);
+    fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw(
+		iMotionInterlocksCommon:=fbMotionInterlocksCommon[6], 
+		iLimSwStatus:=fbLimSwStatus[6],
+		iMotionLogger := fbMotionLogger[6]
+	);
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST(__POUNAME());
@@ -167,7 +184,11 @@ TEST_FINISHED();
     <Method Name="GivenLimSwStatusEventIfStandStillUpdateBackwardAndFowardEnable_Test2" Id="{cf0a87d6-b613-4bab-bdaf-73e10f361f1f}">
       <Declaration><![CDATA[METHOD PRIVATE GivenLimSwStatusEventIfStandStillUpdateBackwardAndFowardEnable_Test2
 VAR_INST
-    fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw(iMotionInterlocksCommon:=fbMotionInterlocksCommon[2], iLimSwStatus:=fbLimSwStatus[2]);
+    fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw(
+		iMotionInterlocksCommon:=fbMotionInterlocksCommon[2], 
+		iLimSwStatus:=fbLimSwStatus[2],
+		iMotionLogger := fbMotionLogger[2]
+	);
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -204,7 +225,11 @@ TEST_FINISHED();
     <Method Name="GivenPositiveLimHitEventIfGlobalResetOrNewMoveReqClearLocalFlags_Test1" Id="{c69f1b81-3118-4011-9ebf-118fdb3c44fe}">
       <Declaration><![CDATA[METHOD PRIVATE GivenPositiveLimHitEventIfGlobalResetOrNewMoveReqClearLocalFlags_Test1
 VAR_INST
-    fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw(iMotionInterlocksCommon:=fbMotionInterlocksCommon[1], iLimSwStatus:=fbLimSwStatus[1]);
+    fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw(
+		iMotionInterlocksCommon:=fbMotionInterlocksCommon[1], 
+		iLimSwStatus:=fbLimSwStatus[1],
+		iMotionLogger := fbMotionLogger[1]
+	);
 END_VAR
 ]]></Declaration>
       <Implementation>

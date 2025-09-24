@@ -198,11 +198,13 @@ END_IF]]></ST>
     <Method Name="GivenHomeCmdAbsoluteSetModeThenSetHomeDoneAndPositionToUserDefineOffset_Test1" Id="{d4754e57-693c-40b7-9460-2ffc5ab4a21b}">
       <Declaration><![CDATA[METHOD PRIVATE GivenHomeCmdAbsoluteSetModeThenSetHomeDoneAndPositionToUserDefineOffset_Test1
 VAR_INST
+	// 
     fbHome : FB_HomeNC(
 		AxisRef:=fbAxisRef[1],
 		iLimSwStatus:=fbLimSwStatus[1],
 		iMotionLogger:=fbMotionLogger[1]
-	):=(Mode:=E_EpicsHomeCmd.ABSOLUTE_SET);
+	)	:=	(	Mode:=E_EpicsHomeCmd.ABSOLUTE_SET	);
+
     fbTestTimer : TON := (IN := TRUE, PT := T#8S);
     nTestStep : INT := 0;
     fExpectedPosition : LREAL := 20.0;
@@ -229,7 +231,11 @@ fbTestTimer(IN := TRUE);
 CASE nTestStep OF
     0: // Enable power, then issue home command
         IF fbPower[1].PowerIsEnabled THEN
-            fbHome.Home(Position := fExpectedPosition, BufferMode := MC_BufferMode.MC_Aborting);
+            fbHome.Home(
+				Position := fExpectedPosition,
+				BufferMode := MC_BufferMode.MC_Aborting,
+				HomeMode:=E_EpicsHomeCmd.ABSOLUTE_SET
+			);
             nTestStep := 1;
         END_IF
 
@@ -315,8 +321,11 @@ CASE nTestStep OF
             // Set override for homing
             bHomingOverride := TRUE;
             // Initiate homing sequence
-			
-            fbHome.Home(Position := 20.0, BufferMode := MC_Aborting);
+            fbHome.Home(
+				Position := 20.0,
+				BufferMode := MC_BufferMode.MC_Aborting,
+				HomeMode:=E_EpicsHomeCmd.HIGH_LIMIT
+			);
             nTestStep := 2;
         END_IF
     2: // Wait until homing is busy (started)
@@ -410,7 +419,11 @@ CASE nTestStep OF
     0:
         IF fbPower[3].PowerIsEnabled THEN
             // Initiate Home command when power is ready
-            fbHome.Home(Position := fExpectedPosition, BufferMode := MC_BufferMode.MC_Aborting);
+			 fbHome.Home(
+					Position := fExpectedPosition,
+					BufferMode := MC_BufferMode.MC_Aborting,
+					HomeMode:=E_EpicsHomeCmd.HOME_VIA_HIGH
+			);
             nTestStep := 1;
         END_IF
     1:
@@ -504,7 +517,11 @@ fbPower[4].Power(
 CASE nTestStep OF
     0: // Await full power-up, start first stage home
         IF fbPower[4].PowerIsEnabled THEN
-            fbHome.Home(Position := fExpectedPosition, BufferMode := MC_BufferMode.MC_Aborting);
+			 fbHome.Home(
+					Position := fExpectedPosition,
+					BufferMode := MC_BufferMode.MC_Aborting,
+					HomeMode:=E_EpicsHomeCmd.HOME_VIA_HIGH
+			);
             nTestStep := 1;
         END_IF
     1: // Simulate Forward Limit pulse (stage 1 complete)
@@ -614,7 +631,11 @@ fbPower[5].Power(
 CASE nTestStep OF
     0: // Wait for power to enable before starting home sequence
         IF fbPower[5].PowerIsEnabled THEN
-            fbHome.Home(Position := fExpectedPosition, BufferMode := MC_BufferMode.MC_Aborting);
+			 fbHome.Home(
+					Position := fExpectedPosition,
+					BufferMode := MC_BufferMode.MC_Aborting,
+					HomeMode:=E_EpicsHomeCmd.HOME_VIA_LOW
+			);
             nTestStep := 1;
         END_IF
     1: // Simulate cam switch pulse: set home limit
@@ -710,7 +731,11 @@ fbPower[6].Power(
 CASE nTestStep OF
     0: // Wait for power ready, then start home
         IF fbPower[6].PowerIsEnabled THEN
-            fbHome.Home(Position := fExpectedPosition, BufferMode := MC_BufferMode.MC_Aborting);
+			 fbHome.Home(
+					Position := fExpectedPosition,
+					BufferMode := MC_BufferMode.MC_Aborting,
+					HomeMode:=E_EpicsHomeCmd.HOME_VIA_LOW
+			);
             nTestStep := 1;
         END_IF
 
@@ -829,7 +854,11 @@ fbPower[7].Power(
 CASE nTestStep OF
     0: // Wait for power enabled, then start homing
         IF fbPower[7].PowerIsEnabled THEN
-            fbHome.Home(Position := fExpectedPosition, BufferMode := MC_BufferMode.MC_Aborting);
+			 fbHome.Home(
+					Position := fExpectedPosition,
+					BufferMode := MC_BufferMode.MC_Aborting,
+					HomeMode:=E_EpicsHomeCmd.LOW_LIMIT
+			);
             nTestStep := 1;
         END_IF
 
@@ -919,7 +948,11 @@ CASE nTestStep OF
 
     1: // Wait for power to come up, then issue Home command
         IF fbPower[8].PowerIsEnabled THEN
-            fbHome.Home(Position := 0.0, BufferMode := MC_BufferMode.MC_Aborting);
+			 fbHome.Home(
+					Position := 0.0,
+					BufferMode := MC_BufferMode.MC_Aborting,
+					HomeMode:=E_EpicsHomeCmd.NONE
+			);
             nTestStep := 2;
         END_IF
 
@@ -986,7 +1019,11 @@ fbPower[9].Power(
 CASE nTestStep OF
     0: // Wait for power enabled, then start homing command
         IF fbPower[9].PowerIsEnabled THEN
-            fbHome.Home(Position := fExpectedPosition, BufferMode := MC_BufferMode.MC_Aborting);
+			 fbHome.Home(
+					Position := fExpectedPosition,
+					BufferMode := MC_BufferMode.MC_Aborting,
+					HomeMode:=E_EpicsHomeCmd.HIGH_LIMIT
+			);
             nTestStep := 1;
         END_IF
 

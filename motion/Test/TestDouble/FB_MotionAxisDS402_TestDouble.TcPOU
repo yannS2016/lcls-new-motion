@@ -91,8 +91,9 @@ END_VAR
     <Method Name="Home" Id="{2de1c4e2-757b-47b6-84b3-d845676f9de7}">
       <Declaration><![CDATA[METHOD Home
 VAR_INPUT
-    Position	: LREAL := DEFAULT_HOME_POSITION;
-    BufferMode	: MC_BufferMode;
+    Position        : LREAL         := DEFAULT_HOME_POSITION;
+    BufferMode      : MC_BufferMode;
+ 	HomeMode: INT :=E_EpicsHomeCmd.NONE;
 END_VAR
 ]]></Declaration>
       <Implementation>

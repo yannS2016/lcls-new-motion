@@ -7,8 +7,9 @@ VAR
 
 
     fbMotionAxisNC : ARRAY [1..20] OF FB_MotionAxisNC_TestDouble;
-	stMotionInterface   : ARRAY[1..20] OF ST_MotionCommand;
+	stMotionCommand  : ARRAY[1..20] OF ST_MotionCommand;
     fbMotionAxisDS402 : ARRAY [1..8] OF FB_MotionAxisDS402_TestDouble;
+    fbMotionLogger : ARRAY [1..20] OF FB_MotionLogger_TestDouble;
     fbMoveRequest : ARRAY [1..20] OF FB_MoveRequest_TestDouble;
 
 END_VAR
@@ -37,9 +38,10 @@ GIvenReachedStateAndAxisStandStillCompleteMoveRequestThenGotoIdlingState_Test14(
       <Declaration><![CDATA[METHOD PRIVATE GivenDS402AxisInitStateValidatedAbsoluteMoveRequestAndModeConfigDoneThenGotoStartedState_Test18
 VAR_INST
     fbMotionDriveStateMachine : FB_MotionDriveStateMachine(
-		stMotionInterface := THIS^.stMotionInterface[18],
+		stMotionCommand := THIS^.stMotionCommand[18],
 		iMotionAxis:=THIS^.fbMotionAxisDS402[4], 
-		iMoveRequest:=THIS^.fbMoveRequest[18]
+		iMoveRequest:=THIS^.fbMoveRequest[18],
+		iMotionLogger := THIS^.fbMotionLogger[18]
 	);
     expectedMoveState : E_MoveState := E_MoveState.STARTED;
     fbTestTimer: TON := (IN:=TRUE, PT:=T#6S);
@@ -86,9 +88,10 @@ END_IF
       <Declaration><![CDATA[METHOD PRIVATE GivenDS402AxisInitStateValidatedAbsoluteMoveRequestAndNotModeConfigDoneThenLatchInitState_Test17
 VAR_INST
     fbMotionDriveStateMachine : FB_MotionDriveStateMachine(
-		stMotionInterface := THIS^.stMotionInterface[17],
+		stMotionCommand := THIS^.stMotionCommand[17],
 		iMotionAxis:=THIS^.fbMotionAxisDS402[3], 
-		iMoveRequest:=THIS^.fbMoveRequest[17]
+		iMoveRequest:=THIS^.fbMoveRequest[17],
+		iMotionLogger := THIS^.fbMotionLogger[17]
 	);
     expectedMoveState : E_MoveState := E_MoveState.INIT;
     fbTestTimer: TON := (IN:=TRUE, PT:=T#6S);
@@ -141,9 +144,10 @@ END_IF
       <Declaration><![CDATA[METHOD PRIVATE GivenDS402AxisInitStateValidatedHomeMoveRequestAndModeConfigDoneThenGotoStartedState_Test16
 VAR_INST
     fbMotionDriveStateMachine : FB_MotionDriveStateMachine(
-		stMotionInterface := THIS^.stMotionInterface[16],
+		stMotionCommand := THIS^.stMotionCommand[16],
 		iMotionAxis:=THIS^.fbMotionAxisDS402[2], 
-		iMoveRequest:=THIS^.fbMoveRequest[16]
+		iMoveRequest:=THIS^.fbMoveRequest[16],
+		iMotionLogger := THIS^.fbMotionLogger[16]
 	);
     expectedMoveState : E_MoveState := E_MoveState.STARTED;
     fbTestTimer: TON := (IN:=TRUE, PT:=T#6S);
@@ -190,9 +194,10 @@ END_IF
       <Declaration><![CDATA[METHOD PRIVATE GivenDS402AxisInitStateValidatedHomeMoveRequestAndNotModeConfigDoneThenLacthInitState_Test15
 VAR_INST
     fbMotionDriveStateMachine : FB_MotionDriveStateMachine(
-		stMotionInterface := THIS^.stMotionInterface[15],
+		stMotionCommand := THIS^.stMotionCommand[15],
 		iMotionAxis:=THIS^.fbMotionAxisDS402[1], 
-		iMoveRequest:=THIS^.fbMoveRequest[15]
+		iMoveRequest:=THIS^.fbMoveRequest[15],
+		iMotionLogger := THIS^.fbMotionLogger[15]
 	);
     expectedMoveState : E_MoveState := E_MoveState.INIT;
     fbTestTimer: TON := (IN:=TRUE, PT:=T#6S);
@@ -245,9 +250,10 @@ END_IF
       <Declaration><![CDATA[METHOD PRIVATE GIvenIdlingStateAndValidatedMoveRequestIfWatchDogTImerOutThenGotoErrorState_Test3
 VAR_INST
     fbMotionDriveStateMachine : FB_MotionDriveStateMachine(
-		stMotionInterface := THIS^.stMotionInterface[3],
+		stMotionCommand := THIS^.stMotionCommand[3],
 		iMotionAxis:=THIS^.fbMotionAxisNC[3], 
-		iMoveRequest:=THIS^.fbMoveRequest[3]
+		iMoveRequest:=THIS^.fbMoveRequest[3],
+		iMotionLogger := THIS^.fbMotionLogger[3]
 	);
     expectedMoveState : E_MoveState := E_MoveState.ERROR;
     fbTestTimer: TON := (IN:=TRUE, PT:=T#6S);
@@ -294,9 +300,10 @@ END_IF
       <Declaration><![CDATA[METHOD PRIVATE GIvenIdlingStateIfErrorGotoErrorState_Test1
 VAR_INST
     fbMotionDriveStateMachine : FB_MotionDriveStateMachine(
-		stMotionInterface := THIS^.stMotionInterface[1],
+		stMotionCommand := THIS^.stMotionCommand[1],
 		iMotionAxis:=THIS^.fbMotionAxisNC[1], 
-		iMoveRequest:=THIS^.fbMoveRequest[1]
+		iMoveRequest:=THIS^.fbMoveRequest[1],
+		iMotionLogger := THIS^.fbMotionLogger[1]
 	);
     expectedMoveState : E_MoveState := E_MoveState.ERROR;
 END_VAR
@@ -321,9 +328,10 @@ TEST_FINISHED();
       <Declaration><![CDATA[METHOD PRIVATE GIvenIdlingStateIfValidatedMoveRequestThenGotoInitState_Test2
 VAR_INST
     fbMotionDriveStateMachine : FB_MotionDriveStateMachine(
-		stMotionInterface := THIS^.stMotionInterface[2],
+		stMotionCommand := THIS^.stMotionCommand[2],
 		iMotionAxis:=THIS^.fbMotionAxisNC[2], 
-		iMoveRequest:=THIS^.fbMoveRequest[2]
+		iMoveRequest:=THIS^.fbMoveRequest[2],
+		iMotionLogger := THIS^.fbMotionLogger[2]
 	);
     expectedMoveState : E_MoveState := E_MoveState.INIT;
 END_VAR
@@ -351,9 +359,10 @@ TEST_FINISHED();
       <Declaration><![CDATA[METHOD PRIVATE GivenInPogressStateAndAbortedThenGotoInterruptedState_Test10
 VAR_INST
     fbMotionDriveStateMachine : FB_MotionDriveStateMachine(
-		stMotionInterface := THIS^.stMotionInterface[10],
+		stMotionCommand := THIS^.stMotionCommand[10],
 		iMotionAxis:=THIS^.fbMotionAxisNC[10], 
-		iMoveRequest:=THIS^.fbMoveRequest[10]
+		iMoveRequest:=THIS^.fbMoveRequest[10],
+		iMotionLogger := THIS^.fbMotionLogger[10]
 	);
     expectedMoveState : E_MoveState := E_MoveState.INTERRUPTED;
 END_VAR
@@ -379,9 +388,10 @@ TEST_FINISHED();
       <Declaration><![CDATA[METHOD PRIVATE GIvenInPogressStateAndAbsoluteMoveDoneStatusFromAxisThenGotoReachedState_Test13
 VAR_INST
     fbMotionDriveStateMachine : FB_MotionDriveStateMachine(
-		stMotionInterface := THIS^.stMotionInterface[13],
+		stMotionCommand := THIS^.stMotionCommand[13],
 		iMotionAxis:=THIS^.fbMotionAxisNC[13], 
-		iMoveRequest:=THIS^.fbMoveRequest[13]
+		iMoveRequest:=THIS^.fbMoveRequest[13],
+		iMotionLogger := THIS^.fbMotionLogger[13]
 	);
     expectedMoveState : E_MoveState := E_MoveState.REACHED;
 END_VAR
@@ -407,9 +417,10 @@ TEST_FINISHED();
       <Declaration><![CDATA[METHOD PRIVATE GIvenInPogressStateAndErrorThenGotoErrorState_Test9
 VAR_INST
     fbMotionDriveStateMachine : FB_MotionDriveStateMachine(
-		stMotionInterface := THIS^.stMotionInterface[9],
+		stMotionCommand := THIS^.stMotionCommand[9],
 		iMotionAxis:=THIS^.fbMotionAxisNC[9], 
-		iMoveRequest:=THIS^.fbMoveRequest[9]
+		iMoveRequest:=THIS^.fbMoveRequest[9],
+		iMotionLogger := THIS^.fbMotionLogger[9]
 	);
     expectedMoveState : E_MoveState := E_MoveState.ERROR;
 END_VAR
@@ -434,9 +445,10 @@ TEST_FINISHED();
       <Declaration><![CDATA[METHOD PRIVATE GIvenInPogressStateAndHomeMoveDoneStatusFromAxisThenGotoReachedState_Test11
 VAR_INST
     fbMotionDriveStateMachine : FB_MotionDriveStateMachine(
-		stMotionInterface := THIS^.stMotionInterface[11],
+		stMotionCommand := THIS^.stMotionCommand[11],
 		iMotionAxis:=THIS^.fbMotionAxisNC[11], 
-		iMoveRequest:=THIS^.fbMoveRequest[11]
+		iMoveRequest:=THIS^.fbMoveRequest[11],
+		iMotionLogger := THIS^.fbMotionLogger[11]
 	);
     expectedMoveState : E_MoveState := E_MoveState.REACHED;
 END_VAR
@@ -462,9 +474,10 @@ TEST_FINISHED();
       <Declaration><![CDATA[METHOD PRIVATE GIvenInterruptedStateAndAbortDoneResetMoveDisablePowerThenGotoIdlingState_Test12
 VAR_INST
     fbMotionDriveStateMachine : FB_MotionDriveStateMachine(
-		stMotionInterface := THIS^.stMotionInterface[12],
+		stMotionCommand := THIS^.stMotionCommand[12],
 		iMotionAxis:=THIS^.fbMotionAxisNC[12], 
-		iMoveRequest:=THIS^.fbMoveRequest[12]
+		iMoveRequest:=THIS^.fbMoveRequest[12],
+		iMotionLogger := THIS^.fbMotionLogger[12]
 	);	
     expectedMoveState : E_MoveState := E_MoveState.IDLING;
     fbTestTimer: TON := (IN:=TRUE, PT:=T#2S);
@@ -508,9 +521,10 @@ END_IF
       <Declaration><![CDATA[METHOD PRIVATE GivenNCAxisInitStateValidatedAbsoluteMoveRequestThenGotoStartedState_Test4
 VAR_INST
     fbMotionDriveStateMachine : FB_MotionDriveStateMachine(
-		stMotionInterface := THIS^.stMotionInterface[4],
+		stMotionCommand := THIS^.stMotionCommand[4],
 		iMotionAxis:=THIS^.fbMotionAxisNC[4], 
-		iMoveRequest:=THIS^.fbMoveRequest[4]
+		iMoveRequest:=THIS^.fbMoveRequest[4],
+		iMotionLogger := THIS^.fbMotionLogger[4]
 	);
     expectedMoveState : E_MoveState := E_MoveState.STARTED;
 END_VAR
@@ -536,9 +550,10 @@ TEST_FINISHED();
       <Declaration><![CDATA[METHOD PRIVATE GivenNCAxisInitStateValidatedHomeMoveRequestIfModeConfigDoneThenGotoStartedState_Test5
 VAR_INST
     fbMotionDriveStateMachine : FB_MotionDriveStateMachine(
-		stMotionInterface := THIS^.stMotionInterface[5],
+		stMotionCommand := THIS^.stMotionCommand[5],
 		iMotionAxis:=THIS^.fbMotionAxisNC[5], 
-		iMoveRequest:=THIS^.fbMoveRequest[5]
+		iMoveRequest:=THIS^.fbMoveRequest[5],
+		iMotionLogger := THIS^.fbMotionLogger[5]
 	);
     expectedMoveState : E_MoveState := E_MoveState.ERROR;
     nTestStep : INT;
@@ -564,9 +579,10 @@ TEST_FINISHED();
       <Declaration><![CDATA[METHOD PRIVATE GIvenReachedStateAndAxisStandStillCompleteMoveRequestThenGotoIdlingState_Test14
 VAR_INST
     fbMotionDriveStateMachine : FB_MotionDriveStateMachine(
-		stMotionInterface := THIS^.stMotionInterface[14],
+		stMotionCommand := THIS^.stMotionCommand[14],
 		iMotionAxis:=THIS^.fbMotionAxisNC[14], 
-		iMoveRequest:=THIS^.fbMoveRequest[14]
+		iMoveRequest:=THIS^.fbMoveRequest[14],
+		iMotionLogger := THIS^.fbMotionLogger[14]
 	);
     expectedMoveState : E_MoveState := E_MoveState.IDLING;
 END_VAR
@@ -596,9 +612,10 @@ TEST_FINISHED();
       <Declaration><![CDATA[METHOD PRIVATE GIvenStartedStateAndBusyStatusFromAxisThenGotoInProgressState_Test7
 VAR_INST
     fbMotionDriveStateMachine : FB_MotionDriveStateMachine(
-		stMotionInterface := THIS^.stMotionInterface[7],
+		stMotionCommand := THIS^.stMotionCommand[7],
 		iMotionAxis:=THIS^.fbMotionAxisNC[7], 
-		iMoveRequest:=THIS^.fbMoveRequest[7]
+		iMoveRequest:=THIS^.fbMoveRequest[7],
+		iMotionLogger := THIS^.fbMotionLogger[7]
 	);
     expectedMoveState : E_MoveState := E_MoveState.IN_PROGRESS;
     nTestStep : INT;
@@ -630,9 +647,10 @@ fbMotionDriveStateMachine();
       <Declaration><![CDATA[METHOD PRIVATE GIvenStartedStateAndWatchDogTimeOutThenGotoInProgressState_Test8
 VAR_INST
     fbMotionDriveStateMachine : FB_MotionDriveStateMachine(
-		stMotionInterface := THIS^.stMotionInterface[8],
+		stMotionCommand := THIS^.stMotionCommand[8],
 		iMotionAxis:=THIS^.fbMotionAxisNC[8], 
-		iMoveRequest:=THIS^.fbMoveRequest[8]
+		iMoveRequest:=THIS^.fbMoveRequest[8],
+		iMotionLogger := THIS^.fbMotionLogger[8]
 	);
     expectedMoveState : E_MoveState := E_MoveState.ERROR;
     fbTestTimer: TON := (IN:=TRUE, PT:=T#6S);
@@ -681,9 +699,10 @@ END_IF
       <Declaration><![CDATA[METHOD PRIVATE GIvenStartedStatedAndErrorThenGotoErrorState_Test6
 VAR_INST
     fbMotionDriveStateMachine : FB_MotionDriveStateMachine(
-		stMotionInterface := THIS^.stMotionInterface[6],
+		stMotionCommand := THIS^.stMotionCommand[6],
 		iMotionAxis:=THIS^.fbMotionAxisNC[6], 
-		iMoveRequest:=THIS^.fbMoveRequest[6]
+		iMoveRequest:=THIS^.fbMoveRequest[6],
+		iMotionLogger := THIS^.fbMotionLogger[6]
 	);
     expectedMoveState : E_MoveState := E_MoveState.ERROR;
 
