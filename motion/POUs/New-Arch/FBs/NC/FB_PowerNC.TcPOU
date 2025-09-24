@@ -7,6 +7,7 @@ VAR
     AxisRef : REFERENCE TO AXIS_REF;
     fbMcPower : MC_Power;
 	iMotionLogger : I_MotionLogger := 0;
+	rtError: R_TRIG;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -20,7 +21,8 @@ fbMcPower(
     Axis := AxisRef,
 );
 
-IF fbMcPower.Error THEN
+rtError(CLK:=fbMcPower.Error);
+IF rtError.Q THEN
 	iMotionLogger.Logger(Message := iMotionLogger.ErrorCodeLookup(fbMcPower.ErrorID), Level := E_MotionLogLevel.ERROR, Source := 'Power');	
 END_IF]]></ST>
     </Implementation>

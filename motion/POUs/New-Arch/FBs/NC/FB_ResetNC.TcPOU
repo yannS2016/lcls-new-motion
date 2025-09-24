@@ -7,6 +7,7 @@ VAR
     AxisRef : REFERENCE TO AXIS_REF;
 	iMotionLogger : I_MotionLogger;
     fbMcReset 	: MC_Reset;
+	rtError: R_TRIG;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -16,7 +17,8 @@ END_IF
 
 fbMcReset( Axis := AxisRef );
 
-IF fbMcReset.Error THEN
+rtError(CLK:=fbMcReset.Error);
+IF rtError.Q THEN
 	iMotionLogger.Logger(Message := iMotionLogger.ErrorCodeLookup(fbMcReset.ErrorID), Level := E_MotionLogLevel.ERROR, Source := 'Reset');	
 END_IF]]></ST>
     </Implementation>

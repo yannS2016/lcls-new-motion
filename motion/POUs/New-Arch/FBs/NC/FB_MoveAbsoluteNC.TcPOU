@@ -9,7 +9,6 @@ VAR
     fbMcMoveAbsolute : MC_MoveAbsolute;
     sMessage : T_MAXSTRING;
 	// auto clear execute in case of error
-	
 	rtError: R_TRIG;
 END_VAR
 ]]></Declaration>
@@ -20,7 +19,8 @@ END_IF
 
 fbMcMoveAbsolute(Axis := AxisRef);
 
-IF fbMcMoveAbsolute.Error THEN
+rtError(CLK:=fbMcMoveAbsolute.Error);
+IF rtError.Q THEN
 	iMotionLogger.Logger(Message := iMotionLogger.ErrorCodeLookup(fbMcMoveAbsolute.ErrorID), Level := E_MotionLogLevel.ERROR, Source := 'MoveAbsolute');	
 END_IF]]></ST>
     </Implementation>

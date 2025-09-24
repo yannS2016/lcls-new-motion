@@ -28,6 +28,8 @@ VAR
     bAxisParamsInit: BOOL;
     {attribute 'hide'}
 	bEnable : BOOL;
+    {attribute 'hide'}
+	rtError: R_TRIG;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -57,7 +59,8 @@ stAxisParametersExposed.fEncScaleFactorInternal       := stAxisParameters.fEncSc
 bExecParamsRead R= fbMcReadParams.Done OR fbMcReadParams.Error;
 bAxisParamsInit S= fbMcReadParams.Done;
 
-IF fbMcReadParams.Error THEN
+rtError(CLK:=fbMcReadParams.Error);
+IF rtError.Q THEN
 	iMotionLogger.Logger(Message := iMotionLogger.ErrorCodeLookup(fbMcReadParams.ErrorID), Level := E_MotionLogLevel.ERROR, Source := 'ReadParams');	
 END_IF]]></ST>
     </Implementation>

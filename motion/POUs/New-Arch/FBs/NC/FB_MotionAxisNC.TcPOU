@@ -26,9 +26,10 @@ VAR
     // Triggers for error/abort conditions
     rtAbortDone : R_TRIG;
     rtMoveAbsoluteError : R_TRIG;
+	rtMoveHomeError : R_TRIG;
     rtHaltError : R_TRIG;
     rtResetError : R_TRIG;
-
+	rtResetDone : R_TRIG;
     // Aggregated axis status structure
     stMotionAxisStatus : ST_AxisStatus;
 END_VAR
@@ -44,8 +45,6 @@ END_IF
 
 // 1. Read axis hardware status *FIRST*
 AxisRef.ReadStatus();
-
-
 
 // 3. Error Handling — now FBs' error/status are up-to-date
 ErrorHandling();
@@ -63,7 +62,7 @@ stMotionAxisStatus.bHaltDone                 := iHalt.Done;
 stMotionAxisStatus.bHomeBusy                 := iHome.Busy;
 stMotionAxisStatus.bHomeDone                 := iHome.Done;
 stMotionAxisStatus.bLimHomeDone              := iHome.LimHomeDone;
-stMotionAxisStatus.eHomeMode                 := iHome.Mode;
+stMotionAxisStatus.nHomeMode                 := iHome.Mode;
 stMotionAxisStatus.bInTargetPosition         := AxisRef.Status.InTargetPosition;
 stMotionAxisStatus.nAxisId                   := AxisRef.NcToPlc.AxisId;
 stMotionAxisStatus.fMeasuredAcceleration     := AxisRef.NcToPlc.ActAcc;
@@ -88,21 +87,36 @@ stMotionAxisStatus.fSavedPosition            := iParamsSaveRestore.SavedPosition
 stMotionAxisStatus.nScaledEncoderCount       := iEncoderScaling.EncoderCount;
 stMotionAxisStatus.bStandStill               := AxisRef.Status.StandStill;
 stMotionAxisStatus.bBusy                     := iHome.Busy OR iMoveAbsolute.Busy;
-stMotionAxisStatus.bDone                     := iHome.Done OR iMoveAbsolute.Done;
+//stMotionAxisStatus.bDone                     := iHome.Done OR iMoveAbsolute.Done;
+stMotionAxisStatus.bDone                     := iMoveAbsolute.Done;
 stMotionAxisStatus.bError                    := bError;
 stMotionAxisStatus.nErrorID                  := nErrorID;
 
+IF bError THEN
+	sMessage := iMotionLogger.ErrorCodeLookup(nErrorId:=nErrorID);
+END_IF
+
 // 5. Auto-reset triggers for internal error recovery
+rtResetDone(CLK:=iReset.Done);
 rtMoveAbsoluteError(CLK:=iMoveAbsolute.Error);
+rtMoveHomeError(CLK:=iHome.Error);
 rtHaltError(CLK:=iHalt.Error);
 rtResetError(CLK:=iReset.Error);
 
 IF rtMoveAbsoluteError.Q THEN
-    iMoveAbsolute.MoveAbsoluteDone();    
+    iMoveAbsolute.MoveAbsoluteDone(); 
+ELSIF  rtMoveHomeError.Q THEN
+ 	iHome.HomeDone();
 ELSIF rtHaltError.Q THEN
     iHalt.HaltDone();    
 ELSIF rtResetError.Q THEN
-    iReset.ResetDone();    
+    iReset.ResetDone();
+END_IF
+
+IF rtResetDone.Q THEN
+    bError:=FALSE;
+    nErrorId:=0;
+    sMessage := '';  	
 END_IF]]></ST>
     </Implementation>
     <Method Name="AxisEnabled" Id="{cc4bbafd-6987-498c-9fa8-c674abc392f5}">
@@ -219,50 +233,38 @@ END_VAR
 IF THIS^.iPower.Error AND THIS^.iPower.PowerIsEnabled THEN
     bError:=THIS^.iPower.Error;
     nErrorId:=THIS^.iPower.ErrorID;
-    sMessage := THIS^.iPower.Message;
 ELSIF THIS^.iHalt.Error AND THIS^.iHalt.Active THEN
     bError:=THIS^.iHalt.Error;
     nErrorId:=THIS^.iHalt.ErrorID;
-    sMessage := THIS^.iHalt.Message;
 ELSIF THIS^.iReset.Error AND THIS^.iReset.Active THEN
     bError:=THIS^.iReset.Error;
     nErrorId:=THIS^.iReset.ErrorID;
-    sMessage := THIS^.iReset.Message;
 ELSIF THIS^.iBacklashCompensation.Error THEN
     bError:=THIS^.iBacklashCompensation.Error;
     nErrorId:=THIS^.iBacklashCompensation.ErrorID;
-    sMessage := THIS^.iBacklashCompensation.Message;
 ELSIF THIS^.iMoveAbsolute.Error THEN
     bError:=THIS^.iMoveAbsolute.Error;
     nErrorId:=THIS^.iMoveAbsolute.ErrorID;
-    sMessage := THIS^.iMoveAbsolute.Message;
 ELSIF THIS^.iHome.Error (*Homing error*) THEN
     bError:=THIS^.iHome.Error;
     nErrorId:=THIS^.iHome.ErrorID;
-    sMessage := THIS^.iHome.Message;
 ELSIF THIS^.AxisRef.Status.Error  THEN
     bError:=THIS^.AxisRef.Status.Error;
     nErrorId:=THIS^.AxisRef.Status.ErrorID;
-    sMessage := THIS^.iMotionLogger.ErrorCodeLookup(THIS^.AxisRef.Status.ErrorID);
 	// dont report this erro if absolute/home move is busy
 ELSIF THIS^.iReadParameter.Error 
 	AND (NOT THIS^.iMoveAbsolute.Busy OR NOT THIS^.iHome.Busy) THEN
     bError := THIS^.iReadParameter.Error;
     nErrorId := THIS^.iReadParameter.ErrorID;
-    sMessage := THIS^.iReadParameter.Message;
 ELSIF THIS^.iWriteParameter.Error THEN
     bError := THIS^.iWriteParameter.Error;
     nErrorId := THIS^.iWriteParameter.ErrorID;
-    sMessage := THIS^.iWriteParameter.Message;
 ELSIF THIS^.iParamsSaveRestore.Error THEN
     bError := THIS^.iParamsSaveRestore.Error;
     nErrorId := THIS^.iParamsSaveRestore.ErrorID;
-    sMessage := THIS^.iParamsSaveRestore.Message;
-ELSE
-    bError:=FALSE;
-    nErrorId:=0;
-    sMessage := '';
-END_IF;]]></ST>
+END_IF;
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="FB_Init" Id="{3ca36ea2-2fee-4826-a4c8-a0afdd04a31e}">
@@ -320,13 +322,18 @@ END_VAR
     <Method Name="Home" Id="{19a4a42c-65d0-44c2-9ba0-43e7fa25e791}">
       <Declaration><![CDATA[METHOD Home
 VAR_INPUT
-    Position        : LREAL         := DEFAULT_HOME_POSITION;
+    Position        : LREAL  := DEFAULT_HOME_POSITION;
     BufferMode      : MC_BufferMode;
+ 	HomeMode: INT :=E_EpicsHomeCmd.NONE;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[//
-THIS^.iHome.Home(Position:=Position,BufferMode:=MC_BufferMode.MC_Aborting);]]></ST>
+THIS^.iHome.Home(
+	Position:=Position,
+	BufferMode:=MC_BufferMode.MC_Aborting,
+	HomeMode := HomeMode
+);]]></ST>
       </Implementation>
     </Method>
     <Method Name="MoveAbsolute" Id="{4f09799f-35f4-498c-b47e-65f81ea0c180}">

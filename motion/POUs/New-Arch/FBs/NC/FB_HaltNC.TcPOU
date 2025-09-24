@@ -19,8 +19,8 @@ END_IF
 
 fbMcHalt(Axis := AxisRef );
 
-
-IF fbMcHalt.Error THEN
+rtError(CLK:=fbMcHalt.Error);
+IF rtError.Q THEN
 	iMotionLogger.Logger(Message := iMotionLogger.ErrorCodeLookup(fbMcHalt.ErrorID), Level := E_MotionLogLevel.ERROR, Source := 'Halt');	
 END_IF
 ]]></ST>

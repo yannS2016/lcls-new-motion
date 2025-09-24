@@ -7,13 +7,14 @@ VAR
     AxisRef : REFERENCE TO AXIS_REF;
 	iMotionLogger : I_MotionLogger;
     fbMcWriteParameter : MC_WriteParameter;
-
+	rtError: R_TRIG;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[(*Do not change a moving axis parameter*)
 fbMcWriteParameter(	Axis:=AxisRef );
-IF fbMcWriteParameter.Error THEN
+rtError(CLK:=fbMcWriteParameter.Error);
+IF rtError.Q THEN
 	iMotionLogger.Logger(Message := iMotionLogger.ErrorCodeLookup(fbMcWriteParameter.ErrorID), Level := E_MotionLogLevel.ERROR, Source := 'WriteParameter');	
 END_IF]]></ST>
     </Implementation>
