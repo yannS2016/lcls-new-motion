@@ -37,31 +37,46 @@ VAR
         field: DESC TRUE if STO not hit
     '}
     bHardwareEnable AT %I*: BOOL ;
+	rtError : R_TRIG;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF ( iMotionLogger = 0) THEN
-    // throw an exception
+      <ST><![CDATA[// ===== Interlock and Error Handling Block =====
+
+// 1. Safety: Check logger
+IF (iMotionLogger = 0) THEN
+    // Optionally: set error status in status struct for diagnostics!
     RETURN;
 END_IF
 
-bPowerEnabled := bMoveEnable AND bHardwareEnable;
-bPowerEnabled R= NOT bUserEnable;
+// 2. Compute power enable
+bPowerEnabled := bMoveEnable AND bHardwareEnable AND bUserEnable;
 
-(*test additional pre-move conditions here*)
+// 3. Compute move OK
 bMoveOk := bUserEnable AND bHardwareEnable;
 
+// 4. Interlock error condition
 IF NOT bUserEnable OR NOT bHardwareEnable THEN
     bError := TRUE;
-    nErrorID:= 11;
+    nErrorID := 11;
     bMoveOk := FALSE;
+
     IF NOT bUserEnable THEN
         sMessage := 'User enable interlock triggered!';
     ELSE
-        sMessage := 'Hardware enbale interlocks triggered!';
+        sMessage := 'Hardware enable interlock triggered!';
     END_IF
 END_IF
-]]></ST>
+
+// 5. Log error on edge (only when error flips TRUE)
+rtError(CLK := bError);
+IF rtError.Q THEN
+    iMotionLogger.Logger(
+        Message := sMessage,
+        Level := E_MotionLogLevel.ERROR,
+        Source := 'MotionInterlocksCommon'
+    );    
+END_IF]]></ST>
     </Implementation>
     <Method Name="CallAfterInit" Id="{bb25ce30-2def-4497-bead-4e7295fc730f}">
       <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
