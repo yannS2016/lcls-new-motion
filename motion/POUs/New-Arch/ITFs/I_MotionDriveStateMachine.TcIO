@@ -15,6 +15,12 @@
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
+    <Method Name="Reset" Id="{7ea4f4ed-dc07-4208-a94f-fd9d13d96ded}">
+      <Declaration><![CDATA[METHOD Reset
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
     <Method Name="StateMachine" Id="{95486653-d40f-4598-a1e5-f89d76b3879d}">
       <Declaration><![CDATA[METHOD StateMachine
 VAR_INPUT

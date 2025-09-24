@@ -13,6 +13,16 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
+    <Method Name="AbsoluteMoveWithBacklashCompensation" Id="{bad890a2-475f-45aa-9b4a-15b622c26192}">
+      <Declaration><![CDATA[METHOD AbsoluteMoveWithBacklashCompensation
+VAR_INPUT
+	Position :LREAL;
+	Velocity :LREAL;
+	Acceleration :LREAL;
+	Deceleration :LREAL;
+END_VAR
+]]></Declaration>
+    </Method>
     <Property Name="ExMotionStatus" Id="{27f8593a-8fe9-40da-86a4-233d57089aba}">
       <Declaration><![CDATA[PROPERTY ExMotionStatus : REFERENCE TO ST_ExtendedMotionStatus]]></Declaration>
       <Get Name="Get" Id="{5d029bcf-a2b0-4556-b6ff-6bafa16fd17d}">
@@ -28,12 +38,21 @@ END_VAR
     <Method Name="Home" Id="{c958a13c-5d38-4350-8e0b-a772cb5b80d0}">
       <Declaration><![CDATA[METHOD Home
 VAR_INPUT
+	HomePosition	: LREAL;
+	HomeMode	: INT;
 END_VAR
+
 ]]></Declaration>
     </Method>
-    <Property Name="MotionInterface" Id="{a020c6dd-0fce-4bed-96e1-b266caf931a8}">
-      <Declaration><![CDATA[PROPERTY MotionInterface : REFERENCE TO ST_MotionCommand]]></Declaration>
+    <Property Name="MotionCmd" Id="{a020c6dd-0fce-4bed-96e1-b266caf931a8}">
+      <Declaration><![CDATA[PROPERTY MotionCmd : REFERENCE TO ST_MotionCommand]]></Declaration>
       <Get Name="Get" Id="{1202f2ab-b61e-4594-a4e4-9fb83a8ce3d0}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="MotionStatus" Id="{db533644-c41f-4c47-bd41-694fd757a109}">
+      <Declaration><![CDATA[PROPERTY MotionStatus : REFERENCE TO ST_MotionStatus]]></Declaration>
+      <Get Name="Get" Id="{ea9ad5d8-c84f-4a08-bf7d-3777ab0e1cc9}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>

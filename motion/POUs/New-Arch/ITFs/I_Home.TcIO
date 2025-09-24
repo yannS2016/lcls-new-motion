@@ -4,10 +4,17 @@
     <Declaration><![CDATA[INTERFACE I_Home EXTENDS I_StatusEx
 ]]></Declaration>
     <Method Name="Home" Id="{33465a37-8a78-445e-9579-3e71296ed69d}">
-      <Declaration><![CDATA[METHOD  Home
+      <Declaration><![CDATA[METHOD  Home : BOOL
 VAR_INPUT
-    Position        : LREAL         := DEFAULT_HOME_POSITION;
+    Position        : LREAL := DEFAULT_HOME_POSITION;
     BufferMode      : MC_BufferMode;
+ 	HomeMode: INT :=E_EpicsHomeCmd.NONE;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="HomeDone" Id="{30226d55-78be-4b23-a587-ba0c395c7e1b}">
+      <Declaration><![CDATA[METHOD HomeDone
+VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
@@ -18,7 +25,7 @@ END_VAR
       </Get>
     </Property>
     <Property Name="Mode" Id="{8fb39e56-cd88-4be6-82b3-d1c9f7887b2d}">
-      <Declaration><![CDATA[PROPERTY Mode : E_EpicsHomeCmd
+      <Declaration><![CDATA[PROPERTY Mode : INT
 ]]></Declaration>
       <Get Name="Get" Id="{44083783-6cc7-4d13-b15d-0ca157e0e75d}">
         <Declaration><![CDATA[]]></Declaration>
@@ -41,5 +48,11 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Set>
     </Property>
+    <Method Name="StopHome" Id="{0144dbea-84dc-44fa-9b62-72ec773b416e}">
+      <Declaration><![CDATA[METHOD StopHome
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
   </Itf>
 </TcPlcObject>
