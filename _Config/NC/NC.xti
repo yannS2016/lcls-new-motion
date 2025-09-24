@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.13" ClassName="CNcSafTaskDef" SubType="0" TcProjectVariant="UnitTesting">
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.13" ClassName="CNcSafTaskDef" SubType="0" TcProjectVariant="HardwareTesting">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-000000000035}" TcBaseType="true" HideType="true">UINTARR2</Name>
@@ -1477,7 +1477,7 @@ External Setpoint Generation:
 		<Axis File="Axis_MotionStageNC_Test4.xti" Id="21"/>
 		<Axis File="Axis_MotionStageNC_Test3.xti" Id="20"/>
 		<Axis File="Axis_MotionStageNC_Test1.xti" Id="18"/>
-		<Axis Id="8" Disabled="true" CreateSymbols="true" AxisType="1" AxisFolder="UnitTesting" GroupId="17">
+		<Axis Id="8" CreateSymbols="true" AxisType="1" AxisFolder="UnitTesting" GroupId="17">
 			<Name>Axis_Hard_Test</Name>
 			<ProjectVariant PvUseDisable="true">
 				<Variant>

@@ -303,9 +303,9 @@
 			</SubItem>
 		</DataType>
 	</DataTypes>
-	<Project ProjectGUID="{61907616-FB73-4229-B6ED-B8F1E64CE806}" TargetNetId="192.168.206.130.1.1" Target64Bit="true" ShowHideConfigurations="#x3c6">
+	<Project ProjectGUID="{61907616-FB73-4229-B6ED-B8F1E64CE806}" Target64Bit="true" ShowHideConfigurations="#x3c6">
 		<System>
-			<Settings MaxCpus="4" CoresPerPkg="1">
+			<Settings MaxCpus="4" NonWinCpus="2" CoresPerPkg="1">
 				<Cpu CpuId="3"/>
 				<ProjectVariant PvUseParameter="true">
 					<Variant>
@@ -322,7 +322,7 @@
 					</Variant>
 					<Variant>
 						<Name>UnitTesting</Name>
-						<Parameters RouterMemory="32" CoresPerPkg="1" MaxWinCpus="4" MaxNonWinCpus="0">
+						<Parameters RouterMemory="32" CoresPerPkg="1" MaxWinCpus="2" MaxNonWinCpus="2">
 							<Cpu Id="3" Percent="80" BaseTime="10000"/>
 							<Affinity ObjId="#x02010030"/>
 							<Affinity ObjId="#x02010060"/>
@@ -385,11 +385,8 @@
 				</Variant>
 				<Variant>
 					<Name>HardwareTesting</Name>
-					<TargetNetId/>
-				</Variant>
-				<Variant>
 					<Name>UnitTesting</Name>
-					<TargetNetId>192.168.206.130.1.1</TargetNetId>
+					<TargetNetId/>
 				</Variant>
 			</ProjectVariant>
 		</System>
@@ -399,6 +396,7 @@
 		<Plc>
 			<Project File="motion.xti"/>
 		</Plc>
+		<Io/>
 		<Variants SpecificLocalBootFolder="true">
 			<Variant>
 				<Name>HardwareTesting</Name>
@@ -411,4 +409,7 @@
 			</Variant>
 		</Variants>
 	</Project>
+	<Mappings>
+		<MappingInfo Identifier="{05000010-2002-0850-1000-040302205008}" Id="#x02030010" Watchdog="14000000040000000400000004000000"/>
+	</Mappings>
 </TcSmProject>
