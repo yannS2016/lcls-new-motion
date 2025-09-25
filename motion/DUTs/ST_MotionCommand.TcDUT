@@ -4,7 +4,6 @@
     <Declaration><![CDATA[TYPE ST_MotionCommand :
     // Defines the EPICS interface to moving a motor in TwinCAT
 STRUCT
-    (* Commands *)
     // Used internally to reset errors and other state
     {attribute 'pytmc' := '
         pv: PLC:bReset
@@ -14,12 +13,8 @@ STRUCT
         field: DESC Used internally to reset errors
     '}
     bReset: BOOL;
+
     // Used internally and by the IOC to start or stop a move
-    {attribute 'pytmc' := '
-        pv: PLC:bExecute
-        io: io
-        field: DESC Used internally and by the IOC to pick what kind of move to do
-    '}
     {attribute 'pytmc' := '
         pv: PLC:bMoveCmd
         io: io
@@ -49,6 +44,7 @@ STRUCT
         field: DESC Used internally and by the IOC to pass additional data to some commands
     '}
 	nCmdData: INT;	
+
     // Used internally and by the IOC to pick a destination for the move
     {attribute 'pytmc' := '
         pv: PLC:fPosition
@@ -56,6 +52,7 @@ STRUCT
         field: DESC Used internally and by the IOC to pick a destination for the move
     '}
     fPosition: LREAL;
+
     // Used internally and by the IOC to pick a move velocity
     {attribute 'pytmc' := '
         pv: PLC:fVelocity
@@ -63,6 +60,7 @@ STRUCT
         field: DESC Used internally and by the IOC to pick a move velocity
     '}
     fVelocity: LREAL;
+
     // Used internally and by the IOC to pick a move acceleration
     {attribute 'pytmc' := '
         pv: PLC:fAcceleration
@@ -70,13 +68,15 @@ STRUCT
         field: DESC Used internally and by the IOC to pick a move acceleration
     '}
     fAcceleration: LREAL;
+
     // Used internally and by the IOC to pick a move deceleration
     {attribute 'pytmc' := '
-        pv: PLC:fAcceleration
+        pv: PLC:fDeceleration
         io: io
         field: DESC Used internally and by the IOC to pick a move deceleration
     '}
     fDeceleration: LREAL;
+
     // Used internally and by the IOC to pick a move jerk
     {attribute 'pytmc' := '
         pv: PLC:fJerk
@@ -84,6 +84,7 @@ STRUCT
         field: DESC Used internally and by the IOC to pick a move jerk
     '}
     fJerk: LREAL;
+
     // Used internally and by the IOC to pick a home position
     {attribute 'pytmc' := '
         pv: PLC:fHomePosition

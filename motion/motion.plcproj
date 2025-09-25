@@ -20,8 +20,9 @@
     <Released>false</Released>
     <POUsForPropertyAccessIncluded>false</POUsForPropertyAccessIncluded>
     <GlobalVersionStructureIncluded>false</GlobalVersionStructureIncluded>
-    <ProjectVersion>2.0.0</ProjectVersion>
+    <ProjectVersion>4.0.0</ProjectVersion>
     <Title>LCLS_OMotion</Title>
+    <AllowChecksForLibrary>false</AllowChecksForLibrary>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DemoTask.TcTTO">

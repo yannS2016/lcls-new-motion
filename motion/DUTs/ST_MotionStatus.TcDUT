@@ -9,18 +9,21 @@ STRUCT
         field: DESC Error code if nonzero
     '}
 	bLimitFwd: BOOL;
+
     {attribute 'pytmc' := '
         pv: PLC:bLimitBwd
         io: i
         field: DESC Error code if nonzero
     '}
 	bLimitBwd: BOOL;
+
     {attribute 'pytmc' := '
         pv: PLC:bHomeSensor
         io: i
         field: DESC Error code if nonzero
     '}
 	bHomeSensor: BOOL;
+
     {attribute 'pytmc' := '
         pv: PLC:bEnabled
         io: i
@@ -28,6 +31,7 @@ STRUCT
         update: 100Hz notify
     '}
 	bEnabled: BOOL;
+
     // Used internally and by the IOC to pick a destination for the move
     {attribute 'pytmc' := '
         pv: PLC:fOverride
@@ -35,18 +39,21 @@ STRUCT
         field: DESC Used internally to set power override
     '}
 	fOverride : LREAL;
+
     {attribute 'pytmc' := '
         pv: PLC:fActVelocity
         io: i
         field: DESC Error code if nonzero
     '}
 	fActVelocity: LREAL;
+
     {attribute 'pytmc' := '
         pv: PLC:fActPosition
         io: i
         field: DESC Error code if nonzero
     '}
 	fActPosition: LREAL;
+
     {attribute 'pytmc' := '
         pv: PLC:fActDiff
         io: i
@@ -54,12 +61,7 @@ STRUCT
         update: 100Hz notify
     '}
 	fActDiff: LREAL;
-    {attribute 'pytmc' := '
-        pv: PLC:bHomed
-        io: i
-        field: DESC Error code if nonzero
-    '}
-    (* Returns *)
+
     // TRUE if in the middle of a command
     {attribute 'pytmc' := '
         pv: PLC:bBusy
@@ -70,6 +72,7 @@ STRUCT
         update: 100Hz notify
     '}
     bBusy: BOOL;
+
     // TRUE if we've done a command and it has finished
     {attribute 'pytmc' := '
         pv: PLC:bDone
@@ -80,6 +83,7 @@ STRUCT
         update: 100Hz notify
     '}
     bDone: BOOL;
+
     // TRUE if the motor has been homed, or does not need to be homed
     {attribute 'pytmc' := '
         pv: PLC:bHomed
@@ -101,6 +105,7 @@ STRUCT
         update: 100Hz notify
     '}
     bError: BOOL;
+
     // Error code if nonzero
     {attribute 'pytmc' := '
         pv: PLC:nErrorId
@@ -109,6 +114,7 @@ STRUCT
         update: 100Hz notify
     '}
     nErrorId: UDINT;
+
     // Unique ID assigned to each axis in the NC
     {attribute 'pytmc' := '
         pv: PLC:nMotionAxisID
@@ -116,6 +122,7 @@ STRUCT
         field: DESC Unique ID assigned to each axis in the NC
     '}
     nMotionAxisID: UDINT:=0;
+
     // Message to identify the error state
     {attribute 'pytmc' := '
         pv: PLC:sErrorMessage
