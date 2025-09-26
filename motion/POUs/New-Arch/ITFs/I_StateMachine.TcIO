@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <Itf Name="I_MotionDriveStateMachine" Id="{40b216ee-9f46-47cd-9746-7ef949a43466}">
-    <Declaration><![CDATA[INTERFACE I_MotionDriveStateMachine
+  <Itf Name="I_StateMachine" Id="{40b216ee-9f46-47cd-9746-7ef949a43466}">
+    <Declaration><![CDATA[INTERFACE I_StateMachine
 ]]></Declaration>
     <Property Name="Idling" Id="{2aa1f55f-313a-444f-a03d-09f72996fc21}">
       <Declaration><![CDATA[PROPERTY Idling : BOOL]]></Declaration>
@@ -25,6 +25,7 @@ END_VAR
       <Declaration><![CDATA[METHOD StateMachine
 VAR_INPUT
 	Error : BOOL;
+	InterlockEvent : BOOL;
 END_VAR
 ]]></Declaration>
     </Method>
