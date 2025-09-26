@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_MotionInterlocksCommon" Id="{6906b881-f15f-4df2-99d8-615248381a43}">
+    <Declaration><![CDATA[INTERFACE I_MotionInterlocksCommon  EXTENDS I_Error
+]]></Declaration>
+    <Method Name="DriveCommands" Id="{95d7873b-b1cc-491b-828c-b846b0af66ce}">
+      <Declaration><![CDATA[METHOD DriveCommands
+VAR_INPUT
+    MoveEnable: BOOL;
+    NewMoveReq : BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="EnableInterlocks" Id="{44152237-0773-4dbc-8200-7c97addc3446}">
+      <Declaration><![CDATA[METHOD EnableInterlocks
+VAR_INPUT
+	UserEnable : BOOL;
+	HardwareEnable : BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="MoveOk" Id="{1afd93f7-f2a6-41c4-917d-1b6c9a77ea87}">
+      <Declaration><![CDATA[PROPERTY MoveOk : BOOL]]></Declaration>
+      <Get Name="Get" Id="{eb795768-982c-4440-9ee6-002d67c772ee}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="PowerEnabled" Id="{c51eea5c-413d-4ba5-abaf-3b70155b6bdc}">
+      <Declaration><![CDATA[PROPERTY PowerEnabled : BOOL]]></Declaration>
+      <Get Name="Get" Id="{05bad098-7800-4d94-a94a-923a51852e71}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="Reset" Id="{cc36a04e-8ae1-4d1a-b6d2-3ef1ada15b9d}">
+      <Declaration><![CDATA[METHOD Reset
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

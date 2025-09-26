@@ -11,10 +11,10 @@ STRUCT
     nFollowingError 		AT %I*	: 	DINT;
     (* Global variables for the RPDO data to the drive. Each one is linked to the respective RPDO channel. *)
     //nDS402DriveControl		AT %Q*	:	UINT;
-	// Connected to NC task Ctrl 1 and Ctrl 2
-   	nDS402DriveControlNC	AT %I*	:	UINT;
-	// connected to I/O Task 'Control Word'
-   	nDS402DriveControl		AT %Q*	:	UINT;
+    // Connected to NC task Ctrl 1 and Ctrl 2
+       nDS402DriveControlNC	AT %I*	:	UINT;
+    // connected to I/O Task 'Control Word'
+       nDS402DriveControl		AT %Q*	:	UINT;
     //nTargetPositionTmp 		AT %I* 	: 	DINT;
     nTargetPosition 		AT %Q* 	: 	DINT;
     nModeOfOperationNC 	AT %I* 	: 	SINT;

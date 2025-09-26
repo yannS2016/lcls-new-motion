@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_MotionAxisNC_TestDouble" Id="{65106e1e-861e-4e30-b566-2b009ccc179b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionAxisNC_TestDouble IMPLEMENTS I_MotionAxis
+VAR
+
+    iHome : I_Home;
+    iHalt : I_Halt;
+    iPower : I_Power;
+    iReset : I_Reset;
+    iMoveAbsolute : I_MoveAbsolute;
+    iReadParameter : I_ReadParameter;
+    iWriteParameter  : I_WriteParameter;
+    iParamSaveRestore: I_ParamsSaveRestore;
+    iEncoderScaling : I_EncoderScaling;
+    iAxisStatus : I_AxisStatus;
+    iBacklashCompensation : I_BacklashCompensation;
+
+    bError: BOOL;
+    nErrorID: UDINT;
+    sMessage : T_MAXSTRING;
+    stMotionAxisStatus : ST_AxisStatus;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="AxisEnabled" Id="{7c01cf99-5952-4423-af46-6100176288ed}">
+      <Declaration><![CDATA[METHOD AxisEnabled : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="BacklashCompensation" Id="{4c981061-8141-4fdf-9c38-a35237e3c5d4}">
+      <Declaration><![CDATA[(*
+    Handle positive/negative backlash compensation
+    User needs to set the direction of backlash from the sign of the compensation value
+    Backlash compensation is disabled during referencing (homing).
+    When direction is positive/negative, further movement in the negative/positive direction not compensated
+    further movement in the negative/positive direction will be compensated
+*)
+METHOD BacklashCompensation
+VAR_INPUT
+    Enable	: BOOL := FALSE;
+    RampVelo	: LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ClearHaltStatus" Id="{59550dbb-aa67-4387-9438-83d50938411a}">
+      <Declaration><![CDATA[METHOD ClearHaltStatus
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ClearHomeStatus" Id="{c1b782a3-3e35-42b7-8afb-b6880a7da5ec}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD ClearHomeStatus
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ClearMoveAbsoluteStatus" Id="{b052e24f-709a-4f5a-bb71-63df7e7bfd66}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD ClearMoveAbsoluteStatus
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ClearResetStatus" Id="{22bf93a0-04be-4c16-87ee-018aa5d58a3d}">
+      <Declaration><![CDATA[METHOD ClearResetStatus
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DisablePower" Id="{0eeb5e4a-39d0-4175-9703-cdb13a04a275}">
+      <Declaration><![CDATA[METHOD DisablePower
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DriveCommands" Id="{e3545993-0054-4474-8c71-54ebff87a616}">
+      <Declaration><![CDATA[METHOD DriveCommands
+VAR_INPUT
+    HomeCmd	: BOOL;
+    NewMoveReq	: BOOL;
+    EnableMode	: E_StageEnableMode;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Halt" Id="{a8dc915d-bcbc-4f48-b53f-dba0477f0963}">
+      <Declaration><![CDATA[METHOD Halt
+VAR_INPUT
+    Deceleration	: LREAL := 0;
+    Jerk	: LREAL := 0;
+    BufferMode	: MC_BufferMode := MC_BufferMode.MC_Aborting;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Home" Id="{90a1bdab-074d-4863-8a1b-c6c7a045e87f}">
+      <Declaration><![CDATA[METHOD Home
+VAR_INPUT
+    Position        : LREAL         := DEFAULT_HOME_POSITION;
+    BufferMode      : MC_BufferMode;
+ 	HomeMode: INT :=E_EpicsHomeCmd.NONE;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveAbsolute" Id="{3a89b1f5-c9d6-49dd-ac48-38a2564998d7}">
+      <Declaration><![CDATA[METHOD MoveAbsolute
+VAR_INPUT
+    Position	: LREAL;
+    Velocity	: LREAL;
+    Acceleration	: LREAL := 0;
+    Deceleration	: LREAL := 0;
+    Jerk	: LREAL := 0;
+    BufferMode	: MC_BufferMode := MC_BufferMode.MC_Aborting;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Power" Id="{8f4f73c7-b7ae-46d9-a3db-1d88cd2c81fe}">
+      <Declaration><![CDATA[METHOD Power
+VAR_INPUT
+    Enable	: BOOL;
+    Enable_Positive	: BOOL;
+    Enable_Negative	: BOOL;
+    Override	: LREAL;
+    BufferMode	: MC_BufferMode;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadAxisParams" Id="{5f8e2dcf-a1e8-487f-92f9-fc1e97131acc}">
+      <Declaration><![CDATA[METHOD ReadAxisParams
+VAR_INPUT
+    Enable	: BOOL;
+    RefreshDelay	: TIME;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{858d6560-051e-479b-b8ae-08b100424d27}">
+      <Declaration><![CDATA[METHOD Reset
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SaveAxisParams" Id="{2860f60c-6d3f-4a54-9709-90eca97ea1e4}">
+      <Declaration><![CDATA[METHOD SaveAxisParams
+VAR_INPUT
+    Enable	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Status" Id="{152d912b-c05d-4102-8524-db7ba5871690}">
+      <Declaration><![CDATA[PROPERTY Status : REFERENCE TO ST_AxisStatus
+]]></Declaration>
+      <Get Name="Get" Id="{fabf8fb6-6654-4bc7-ab15-a87d1fed9a17}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Status REF= stMotionAxisStatus;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>

@@ -1,5 +1,6 @@
 # From Confluence "Twincat 3 Git Setup and Best Practices
-_Boot
+_Boot/*
+!/_Boot/TargetDescription.xml
 _Libraries
 _CompileInfo
 *.suo

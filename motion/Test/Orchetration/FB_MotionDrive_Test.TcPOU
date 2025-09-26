@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_MotionDrive_Test" Id="{fa0c0ca3-2ef2-4761-b316-41cf1af95b88}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionDrive_Test EXTENDS FB_TestSuite
+VAR
+    fbMoveRequest : FB_MoveRequest_TestDouble;
+	stMotionInterface : ST_MotionInterface;
+    fbEpicsMotionParamsStatus : FB_EpicsMotionParamsStatus_TestDouble;
+    fbMotionAxis: FB_MotionAxisNC_TestDouble;
+    fbBrake 				: FB_Brake_TestDouble;
+    fbMotionInterlocks	: FB_MotionInterlocksLimSw_TestDouble;
+    fbMotionLogger 		: FB_MotionLogger_TestDouble;
+    fbMotionDriveStateMachine : FB_MotionDriveStateMachine_TestDouble;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[NoCrashTest();]]></ST>
+    </Implementation>
+    <Method Name="NoCrashTest" Id="{75361fae-01d6-457b-bd6b-fe3e29169e9e}">
+      <Declaration><![CDATA[METHOD PRIVATE NoCrashTest
+VAR_INST
+    fbMotionDrive : FB_MotionDrive(	stMotionInterface := stMotionInterface,
+                                    iMotionAxis := fbMotionAxis,
+                                    iMotionLogger:=fbMotionLogger,
+                                    iBrake:=fbBrake,
+                                    iMotionInterlocks:=fbMotionInterlocks,
+                                    iMoveRequest :=fbMoveRequest,
+                                    iMotionDriveStateMachine := fbMotionDriveStateMachine
+                                );
+
+
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(*This method is called cyclicly in the fbMotionDrive *)
+TEST(__POUNAME());
+fbMotionDrive();
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

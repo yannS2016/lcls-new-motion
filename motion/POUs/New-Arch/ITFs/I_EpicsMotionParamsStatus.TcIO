@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_EpicsMotionParamsStatus" Id="{bfb903e2-9136-49f8-be52-58ed07e3baa9}">
+    <Declaration><![CDATA[INTERFACE I_EpicsMotionParamsStatus
+]]></Declaration>
+    <Method Name="MotionParamsAndStatus" Id="{b23cbd51-01d2-4f59-93b6-a0f074fb8271}">
+      <Declaration><![CDATA[METHOD MotionParamsAndStatus
+VAR_INPUT
+	PowerEnabled : BOOL;
+	PowerIsEnabled : BOOL;
+	Execute : BOOL;
+	LimHome : BOOL;
+	MoveBackwardEnabled : BOOL;
+	MoveForwardEnabled : BOOL;
+	MeasuredPositionDiff : LREAL;
+	MeasuredPosition : LREAL;
+	MeasuredVelocity : LREAL;
+	PowerOverride : LREAL;
+	Busy : BOOL;
+	HomeDone : BOOL;
+	MotionAxisId : UDINT;
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

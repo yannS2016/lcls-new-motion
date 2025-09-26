@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_MotionInterlocks" Id="{f1e8e58f-70bb-485c-99bb-95a56820fdb6}">
+    <Declaration><![CDATA[// User API for interlocks, add each new interlocks interface here
+INTERFACE I_MotionInterlocks
+]]></Declaration>
+    <Method Name="AxisStatus" Id="{dacb7d42-f913-4c3c-8725-5ac4315a091a}">
+      <Declaration><![CDATA[METHOD AxisStatus
+VAR_INPUT
+	HomeBusy: BOOL;
+	PositiveDirection : BOOL;
+	NegativeDirection : BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="DriveCommands" Id="{4eadfef4-5c7c-464f-b3d8-85555ae4b8ba}">
+      <Declaration><![CDATA[METHOD DriveCommands
+VAR_INPUT
+    MoveEnable: BOOL;
+    NewMoveReq : BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="Error" Id="{cb8c4f4f-26d3-4070-a3b0-01084a7b31fd}">
+      <Declaration><![CDATA[PROPERTY Error : BOOL]]></Declaration>
+      <Get Name="Get" Id="{3c954f64-0417-4db1-abeb-dec4d46a007d}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="ErrorID" Id="{3679fc85-f898-430b-b18e-92a8643354fe}">
+      <Declaration><![CDATA[PROPERTY ErrorID : UDINT]]></Declaration>
+      <Get Name="Get" Id="{f7bc3532-00ad-4cf2-8f15-5d20c5cbe6d9}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="Message" Id="{9f0d5caf-5e8b-49a6-9cb6-a74ac978daca}">
+      <Declaration><![CDATA[PROPERTY Message : T_MAXSTRING]]></Declaration>
+      <Get Name="Get" Id="{5e7d9b57-4a23-4d1a-ae3d-a3c1e73b4ad0}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="MoveBackwardEnabled" Id="{437d5026-d3d2-451f-aaec-a79f11811b76}">
+      <Declaration><![CDATA[PROPERTY MoveBackwardEnabled : BOOL]]></Declaration>
+      <Get Name="Get" Id="{7c34fb6f-f131-4c32-8007-32b5760134e0}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="MoveForwardEnabled" Id="{3f0479ef-0797-4b11-80d8-e2af512406d5}">
+      <Declaration><![CDATA[PROPERTY MoveForwardEnabled : BOOL]]></Declaration>
+      <Get Name="Get" Id="{c48ed286-fb7c-46b5-b434-3eb5c4175687}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="MoveOk" Id="{923a20cb-b75b-46f9-bb2a-200129f48beb}">
+      <Declaration><![CDATA[PROPERTY MoveOk : BOOL]]></Declaration>
+      <Get Name="Get" Id="{0ff386a4-7805-4634-a7c9-b25a0c9fccc6}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="PowerEnabled" Id="{21374bb6-d388-4443-be9e-3f9b640d7d98}">
+      <Declaration><![CDATA[PROPERTY PowerEnabled : BOOL]]></Declaration>
+      <Get Name="Get" Id="{84d4d810-7c5b-4fb1-848b-e406f6d15e58}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="Reset" Id="{5eaf8c93-8e83-434e-8bc9-866213c3ec76}">
+      <Declaration><![CDATA[METHOD Reset
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="Warning" Id="{30aedff3-6dda-49b4-9b04-d1c5bce530df}">
+      <Declaration><![CDATA[PROPERTY Warning : BOOL]]></Declaration>
+      <Get Name="Get" Id="{ae87cb53-e5aa-4c45-a014-84be50c80211}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

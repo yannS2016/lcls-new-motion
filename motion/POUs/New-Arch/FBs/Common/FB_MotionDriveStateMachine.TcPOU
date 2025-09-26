@@ -1,0 +1,341 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_MotionDriveStateMachine" Id="{8cb7b5f0-c2e7-431f-bb79-fb3574afad8a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionDriveStateMachine IMPLEMENTS I_StateMachine
+VAR
+    stMotionCommand : REFERENCE TO ST_MotionCommand; // Contains .Execute, .nCommand, .fPosition, .fVelocity, .fAcceleration, .fDeceleration, .fHomePosition
+    iMoveRequest    : I_MoveRequest;
+    iMotionAxis     : I_MotionAxis;
+    iMotionAxisDS402: I_MotionAxisDS402;
+    iMotionLogger   : I_MotionLogger;
+
+	tonMotionWatchDog: TON;
+    rtTargetReached  : R_TRIG;
+    rtHomed          : R_TRIG;
+    rtError          : R_TRIG;
+    ftStageError          : F_TRIG;
+    eMoveState       : E_MOVESTATE := E_MOVESTATE.IDLING;
+    bAxisError           : BOOL := FALSE;
+    bInterlockEvent  : BOOL := FALSE;
+    ftStop           : F_TRIG;
+    rtStandStill     : R_TRIG;
+	rtReset : R_TRIG;
+	bReset : BOOL;
+	ftError: F_TRIG;
+	bAbortComplete: BOOL;
+END_VAR
+
+VAR_OUTPUT
+    Error    : BOOL := FALSE;
+    ErrorId  : UDINT := 0;
+    Message  : T_MAXSTRING := '';
+    DriveState : E_MOVESTATE := E_MOVESTATE.IDLING; // For EPICS/HMI output
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Edge detectors
+rtTargetReached(CLK := iMotionAxis.Status.bMoveAbsoluteDone);
+rtHomed(CLK := iMotionAxis.Status.bHomeDone);
+ftStageError(CLK := bAxisError);
+ftError(CLK := Error);
+
+CASE eMoveState OF
+
+    E_MoveState.IDLING:
+        IF bAxisError THEN
+            eMoveState := E_MoveState.ERROR;
+        ELSIF iMoveRequest.Status.bExecute THEN
+            tonMotionWatchDog.IN := TRUE;
+            eMoveState := E_MoveState.INIT;
+        END_IF
+
+    E_MoveState.INIT:
+        CASE iMoveRequest.Status.nCommand OF
+            E_EpicsMotorCmd.MOVE_ABSOLUTE:
+                iMotionAxis.BacklashCompensation(
+                    Enable := TRUE,
+                    RampVelo := stMotionCommand.fVelocity / 10.0
+                );
+                IF __QUERYINTERFACE(iMotionAxis, iMotionAxisDS402) THEN
+                    IF iMotionAxisDS402.ModeConfigDone(Mode := E_EpicsMotorCmd.MOVE_ABSOLUTE) THEN
+                        iMotionAxis.MoveAbsolute(
+                            Position     := stMotionCommand.fPosition,
+                            Velocity     := stMotionCommand.fVelocity,
+                            Acceleration := stMotionCommand.fAcceleration,
+                            Deceleration := stMotionCommand.fDeceleration
+                        );
+                        eMoveState := E_MoveState.STARTED;
+                    END_IF
+                ELSE
+                    iMotionAxis.MoveAbsolute(
+                        Position     := stMotionCommand.fPosition,
+                        Velocity     := stMotionCommand.fVelocity,
+                        Acceleration := stMotionCommand.fAcceleration,
+                        Deceleration := stMotionCommand.fDeceleration
+                    );
+                    eMoveState := E_MoveState.STARTED;
+                END_IF
+
+            E_EpicsMotorCmd.HOME:
+                iMotionAxis.BacklashCompensation(
+                    Enable   := FALSE,
+                    RampVelo := stMotionCommand.fVelocity / 10.0
+                );
+                IF __QUERYINTERFACE(iMotionAxis, iMotionAxisDS402) THEN
+                    IF iMotionAxisDS402.ModeConfigDone(Mode := E_EpicsMotorCmd.HOME) THEN
+                        iMotionAxis.home(
+                            Position   := stMotionCommand.fHomePosition,
+                            BufferMode := MC_Aborting,
+                            HomeMode   := stMotionCommand.nCmdData
+                        );
+                        eMoveState := E_MoveState.STARTED;
+                    END_IF
+                ELSE
+                    iMotionAxis.home(
+                        Position   := stMotionCommand.fHomePosition,
+                        BufferMode := MC_Aborting,
+                        HomeMode   := stMotionCommand.nCmdData
+                    );
+                    eMoveState := E_MoveState.STARTED;
+                END_IF
+        END_CASE
+
+    E_MoveState.STARTED:
+        IF bAxisError THEN
+            eMoveState := E_MoveState.ERROR;
+        ELSIF iMotionAxis.Status.bBusy THEN
+            tonMotionWatchDog.IN := FALSE;
+            eMoveState := E_MoveState.IN_PROGRESS;
+        END_IF
+
+    E_MoveState.IN_PROGRESS:
+        IF bAxisError THEN
+            eMoveState := E_MoveState.ERROR;
+        ELSIF iMotionAxis.Status.bAborted THEN
+            iMoveRequest.ClearMoveRequest();
+            eMoveState := E_MoveState.INTERRUPTED;
+        ELSIF rtTargetReached.Q OR rtHomed.Q THEN
+            iMoveRequest.ClearMoveRequest();
+            eMoveState := E_MoveState.REACHED;
+        END_IF
+
+    E_MoveState.INTERRUPTED:
+		bAbortComplete := bInterlockEvent OR NOT iMotionAxis.Status.bDirectionalPowerEnabled OR iMotionAxis.Status.bAbortDone;
+		IF bAbortComplete THEN
+			iMoveRequest.MoveRequestDone(Done := TRUE);
+	
+			// Only do reset clearing for actual abort-complete
+			IF iMotionAxis.Status.bAbortDone THEN
+				iMotionAxis.ClearResetStatus();
+				iMotionAxis.ClearHaltStatus();
+			END_IF
+	
+			IF iMotionAxis.Status.bStandStill THEN
+				IF iMoveRequest.ResetMoveEnable() THEN
+					iMotionAxis.DisablePower();
+				END_IF
+			END_IF
+			eMoveState := E_MoveState.IDLING;
+		END_IF
+
+    E_MoveState.REACHED:
+        iMoveRequest.MoveRequestCompleted(
+             HomeDone := iMotionAxis.Status.bHomeDone,
+             MoveDone := iMotionAxis.Status.bMoveAbsoluteDone
+        );
+        IF iMotionAxis.Status.bStandStill THEN
+            IF iMoveRequest.ResetMoveEnable() THEN
+                iMotionAxis.DisablePower();
+            END_IF
+        END_IF
+        eMoveState := E_MoveState.IDLING;
+
+    E_MoveState.ERROR:
+        iMoveRequest.ClearMoveRequest();
+        iMoveRequest.ResetMoveEnable();
+        tonMotionWatchDog.IN := FALSE;
+        IF ftStageError.Q OR ftError.Q THEN
+            eMoveState := E_MoveState.IDLING;
+        END_IF
+
+END_CASE
+
+// Watchdog
+tonMotionWatchDog(PT := T#5S);
+IF tonMotionWatchDog.Q THEN
+    Error := TRUE;
+    ErrorId := 99;
+    Message := 'Motion axis response timeout';
+    eMoveState := E_MoveState.ERROR;
+END_IF
+
+// Outputs for HMI/EPICS
+Error    := bAxisError OR (eMoveState = E_MoveState.ERROR);
+ErrorId  := ErrorId;
+Message  := Message;
+DriveState := eMoveState;
+
+// Edge log
+rtError(CLK := Error);
+IF rtError.Q THEN
+    IF iMotionLogger <> 0 THEN
+        iMotionLogger.Logger(
+            Message := Message,
+            Level   := E_MotionLogLevel.ERROR,
+            Source  := 'MotionDriveStateMachine'
+        );
+    END_IF
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="CallAfterInit" Id="{e0b49802-1f54-4d4a-bab0-a630f6e6317c}">
+      <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
+VAR_INPUT
+    iMotionAxis: I_MotionAxis;
+    iMoveRequest : I_MoveRequest;
+	iMotionLogger : I_MotionLogger;
+	stMotionCommand : REFERENCE TO ST_MotionCommand;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+THIS^.iMotionAxis := iMotionAxis;
+THIS^.iMoveRequest :=iMoveRequest;
+THIS^.iMotionLogger := iMotionLogger;
+THIS^.stMotionCommand REF=stMotionCommand;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_Init" Id="{294adae6-d914-4615-a1d2-fba496fbc903}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
+    iMotionAxis: I_MotionAxis;
+    iMoveRequest : I_MoveRequest;
+	iMotionLogger : I_MotionLogger;
+	stMotionCommand : REFERENCE TO ST_MotionCommand;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+THIS^.iMotionAxis := iMotionAxis;
+THIS^.iMoveRequest :=iMoveRequest;
+THIS^.iMotionLogger := iMotionLogger;
+THIS^.stMotionCommand REF=stMotionCommand;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Idling" Id="{81fbbd86-d58e-4ccc-aada-ec68eb49454d}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Idling : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{0e6ed222-832b-452a-8e44-460f723c90c1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IF eMoveState =  E_MOVESTATE.IDLING THEN
+	Idling := TRUE;
+ELSE
+	Idling := FALSE;
+END_IF]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MoveState" Id="{e4b86fb5-39ba-415c-bea9-8752f5b3590f}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
+PROPERTY MoveState : E_MOVESTATE
+]]></Declaration>
+      <Get Name="Get" Id="{7e0d7816-166f-41f5-a5d4-3d2ac7cfde0b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MoveState := eMoveState;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Reset" Id="{a85adb98-7fe2-46ac-afd3-bf40de529e36}">
+      <Declaration><![CDATA[METHOD Reset
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bReset  := TRUE;
+Error    := FALSE;
+ErrorId  := 0;
+Message  := '';]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="State" Id="{67fe1b58-6176-452d-99c9-b333901fd72b}">
+      <Declaration><![CDATA[(*Strictly used for testing*)
+PROPERTY INTERNAL State : E_MOVESTATE;]]></Declaration>
+      <Get Name="Get" Id="{56c38c3a-8cc4-4e25-96c8-0e2866805f8f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[State := eMoveState;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{8bec99e5-1656-44fc-b9b6-90a5e318653a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[eMoveState := State;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="StateMachine" Id="{66378d9f-e842-4289-88b6-7de0d7f7c0a0}">
+      <Declaration><![CDATA[METHOD StateMachine
+VAR_INPUT
+	Error : BOOL;
+	InterlockEvent : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.bAxisError := Error;
+THIS^.bInterlockEvent := InterlockEvent;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="WatchDog" Id="{ffd10039-8300-4aa4-a939-c817f83dfa6b}">
+      <Declaration><![CDATA[(*Testing only*)
+PROPERTY INTERNAL WatchDog : BOOL]]></Declaration>
+      <Set Name="Set" Id="{a8c696ab-b8a9-4f3e-bc17-b0a6d0d39466}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[THIS^.tonMotionWatchDog.IN := WatchDog;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="WatchDogStatus" Id="{f4a0274a-eb4a-4d55-8725-d7041e208e2f}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
+PROPERTY WatchDogStatus : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{a6ce01d7-e717-44d9-8fe7-d96ad2a3570f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[WatchDogStatus := THIS^.tonMotionWatchDog.IN;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="WatchDogTimeOut" Id="{e28a1111-9814-4bbb-b7b7-739c7c451e1f}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
+PROPERTY WatchDogTimeOut : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{4fc28fed-c55a-4ffe-80b1-7041542caba2}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[WatchDogTimeOut := THIS^.tonMotionWatchDog.Q;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>

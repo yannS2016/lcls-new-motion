@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_MotionLogger" Id="{6fbb242a-2ddb-457e-b22a-4be4b700b56a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionLogger IMPLEMENTS I_MotionLogger
+VAR CONSTANT
+    MOTION_LOGGER_MAX_MSGS_SIZE : UINT := 10;
+END_VAR
+
+VAR
+    nMaxMsg : UINT := MOTION_LOGGER_MAX_MSGS_SIZE; // configurable max log entries
+    sLookedUpMsg :  MOTION_LOGGER_MSG;
+    arLogMessages : ARRAY[1..MOTION_LOGGER_MAX_MSGS_SIZE] OF ST_MotionLogMessage;
+    nLogWriteIdx : UINT := 1;
+    nLogCount : UINT := 0;
+    sLastMessage :  MOTION_LOGGER_MSG;
+    {attribute 'pytmc' := '
+        pv: PLC:sExtendedErrorMsgs
+        io: i
+        field: DESC Extended cyclic error message
+    '}
+    sExtendedErrorMsgs : STRING(1024);
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Clear" Id="{edb8987f-39bb-4563-8f80-7c4b23a878af}">
+      <Declaration><![CDATA[METHOD Clear
+VAR
+    i : UINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i := 1 TO nMaxMsg DO
+    arLogMessages[i].sSource := '';
+    arLogMessages[i].sMessage := '';
+END_FOR
+nLogWriteIdx := 1;
+nLogCount := 0;
+sLastMessage := '';]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ErrorCodeLookup" Id="{014a07d2-b991-4a2d-ae90-c23017b8e3eb}">
+      <Declaration><![CDATA[METHOD ErrorCodeLookup : STRING
+VAR_INPUT
+	nErrorId	: UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE nErrorId OF
+    // --- Common NC errors ---
+    16#4221: sLookedUpMsg := 'Requested set velocity is not allowed';
+    16#4222: sLookedUpMsg := 'Requested set position is not allowed';
+    16#4223: sLookedUpMsg := 'No enable for controller and/or feed';
+    16#4225: sLookedUpMsg := 'Drive not ready during axis start';
+    16#4260: sLookedUpMsg := 'Drive disabled';
+    16#42A0: sLookedUpMsg := 'Coupled axis error';
+    16#4357: sLookedUpMsg := 'Negative limit hit';
+    16#4358: sLookedUpMsg := 'Positive limit hit';
+    16#4395: sLookedUpMsg := 'Set velocity not allowed';
+    16#4466: sLookedUpMsg := 'Invalid I/O data for more than n continuous NC cycles (encoder)';
+    16#4467: sLookedUpMsg := 'Encoder error: invalid actual position data';
+    16#4550: sLookedUpMsg := 'Stall: position lag monitoring error';
+    16#4650: sLookedUpMsg := 'Drive hardware not ready to operate';
+    16#4655: sLookedUpMsg := 'Invalid IO data';
+    16#4B07: sLookedUpMsg := 'Timeout axis function block after 6 seconds';
+    16#4FFF: sLookedUpMsg := 'Unknown NC error (not in manual)';
+
+    // --- Custom error definitions (make sure these enums are defined!) ---
+    E_LCLSMotionError.ABORTED:   sLookedUpMsg := 'Aborted move request with active move in progress';
+    E_LCLSMotionError.UNSAFE:    sLookedUpMsg := 'Position state unsafe';
+    E_LCLSMotionError.INVALID:   sLookedUpMsg := 'Position state invalid';
+    E_LCLSMotionError.TEST:      sLookedUpMsg := 'Fake testing error';
+
+    // --- No error ---
+    0:   sLookedUpMsg := '';
+    
+    // --- Fallback ---
+    ELSE
+        sLookedUpMsg := 'Contact PCDS to add new message';
+END_CASE
+
+ErrorCodeLookup := sLookedUpMsg;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetAllMessages" Id="{3540ecc2-9f2c-4549-8320-157801e499c8}">
+      <Declaration><![CDATA[METHOD GetAllMessages : STRING(1024)
+VAR
+    i : UINT;
+    idx : UINT;
+END_VAR
+
+VAR_OUTPUT
+
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[sExtendedErrorMsgs := '';
+FOR i := 1 TO nLogCount DO
+    //idx := (nLogWriteIdx + nLogCount - i - 1) MOD nMaxMsg + 1;
+    sExtendedErrorMsgs := CONCAT(sExtendedErrorMsgs, '[');
+    sExtendedErrorMsgs := CONCAT(sExtendedErrorMsgs, arLogMessages[i].sTimestamp);
+    sExtendedErrorMsgs := CONCAT(sExtendedErrorMsgs, '] ');
+    sExtendedErrorMsgs := CONCAT(sExtendedErrorMsgs, arLogMessages[i].sSource);
+    sExtendedErrorMsgs := CONCAT(sExtendedErrorMsgs, ' ');
+    sExtendedErrorMsgs := CONCAT(sExtendedErrorMsgs, TO_STRING(arLogMessages[i].eLevel));
+    sExtendedErrorMsgs := CONCAT(sExtendedErrorMsgs, ': ');
+    sExtendedErrorMsgs := CONCAT(sExtendedErrorMsgs, arLogMessages[i].sMessage);
+    sExtendedErrorMsgs := CONCAT(sExtendedErrorMsgs, '\n');
+END_FOR
+GetAllMessages := sExtendedErrorMsgs;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetMessageCount" Id="{dca2f506-954b-4a2c-a0d1-2552abd06362}">
+      <Declaration><![CDATA[METHOD GetMessageCount : UINT
+VAR_OUTPUT
+    nCount : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[nCount := nLogCount;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Logger" Id="{0b78526a-f6b7-4255-815f-106ed946d449}">
+      <Declaration><![CDATA[METHOD Logger
+VAR_INPUT
+    Message : STRING;
+    Level   : E_MotionLogLevel := E_MotionLogLevel.INFO;
+    Source  : STRING := '';
+END_VAR
+
+VAR
+	fbTimeStamp   : FB_LocalSystemTime := ( bEnable := TRUE, dwCycle := 1 );
+    logMessage : ST_MotionLogMessage;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Prepare record
+logMessage.sSource     := Source;
+logMessage.sMessage    := Message;
+logMessage.eLevel      := Level;
+
+// Get timestamp; use SYSTEMTIME, DT, or T_TIMESTAMP depending on platform
+fbTimeStamp();
+logMessage.sTimestamp :=SYSTEMTIME_TO_STRING(fbTimeStamp.systemTime); // Or alternative if not available
+
+// Save to buffer
+arLogMessages[nLogWriteIdx] := logMessage;
+sLastMessage := Message;
+
+// Rotate buffer
+nLogWriteIdx := nLogWriteIdx + 1;
+IF nLogWriteIdx > nMaxMsg THEN
+    nLogWriteIdx := 1;
+END_IF
+IF nLogCount < nMaxMsg THEN
+    nLogCount := nLogCount + 1;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

@@ -1,31 +1,49 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <DUT Name="ST_AxisStatus" Id="{599661fb-9246-4a68-9ba7-2ef6c3f03f60}">
+  <DUT Name="ST_AxisStatus" Id="{5360b8d7-a1fc-4337-aa26-a64d019d9101}">
     <Declaration><![CDATA[TYPE ST_AxisStatus :
 STRUCT
-    bEnable: BOOL;
-    bReset: BOOL;
-    bExecute: BOOL;
-    nCommand: UINT;
-    nCmdData: UINT;
-    fVelocity: LREAL;
-    fPosition: LREAL;
-    fAcceleration: LREAL;
-    fDeceleration: LREAL;
-    bJogFwd: BOOL;
-    bJogBwd: BOOL;
-    bLimitFwd: BOOL;
-    bLimitBwd: BOOL;
-    fOverride: LREAL := 100;
-    bHomeSensor: BOOL;
-    bEnabled: BOOL;
-    bError: BOOL;
-    nErrorId: UDINT;
-    fActVelocity: LREAL;
-    fActPosition: LREAL;
-    fActDiff: LREAL;
-    bHomed:BOOL;
-    bBusy:BOOL;
+	nAxisId : UDINT;
+	bAxisEnable : BOOL;
+	bAbortDone : BOOL;
+	bAborted : BOOL;
+	bAxisReadParamsInit : BOOL;
+	eAxisState : MC_AxisStates;
+	bBacklashCompensationStatus : BOOL;
+	bBusy : BOOL;
+	bDone : BOOL;
+	bError : BOOL;
+	nErrorID : UDINT;
+	bHaltActive : BOOL;
+	bHaltBusy : BOOL;
+	bHaltDone : BOOL;
+	bHomeBusy : BOOL;
+	bHomeDone : BOOL;
+	bLimHomeDone : BOOL;
+	nHomeMode : INT;
+	bInTargetPosition : BOOL;
+	fMeasuredAcceleration : LREAL;
+	fMeasuredCompensation : LREAL;
+	fMeasuredPosition : LREAL;
+	fMeasuredPositionDiff : LREAL;
+	fMeasuredVelocity : LREAL;
+	sMessage : T_MaxString;
+	bMoveAbsoluteAborted : BOOL;
+	bMoveAbsoluteActive : BOOL;
+	bMoveAbsoluteBusy : BOOL;
+	bMoveAbsoluteDone : BOOL;
+	bNegativeMotionIsEnabled : BOOL;
+	bPositiveMotionIsEnabled : BOOL;
+	bDirectionalPowerEnabled : BOOL;
+	bPowerActive : BOOL;
+	bPowerIsEnabled : BOOL;
+	fPowerOverride : LREAL;
+	bResetBusy : BOOL;
+	bResetDone : BOOL;
+	bRestoreDone : BOOL;
+	fSavedPosition : LREAL;
+	nScaledEncoderCount : UDINT;
+	bStandStill : BOOL;
 END_STRUCT
 END_TYPE
 ]]></Declaration>

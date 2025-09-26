@@ -9,19 +9,44 @@
     <WriteProductVersion>false</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
     <Name>motion</Name>
-    <ProgramVersion>3.1.4026.15</ProgramVersion>
+    <ProgramVersion>3.1.4026.17</ProgramVersion>
     <Application>{33d664b0-6516-4278-a609-945dc6212735}</Application>
     <TypeSystem>{c65f0172-be58-4007-8d8b-64ba0ae68ce0}</TypeSystem>
     <Implicit_Task_Info>{0e3edc62-cc3b-47a4-b014-ded5a500659f}</Implicit_Task_Info>
     <Implicit_KindOfTask>{fcfafade-8fe5-439d-80af-03fbc1979172}</Implicit_KindOfTask>
     <Implicit_Jitter_Distribution>{e9c2aaf6-517d-47c3-a4fa-030272635aff}</Implicit_Jitter_Distribution>
     <LibraryReferences>{4e753108-02f3-49a6-bba6-07c1c7eb77be}</LibraryReferences>
+    <Company>SLAC</Company>
+    <Released>false</Released>
+    <POUsForPropertyAccessIncluded>false</POUsForPropertyAccessIncluded>
+    <GlobalVersionStructureIncluded>false</GlobalVersionStructureIncluded>
+    <ProjectVersion>4.0.0</ProjectVersion>
+    <Title>LCLS_OMotion</Title>
+    <AllowChecksForLibrary>false</AllowChecksForLibrary>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DemoTask.TcTTO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\E_LCLSMotionError.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\E_MotionLogLevel.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MOTION_LOGGER_MSG.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\ST_ExtendedMotionStatus.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\E_HomeStates.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\ST_AxisStatus.TcDUT">
+    <Compile Include="DUTs\E_Module.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\ST_MotionStatus.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\ENUM_StageEnableMode.TcDUT">
@@ -60,172 +85,298 @@
     <Compile Include="DUTs\ST_DS402DriveStatus.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\ST_MotionEpicsItf.TcDUT">
+    <Compile Include="DUTs\ST_AxisStatus.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GVLs\NcAxis_GVL.TcGVL">
+    <Compile Include="DUTs\ST_MotionCommand.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\ST_MotionLogMessage.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\ST_MoveRequestStatus.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\Common\FB_Brake.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Common\FB_EncoderScaling.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\Common\FB_DS402Common.TcPOU">
-      <SubType>Code</SubType>
-      <ExcludeFromBuild>true</ExcludeFromBuild>
-    </Compile>
-    <Compile Include="POUs\FBs\Common\FB_LimSwStatus.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Common\FB_EpicsMotionParamsStatus.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\Common\FB_LimSwStatusMCS2.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Common\FB_LimSwStatus.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\Common\FB_MotionAxisCommonDS402Old.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Common\FB_MotionDrive.TcPOU">
       <SubType>Code</SubType>
       <ExcludeFromBuild>true</ExcludeFromBuild>
     </Compile>
-    <Compile Include="POUs\FBs\Common\FB_MotionDrive.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Common\FB_MotionInterlocksCommon.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\Common\FB_MotionInterlocksCommon.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Common\FB_MotionInterlocksLimSw.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\Common\FB_MotionInterlocksLimSw.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Common\FB_MotionLogger.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\Common\FB_MotionLogger.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Common\FB_EpicsMoveRequest.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\Common\FB_PersistentDataStorage.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Common\FB_PersistentDataStorage.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\DS402\FB_HomeDS402.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Common\FB_MotionDriveStateMachine.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_ParamsSaveRestoreNC.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\Containers\FB_MotionStageNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_AxisStatusNC.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\DS402\FB_HomeDS402.TcPOU">
+      <SubType>Code</SubType>
+      <ExcludeFromBuild>true</ExcludeFromBuild>
+    </Compile>
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_AxisStatusNC.TcPOU">
+      <SubType>Code</SubType>
+      <ExcludeFromBuild>true</ExcludeFromBuild>
+    </Compile>
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_BacklashCompensationNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_BacklashCompensationNC.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_BrakeNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_EncoderScaling.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_HaltNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_HaltNC.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_HomeNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_HomeNC.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_MotionAxisNC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_MotionAxisMCS2.TcPOU">
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_MoveAbsoluteNC.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_ParamsSaveRestoreNC.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_PowerNC.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_PowerInterlockNC.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_ReadParameterNC.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_ResetNC.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\FBs\NC\FB_WriteParameterNC.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_AxisStatus.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_BacklashCompensation.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_Brake.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_DS402GenericDrive.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_EncoderScaling.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_EpicsMotionParamsStatus.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_Error.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_Halt.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_Home.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_HomeDS402.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_LimSwStatus.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_MotionAxisDS402.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_MotionAxis.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_MotionDrive.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_MotionInterlocks.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_MotionInterlocksCommon.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_MotionLogger.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_MotionStage.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_MoveAbsolute.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_MoveRequest.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_StatusEx.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_Status.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_ParamsSaveRestore.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_PersistentDataStorage.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_Power.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_ReadParameter.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_Reset.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_StateMachine.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\New-Arch\ITFs\I_WriteParameter.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\Containers\FB_MotionStageNC_Test.TcPOU">
+      <SubType>Code</SubType>
+      <External>false</External>
+      <ExcludeFromBuild>false</ExcludeFromBuild>
+    </Compile>
+    <Compile Include="Test\Interlok\FB_MotionInterlocksCommon_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\Interlok\FB_MotionInterlocksLimSw_Test.TcPOU">
       <SubType>Code</SubType>
       <ExcludeFromBuild>false</ExcludeFromBuild>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_MotionAxisNC.TcPOU">
+    <Compile Include="Test\HARD_TEST.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_MoveAbsoluteNC.TcPOU">
+    <Compile Include="Test\Orchetration\FB_BrakeNC_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_PowerNC.TcPOU">
+    <Compile Include="Test\Orchetration\FB_MotionDriveStateMachine_Test.TcPOU">
+      <SubType>Code</SubType>
+      <ExcludeFromBuild>false</ExcludeFromBuild>
+    </Compile>
+    <Compile Include="Test\Orchetration\FB_MotionDrive_Test.TcPOU">
+      <SubType>Code</SubType>
+      <ExcludeFromBuild>true</ExcludeFromBuild>
+    </Compile>
+    <Compile Include="Test\Orchetration\FB_MoveRequest_Test.TcPOU">
+      <SubType>Code</SubType>
+      <ExcludeFromBuild>false</ExcludeFromBuild>
+    </Compile>
+    <Compile Include="Test\NC\FB_NcMotionBlocks_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_ReadParameterNC.TcPOU">
+    <Compile Include="Test\NC\FB_MotionAxisNC_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_ResetNC.TcPOU">
+    <Compile Include="Test\PRG_TEST.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\NC\FB_WriteParameterNC.TcPOU">
+    <Compile Include="Test\CONTAINER_TEST.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\Samples\FB_MotionStage.TcPOU">
+    <Compile Include="Test\TestDouble\FB_AxisStatusNC_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\Samples\FB_MotionStageMCS2.TcPOU">
+    <Compile Include="Test\TestDouble\FB_BacklashCompensationNC_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\Samples\MAIN.TcPOU">
+    <Compile Include="Test\TestDouble\FB_Brake_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_AxisStatus.TcIO">
+    <Compile Include="Test\TestDouble\FB_EncoderScalingNC_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_ParamSaveRestore.TcIO">
+    <Compile Include="Test\TestDouble\FB_EpicsMotionParamsStatus_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_BacklashCompensation.TcIO">
+    <Compile Include="Test\TestDouble\FB_HaltNC_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_EncoderScaling.TcIO">
+    <Compile Include="Test\TestDouble\FB_HomeNC_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_Halt.TcIO">
+    <Compile Include="Test\TestDouble\FB_LimSwStatus_testDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_Brake.TcIO">
+    <Compile Include="Test\TestDouble\FB_MotionAxisDS402_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_Home.TcIO">
+    <Compile Include="Test\TestDouble\FB_MotionAxisNC_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_HomeDS402.TcIO">
+    <Compile Include="Test\TestDouble\FB_MotionDriveStateMachine_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_LimSwStatus.TcIO">
+    <Compile Include="Test\TestDouble\FB_MotionInterlocksCommon_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_LimSwStatusMCS2.TcIO">
+    <Compile Include="Test\TestDouble\FB_MotionInterlocksLimSw_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_MotionAxisDS402.TcIO">
+    <Compile Include="Test\TestDouble\FB_MotionLogger_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_MotionInterlocks.TcIO">
+    <Compile Include="Test\TestDouble\FB_MoveAbsoluteNC_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_MotionInterlocksCommon.TcIO">
+    <Compile Include="Test\TestDouble\FB_MoveRequest_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_MotionInterlocksLimSw.TcIO">
+    <Compile Include="Test\TestDouble\FB_ParamSaveRestoreNC_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_Output.TcIO">
+    <Compile Include="Test\TestDouble\FB_PersistentDataStorage_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_MotionAxis.TcIO">
+    <Compile Include="Test\TestDouble\FB_PowerNC_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_DS402Common.TcIO">
+    <Compile Include="Test\TestDouble\FB_ReadParameterNC_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_MotionDrive.TcIO">
+    <Compile Include="Test\TestDouble\FB_ResetNC_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_MotionLogger.TcIO">
+    <Compile Include="Test\TestDouble\FB_WriteParameterNC_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_MoveAbsolute.TcIO">
+    <Compile Include="Test\Utils\FB_MotionLogger_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ITFs\I_PersistentDataStorage.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\ITFs\I_Power.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\ITFs\I_ReadParameter.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\ITFs\I_Reset.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\ITFs\I_WriteParameter.TcIO">
+    <Compile Include="UnitTestTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="VISUs\motion.TcCD">
@@ -235,12 +386,24 @@
   <ItemGroup>
     <Folder Include="DUTs" />
     <Folder Include="GVLs" />
-    <Folder Include="POUs\FBs\DS402" />
-    <Folder Include="POUs\FBs\NC" />
-    <Folder Include="POUs\FBs\Common" />
-    <Folder Include="POUs\FBs\Samples" />
-    <Folder Include="POUs\ITFs" />
-    <Folder Include="POUs\FBs" />
+    <Folder Include="POUs\New-Arch" />
+    <Folder Include="POUs\New-Arch\FBs" />
+    <Folder Include="POUs\New-Arch\FBs\Common" />
+    <Folder Include="POUs\New-Arch\FBs\Containers" />
+    <Folder Include="POUs\New-Arch\FBs\DS402" />
+    <Folder Include="POUs\New-Arch\FBs\NC" />
+    <Folder Include="POUs\New-Arch\ITFs" />
+    <Folder Include="Test" />
+    <Folder Include="Test\Interlok">
+      <ExcludeFromBuild>false</ExcludeFromBuild>
+    </Folder>
+    <Folder Include="Test\Utils" />
+    <Folder Include="Test\Orchetration">
+      <ExcludeFromBuild>false</ExcludeFromBuild>
+    </Folder>
+    <Folder Include="Test\NC" />
+    <Folder Include="Test\Containers" />
+    <Folder Include="Test\TestDouble" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />
   </ItemGroup>
@@ -248,6 +411,10 @@
     <PlaceholderReference Include="LCLS General">
       <DefaultResolution>LCLS General, * (SLAC)</DefaultResolution>
       <Namespace>LCLS_General</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc2_EtherCAT">
+      <DefaultResolution>Tc2_EtherCAT, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_EtherCAT</Namespace>
     </PlaceholderReference>
     <PlaceholderReference Include="Tc2_MC2">
       <DefaultResolution>Tc2_MC2, * (Beckhoff Automation GmbH)</DefaultResolution>
@@ -270,6 +437,10 @@
       <Namespace>Tc3_Module</Namespace>
       <SystemLibrary>true</SystemLibrary>
     </PlaceholderReference>
+    <PlaceholderReference Include="TcUnit">
+      <DefaultResolution>TcUnit, * (www.tcunit.org)</DefaultResolution>
+      <Namespace>TcUnit</Namespace>
+    </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="motion.tmc">
@@ -279,8 +450,8 @@
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-        <Data>
-          <o xml:space="preserve" t="OptionKey">
+  <Data>
+    <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -318,9 +489,11 @@
         <o>
           <v n="Name">"{40450F57-0AA3-4216-96F3-5444ECB29763}"</v>
           <d n="SubKeys" t="Hashtable" />
-          <d n="Values" t="Hashtable" ckt="String" cvt="String">
+          <d n="Values" t="Hashtable" ckt="String">
+            <v>ActiveVisuExtensionsLength</v>
+            <v>0</v>
             <v>ActiveVisuProfile</v>
-            <v>IR0whWr8bwcQCAAAY7rhNAAAAACAAgAAGMPQIgAAAAABAAAAAAAAAAEaUwB5AHMAdABlAG0ALgBTAHQAcgBpAG4AZwACTHsAZgA5ADUAYgBiADQAMgA2AC0ANQA1ADIANAAtADQAYgA0ADUALQA5ADQAMAAwAC0AZgBiADAAZgAyAGUANwA3AGUANQAxAGIAfQADCE4AYQBtAGUABDBUAHcAaQBuAEMAQQBUACAAMwAuADEAIABCAHUAaQBsAGQAIAA0ADAAMgA2AC4ANwAFFlAAcgBvAGYAaQBsAGUARABhAHQAYQAGTHsAMQA2AGUANQA1AGIANgAwAC0ANwAwADQAMwAtADQAYQA2ADMALQBiADYANQBiAC0ANgAxADQANwAxADMAOAA3ADgAZAA0ADIAfQAHEkwAaQBiAHIAYQByAGkAZQBzAAhMewAzAGIAZgBkADUANAA1ADkALQBiADAANwBmAC0ANABkADYAZQAtAGEAZQAxAGEALQBhADgAMwAzADUANgBhADUANQAxADQAMgB9AAlMewA5AGMAOQA1ADgAOQA2ADgALQAyAGMAOAA1AC0ANAAxAGIAYgAtADgAOAA3ADEALQA4ADkANQBmAGYAMQBmAGUAZABlADEAYQB9AAoOVgBlAHIAcwBpAG8AbgALBmkAbgB0AAwKVQBzAGEAZwBlAA0KVABpAHQAbABlAA4aVgBpAHMAdQBFAGwAZQBtAE0AZQB0AGUAcgAPDkMAbwBtAHAAYQBuAHkAEAxTAHkAcwB0AGUAbQARElYAaQBzAHUARQBsAGUAbQBzABIwVgBpAHMAdQBFAGwAZQBtAHMAUwBwAGUAYwBpAGEAbABDAG8AbgB0AHIAbwBsAHMAEyhWAGkAcwB1AEUAbABlAG0AcwBXAGkAbgBDAG8AbgB0AHIAbwBsAHMAFCRWAGkAcwB1AEUAbABlAG0AVABlAHgAdABFAGQAaQB0AG8AcgAVIlYAaQBzAHUATgBhAHQAaQB2AGUAQwBvAG4AdAByAG8AbAAWHlYAaQBzAHUARQBsAGUAbQBYAFkAQwBoAGEAcgB0ABcUVgBpAHMAdQBJAG4AcAB1AHQAcwAYGFYAaQBzAHUARQBsAGUAbQBCAGEAcwBlABkmRABlAHYAUABsAGEAYwBlAGgAbwBsAGQAZQByAHMAVQBzAGUAZAAaCGIAbwBvAGwAGyJQAGwAdQBnAGkAbgBDAG8AbgBzAHQAcgBhAGkAbgB0AHMAHEx7ADQAMwBkADUAMgBiAGMAZQAtADkANAAyAGMALQA0ADQAZAA3AC0AOQBlADkANAAtADEAYgBmAGQAZgAzADEAMABlADYAMwBjAH0AHRxBAHQATABlAGEAcwB0AFYAZQByAHMAaQBvAG4AHhRQAGwAdQBnAGkAbgBHAHUAaQBkAB8WUwB5AHMAdABlAG0ALgBHAHUAaQBkACBIYQBmAGMAZAA1ADQANAA2AC0ANAA5ADEANAAtADQAZgBlADcALQBiAGIANwA4AC0AOQBiAGYAZgBlAGIANwAwAGYAZAAxADcAIRRVAHAAZABhAHQAZQBJAG4AZgBvACJMewBiADAAMwAzADYANgBhADgALQBiADUAYwAwAC0ANABiADkAYQAtAGEAMAAwAGUALQBlAGIAOAA2ADAAMQAxADEAMAA0AGMAMwB9ACMOVQBwAGQAYQB0AGUAcwAkTHsAMQA4ADYAOABmAGYAYwA5AC0AZQA0AGYAYwAtADQANQAzADIALQBhAGMAMAA2AC0AMQBlADMAOQBiAGIANQA1ADcAYgA2ADkAfQAlTHsAYQA1AGIAZAA0ADgAYwAzAC0AMABkADEANwAtADQAMQBiADUALQBiADEANgA0AC0ANQBmAGMANgBhAGQAMgBiADkANgBiADcAfQAmFk8AYgBqAGUAYwB0AHMAVAB5AHAAZQAnVFUAcABkAGEAdABlAEwAYQBuAGcAdQBhAGcAZQBNAG8AZABlAGwARgBvAHIAQwBvAG4AdgBlAHIAdABpAGIAbABlAEwAaQBiAHIAYQByAGkAZQBzACgQTABpAGIAVABpAHQAbABlACkUTABpAGIAQwBvAG0AcABhAG4AeQAqHlUAcABkAGEAdABlAFAAcgBvAHYAaQBkAGUAcgBzACs4UwB5AHMAdABlAG0ALgBDAG8AbABsAGUAYwB0AGkAbwBuAHMALgBIAGEAcwBoAHQAYQBiAGwAZQAsEnYAaQBzAHUAZQBsAGUAbQBzAC0McwB5AHMAdABlAG0ALkg2AGMAYgAxAGMAZABlADEALQBkADUAZABjAC0ANABhADMAYgAtADkAMAA1ADQALQAyADEAZgBhADcANQA2AGEAMwBmAGEANAAvKEkAbgB0AGUAcgBmAGEAYwBlAFYAZQByAHMAaQBvAG4ASQBuAGYAbwAwTHsAYwA2ADEAMQBlADQAMAAwAC0ANwBmAGIAOQAtADQAYwAzADUALQBiADkAYQBjAC0ANABlADMAMQA0AGIANQA5ADkANgA0ADMAfQAxGE0AYQBqAG8AcgBWAGUAcgBzAGkAbwBuADIYTQBpAG4AbwByAFYAZQByAHMAaQBvAG4AMwxMAGUAZwBhAGMAeQA0MEwAYQBuAGcAdQBhAGcAZQBNAG8AZABlAGwAVgBlAHIAcwBpAG8AbgBJAG4AZgBvADUwTABvAGEAZABMAGkAYgByAGEAcgBpAGUAcwBJAG4AdABvAFAAcgBvAGoAZQBjAHQANhpDAG8AbQBwAGEAdABpAGIAaQBsAGkAdAB5ANAAAhoD0AMBLQTQBQYaB9AHCBoBRQcJCdAACRoERQoLBAQAAAAGAAAAAAAAAAAAAADQDAutAgAAANANAS0O0A8BLRDQAAkaBEUKCwQEAAAABgAAAAAAAAAAAAAA0AwLrQEAAADQDQEtEdAPAS0Q0AAJGgRFCgsEBAAAAAYAAAAAAAAAAAAAANAMC60CAAAA0A0BLRLQDwEtENAACRoERQoLBAQAAAAGAAAAAAAAAAAAAADQDAutAgAAANANAS0T0A8BLRDQAAkaBEUKCwQEAAAABgAAAAAAAAAAAAAA0AwLrQIAAADQDQEtFNAPAS0Q0AAJGgRFCgsEBAAAAAYAAAAAAAAAAAAAANAMC60CAAAA0A0BLRXQDwEtENAACRoERQoLBAQAAAAGAAAAAAAAAAAAAADQDAutAgAAANANAS0W0A8BLRDQAAkaBEUKCwQEAAAABgAAAAAAAAAAAAAA0AwLrQIAAADQDQEtF9APAS0Q0AAJGgRFCgsEBAAAAAYAAAAAAAAAAAAAANAMC60EAAAA0A0BLRjQDwEtENAZGq0BRRscAdAAHBoCRR0LBAQAAAACAAAAAAAAAAAAAADQHh8tINAhIhoCRSMkAtAAJRoFRQoLBAMAAAADAAAAAAAAAAoAAADQJgutAAAAANADAS0n0CgBLRHQKQEtENAAJRoFRQoLBAMAAAADAAAAAAAAAAoAAADQJgutAQAAANADAS0n0CgBLRHQKQEtEJoqKwFFAAEC0AABLSzQAAEtLdAAHy0u0C8wGgPQMQutAQAAANAyC60jAAAA0DMarQDQNDAaA9AxC60CAAAA0DILrQYAAADQMxqtANA1Gq0A0DYarQA=</v>
+            <v>"IR0whWr8bwfyBwAAaCbC8QAAAABVAgAA1xHl6QAAAAABAAAAAAAAAAEaUwB5AHMAdABlAG0ALgBTAHQAcgBpAG4AZwACTHsAZgA5ADUAYgBiADQAMgA2AC0ANQA1ADIANAAtADQAYgA0ADUALQA5ADQAMAAwAC0AZgBiADAAZgAyAGUANwA3AGUANQAxAGIAfQADCE4AYQBtAGUABDJUAHcAaQBuAEMAQQBUACAAMwAuADEAIABCAHUAaQBsAGQAIAA0ADAAMgA2AC4AMQA1AAUWUAByAG8AZgBpAGwAZQBEAGEAdABhAAZMewAxADYAZQA1ADUAYgA2ADAALQA3ADAANAAzAC0ANABhADYAMwAtAGIANgA1AGIALQA2ADEANAA3ADEAMwA4ADcAOABkADQAMgB9AAcSTABpAGIAcgBhAHIAaQBlAHMACEx7ADMAYgBmAGQANQA0ADUAOQAtAGIAMAA3AGYALQA0AGQANgBlAC0AYQBlADEAYQAtAGEAOAAzADMANQA2AGEANQA1ADEANAAyAH0ACUx7ADkAYwA5ADUAOAA5ADYAOAAtADIAYwA4ADUALQA0ADEAYgBiAC0AOAA4ADcAMQAtADgAOQA1AGYAZgAxAGYAZQBkAGUAMQBhAH0ACg5WAGUAcgBzAGkAbwBuAAsGaQBuAHQADApVAHMAYQBnAGUADQpUAGkAdABsAGUADhpWAGkAcwB1AEUAbABlAG0ATQBlAHQAZQByAA8OQwBvAG0AcABhAG4AeQAQDFMAeQBzAHQAZQBtABESVgBpAHMAdQBFAGwAZQBtAHMAEjBWAGkAcwB1AEUAbABlAG0AcwBTAHAAZQBjAGkAYQBsAEMAbwBuAHQAcgBvAGwAcwATKFYAaQBzAHUARQBsAGUAbQBzAFcAaQBuAEMAbwBuAHQAcgBvAGwAcwAUJFYAaQBzAHUARQBsAGUAbQBUAGUAeAB0AEUAZABpAHQAbwByABUiVgBpAHMAdQBOAGEAdABpAHYAZQBDAG8AbgB0AHIAbwBsABYUVgBpAHMAdQBJAG4AcAB1AHQAcwAXGFYAaQBzAHUARQBsAGUAbQBCAGEAcwBlABgmRABlAHYAUABsAGEAYwBlAGgAbwBsAGQAZQByAHMAVQBzAGUAZAAZCGIAbwBvAGwAGiJQAGwAdQBnAGkAbgBDAG8AbgBzAHQAcgBhAGkAbgB0AHMAG0x7ADQAMwBkADUAMgBiAGMAZQAtADkANAAyAGMALQA0ADQAZAA3AC0AOQBlADkANAAtADEAYgBmAGQAZgAzADEAMABlADYAMwBjAH0AHBxBAHQATABlAGEAcwB0AFYAZQByAHMAaQBvAG4AHRRQAGwAdQBnAGkAbgBHAHUAaQBkAB4WUwB5AHMAdABlAG0ALgBHAHUAaQBkAB9IYQBmAGMAZAA1ADQANAA2AC0ANAA5ADEANAAtADQAZgBlADcALQBiAGIANwA4AC0AOQBiAGYAZgBlAGIANwAwAGYAZAAxADcAIBRVAHAAZABhAHQAZQBJAG4AZgBvACFMewBiADAAMwAzADYANgBhADgALQBiADUAYwAwAC0ANABiADkAYQAtAGEAMAAwAGUALQBlAGIAOAA2ADAAMQAxADEAMAA0AGMAMwB9ACIOVQBwAGQAYQB0AGUAcwAjTHsAMQA4ADYAOABmAGYAYwA5AC0AZQA0AGYAYwAtADQANQAzADIALQBhAGMAMAA2AC0AMQBlADMAOQBiAGIANQA1ADcAYgA2ADkAfQAkTHsAYQA1AGIAZAA0ADgAYwAzAC0AMABkADEANwAtADQAMQBiADUALQBiADEANgA0AC0ANQBmAGMANgBhAGQAMgBiADkANgBiADcAfQAlFk8AYgBqAGUAYwB0AHMAVAB5AHAAZQAmVFUAcABkAGEAdABlAEwAYQBuAGcAdQBhAGcAZQBNAG8AZABlAGwARgBvAHIAQwBvAG4AdgBlAHIAdABpAGIAbABlAEwAaQBiAHIAYQByAGkAZQBzACcQTABpAGIAVABpAHQAbABlACgUTABpAGIAQwBvAG0AcABhAG4AeQApHlUAcABkAGEAdABlAFAAcgBvAHYAaQBkAGUAcgBzACo4UwB5AHMAdABlAG0ALgBDAG8AbABsAGUAYwB0AGkAbwBuAHMALgBIAGEAcwBoAHQAYQBiAGwAZQArEnYAaQBzAHUAZQBsAGUAbQBzACwMcwB5AHMAdABlAG0ALUg2AGMAYgAxAGMAZABlADEALQBkADUAZABjAC0ANABhADMAYgAtADkAMAA1ADQALQAyADEAZgBhADcANQA2AGEAMwBmAGEANAAuKEkAbgB0AGUAcgBmAGEAYwBlAFYAZQByAHMAaQBvAG4ASQBuAGYAbwAvTHsAYwA2ADEAMQBlADQAMAAwAC0ANwBmAGIAOQAtADQAYwAzADUALQBiADkAYQBjAC0ANABlADMAMQA0AGIANQA5ADkANgA0ADMAfQAwGE0AYQBqAG8AcgBWAGUAcgBzAGkAbwBuADEYTQBpAG4AbwByAFYAZQByAHMAaQBvAG4AMgxMAGUAZwBhAGMAeQAzMEwAYQBuAGcAdQBhAGcAZQBNAG8AZABlAGwAVgBlAHIAcwBpAG8AbgBJAG4AZgBvADQwTABvAGEAZABMAGkAYgByAGEAcgBpAGUAcwBJAG4AdABvAFAAcgBvAGoAZQBjAHQANRpDAG8AbQBwAGEAdABpAGIAaQBsAGkAdAB5ANAAAhoD0AMBLQTQBQYaB9AHCBoBRQcJCNAACRoERQoLBAQAAAAHAAAAAAAAAAAAAADQDAutAgAAANANAS0O0A8BLRDQAAkaBEUKCwQEAAAABwAAAAAAAAAAAAAA0AwLrQEAAADQDQEtEdAPAS0Q0AAJGgRFCgsEBAAAAAcAAAAAAAAAAAAAANAMC60CAAAA0A0BLRLQDwEtENAACRoERQoLBAQAAAAHAAAAAAAAAAAAAADQDAutAgAAANANAS0T0A8BLRDQAAkaBEUKCwQEAAAABwAAAAAAAAAAAAAA0AwLrQIAAADQDQEtFNAPAS0Q0AAJGgRFCgsEBAAAAAcAAAAAAAAAAAAAANAMC60CAAAA0A0BLRXQDwEtENAACRoERQoLBAQAAAAHAAAAAAAAAAAAAADQDAutAgAAANANAS0W0A8BLRDQAAkaBEUKCwQEAAAABwAAAAAAAAAAAAAA0AwLrQQAAADQDQEtF9APAS0Q0BgZrQFFGhsB0AAbGgJFHAsEBAAAAAIAAAAAAAAAAAAAANAdHi0f0CAhGgJFIiMC0AAkGgVFCgsEAwAAAAMAAAAAAAAACgAAANAlC60AAAAA0AMBLSbQJwEtEdAoAS0Q0AAkGgVFCgsEAwAAAAMAAAAAAAAACgAAANAlC60BAAAA0AMBLSbQJwEtEdAoAS0QmikqAUUAAQLQAAEtK9AAAS0s0AAeLS3QLi8aA9AwC60BAAAA0DELrSQAAADQMhmtANAzLxoD0DALrQIAAADQMQutBgAAANAyGa0A0DQZrQDQNRmtAA=="</v>
           </d>
         </o>
         <v>{8A0FB252-96EB-4DCC-A5B4-B4804D05E2D6}</v>
@@ -353,14 +526,15 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-        </Data>
-        <TypeList>
-          <Type n="Boolean">System.Boolean</Type>
-          <Type n="Hashtable">System.Collections.Hashtable</Type>
-          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-          <Type n="String">System.String</Type>
-        </TypeList>
-      </XmlArchive>
+  </Data>
+  <TypeList>
+    <Type n="Boolean">System.Boolean</Type>
+    <Type n="Hashtable">System.Collections.Hashtable</Type>
+    <Type n="Int32">System.Int32</Type>
+    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+    <Type n="String">System.String</Type>
+  </TypeList>
+</XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>

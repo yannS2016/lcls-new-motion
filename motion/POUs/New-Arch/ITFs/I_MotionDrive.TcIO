@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_MotionDrive" Id="{848572bc-fef8-4708-bb80-0dc37710e2cf}">
+    <Declaration><![CDATA[INTERFACE I_MotionDrive
+]]></Declaration>
+  </Itf>
+</TcPlcObject>
