@@ -96,7 +96,7 @@ fbMotionInterlocksLimSw();
 
 AssertFalse(Condition := fbMotionInterlocksLimSw.Warning,
            Message := 'No Warning event expected #1');
-AssertFalse(Condition := fbMotionInterlocksLimSw.LimHit,
+AssertFalse(Condition := fbMotionInterlocksLimSw.Warning,
            Message := 'No Lim Hit event expected #2');
 TEST_FINISHED();
 
@@ -135,7 +135,7 @@ fbMotionInterlocksLimSw();
 
 AssertTrue(Condition := fbMotionInterlocksLimSw.Warning,
                    Message := 'Expecting a Warning event after positive lim hit #1');
-AssertTrue(Condition := fbMotionInterlocksLimSw.LimHit,
+AssertTrue(Condition := fbMotionInterlocksLimSw.Warning,
                    Message := 'Expecting a Limit hit event after positive lim hit #2');
 TEST_FINISHED();
 
@@ -163,7 +163,7 @@ fbMotionInterlocksLimSw();
 AssertFalse(Condition := fbMotionInterlocksLimSw.Warning,
            Message := 'Warning event while homing unexpected #1');
 
-AssertFalse(Condition := fbMotionInterlocksLimSw.LimHit,
+AssertFalse(Condition := fbMotionInterlocksLimSw.Warning,
            Message := 'Lim hit event while homing unexpected #2');
 
 fbMotionInterlocksLimSw.AxisStatus(HomeBusy:=TRUE, PositiveDirection:=FALSE, NegativeDirection:=TRUE);
@@ -173,7 +173,7 @@ fbMotionInterlocksLimSw();
 AssertFalse(Condition := fbMotionInterlocksLimSw.Warning,
            Message := 'Warning event while homing unexpected #3');
 
-AssertFalse(Condition := fbMotionInterlocksLimSw.LimHit,
+AssertFalse(Condition := fbMotionInterlocksLimSw.Warning,
            Message := 'Lim hit event while homing unexpected #4');
 
 TEST_FINISHED();
@@ -251,7 +251,7 @@ fbMotionInterlocksLimSw();
 
 AssertFalse(Condition := fbMotionInterlocksLimSw.Warning,
                Message := 'Warning should be cleared #1');
-AssertFalse(Condition := fbMotionInterlocksLimSw.LimHit,
+AssertFalse(Condition := fbMotionInterlocksLimSw.Warning,
                Message := 'Limit hit flag should be cleared #2');
 
 
@@ -280,7 +280,7 @@ fbMotionInterlocksLimSw();
 
 AssertFalse(Condition := fbMotionInterlocksLimSw.Warning,
                Message := 'Warning should be cleared #3');
-AssertFalse(Condition := fbMotionInterlocksLimSw.LimHit,
+AssertFalse(Condition := fbMotionInterlocksLimSw.Warning,
                Message := 'Limit hit flag should be cleared #4');
 
 
@@ -308,7 +308,7 @@ fbMotionInterlocksLimSw();
 
 AssertFalse(Condition := fbMotionInterlocksLimSw.Warning,
                Message := 'Warning should be cleared #5');
-AssertFalse(Condition := fbMotionInterlocksLimSw.LimHit,
+AssertFalse(Condition := fbMotionInterlocksLimSw.Warning,
                Message := 'Limit hit flag should be cleared #6');
 
 TEST_FINISHED();

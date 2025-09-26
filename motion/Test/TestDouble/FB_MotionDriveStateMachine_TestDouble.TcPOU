@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_MotionDriveStateMachine_TestDouble" Id="{bd4c0fda-2c0f-4d99-bff0-ed190100a01c}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionDriveStateMachine_TestDouble IMPLEMENTS I_MotionDriveStateMachine
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionDriveStateMachine_TestDouble IMPLEMENTS I_StateMachine
 VAR
 END_VAR
 ]]></Declaration>

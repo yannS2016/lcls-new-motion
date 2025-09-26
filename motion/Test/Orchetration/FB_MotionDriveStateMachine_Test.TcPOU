@@ -312,7 +312,7 @@ END_VAR
         <ST><![CDATA[TEST(__POUNAME());
 
 fbMotionDriveStateMachine.State := E_MoveState.IDLING;
-fbMotionDriveStateMachine.StateMachine(Error:=TRUE);
+fbMotionDriveStateMachine.StateMachine(Error:=TRUE, InterlockEvent:=FALSE);
 fbMotionDriveStateMachine();
 AssertEquals_INT(	Expected:=expectedMoveState,
                     Actual:=fbMotionDriveStateMachine.State,
@@ -429,7 +429,7 @@ END_VAR
         <ST><![CDATA[TEST(__POUNAME());
 
 fbMotionDriveStateMachine.State := E_MoveState.IN_PROGRESS;
-fbMotionDriveStateMachine.StateMachine(Error:=TRUE);
+fbMotionDriveStateMachine.StateMachine(Error:=TRUE, InterlockEvent:=FALSE);
 fbMotionDriveStateMachine();
 
 AssertEquals_INT(	Expected:=expectedMoveState,
@@ -714,7 +714,7 @@ END_VAR
 CASE nTestStep OF
     0:
         fbMotionDriveStateMachine.State := E_MoveState.STARTED;
-        fbMotionDriveStateMachine.StateMachine(Error:=TRUE);
+        fbMotionDriveStateMachine.StateMachine(Error:=TRUE, InterlockEvent:=FALSE);
         nTestStep := nTestStep + 1;
     1:
         AssertEquals_INT(	Expected:=expectedMoveState,

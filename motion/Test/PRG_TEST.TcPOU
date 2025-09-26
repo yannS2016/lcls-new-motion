@@ -51,7 +51,8 @@ VAR
 	    .fbAxisRef[13] := Axis_MotionStageNC_Test13;
 	    .fbAxisRef[14] := Axis_MotionStageNC_Test14;
 	    .fbAxisRef[15] := Axis_MotionStageNC_Test15;
-	    .fbAxisRef[16] := Axis_MotionStageNC_Test16
+	    .fbAxisRef[16] := Axis_MotionStageNC_Test16;
+	    .fbAxisRef[17] := Axis_MotionStageNC_Test17
     '}
  	fb_MotionStageNC_Test :  FB_MotionStageNC_Test;
 

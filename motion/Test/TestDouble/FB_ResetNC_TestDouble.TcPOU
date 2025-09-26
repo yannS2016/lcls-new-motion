@@ -73,6 +73,13 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="ClearStatus" Id="{b1bfc581-c709-4547-a6b7-03233b3cf12b}">
+      <Declaration><![CDATA[METHOD ClearStatus
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="Done" Id="{ceadc5dc-060c-488d-bae7-f157c6810b13}">
       <Declaration><![CDATA[PROPERTY Done : BOOL
 ]]></Declaration>
@@ -141,13 +148,6 @@ END_VAR
     </Property>
     <Method Name="Reset" Id="{baceac4e-8cd9-4713-bb46-b638d35d7dae}">
       <Declaration><![CDATA[METHOD Reset
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="ResetDone" Id="{b1bfc581-c709-4547-a6b7-03233b3cf12b}">
-      <Declaration><![CDATA[METHOD ResetDone
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>

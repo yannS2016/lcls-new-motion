@@ -72,6 +72,13 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="ClearStatus" Id="{926c075d-bb71-43bb-b2c3-d039de87d848}">
+      <Declaration><![CDATA[METHOD ClearStatus
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="CommandHalt" Id="{5a4d8f78-05a5-40fb-b10c-445da57e98d8}">
       <Declaration><![CDATA[PROPERTY CommandHalt : BOOL
 ]]></Declaration>
@@ -145,13 +152,6 @@ VAR_INPUT
     Jerk	: LREAL := 0;
     BufferMode	: MC_BufferMode := MC_BufferMode.MC_Aborting;
 END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="HaltDone" Id="{926c075d-bb71-43bb-b2c3-d039de87d848}">
-      <Declaration><![CDATA[METHOD HaltDone
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>

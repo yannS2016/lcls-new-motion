@@ -3,22 +3,54 @@
   <POU Name="CONTAINER_TEST" Id="{cf068a0d-ba9f-4527-8e93-978663edefcc}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM CONTAINER_TEST
 VAR
-
-    fbMotionLogger : FB_MotionLogger;
-    // Persistant storage
-    fbPersistentDataStorage : FB_PersistentDataStorage;
-    fbMotionStage : FB_MotionStageNC(	sName := 'NC',
-                                        AxisRef := NcAxis_GVL.NC,
-                                        iMotionLogger := fbMotionLogger,
-                                        iPersistentDataStorage := fbPersistentDataStorage
-                                    );
+    fbAxisRef : AXIS_REF;
+	fbMotionLogger : FB_MotionLogger_TestDouble;
+	fbPower: FB_PowerNC(AxisRef:=fbAxisRef, iMotionLogger:=fbMotionLogger);
+	fbMcReset 	: MC_Reset;
+	fbMcPower : MC_Power;
+    fbMcHome : MC_Home;
+    fbMcSetPosition : MC_SetPosition;
+	bLimPositive : BOOL := TRUE;
+	bLimNegative : BOOL := TRUE;
+	bTriggerHome : BOOL;
+	bHomingOverride: BOOL := TRUE;
+    nTestStep : INT;
+	bEnable: BOOL;
+	bReset: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[fbMotionLogger();
-fbPersistentDataStorage();
-fbMotionStage();
+      <ST><![CDATA[
 
+
+fbMcHome.bCalibrationCam := NOT bLimNegative;
+				  
+CASE nTestStep OF
+    0:
+        fbMcHome.HomingMode := MC_HomingMode.MC_DefaultHoming;
+        fbMcHome.Options.SearchDirection := MC_Direction.MC_Negative_Direction;
+        fbMcHome.Options.SyncDirection := MC_Direction.MC_Positive_Direction;
+        fbMcHome.Options.ClearPositionLag := TRUE;
+		nTestStep := 1;
+	1:
+		IF fbMcPower.Status THEN
+			fbMcHome.Execute := TRUE;
+			nTestStep := 2;			
+		END_IF
+
+
+END_CASE
+fbMcReset(   Axis := fbAxisRef,
+             Execute := bReset );
+
+fbMcPower(
+    Axis :=  fbAxisRef,
+    Enable := bEnable,
+    Enable_Positive := bHomingOverride OR bLimPositive,
+    Enable_Negative := bHomingOverride OR bLimNegative,
+    Override :=100.0
+);
+fbMcHome( Axis := fbAxisRef, Position := 5.0  );
 ]]></ST>
     </Implementation>
   </POU>

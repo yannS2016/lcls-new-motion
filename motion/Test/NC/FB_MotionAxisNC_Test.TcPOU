@@ -3,7 +3,7 @@
   <POU Name="FB_MotionAxisNC_Test" Id="{fa75d716-c423-459e-9a73-6d09eee7d5ba}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionAxisNC_Test EXTENDS FB_TestSuite
 VAR
-	AxisRef : AXIS_REF;
+	fbAxisRef : AXIS_REF;
 	fbMotionLogger : FB_MotionLogger;
     fbHome : FB_HomeNC_TestDouble;
     fbHalt : FB_HaltNC_TestDouble;
@@ -27,7 +27,7 @@ VAR_INST
     // subject under test
     // subject under test
     fbMotionAxis : FB_MotionAxisNC(  	
-		AxisRef :=AxisRef,
+		AxisRef :=fbAxisRef,
 		iMotionLogger := fbMotionLogger,
 		iHome := fbHome,
         iHalt := fbHalt,

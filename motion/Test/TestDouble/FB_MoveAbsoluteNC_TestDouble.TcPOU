@@ -47,6 +47,14 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="CLearStatus" Id="{8f9988b0-62d9-4af8-b704-85a4b2006930}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD CLearStatus
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="CommandMoveAbsolute" Id="{17406061-5f30-4bfd-8e6d-0a7558c9130d}">
       <Declaration><![CDATA[PROPERTY CommandMoveAbsolute : BOOL
 ]]></Declaration>
@@ -135,14 +143,6 @@ VAR_INPUT
     Jerk	: LREAL := 0;
     BufferMode	: MC_BufferMode := MC_BufferMode.MC_Aborting;
 END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="MoveAbsoluteDone" Id="{8f9988b0-62d9-4af8-b704-85a4b2006930}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD MoveAbsoluteDone
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>

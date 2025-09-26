@@ -149,7 +149,7 @@ END_VAR
       </Implementation>
     </Method>
     <Method Name="ResetMoveEnable" Id="{d9a38b2c-4208-4dbc-9ad7-b8bdcfa1e4f3}">
-      <Declaration><![CDATA[METHOD ResetMoveEnable
+      <Declaration><![CDATA[METHOD ResetMoveEnable : BOOL
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>

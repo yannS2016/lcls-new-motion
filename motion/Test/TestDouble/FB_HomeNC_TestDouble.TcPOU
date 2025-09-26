@@ -73,6 +73,14 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="ClearStatus" Id="{556ab42d-d997-4975-8734-208caa4fa113}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD ClearStatus
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="Done" Id="{2526c581-55e7-4365-af95-ce96dcc55d1b}">
       <Declaration><![CDATA[PROPERTY Done : BOOL
 ]]></Declaration>

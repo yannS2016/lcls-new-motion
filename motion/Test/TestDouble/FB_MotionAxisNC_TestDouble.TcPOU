@@ -50,6 +50,36 @@ END_VAR
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
+    <Method Name="ClearHaltStatus" Id="{59550dbb-aa67-4387-9438-83d50938411a}">
+      <Declaration><![CDATA[METHOD ClearHaltStatus
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ClearHomeStatus" Id="{c1b782a3-3e35-42b7-8afb-b6880a7da5ec}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD ClearHomeStatus
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ClearMoveAbsoluteStatus" Id="{b052e24f-709a-4f5a-bb71-63df7e7bfd66}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD ClearMoveAbsoluteStatus
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ClearResetStatus" Id="{22bf93a0-04be-4c16-87ee-018aa5d58a3d}">
+      <Declaration><![CDATA[METHOD ClearResetStatus
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="DisablePower" Id="{0eeb5e4a-39d0-4175-9703-cdb13a04a275}">
       <Declaration><![CDATA[METHOD DisablePower
 ]]></Declaration>
@@ -108,14 +138,6 @@ END_VAR
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
-    <Method Name="MoveAbsoluteDone" Id="{b052e24f-709a-4f5a-bb71-63df7e7bfd66}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD MoveAbsoluteDone
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="Power" Id="{8f4f73c7-b7ae-46d9-a3db-1d88cd2c81fe}">
       <Declaration><![CDATA[METHOD Power
 VAR_INPUT
@@ -143,20 +165,6 @@ END_VAR
     </Method>
     <Method Name="Reset" Id="{858d6560-051e-479b-b8ae-08b100424d27}">
       <Declaration><![CDATA[METHOD Reset
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="ResetDone" Id="{22bf93a0-04be-4c16-87ee-018aa5d58a3d}">
-      <Declaration><![CDATA[METHOD ResetDone
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="ResetExecute" Id="{59550dbb-aa67-4387-9438-83d50938411a}">
-      <Declaration><![CDATA[METHOD ResetExecute
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
