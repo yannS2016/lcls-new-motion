@@ -97,9 +97,6 @@
     <Compile Include="DUTs\ST_MoveRequestStatus.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GVLs\NcAxis_GVL.TcGVL">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
@@ -136,10 +133,6 @@
     </Compile>
     <Compile Include="POUs\New-Arch\FBs\Containers\FB_MotionStageNC.TcPOU">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\New-Arch\FBs\Containers\FB_MotionStageNC_1.TcPOU">
-      <SubType>Code</SubType>
-      <ExcludeFromBuild>true</ExcludeFromBuild>
     </Compile>
     <Compile Include="POUs\New-Arch\FBs\DS402\FB_HomeDS402.TcPOU">
       <SubType>Code</SubType>
@@ -266,7 +259,7 @@
     <Compile Include="POUs\New-Arch\ITFs\I_Reset.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\New-Arch\ITFs\I_MotionDriveStateMachine.TcIO">
+    <Compile Include="POUs\New-Arch\ITFs\I_StateMachine.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\New-Arch\ITFs\I_WriteParameter.TcIO">

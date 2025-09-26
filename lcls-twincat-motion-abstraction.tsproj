@@ -303,26 +303,16 @@
 			</SubItem>
 		</DataType>
 	</DataTypes>
-	<Project ProjectGUID="{61907616-FB73-4229-B6ED-B8F1E64CE806}" Target64Bit="true" ShowHideConfigurations="#x3c6">
+	<Project ProjectGUID="{61907616-FB73-4229-B6ED-B8F1E64CE806}" TargetNetId="192.168.206.130.1.1" Target64Bit="true" ShowHideConfigurations="#x3c6">
 		<System>
-			<Settings MaxCpus="4" NonWinCpus="2" CoresPerPkg="1">
+			<Settings MaxCpus="4" CoresPerPkg="1">
 				<Cpu CpuId="3"/>
 				<ProjectVariant PvUseParameter="true">
 					<Variant>
 						<Name>Demo</Name>
 						<Name>HardwareTesting</Name>
-						<Parameters RouterMemory="32" CoresPerPkg="1" MaxWinCpus="2" MaxNonWinCpus="2">
-							<Cpu Id="3" Percent="80" BaseTime="10000"/>
-							<Affinity ObjId="#x02010030"/>
-							<Affinity ObjId="#x02010060"/>
-							<Affinity ObjId="#x05000010"/>
-							<Affinity ObjId="#x08500010"/>
-							<Affinity ObjId="#x03000011"/>
-						</Parameters>
-					</Variant>
-					<Variant>
 						<Name>UnitTesting</Name>
-						<Parameters RouterMemory="32" CoresPerPkg="1" MaxWinCpus="2" MaxNonWinCpus="2">
+						<Parameters RouterMemory="32" CoresPerPkg="1" MaxWinCpus="4" MaxNonWinCpus="0">
 							<Cpu Id="3" Percent="80" BaseTime="10000"/>
 							<Affinity ObjId="#x02010030"/>
 							<Affinity ObjId="#x02010060"/>
@@ -381,12 +371,9 @@
 			<ProjectVariant PvUseLink="true">
 				<Variant>
 					<Name>Demo</Name>
-					<TargetNetId>172.21.148.154.1.1</TargetNetId>
-				</Variant>
-				<Variant>
 					<Name>HardwareTesting</Name>
 					<Name>UnitTesting</Name>
-					<TargetNetId/>
+					<TargetNetId>192.168.206.130.1.1</TargetNetId>
 				</Variant>
 			</ProjectVariant>
 		</System>
