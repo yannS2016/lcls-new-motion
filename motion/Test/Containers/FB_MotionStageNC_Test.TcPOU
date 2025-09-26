@@ -1185,7 +1185,7 @@ CASE nTestStep OF
                 Message   := 'Move request must be canceled #9'
             );
             AssertFalse(
-                Condition := fbMotionStage.MotionCmd.bExecute,
+                Condition := fbMotionStage.stExMotionStatus.bExecute,
                 Message   := 'Move request must cleared #10'
             );
             nTestStep := 6;
@@ -1305,7 +1305,7 @@ CASE nTestStep OF
                 Message := 'Move request must be canceled #6'
             );
             AssertFalse(
-                Condition := fbMotionStage.MotionCmd.bExecute,
+                Condition := fbMotionStage.stExMotionStatus.bExecute,
                 Message := 'Move request must be cleared #7'
             );
             nTestStep := nTestStep + 1;

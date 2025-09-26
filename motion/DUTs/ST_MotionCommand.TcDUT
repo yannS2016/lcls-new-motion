@@ -13,7 +13,14 @@ STRUCT
         field: DESC Used internally to reset errors
     '}
     bReset: BOOL;
-
+    {attribute 'pytmc' := '
+        pv: PLC:bHalt
+        io: io
+        field: ZNAM FALSE
+        field: ONAM TRUE
+        field: DESC Used internally to stop move
+    '}
+    bHalt: BOOL;
     // Used internally and by the IOC to start or stop a move
     {attribute 'pytmc' := '
         pv: PLC:bMoveCmd
@@ -29,7 +36,7 @@ STRUCT
     '}
     bHomeCmd: BOOL;
 	
-    bExecute: BOOL;
+    //bExecute: BOOL;
     // Used internally and by the IOC to pick what kind of move to do
     {attribute 'pytmc' := '
         pv: PLC:nCommand

@@ -23,13 +23,6 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Set>
     </Property>
-    <Method Name="HaltMoveRequest" Id="{f276ba1c-ec79-4d81-b3bf-f8c9b4e15e1e}">
-      <Declaration><![CDATA[METHOD HaltMoveRequest : BOOL
-VAR_INPUT
-	Busy : BOOL;
-END_VAR
-]]></Declaration>
-    </Method>
     <Method Name="InitMoveRequest" Id="{bf494b24-bbf4-47db-9db8-0e709071e1e5}">
       <Declaration><![CDATA[METHOD InitMoveRequest
 VAR_INPUT
@@ -76,20 +69,8 @@ ErrorId :UDINT;
 ErrorMessage:T_MAXSTRING;
 END_VAR]]></Declaration>
     </Method>
-    <Method Name="MoveResetDone" Id="{fe489e21-73f0-4ddd-9dc4-aa68a3402786}">
-      <Declaration><![CDATA[METHOD MoveResetDone
-VAR_INPUT
-END_VAR
-]]></Declaration>
-    </Method>
     <Method Name="ResetMoveEnable" Id="{0644586b-fcac-4d48-8e18-72697f9ae9a6}">
       <Declaration><![CDATA[METHOD ResetMoveEnable : BOOL
-]]></Declaration>
-    </Method>
-    <Method Name="ResetMoveRequest" Id="{03c7c64b-8551-4106-a3c0-5e029b2f2ad9}">
-      <Declaration><![CDATA[METHOD ResetMoveRequest
-VAR_INPUT
-END_VAR
 ]]></Declaration>
     </Method>
     <Method Name="RestoreSettings" Id="{9701b3da-9713-48c2-a2a8-cb5a91108d7e}">
@@ -106,5 +87,11 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
+    <Method Name="StopMoveRequest" Id="{0a709732-71f5-475e-bdd2-97940d11fb7a}">
+      <Declaration><![CDATA[METHOD StopMoveRequest
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
   </Itf>
 </TcPlcObject>
