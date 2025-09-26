@@ -70,6 +70,14 @@ END_VAR
 THIS^.iMotionLogger := iMotionLogger;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="ClearStatus" Id="{703d31eb-b69f-4e59-82a6-fb6d1d408441}">
+      <Declaration><![CDATA[METHOD ClearStatus
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Clear previous status
+fbMcReset(Execute := FALSE,  Axis := THIS^.AxisRef);]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="Done" Id="{83716cc5-e3e4-4a0e-9a01-85c819af47e4}">
       <Declaration><![CDATA[PROPERTY Done : BOOL
 ]]></Declaration>
@@ -144,14 +152,6 @@ fbMcReset(Execute := FALSE,  Axis := THIS^.AxisRef);
 fbMcReset(   Axis := THIS^.AxisRef,
              Execute := TRUE );
 ]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="ResetDone" Id="{703d31eb-b69f-4e59-82a6-fb6d1d408441}">
-      <Declaration><![CDATA[METHOD ResetDone
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[// Clear previous status
-fbMcReset(Execute := FALSE,  Axis := THIS^.AxisRef);]]></ST>
       </Implementation>
     </Method>
   </POU>

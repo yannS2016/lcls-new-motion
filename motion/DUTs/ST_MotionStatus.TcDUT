@@ -94,7 +94,16 @@ STRUCT
         update: 100Hz notify
     '}
     bHomed: BOOL;
-
+	
+    {attribute 'pytmc' := '
+        pv: PLC:bWarning
+        io: i
+        field: ZNAM FALSE
+        field: ONAM TRUE
+        field: DESC Interlocks Warning
+    '}	
+	bWarning : BOOL;
+	
     // TRUE if we're in an error state
     {attribute 'pytmc' := '
         pv: PLC:bError

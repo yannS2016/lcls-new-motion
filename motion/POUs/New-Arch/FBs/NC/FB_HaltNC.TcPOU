@@ -73,6 +73,14 @@ END_VAR
 THIS^.iMotionLogger := iMotionLogger;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="ClearStatus" Id="{22a58216-660c-4b25-a8ed-e863b8c537cb}">
+      <Declaration><![CDATA[METHOD ClearStatus
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Clear previous status: MC_Halt auto clear this bit when Done is set.
+fbMcHalt(Execute := FALSE,  Axis := THIS^.AxisRef);]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="CommandHalt" Id="{bbacc6b5-2150-42a2-9054-67af9aca1473}">
       <Declaration><![CDATA[PROPERTY CommandHalt : BOOL
 ]]></Declaration>
@@ -157,14 +165,6 @@ fbMcHalt(Execute := TRUE,
     Jerk := Jerk,
     BufferMode := BufferMode);
 ]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="HaltDone" Id="{22a58216-660c-4b25-a8ed-e863b8c537cb}">
-      <Declaration><![CDATA[METHOD HaltDone
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[// Clear previous status: MC_Halt auto clear this bit when Done is set.
-fbMcHalt(Execute := FALSE,  Axis := THIS^.AxisRef);]]></ST>
       </Implementation>
     </Method>
     <Property Name="Message" Id="{08e92b01-505f-4268-a83e-cb2252382ca8}">

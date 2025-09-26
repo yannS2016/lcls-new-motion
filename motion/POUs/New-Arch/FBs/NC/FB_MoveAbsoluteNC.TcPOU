@@ -72,6 +72,13 @@ END_VAR
 THIS^.iMotionLogger := iMotionLogger;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="CLearStatus" Id="{3fe76b74-fe86-4466-8693-db038a37c0ad}">
+      <Declaration><![CDATA[METHOD CLearStatus
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbMcMoveAbsolute(Execute := FALSE, Axis := THIS^.AxisRef);]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="CommandMoveAbsolute" Id="{7bbe24c9-46f3-48a9-9a5a-f238ba708042}">
       <Declaration><![CDATA[PROPERTY CommandMoveAbsolute : BOOL
 ]]></Declaration>
@@ -172,13 +179,6 @@ fbMcMoveAbsolute(
         BufferMode := BufferMode
 );
 ]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="MoveAbsoluteDone" Id="{3fe76b74-fe86-4466-8693-db038a37c0ad}">
-      <Declaration><![CDATA[METHOD MoveAbsoluteDone
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[fbMcMoveAbsolute(Execute := FALSE, Axis := THIS^.AxisRef);]]></ST>
       </Implementation>
     </Method>
   </POU>

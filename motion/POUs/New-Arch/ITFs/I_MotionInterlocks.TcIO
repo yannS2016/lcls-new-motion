@@ -33,18 +33,6 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Property Name="InterlockEvent" Id="{4626fde1-1a12-4e8c-af56-a81a21e2e625}">
-      <Declaration><![CDATA[PROPERTY InterlockEvent : BOOL]]></Declaration>
-      <Get Name="Get" Id="{46f4e7d2-165f-43e2-b11a-41b0ae0b097d}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
-    <Property Name="LimHome" Id="{afb29fce-e002-4581-b44c-7cdfce3976d7}">
-      <Declaration><![CDATA[PROPERTY LimHome : BOOL]]></Declaration>
-      <Get Name="Get" Id="{c5ce7826-2bcf-4ef7-a3c3-f2af2474caae}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
     <Property Name="Message" Id="{9f0d5caf-5e8b-49a6-9cb6-a74ac978daca}">
       <Declaration><![CDATA[PROPERTY Message : T_MAXSTRING]]></Declaration>
       <Get Name="Get" Id="{5e7d9b57-4a23-4d1a-ae3d-a3c1e73b4ad0}">
@@ -81,10 +69,9 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
-    <Property Name="Warning" Id="{91e00cec-1c9c-45a9-adce-d11447c803e6}">
-      <Declaration><![CDATA[PROPERTY Warning : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{24c57123-3d83-4dfc-8d6f-96a327d66a69}">
+    <Property Name="Warning" Id="{30aedff3-6dda-49b4-9b04-d1c5bce530df}">
+      <Declaration><![CDATA[PROPERTY Warning : BOOL]]></Declaration>
+      <Get Name="Get" Id="{ae87cb53-e5aa-4c45-a014-84be50c80211}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>

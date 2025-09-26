@@ -237,7 +237,7 @@ END_IF]]></ST>
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[Aborted := fbMcHome.CommandAborted;]]></ST>
+          <ST><![CDATA[Aborted := THIS^.bAborted;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -277,6 +277,15 @@ END_VAR
         <ST><![CDATA[THIS^.AxisRef REF= AxisRef;
 THIS^.iMotionLogger := iMotionLogger;
 THIS^.iLimSwStatus:= iLimSwStatus;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ClearStatus" Id="{54788af1-1f98-4fe2-912d-c988adacf6f9}">
+      <Declaration><![CDATA[METHOD ClearStatus
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.StopHome();
+// Override this as the call is a reinit one this time around.
+THIS^.bAborted          := FALSE; ]]></ST>
       </Implementation>
     </Method>
     <Property Name="Done" Id="{a400b97e-6245-4667-8036-7fb53f8ce97f}">
@@ -467,7 +476,6 @@ fbMcSetPosition(
     Mode    := 0,
     Position:= THIS^.fPosition
 );
-
 // 2. Clear/latch all home execution state
 THIS^.bHomeRequested    := FALSE;
 THIS^.bExecLatched      := FALSE;

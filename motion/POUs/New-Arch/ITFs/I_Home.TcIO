@@ -3,6 +3,12 @@
   <Itf Name="I_Home" Id="{b2162ae7-b954-447f-934b-6cfe92c3e8fb}">
     <Declaration><![CDATA[INTERFACE I_Home EXTENDS I_StatusEx
 ]]></Declaration>
+    <Method Name="ClearStatus" Id="{6379a40b-94e8-40d5-a374-fa2fec2dfe73}">
+      <Declaration><![CDATA[METHOD ClearStatus
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
     <Method Name="Home" Id="{33465a37-8a78-445e-9579-3e71296ed69d}">
       <Declaration><![CDATA[METHOD  Home : BOOL
 VAR_INPUT

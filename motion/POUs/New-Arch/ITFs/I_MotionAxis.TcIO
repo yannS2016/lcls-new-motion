@@ -22,6 +22,30 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
+    <Method Name="ClearHaltStatus" Id="{82ddacec-70b6-479e-92f4-829c8fc195ef}">
+      <Declaration><![CDATA[METHOD ClearHaltStatus
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="ClearHomeStatus" Id="{b5d86b1d-bc4c-40bb-9252-141621ed9d09}">
+      <Declaration><![CDATA[METHOD ClearHomeStatus
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="ClearMoveAbsoluteStatus" Id="{665540cc-b90e-43d0-84fc-ce2fd1d0ba73}">
+      <Declaration><![CDATA[METHOD ClearMoveAbsoluteStatus
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="ClearResetStatus" Id="{0015b9f1-a510-4692-b355-009b1830367b}">
+      <Declaration><![CDATA[METHOD ClearResetStatus
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
     <Method Name="DisablePower" Id="{7294e34a-a76e-4522-b500-8ef9e848f17a}">
       <Declaration><![CDATA[METHOD DisablePower
 VAR_INPUT
@@ -66,12 +90,6 @@ VAR_INPUT
     BufferMode	: MC_BufferMode := MC_BufferMode.MC_Aborting;
 END_VAR]]></Declaration>
     </Method>
-    <Method Name="MoveAbsoluteDone" Id="{665540cc-b90e-43d0-84fc-ce2fd1d0ba73}">
-      <Declaration><![CDATA[METHOD MoveAbsoluteDone
-VAR_INPUT
-END_VAR
-]]></Declaration>
-    </Method>
     <Method Name="Power" Id="{0f111fce-47b1-4257-a122-9207c35b0527}">
       <Declaration><![CDATA[METHOD Power
 VAR_INPUT
@@ -93,18 +111,6 @@ END_VAR
     </Method>
     <Method Name="Reset" Id="{7a4653ab-674a-4e3f-8902-d38983bd8a4e}">
       <Declaration><![CDATA[METHOD Reset
-VAR_INPUT
-END_VAR
-]]></Declaration>
-    </Method>
-    <Method Name="ResetDone" Id="{0015b9f1-a510-4692-b355-009b1830367b}">
-      <Declaration><![CDATA[METHOD ResetDone
-VAR_INPUT
-END_VAR
-]]></Declaration>
-    </Method>
-    <Method Name="ResetExecute" Id="{82ddacec-70b6-479e-92f4-829c8fc195ef}">
-      <Declaration><![CDATA[METHOD ResetExecute
 VAR_INPUT
 END_VAR
 ]]></Declaration>

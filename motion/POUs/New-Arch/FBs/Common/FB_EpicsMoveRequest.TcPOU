@@ -343,12 +343,15 @@ END_IF
       </Implementation>
     </Method>
     <Method Name="ResetMoveEnable" Id="{f28760d0-5752-4bf4-b850-362b1de6a659}">
-      <Declaration><![CDATA[METHOD ResetMoveEnable
+      <Declaration><![CDATA[METHOD ResetMoveEnable : BOOL
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF stMotionRequestStatus.bPrepareDisable THEN
     IF THIS^.eEnableMode=E_StageEnableMode.DURING_MOTION THEN
         THIS^.stMotionRequestStatus.bEnable := FALSE;
+		ResetMoveEnable := TRUE;
+	ELSE
+		ResetMoveEnable := FALSE;
     END_IF
     THIS^.stMotionRequestStatus.bPrepareDisable := FALSE;
 END_IF]]></ST>

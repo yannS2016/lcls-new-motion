@@ -4,7 +4,7 @@
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionInterlocksLimSw IMPLEMENTS I_MotionInterlocks
 VAR
     {attribute 'no_copy'}
-    stMotionCommand : REFERENCE TO ST_MotionCommand;
+    //stMotionCommand : REFERENCE TO ST_MotionCommand;
     {attribute 'hide'}
     iMotionInterlocksCommon : I_MotionInterlocksCommon;
     {attribute 'hide'}
@@ -38,10 +38,6 @@ VAR
     {attribute 'hide'}
     rtReset : R_TRIG;
     {attribute 'hide'}
-    bLimHitIdling : BOOL;
-    {attribute 'hide'}
-    bLimHitMoving : BOOL;
-    {attribute 'hide'}
     bWarning: BOOL;
     {attribute 'hide'}
     bPositiveDirection : BOOL;
@@ -74,8 +70,6 @@ IF NOT bHomeBusy AND (
     ELSIF NOT bMoveBackwardEnabled THEN
         sMessage := 'Cannot move past Negative limit.';
     END_IF
-
-    bWarning := TRUE;
     bLimHit := TRUE;
     iMotionLogger.Logger(
         Message := sMessage,
@@ -87,7 +81,6 @@ IF NOT bHomeBusy AND (
 ELSIF rtUserExec.Q THEN
     bLimHit := FALSE;
     sMessage := '';
-    bWarning := FALSE;
 END_IF
 
 // --- 5. Error takes priority over warnings ---
@@ -184,45 +177,6 @@ THIS^.iLimSwStatus := iLimSwStatus;
 THIS^.iMotionLogger := iMotionLogger;]]></ST>
       </Implementation>
     </Method>
-    <Property Name="InterlockEvent" Id="{90152201-0cb8-4e2b-9fb0-8f192f34ce29}">
-      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
-PROPERTY InterlockEvent : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{16e8058e-055d-48ff-8e34-1f0e748f484e}">
-        <Declaration><![CDATA[
-VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[InterlockEvent := bLimHit;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="LimHit" Id="{99748d3e-ad89-4681-8215-b6eb2ee6603f}">
-      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
-PROPERTY LimHit : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{50f740a6-00fb-4f30-ab85-95696b18566f}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[Limhit := bLimHit;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="LimHome" Id="{d5157c5a-4054-44c2-818a-302abd310796}">
-      <Declaration><![CDATA[PROPERTY LimHome : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{dbb7e89e-2740-4276-887e-2d4fa207f175}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[LimHome := iLimSwStatus.LimitHome;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
     <Property Name="Message" Id="{8ea093d5-4ffa-4429-b651-9948334398fd}">
       <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
 PROPERTY Message : T_MAXSTRING
@@ -293,23 +247,21 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.bLimHit := FALSE;
-THIS^.bLimHitMoving := bLimHit;
-THIS^.bLimHitIdling := bLimHit;
 THIS^.sMessage := '';
 THIS^.bWarning := FALSE;
 THIS^.iMotionInterlocksCommon.Reset();]]></ST>
       </Implementation>
     </Method>
-    <Property Name="Warning" Id="{ba7c0972-da36-446e-8dbf-91b3341a7d36}">
+    <Property Name="Warning" Id="{99748d3e-ad89-4681-8215-b6eb2ee6603f}">
       <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
 PROPERTY Warning : BOOL
 ]]></Declaration>
-      <Get Name="Get" Id="{e6861a3a-a44e-404c-bd2f-06269abd46b3}">
+      <Get Name="Get" Id="{50f740a6-00fb-4f30-ab85-95696b18566f}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[Warning := THIS^.bWarning;]]></ST>
+          <ST><![CDATA[Warning := bLimHit;]]></ST>
         </Implementation>
       </Get>
     </Property>
