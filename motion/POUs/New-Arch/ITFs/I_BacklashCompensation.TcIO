@@ -17,6 +17,12 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
+    <Method Name="ClearStatus" Id="{ddea3c50-d1c1-4f1d-b872-442b9915424d}">
+      <Declaration><![CDATA[METHOD ClearStatus
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
     <Property Name="CurrentBacklash" Id="{ff081112-3182-493d-846e-c2192c5f77d6}">
       <Declaration><![CDATA[PROPERTY CurrentBacklash : LREAL]]></Declaration>
       <Get Name="Get" Id="{5dbd065d-c6db-421a-8993-7aa4f3a00024}">
