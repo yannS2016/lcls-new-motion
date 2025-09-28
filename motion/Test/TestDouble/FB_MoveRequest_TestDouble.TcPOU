@@ -184,5 +184,13 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="StopMoveRequest" Id="{cc33e6ce-4ce5-45af-9a6f-6eb33782b35a}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD StopMoveRequest
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
   </POU>
 </TcPlcObject>

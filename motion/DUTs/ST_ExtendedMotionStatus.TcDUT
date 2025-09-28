@@ -13,6 +13,7 @@ STRUCT
 	bAborted : BOOL;
 	bLimHomeDone : BOOL;
 	bNewMoveReq : BOOL;
+	bExecute : BOOL;
 	bEnable : BOOL;
 	bIdling : BOOL;
 END_STRUCT

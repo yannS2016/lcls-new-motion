@@ -5,9 +5,9 @@
 STRUCT
     bEnable: BOOL;
     bNewMoveReq: BOOL;
+	bExecute: BOOL;
     nCmdData: INT;
     nCommand: INT;
-	bExecute : BOOL;
     bExecHome: BOOL;
 	bHomeEnablewOverride : BOOL;
     bExecMove: BOOL;

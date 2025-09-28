@@ -136,23 +136,23 @@ VAR
 	bSaveAxisParams : BOOL;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// 1. Coordination/orchestration logic; these now use status from axis/interlocks
-HandleMoveRequest();
-// 2. High-level coordination blocks (requests, state machine, brake)
-fbMoveRequest();
-// 3. Send Request status to interlocks
-SendRequestStatusToInterlocks();
-
-// 4. Read hardware limit switches (always first)
+      <ST><![CDATA[// 1. Read all hardware/limit switch input and axis status first.
 fbLimSwStatus();
-// 3. Interlocks: update with latest axis status
+UpdateInterlockAxisStatus();
 fbMotionInterlocksCommon();
 fbMotionInterlocksLimSw();
 
+// 2. Coordination/orchestration logic (requests, handle user signals, set control flags)
+HandleMoveRequest();
 HandleHalt();
 HandleReset();
 HandlePowerControl();
-// 2. Axis block — calls all its internal NC FBs and aggregates status
+
+// 3. Update request block and propagate to interlocks
+fbMoveRequest();
+SendRequestStatusToInterlocks();
+
+// 4. Call all axis-level or NC low-level blocks (must be called every scan)
 fbReset();
 fbHalt();
 fbPower();
@@ -164,21 +164,22 @@ fbWriteParameter();
 fbParamsSaveRestore();
 fbEncoderScaling();
 fbMotionAxis();
- 
-//-- Interlocks: update with latest axis status
-UpdateInterlockAxisStatus();
 
+// 5. High-level: run state machine, brake, after all axis/NC FBs
 HandleStateMachine();
 fbStateMachine();
 fbBrake();
-// Periodic parameter read/save, if required
+
+// 6. Parameter management: read/save axis parameters as needed
 ReadAxisParameters();
-SaveAxisParameters(Enable:=bSaveAxisParams);
+SaveAxisParameters(Enable := bSaveAxisParams);
+RestoreSettings();
+
+// 7. Error handling/propagation
 HandleErrorPropagation();
-// Diagnostics/EPICS status block (always last)
-UpdateMotionInterfaceStatus();
-//
-RestoreSettings();]]></ST>
+
+// 8. Update diagnostics/status for HMI/EPICS PVs (always after status is most up to date)
+UpdateMotionInterfaceStatus();]]></ST>
     </Implementation>
     <Method Name="AbsoluteMove" Id="{6b96bfb8-b32d-4334-81ff-c0392805e3a2}">
       <Declaration><![CDATA[METHOD AbsoluteMove
@@ -385,7 +386,7 @@ THIS^.sName := sName;
       <Declaration><![CDATA[METHOD Halt
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[stMotionCommand.bExecute:=FALSE;]]></ST>
+        <ST><![CDATA[THIS^.stMotionCommand.bHalt := TRUE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="HandleErrorPropagation" Id="{e9cb52b1-0a2d-4fed-aabd-a100b735fbf3}">
@@ -424,19 +425,19 @@ fbMoveRequest.MoveRequestError(
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[// Halt is always a user stop but not an interlock event or a reset.
-ftstop(CLK:=stMotionCommand.bExecute);
-
-bHandleHalt := NOT stMotionCommand.bReset AND ftstop.Q
-                        AND ((fbMotionAxis.Status.bBusy AND (fbMoveRequest.Status.nCommand=10))
-                        OR (fbMotionAxis.Status.bBusy AND (fbMoveRequest.Status.nCommand=3)));
-rtStop(CLK := bHandleHalt );
-
-IF rtStop.Q THEN
+IF stMotionCommand.bHalt THEN
+	THIS^.fbMoveRequest.StopMoveRequest();
 	IF fbHome.Busy THEN
 		fbHome.StopHome();
 	END_IF
-    fbHalt.Halt(Deceleration := stMotionCommand.fDeceleration);
+	
+	IF NOT stMotionCommand.bReset AND ((fbMotionAxis.Status.bBusy AND (fbMoveRequest.Status.nCommand=10))
+		OR (fbMotionAxis.Status.bBusy AND (fbMoveRequest.Status.nCommand=3))) THEN
+		fbHalt.Halt(Deceleration := stMotionCommand.fDeceleration);		
+	END_IF
+	stMotionCommand.bHalt := FALSE;
 END_IF
+
 
 ]]></ST>
       </Implementation>
@@ -629,7 +630,7 @@ VAR_INPUT
 	Execute : BOOL;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[stMotionCommand.bExecute := Execute;]]></ST>
+        <ST><![CDATA[stMotionCommand.bMoveCmd := Execute;]]></ST>
       </Implementation>
     </Method>
     <Method Name="UpdateInterlockAxisStatus" Id="{ee152f48-cf6d-48de-87b2-feac022c8dfd}">
@@ -693,7 +694,8 @@ stExMotionStatus.bLimHomeDone := fbMotionAxis.Status.bLimHomeDone;
 stExMotionStatus.bDriveWatchDogStatus := fbStateMachine.WatchDogStatus;
 stExMotionStatus.bNewMoveReq := fbMoveRequest.Status.bNewMoveReq;
 stExMotionStatus.bEnable := fbMoveRequest.Status.bEnable;
-stExMotionStatus.bIdling:= fbStateMachine.Idling;]]></ST>
+stExMotionStatus.bIdling:= fbStateMachine.Idling;
+stExMotionStatus.bExecute := fbMoveRequest.Status.bExecute;]]></ST>
       </Implementation>
     </Method>
   </POU>

@@ -426,6 +426,7 @@ END_VAR
         <ST><![CDATA[IF THIS^.stMotionAxisStatus.bError THEN
 	THIS^.iMoveAbsolute.ClearStatus();
 	THIS^.iHome.ClearStatus();	
+	THIS^.iBacklashCompensation.ClearStatus();
 END_IF
 
 THIS^.iReset.Reset();

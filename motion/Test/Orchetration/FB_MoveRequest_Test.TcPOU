@@ -150,11 +150,11 @@ TEST(__POUNAME());
 	);
 	fbMoveRequest();
 	
-	AssertTrue(THIS^.stMotionCommand[10].bExecute, 'bExecute must be set');
+	AssertTrue(fbMoveRequest.stMotionRequestStatus.bExecute, 'bExecute must be set');
 	AssertTrue(fbMoveRequest.Status.bExecute, 'Local execute flag must be set');
 	
 	// Simulate user reset/stop
-	THIS^.stMotionCommand[10].bExecute := FALSE;
+	fbMoveRequest.StopMoveRequest();
 	fbMoveRequest();
 	AssertTrue(fbMoveRequest.Status.bPrepareDisable, 'Request must prepare disable after clear');
 
@@ -407,11 +407,11 @@ END_VAR
 	);
 	fbMoveRequest();
 	
-	AssertTrue(THIS^.stMotionCommand[1].bExecute, 'Execute must be set by now #18');
+	AssertTrue(fbMoveRequest.stMotionRequestStatus.bExecute, 'Execute must be set by now #18');
 	AssertTrue(fbMoveRequest.Status.bExecute, 'Local Execute must be set by now #19');
 	
 	// Simulate user stop
-	THIS^.stMotionCommand[1].bExecute := FALSE;
+	fbMoveRequest.StopMoveRequest();
 	fbMoveRequest();
 	
 	AssertTrue(fbMoveRequest.Status.bPrepareDisable, 'Must be preparing to disable by now #20');

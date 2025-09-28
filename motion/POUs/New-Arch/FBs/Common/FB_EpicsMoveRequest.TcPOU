@@ -53,30 +53,30 @@ rtMoveCmdShortcut(CLK := stMotionCommand.bMoveCmd);
 rtHomeCmdShortcut(CLK := stMotionCommand.bHomeCmd);
 
 // --- Rising edge of move command: issue MOVE_ABSOLUTE ---
-IF rtMoveCmdShortcut.Q AND NOT stMotionCommand.bExecute THEN
-    stMotionCommand.bExecute := TRUE;
+IF rtMoveCmdShortcut.Q AND NOT bExecute THEN
+    bExecute := TRUE;
     stMotionCommand.nCommand := E_EpicsMotorCmd.MOVE_ABSOLUTE;
 
 // --- Rising edge of home command: validate and set HOME mode ---
-ELSIF rtHomeCmdShortcut.Q AND NOT stMotionCommand.bExecute THEN
+ELSIF rtHomeCmdShortcut.Q AND NOT bExecute THEN
     IF IsValidHomeCmd(stMotionCommand.nCmdData) THEN
         IF stMotionCommand.nCmdData = E_EpicsHomeCmd.NONE THEN
-            stMotionCommand.bExecute := FALSE; // Do not execute
+            bExecute := FALSE; // Do not execute
         ELSE
-            stMotionCommand.bExecute := TRUE;  // Valid home: enable
+            bExecute := TRUE;  // Valid home: enable
         END_IF
         stMotionCommand.nCommand := E_EpicsMotorCmd.HOME;
     END_IF
 END_IF
 
 // --- User/EPICS main exec entry ---
-rtUserExec(CLK := stMotionCommand.bExecute);
+rtUserExec(CLK := bExecute);
 
 // --- New move request: rising edge, axis not busy, no error, and interlocks OK ---
 stMotionRequestStatus.bNewMoveReq S= NOT stMotionStatus.bBusy AND rtUserExec.Q AND NOT stMotionStatus.bError AND bMoveOk;
 
 // --- New move stays active until execute ends or error occurs ---
-stMotionRequestStatus.bNewMoveReq R= NOT stMotionCommand.bExecute OR stMotionStatus.bError;
+stMotionRequestStatus.bNewMoveReq R= NOT bExecute OR stMotionStatus.bError;
 
 // --- Prepare disable on end of move ---
 stMotionRequestStatus.bPrepareDisable R= stMotionRequestStatus.bNewMoveReq;
@@ -108,12 +108,12 @@ CASE eEnableMode OF
 END_CASE
 
 // --- Execute if: not error, Execute set, and axis ready ---
-stMotionRequestStatus.bExecute := NOT stMotionStatus.bError AND stMotionCommand.bExecute AND bEnableDone;
+stMotionRequestStatus.bExecute := NOT stMotionStatus.bError AND bExecute AND bEnableDone;
 stMotionRequestStatus.bExecHome := stMotionRequestStatus.bExecute AND stMotionRequestStatus.nCommand = E_EpicsMotorCmd.HOME;
 stMotionRequestStatus.bExecMove := stMotionRequestStatus.bExecute AND NOT stMotionRequestStatus.bExecHome;
 
 // --- Latch axis busy at execute (clear done, busy, error) ---
-rtExecute(CLK := stMotionCommand.bExecute);
+rtExecute(CLK := bExecute);
 IF rtExecute.Q THEN
     InitMoveRequest();
 END_IF
@@ -123,7 +123,7 @@ stMotionCommand.bMoveCmd := FALSE;
 stMotionCommand.bHomeCmd := FALSE;
 
 // --- Prepare to disable at the end of execution (on falling edge) ---
-ftStopExec(CLK := stMotionCommand.bExecute);
+ftStopExec(CLK := bExecute);
 stMotionRequestStatus.bPrepareDisable S= (eEnableMode = E_StageEnableMode.DURING_MOTION) AND ftStopExec.Q;
 
 // --- Reset error message on busy; optional: else show string on error condition ---
@@ -150,7 +150,7 @@ THIS^.stMotionStatus REF=stMotionStatus;
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[// falling edge here when target is reached, move halted
-stMotionCommand.bExecute := FALSE;
+bExecute := FALSE;
 stMotionStatus.bDone := FALSE;
 stMotionStatus.bBusy := FALSE;
 // release the cmds
@@ -206,21 +206,6 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.stMotionCommand REF=stMotionCommand;
 THIS^.stMotionStatus REF=stMotionStatus;]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="HaltMoveRequest" Id="{71c9e391-cb0d-4362-ab43-3cfd1f6c0962}">
-      <Declaration><![CDATA[METHOD HaltMoveRequest : BOOL
-VAR_INPUT
-    Busy	: BOOL;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[// // Halt is always a user stop but not an interlock event or a reset.
-// ftstop(CLK:=stMotionCommand.bExecute);
-// HaltMoveRequest := NOT stMotionCommand.bReset AND ftstop.Q
-//                         AND ((Busy AND (stMotionRequestStatus.nCommand=10))
-//                         OR (Busy AND (stMotionRequestStatus.nCommand=3)));
-]]></ST>
       </Implementation>
     </Method>
     <Method Name="InitMoveRequest" Id="{2d590fc6-f95b-45d5-9e1d-141474a0f09b}">
@@ -335,13 +320,6 @@ END_IF
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="MoveResetDone" Id="{f2401880-c9b3-4971-9d2e-b338ef5fea0a}">
-      <Declaration><![CDATA[METHOD MoveResetDone
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[THIS^.stMotionCommand.bReset := FALSE;]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="ResetMoveEnable" Id="{f28760d0-5752-4bf4-b850-362b1de6a659}">
       <Declaration><![CDATA[METHOD ResetMoveEnable : BOOL
 ]]></Declaration>
@@ -355,13 +333,6 @@ END_IF
     END_IF
     THIS^.stMotionRequestStatus.bPrepareDisable := FALSE;
 END_IF]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="ResetMoveRequest" Id="{90fe06b0-aa4b-458a-9f0e-28628dab07b6}">
-      <Declaration><![CDATA[METHOD ResetMoveRequest
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Method Name="RestoreSettings" Id="{08281416-55cb-4b9c-81b3-3cf6fd0d7faf}">
@@ -409,5 +380,12 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="StopMoveRequest" Id="{92e9d903-c05e-4a96-bba3-dd1393b47659}">
+      <Declaration><![CDATA[METHOD StopMoveRequest
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.bExecute := FALSE;]]></ST>
+      </Implementation>
+    </Method>
   </POU>
 </TcPlcObject>
