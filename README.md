@@ -106,10 +106,10 @@ Below is a sample boilerplate for the motion library. It shows how to create the
 VAR
     fbMotionLogger           : FB_MotionLogger;
     fbPersistentDataStorage  : FB_PersistentDataStorage;
-	{attribute 'pytmc' := '
-		axis-link: GVL_Axes.Axes[1]
-		pv: TST:MOTION:M1
-	'}
+	  {attribute 'pytmc' := '
+		  axis-link: GVL_Axes.Axes[1]
+		  pv: TST:MOTION:M1
+	  '}
     slitX : FB_MotionStageNC(
         sName                   := 'Test2',                  // Name identifier for the motion stage
         AxisRef                 := GVL_Axes.Axes[1],                // Reference to the axis function block
