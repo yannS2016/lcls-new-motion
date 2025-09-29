@@ -4,7 +4,7 @@
     <Declaration><![CDATA[{attribute 'call_after_init'}
 FUNCTION_BLOCK FB_MotionStageNC IMPLEMENTS I_MotionStage
 VAR
-    iMotionLogger : I_MotionLogger;
+
     {attribute 'no_copy'}
     AxisRef : REFERENCE TO AXIS_REF;
    {attribute 'pytmc' := 'pv:'}
@@ -21,13 +21,13 @@ VAR
 	stExMotionStatus : ST_ExtendedMotionStatus;
    {attribute 'hide'}
     iPersistentDataStorage : I_PersistentDataStorage;
-
+    fbMotionLogger : FB_MotionLogger(sName := sName);
     //Brakes : brake fb participate in sync comm with fbMotionDrive, fbMotionAxis and fbMotionInterlocks
     fbBrake : FB_BrakeNC := (BrakeMode := E_StageBrakeMode.IF_MOVING);
     // common interlocks
 	{attribute 'pytmc' := 'pv:'}
     fbMotionInterlocksCommon : FB_MotionInterlocksCommon(
-		iMotionLogger := iMotionLogger, 
+		iMotionLogger := fbMotionLogger, 
 	);
     // stage with Limit switches
     fbLimSwStatus : FB_LimSwStatus();
@@ -35,49 +35,49 @@ VAR
     fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw ( 
 		iMotionInterlocksCommon:=fbMotionInterlocksCommon, 
 		iLimSwStatus:=fbLimSwStatus,
-		iMotionLogger := iMotionLogger
+		iMotionLogger := fbMotionLogger
 	);
 	
 	fbHome : FB_HomeNC(
         AxisRef := AxisRef,
-        iMotionLogger := iMotionLogger,
+        iMotionLogger := fbMotionLogger,
         iLimSwStatus := fbLimSwStatus
     );
 
     fbHalt : FB_HaltNC(
 		AxisRef := AxisRef,
-		iMotionLogger := iMotionLogger
+		iMotionLogger := fbMotionLogger
 	);
 	
     fbPower : FB_PowerNC(
 		AxisRef := AxisRef,
-		iMotionLogger := iMotionLogger
+		iMotionLogger := fbMotionLogger
 	);
 	
     fbReset : FB_ResetNC(
 		AxisRef := AxisRef,
-		iMotionLogger := iMotionLogger
+		iMotionLogger := fbMotionLogger
 	);
 	
     fbMoveAbsolute : FB_MoveAbsoluteNC(
 		AxisRef := AxisRef,
-		iMotionLogger := iMotionLogger
+		iMotionLogger := fbMotionLogger
 	);
 	
     {attribute 'pytmc' := 'pv:'}
     fbReadParameter : FB_ReadParameterNC(
 		AxisRef := AxisRef,
-		iMotionLogger := iMotionLogger
+		iMotionLogger := fbMotionLogger
 	);
     fbWriteParameter : FB_WriteParameterNC(
 		AxisRef := AxisRef, 
-		iMotionLogger := iMotionLogger
+		iMotionLogger := fbMotionLogger
 	);
 	
     fbParamsSaveRestore : FB_ParamsSaveRestoreNC(
         AxisRef := AxisRef,
         iPersistentDataStorage := iPersistentDataStorage,
-		iMotionLogger := iMotionLogger
+		iMotionLogger := fbMotionLogger
     );
 
     {attribute 'pytmc' := 'pv:'}
@@ -86,13 +86,13 @@ VAR
     {attribute 'pytmc' := 'pv:'}
     fbBacklashCompensation : FB_BacklashCompensationNC(
 		AxisRef := AxisRef, 
-		iMotionLogger := iMotionLogger
+		iMotionLogger := fbMotionLogger
 	);
 	
 	{attribute 'pytmc' := 'pv:'}
     fbMotionAxis : FB_MotionAxisNC(
 		AxisRef := AxisRef,
-		iMotionLogger := iMotionLogger,
+		iMotionLogger := fbMotionLogger,
         iHome := fbHome,
         iHalt := fbHalt,
         iPower := fbPower,
@@ -115,7 +115,7 @@ VAR
 		    stMotionCommand:=stMotionCommand,
             iMotionAxis:=fbMotionAxis,
             iMoveRequest:=fbMoveRequest,
-			iMotionLogger := iMotionLogger
+			iMotionLogger := fbMotionLogger
     );
 	
 	fbMotionDrive : FB_MotionDrive(	
@@ -123,7 +123,7 @@ VAR
 		stMotionStatus:=stMotionStatus,
 		stExMotionStatus :=stExMotionStatus,
 		iInterlocks :=fbMotionInterlocksLimSw,
-		iLogger :=iMotionLogger,
+		iLogger :=fbMotionLogger,
 		iAxis:=fbMotionAxis,
 		iMoveRequest :=fbMoveRequest,
 		iStateMachine :=fbStateMachine,
@@ -132,19 +132,6 @@ VAR
     // Name to use for log messages, fast faults, etc.
     {attribute 'hide'}
     sName : T_MaxString;
-    {attribute 'hide'}
-    bError : BOOL;
-    {attribute 'hide'}
-    nErrorId : UDINT;
-    {attribute 'hide'}
-    sErrorMessage : STRING;
-    {attribute 'hide'}
-	rtRestoreDone : R_TRIG;
-    {attribute 'hide'}
-    rtStop : R_TRIG;
-    {attribute 'hide'}
-    ftstop: F_TRIG;
-	bHandleHalt : BOOL;
 	bSaveAxisParams : BOOL;
 END_VAR]]></Declaration>
     <Implementation>
@@ -176,7 +163,10 @@ END_VAR]]></Declaration>
     fbStateMachine();
 
     // 6. Brake and any final safety logic
-    fbBrake();]]></ST>
+    fbBrake();
+	
+	//7. 
+	fbMotionLogger();]]></ST>
     </Implementation>
     <Method Name="AbsoluteMove" Id="{6b96bfb8-b32d-4334-81ff-c0392805e3a2}">
       <Declaration><![CDATA[METHOD AbsoluteMove
@@ -221,66 +211,66 @@ END_VAR
 METHOD PRIVATE CallAfterInit]]></Declaration>
       <Implementation>
         <ST><![CDATA[fbMotionInterlocksCommon.CallAfterInit(
-	iMotionLogger := THIS^.iMotionLogger, 
+	iMotionLogger := THIS^.fbMotionLogger, 
 );
-//fbLimSwStatus.CallAfterInit(iMotionLogger := THIS^.iMotionLogger);
+//fbLimSwStatus.CallAfterInit(iMotionLogger := THIS^.fbMotionLogger);
 fbMotionInterlocksLimSw.CallAfterInit(
 	iMotionInterlocksCommon := THIS^.fbMotionInterlocksCommon,
 	iLimSwStatus := THIS^.fbLimSwStatus,
-	iMotionLogger := THIS^.iMotionLogger
+	iMotionLogger := THIS^.fbMotionLogger
 );
 
 // Pass correctly initialized Motion axis dependencies
 fbHome.CallAfterInit(
         AxisRef := THIS^.AxisRef,
-        iMotionLogger := THIS^.iMotionLogger,
+        iMotionLogger := THIS^.fbMotionLogger,
         iLimSwStatus := THIS^.fbLimSwStatus
 );
 
 fbHalt.CallAfterInit(
 	AxisRef := THIS^.AxisRef,
-	iMotionLogger := THIS^.iMotionLogger
+	iMotionLogger := THIS^.fbMotionLogger
 );
 
 fbPower.CallAfterInit(
 	AxisRef := THIS^.AxisRef,
-	iMotionLogger := iMotionLogger
+	iMotionLogger := THIS^.fbMotionLogger
 );
 
 fbReset.CallAfterInit(
 	AxisRef := THIS^.AxisRef,
-	iMotionLogger := THIS^.iMotionLogger
+	iMotionLogger := THIS^.fbMotionLogger
 );
 
 fbMoveAbsolute.CallAfterInit(
 	AxisRef := THIS^.AxisRef,
-	iMotionLogger := THIS^.iMotionLogger
+	iMotionLogger := THIS^.fbMotionLogger
 );
 
 fbReadParameter.CallAfterInit(
 	AxisRef := THIS^.AxisRef,
-	iMotionLogger := THIS^.iMotionLogger
+	iMotionLogger := THIS^.fbMotionLogger
 );
 
 fbWriteParameter.CallAfterInit(
 	AxisRef := THIS^.AxisRef,
-	iMotionLogger := THIS^.iMotionLogger
+	iMotionLogger := THIS^.fbMotionLogger
 );
 
 fbParamsSaveRestore.CallAfterInit(
 	AxisRef := THIS^.AxisRef,
 	iPersistentDataStorage := THIS^.iPersistentDataStorage,
-	iMotionLogger := THIS^.iMotionLogger
+	iMotionLogger := THIS^.fbMotionLogger
 );
 
 fbBacklashCompensation.CallAfterInit(
 	AxisRef := THIS^.AxisRef,
-	iMotionLogger := THIS^.iMotionLogger
+	iMotionLogger := THIS^.fbMotionLogger
 );
 
 fbMotionAxis.CallAfterInit(
 	AxisRef := THIS^.AxisRef,
-	iMotionLogger := THIS^.iMotionLogger,
+	iMotionLogger := THIS^.fbMotionLogger,
     iHome := THIS^.fbHome,
     iHalt := THIS^.fbHalt,
     iPower := THIS^.fbPower,
@@ -304,7 +294,7 @@ fbMotionDrive.CallAfterInit(
 	stMotionStatus:=THIS^.stMotionStatus,
 	stExMotionStatus :=THIS^.stExMotionStatus,
 	iInterlocks :=THIS^.fbMotionInterlocksLimSw,
-	iLogger :=THIS^.iMotionLogger,
+	iLogger :=THIS^.fbMotionLogger,
 	iAxis:=THIS^.fbMotionAxis,
 	iMoveRequest :=THIS^.fbMoveRequest,
 	iStateMachine :=THIS^.fbStateMachine,
@@ -315,7 +305,7 @@ fbStateMachine.CallAfterInit(
 	iMotionAxis:=THIS^.fbMotionAxis, 
 	iMoveRequest:=THIS^.fbMoveRequest, 
 	stMotionCommand:=THIS^.stMotionCommand,
-	iMotionLogger := THIS^.iMotionLogger
+	iMotionLogger := THIS^.fbMotionLogger
 );]]></ST>
       </Implementation>
     </Method>
@@ -378,14 +368,12 @@ METHOD FB_Init: BOOL
 VAR_INPUT
     bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
-    iMotionLogger : I_MotionLogger;
     AxisRef : REFERENCE TO AXIS_REF;
     iPersistentDataStorage : I_PersistentDataStorage;
     sName : T_MaxString;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.iMotionLogger := iMotionLogger;
-THIS^.AxisRef REF= AxisRef;
+        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;
 THIS^.iPersistentDataStorage := iPersistentDataStorage;
 THIS^.sName := sName;
 ]]></ST>

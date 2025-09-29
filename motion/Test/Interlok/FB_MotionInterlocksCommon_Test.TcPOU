@@ -3,7 +3,7 @@
   <POU Name="FB_MotionInterlocksCommon_Test" Id="{a2005ca9-592c-499d-b205-56dd47273a45}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionInterlocksCommon_Test EXTENDS FB_TestSuite
 VAR
-    fbMotionLogger 		: ARRAY[1..5] OF FB_MotionLogger;
+    fbMotionLogger 		: ARRAY[1..5] OF FB_MotionLogger_TestDouble;
 END_VAR
 ]]></Declaration>
     <Implementation>

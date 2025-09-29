@@ -7,6 +7,7 @@ VAR CONSTANT
 END_VAR
 
 VAR
+	sName : STRING;
     nMaxMsg : UINT := MOTION_LOGGER_MAX_MSGS_SIZE; // configurable max log entries
     sLookedUpMsg :  MOTION_LOGGER_MSG;
     arLogMessages : ARRAY[1..MOTION_LOGGER_MAX_MSGS_SIZE] OF ST_MotionLogMessage;
@@ -23,6 +24,16 @@ END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
+    <Method Name="CallAfterInit" Id="{d4302d3b-22cd-406d-9fd9-8b025b9a67df}">
+      <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
+VAR_INPUT
+    sName : STRING; 
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.sName := sName;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="Clear" Id="{edb8987f-39bb-4563-8f80-7c4b23a878af}">
       <Declaration><![CDATA[METHOD Clear
 VAR
@@ -81,6 +92,21 @@ END_CASE
 ErrorCodeLookup := sLookedUpMsg;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="FB_Init" Id="{53231101-7ddd-4267-8b4d-713e88bd068c}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)  
+    sName : STRING; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.sName := sName;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="GetAllMessages" Id="{3540ecc2-9f2c-4549-8320-157801e499c8}">
       <Declaration><![CDATA[METHOD GetAllMessages : STRING(1024)
 VAR
@@ -133,7 +159,7 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// Prepare record
-logMessage.sSource     := Source;
+logMessage.sSource     := CONCAT(sName, CONCAT(':', Source));
 logMessage.sMessage    := Message;
 logMessage.eLevel      := Level;
 
@@ -156,5 +182,18 @@ END_IF
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="Name" Id="{43875efb-4595-41b3-977c-39d4c1e5cd50}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Name : STRING
+]]></Declaration>
+      <Get Name="Get" Id="{3f7fce66-2c14-4e01-8318-e4be5a7be82e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
   </POU>
 </TcPlcObject>

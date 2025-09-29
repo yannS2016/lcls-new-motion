@@ -14,7 +14,7 @@ END_VAR
       <Declaration><![CDATA[METHOD PRIVATE GetLastWarningMessage_Test1
 VAR_INST
 	logs : STRING(1024);
-	fbMotionLogger : FB_MotionLogger ;
+	fbMotionLogger : FB_MotionLogger(sName:='slitX') ;
 END_VAR
 ]]></Declaration>
       <Implementation>
