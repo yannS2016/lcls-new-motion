@@ -96,10 +96,10 @@ Click for full resolution.
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yannS2016/lcls-new-motion.git```
-
+   git clone https://github.com/yannS2016/lcls-new-motion.git
+```
 ## Usage
-Below is an example of how to instantiate and run the essential components of the motion library in a PLC project. This demonstrates how to create the logger, persistent data storage, axis reference, and motion stage, then call them in the main PLC cycle.
+Below is a sample boiler plate for the motion library. it shows how to create the logger, persistent data storage, axis reference, and motion stage, then call them in the main PLC cycle.
 ## Basic Usage
 ```pascal
 VAR
@@ -121,9 +121,9 @@ fbMotionLogger();
 fbMotionStage();
 ```
 ### Typical Workflow
-How it works
-Logger (FB_MotionLogger): Handles motion-related diagnostics, warnings, and error reporting.
-Persistent Data Storage (FB_PersistentDataStorage): Manages saving and restoring axis parameters and motion state across controller cycles.
-Axis Reference (FB_MotionAxisNC): Represents the underlying axis being controlled—select or replace as appropriate for your hardware.
-Motion Stage (FB_MotionStageNC): The main orchestrator, bringing together axis logic, logging, persistent storage, and command/state coordination.
-All function blocks are called cyclically in the PLC program, ensuring continual updates and coordination
+
+- Logger (FB_MotionLogger): Handles motion-related diagnostics, warnings, and error reporting.
+- Persistent Data Storage (FB_PersistentDataStorage): Manages saving and restoring axis parameters and motion state across controller cycles.
+- Axis Reference (FB_MotionAxisNC): Represents the underlying axis being controlled—select or replace as appropriate for your hardware.
+- Motion Stage (FB_MotionStageNC): The main orchestrator, bringing together axis logic, logging, persistent storage, and command/state coordination.
+- All function blocks are called cyclically in the PLC program, ensuring continual updates and coordination
