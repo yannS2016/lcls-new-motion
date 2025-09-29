@@ -106,11 +106,13 @@ Below is a sample boilerplate for the motion library. It shows how to create the
 VAR
     fbMotionLogger           : FB_MotionLogger;
     fbPersistentDataStorage  : FB_PersistentDataStorage;
-    fbAxisRef                : AXIS_REF
-
-    fbMotionStage : FB_MotionStageNC(
+	  {attribute 'pytmc' := '
+		  axis-link: GVL_Axes.Axes[1]
+		  pv: TST:MOTION:M1
+	  '}
+    slitX : FB_MotionStageNC(
         sName                   := 'Test2',                  // Name identifier for the motion stage
-        AxisRef                 := fbAxisRef,                // Reference to the axis function block
+        AxisRef                 := GVL_Axes.Axes[1],                // Reference to the axis function block
         iMotionLogger           := fbMotionLogger,           // Logger interface
         iPersistentDataStorage  := fbPersistentDataStorage   // Persistent data storage interface
     );
@@ -119,7 +121,7 @@ END_VAR
 // Typical PLC cycle invocation
 fbPersistentDataStorage();
 fbMotionLogger();
-fbMotionStage();
+slitX();
 ```
 ### Typical Workflow
 
