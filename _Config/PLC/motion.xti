@@ -983,7 +983,7 @@ External Setpoint Generation:
 		</DataType>
 	</DataTypes>
 	<Project GUID="{DA380EE4-C409-4A84-97B8-4D1FBAEE5CC8}" Name="motion" PrjFilePath="..\..\motion\motion.plcproj" TmcFilePath="..\..\motion\motion.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{B1DC1552-E6DC-A879-C72D-DAEBCF2602A4}" TmcPath="motion\motion.tmc">
+		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{743024E3-FB03-2D85-158D-98245B051D21}" TmcPath="motion\motion.tmc">
 			<Name>motion Instance</Name>
 			<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 			<Vars VarGrpType="2" ContextId="2" AreaNo="33">
@@ -1125,87 +1125,87 @@ External Setpoint Generation:
 					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdAndAbsoluteSetAndMoveOkThenMoveToUserDefinedHomePosition_Test8_3388__fbMotionStage.fbBrake.bBrakeRelease</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdAndAbsoluteSetAndMoveOkThenMoveToUserDefinedHomePosition_Test8_3472__fbMotionStage.fbBrake.bBrakeRelease</Name>
 					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHighLimitModeForwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test11_3389__fbMotionStage.fbBrake.bBrakeRelease</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHighLimitModeForwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test11_3473__fbMotionStage.fbBrake.bBrakeRelease</Name>
 					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaHighModeForwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test14_3390__fbMotionStage.fbBrake.bBrakeRelease</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaHighModeForwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test14_3474__fbMotionStage.fbBrake.bBrakeRelease</Name>
 					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaHighModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test13_3391__fbMotionStage.fbBrake.bBrakeRelease</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaHighModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test13_3475__fbMotionStage.fbBrake.bBrakeRelease</Name>
 					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaLowModeBackwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test15_3392__fbMotionStage.fbBrake.bBrakeRelease</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaLowModeBackwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test15_3476__fbMotionStage.fbBrake.bBrakeRelease</Name>
 					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaLowModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test12_3393__fbMotionStage.fbBrake.bBrakeRelease</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaLowModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test12_3477__fbMotionStage.fbBrake.bBrakeRelease</Name>
 					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdLowLimitModeAndResetThenAbortHoming_Test16_3394__fbMotionStage.fbBrake.bBrakeRelease</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdLowLimitModeAndResetThenAbortHoming_Test16_3478__fbMotionStage.fbBrake.bBrakeRelease</Name>
 					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdLowLimitModeBackwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test10_3395__fbMotionStage.fbBrake.bBrakeRelease</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdLowLimitModeBackwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test10_3479__fbMotionStage.fbBrake.bBrakeRelease</Name>
 					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdNoneAndMoveOkThenSetHomeFlag_Test9_3396__fbMotionStage.fbBrake.bBrakeRelease</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdNoneAndMoveOkThenSetHomeFlag_Test9_3480__fbMotionStage.fbBrake.bBrakeRelease</Name>
 					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7_3397__fbMotionStage.fbBrake.bBrakeRelease</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7_3481__fbMotionStage.fbBrake.bBrakeRelease</Name>
 					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkAndPositiveBacklashEnabledThenMoveToTargetWithCompensation_Test6_3398__fbMotionStage.fbBrake.bBrakeRelease</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkAndPositiveBacklashEnabledThenMoveToTargetWithCompensation_Test6_3482__fbMotionStage.fbBrake.bBrakeRelease</Name>
 					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkIfHaltThenAbortMove_Test2_3399__fbMotionStage.fbBrake.bBrakeRelease</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkIfHaltThenAbortMove_Test2_3483__fbMotionStage.fbBrake.bBrakeRelease</Name>
 					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkIfResetThenAbortMove_Test1_3400__fbMotionStage.fbBrake.bBrakeRelease</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkIfResetThenAbortMove_Test1_3484__fbMotionStage.fbBrake.bBrakeRelease</Name>
 					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkMoveToTarget1ThenTarget2_Test3_3401__fbMotionStage.fbBrake.bBrakeRelease</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkMoveToTarget1ThenTarget2_Test3_3485__fbMotionStage.fbBrake.bBrakeRelease</Name>
 					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndValidInterlocksThenMoveToTarget_Test4_3402__fbMotionStage.fbBrake.bBrakeRelease</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndValidInterlocksThenMoveToTarget_Test4_3486__fbMotionStage.fbBrake.bBrakeRelease</Name>
 					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdValidInterlockAndWrongMotionParamsThenGotoErrorStateIfResetThenGotoInitState_Test5_3403__fbMotionStage.fbBrake.bBrakeRelease</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdValidInterlockAndWrongMotionParamsThenGotoErrorStateIfResetThenGotoInitState_Test5_3487__fbMotionStage.fbBrake.bBrakeRelease</Name>
 					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__OverallStageFeaturesAndOperationalTests_Test17_3404__fbMotionStage.fbBrake.bBrakeRelease</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__OverallStageFeaturesAndOperationalTests_Test17_3488__fbMotionStage.fbBrake.bBrakeRelease</Name>
 					<Comment><![CDATA[ NC Brake Output: TRUE to release brake]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
@@ -1349,682 +1349,682 @@ External Setpoint Generation:
 					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdAndAbsoluteSetAndMoveOkThenMoveToUserDefinedHomePosition_Test8_3388__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdAndAbsoluteSetAndMoveOkThenMoveToUserDefinedHomePosition_Test8_3472__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
 					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdAndAbsoluteSetAndMoveOkThenMoveToUserDefinedHomePosition_Test8_3388__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdAndAbsoluteSetAndMoveOkThenMoveToUserDefinedHomePosition_Test8_3472__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
 					<Comment><![CDATA[ Hardware 
  NC Forward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdAndAbsoluteSetAndMoveOkThenMoveToUserDefinedHomePosition_Test8_3388__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdAndAbsoluteSetAndMoveOkThenMoveToUserDefinedHomePosition_Test8_3472__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
 					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdAndAbsoluteSetAndMoveOkThenMoveToUserDefinedHomePosition_Test8_3388__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdAndAbsoluteSetAndMoveOkThenMoveToUserDefinedHomePosition_Test8_3472__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
 					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdAndAbsoluteSetAndMoveOkThenMoveToUserDefinedHomePosition_Test8_3388__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdAndAbsoluteSetAndMoveOkThenMoveToUserDefinedHomePosition_Test8_3472__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
 					<Type>ULINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdAndAbsoluteSetAndMoveOkThenMoveToUserDefinedHomePosition_Test8_3388__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdAndAbsoluteSetAndMoveOkThenMoveToUserDefinedHomePosition_Test8_3472__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
 					<Type>UINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdAndAbsoluteSetAndMoveOkThenMoveToUserDefinedHomePosition_Test8_3388__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdAndAbsoluteSetAndMoveOkThenMoveToUserDefinedHomePosition_Test8_3472__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
 					<Type>INT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdAndAbsoluteSetAndMoveOkThenMoveToUserDefinedHomePosition_Test8_3388__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdAndAbsoluteSetAndMoveOkThenMoveToUserDefinedHomePosition_Test8_3472__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
 					<Type>DINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHighLimitModeForwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test11_3389__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHighLimitModeForwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test11_3473__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
 					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHighLimitModeForwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test11_3389__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHighLimitModeForwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test11_3473__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
 					<Comment><![CDATA[ Hardware 
  NC Forward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHighLimitModeForwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test11_3389__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHighLimitModeForwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test11_3473__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
 					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHighLimitModeForwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test11_3389__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHighLimitModeForwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test11_3473__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
 					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHighLimitModeForwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test11_3389__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHighLimitModeForwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test11_3473__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
 					<Type>ULINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHighLimitModeForwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test11_3389__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHighLimitModeForwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test11_3473__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
 					<Type>UINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHighLimitModeForwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test11_3389__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHighLimitModeForwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test11_3473__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
 					<Type>INT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHighLimitModeForwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test11_3389__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHighLimitModeForwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test11_3473__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
 					<Type>DINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaHighModeForwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test14_3390__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaHighModeForwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test14_3474__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
 					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaHighModeForwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test14_3390__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaHighModeForwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test14_3474__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
 					<Comment><![CDATA[ Hardware 
  NC Forward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaHighModeForwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test14_3390__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaHighModeForwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test14_3474__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
 					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaHighModeForwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test14_3390__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaHighModeForwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test14_3474__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
 					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaHighModeForwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test14_3390__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaHighModeForwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test14_3474__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
 					<Type>ULINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaHighModeForwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test14_3390__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaHighModeForwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test14_3474__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
 					<Type>UINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaHighModeForwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test14_3390__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaHighModeForwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test14_3474__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
 					<Type>INT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaHighModeForwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test14_3390__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaHighModeForwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test14_3474__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
 					<Type>DINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaHighModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test13_3391__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaHighModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test13_3475__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
 					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaHighModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test13_3391__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaHighModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test13_3475__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
 					<Comment><![CDATA[ Hardware 
  NC Forward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaHighModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test13_3391__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaHighModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test13_3475__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
 					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaHighModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test13_3391__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaHighModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test13_3475__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
 					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaHighModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test13_3391__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaHighModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test13_3475__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
 					<Type>ULINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaHighModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test13_3391__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaHighModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test13_3475__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
 					<Type>UINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaHighModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test13_3391__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaHighModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test13_3475__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
 					<Type>INT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaHighModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test13_3391__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaHighModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test13_3475__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
 					<Type>DINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaLowModeBackwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test15_3392__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaLowModeBackwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test15_3476__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
 					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaLowModeBackwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test15_3392__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaLowModeBackwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test15_3476__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
 					<Comment><![CDATA[ Hardware 
  NC Forward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaLowModeBackwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test15_3392__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaLowModeBackwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test15_3476__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
 					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaLowModeBackwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test15_3392__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaLowModeBackwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test15_3476__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
 					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaLowModeBackwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test15_3392__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaLowModeBackwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test15_3476__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
 					<Type>ULINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaLowModeBackwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test15_3392__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaLowModeBackwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test15_3476__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
 					<Type>UINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaLowModeBackwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test15_3392__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaLowModeBackwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test15_3476__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
 					<Type>INT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaLowModeBackwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test15_3392__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaLowModeBackwardSwPulseBeforeHomeSwPulseThenMoveToUserDefinePosition_Test15_3476__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
 					<Type>DINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaLowModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test12_3393__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaLowModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test12_3477__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
 					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaLowModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test12_3393__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaLowModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test12_3477__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
 					<Comment><![CDATA[ Hardware 
  NC Forward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaLowModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test12_3393__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaLowModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test12_3477__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
 					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaLowModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test12_3393__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaLowModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test12_3477__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
 					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaLowModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test12_3393__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaLowModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test12_3477__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
 					<Type>ULINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaLowModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test12_3393__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaLowModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test12_3477__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
 					<Type>UINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaLowModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test12_3393__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaLowModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test12_3477__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
 					<Type>INT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdHomeViaLowModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test12_3393__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdHomeViaLowModeHomeSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test12_3477__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
 					<Type>DINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdLowLimitModeAndResetThenAbortHoming_Test16_3394__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdLowLimitModeAndResetThenAbortHoming_Test16_3478__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
 					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdLowLimitModeAndResetThenAbortHoming_Test16_3394__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdLowLimitModeAndResetThenAbortHoming_Test16_3478__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
 					<Comment><![CDATA[ Hardware 
  NC Forward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdLowLimitModeAndResetThenAbortHoming_Test16_3394__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdLowLimitModeAndResetThenAbortHoming_Test16_3478__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
 					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdLowLimitModeAndResetThenAbortHoming_Test16_3394__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdLowLimitModeAndResetThenAbortHoming_Test16_3478__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
 					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdLowLimitModeAndResetThenAbortHoming_Test16_3394__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdLowLimitModeAndResetThenAbortHoming_Test16_3478__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
 					<Type>ULINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdLowLimitModeAndResetThenAbortHoming_Test16_3394__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdLowLimitModeAndResetThenAbortHoming_Test16_3478__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
 					<Type>UINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdLowLimitModeAndResetThenAbortHoming_Test16_3394__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdLowLimitModeAndResetThenAbortHoming_Test16_3478__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
 					<Type>INT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdLowLimitModeAndResetThenAbortHoming_Test16_3394__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdLowLimitModeAndResetThenAbortHoming_Test16_3478__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
 					<Type>DINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdLowLimitModeBackwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test10_3395__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdLowLimitModeBackwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test10_3479__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
 					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdLowLimitModeBackwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test10_3395__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdLowLimitModeBackwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test10_3479__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
 					<Comment><![CDATA[ Hardware 
  NC Forward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdLowLimitModeBackwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test10_3395__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdLowLimitModeBackwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test10_3479__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
 					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdLowLimitModeBackwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test10_3395__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdLowLimitModeBackwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test10_3479__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
 					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdLowLimitModeBackwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test10_3395__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdLowLimitModeBackwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test10_3479__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
 					<Type>ULINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdLowLimitModeBackwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test10_3395__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdLowLimitModeBackwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test10_3479__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
 					<Type>UINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdLowLimitModeBackwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test10_3395__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdLowLimitModeBackwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test10_3479__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
 					<Type>INT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdLowLimitModeBackwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test10_3395__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdLowLimitModeBackwardSwPulseMoveOkThenMoveToUserDefinedHomePosition_Test10_3479__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
 					<Type>DINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdNoneAndMoveOkThenSetHomeFlag_Test9_3396__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdNoneAndMoveOkThenSetHomeFlag_Test9_3480__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
 					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdNoneAndMoveOkThenSetHomeFlag_Test9_3396__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdNoneAndMoveOkThenSetHomeFlag_Test9_3480__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
 					<Comment><![CDATA[ Hardware 
  NC Forward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdNoneAndMoveOkThenSetHomeFlag_Test9_3396__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdNoneAndMoveOkThenSetHomeFlag_Test9_3480__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
 					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdNoneAndMoveOkThenSetHomeFlag_Test9_3396__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdNoneAndMoveOkThenSetHomeFlag_Test9_3480__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
 					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdNoneAndMoveOkThenSetHomeFlag_Test9_3396__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdNoneAndMoveOkThenSetHomeFlag_Test9_3480__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
 					<Type>ULINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdNoneAndMoveOkThenSetHomeFlag_Test9_3396__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdNoneAndMoveOkThenSetHomeFlag_Test9_3480__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
 					<Type>UINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdNoneAndMoveOkThenSetHomeFlag_Test9_3396__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdNoneAndMoveOkThenSetHomeFlag_Test9_3480__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
 					<Type>INT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenHomeCmdNoneAndMoveOkThenSetHomeFlag_Test9_3396__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenHomeCmdNoneAndMoveOkThenSetHomeFlag_Test9_3480__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
 					<Type>DINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7_3397__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7_3481__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
 					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7_3397__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7_3481__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
 					<Comment><![CDATA[ Hardware 
  NC Forward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7_3397__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7_3481__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
 					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7_3397__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7_3481__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
 					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7_3397__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7_3481__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
 					<Type>ULINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7_3397__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7_3481__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
 					<Type>UINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7_3397__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7_3481__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
 					<Type>INT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7_3397__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkAndNegativeBacklashEnabledThenMoveToTargetWithCompensation_Test7_3481__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
 					<Type>DINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkAndPositiveBacklashEnabledThenMoveToTargetWithCompensation_Test6_3398__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkAndPositiveBacklashEnabledThenMoveToTargetWithCompensation_Test6_3482__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
 					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkAndPositiveBacklashEnabledThenMoveToTargetWithCompensation_Test6_3398__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkAndPositiveBacklashEnabledThenMoveToTargetWithCompensation_Test6_3482__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
 					<Comment><![CDATA[ Hardware 
  NC Forward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkAndPositiveBacklashEnabledThenMoveToTargetWithCompensation_Test6_3398__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkAndPositiveBacklashEnabledThenMoveToTargetWithCompensation_Test6_3482__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
 					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkAndPositiveBacklashEnabledThenMoveToTargetWithCompensation_Test6_3398__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkAndPositiveBacklashEnabledThenMoveToTargetWithCompensation_Test6_3482__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
 					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkAndPositiveBacklashEnabledThenMoveToTargetWithCompensation_Test6_3398__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkAndPositiveBacklashEnabledThenMoveToTargetWithCompensation_Test6_3482__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
 					<Type>ULINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkAndPositiveBacklashEnabledThenMoveToTargetWithCompensation_Test6_3398__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkAndPositiveBacklashEnabledThenMoveToTargetWithCompensation_Test6_3482__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
 					<Type>UINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkAndPositiveBacklashEnabledThenMoveToTargetWithCompensation_Test6_3398__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkAndPositiveBacklashEnabledThenMoveToTargetWithCompensation_Test6_3482__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
 					<Type>INT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkAndPositiveBacklashEnabledThenMoveToTargetWithCompensation_Test6_3398__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkAndPositiveBacklashEnabledThenMoveToTargetWithCompensation_Test6_3482__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
 					<Type>DINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkIfHaltThenAbortMove_Test2_3399__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkIfHaltThenAbortMove_Test2_3483__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
 					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkIfHaltThenAbortMove_Test2_3399__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkIfHaltThenAbortMove_Test2_3483__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
 					<Comment><![CDATA[ Hardware 
  NC Forward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkIfHaltThenAbortMove_Test2_3399__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkIfHaltThenAbortMove_Test2_3483__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
 					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkIfHaltThenAbortMove_Test2_3399__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkIfHaltThenAbortMove_Test2_3483__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
 					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkIfHaltThenAbortMove_Test2_3399__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkIfHaltThenAbortMove_Test2_3483__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
 					<Type>ULINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkIfHaltThenAbortMove_Test2_3399__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkIfHaltThenAbortMove_Test2_3483__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
 					<Type>UINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkIfHaltThenAbortMove_Test2_3399__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkIfHaltThenAbortMove_Test2_3483__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
 					<Type>INT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkIfHaltThenAbortMove_Test2_3399__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkIfHaltThenAbortMove_Test2_3483__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
 					<Type>DINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkIfResetThenAbortMove_Test1_3400__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkIfResetThenAbortMove_Test1_3484__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
 					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkIfResetThenAbortMove_Test1_3400__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkIfResetThenAbortMove_Test1_3484__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
 					<Comment><![CDATA[ Hardware 
  NC Forward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkIfResetThenAbortMove_Test1_3400__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkIfResetThenAbortMove_Test1_3484__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
 					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkIfResetThenAbortMove_Test1_3400__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkIfResetThenAbortMove_Test1_3484__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
 					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkIfResetThenAbortMove_Test1_3400__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkIfResetThenAbortMove_Test1_3484__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
 					<Type>ULINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkIfResetThenAbortMove_Test1_3400__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkIfResetThenAbortMove_Test1_3484__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
 					<Type>UINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkIfResetThenAbortMove_Test1_3400__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkIfResetThenAbortMove_Test1_3484__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
 					<Type>INT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkIfResetThenAbortMove_Test1_3400__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkIfResetThenAbortMove_Test1_3484__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
 					<Type>DINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkMoveToTarget1ThenTarget2_Test3_3401__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkMoveToTarget1ThenTarget2_Test3_3485__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
 					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkMoveToTarget1ThenTarget2_Test3_3401__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkMoveToTarget1ThenTarget2_Test3_3485__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
 					<Comment><![CDATA[ Hardware 
  NC Forward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkMoveToTarget1ThenTarget2_Test3_3401__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkMoveToTarget1ThenTarget2_Test3_3485__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
 					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkMoveToTarget1ThenTarget2_Test3_3401__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkMoveToTarget1ThenTarget2_Test3_3485__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
 					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkMoveToTarget1ThenTarget2_Test3_3401__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkMoveToTarget1ThenTarget2_Test3_3485__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
 					<Type>ULINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkMoveToTarget1ThenTarget2_Test3_3401__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkMoveToTarget1ThenTarget2_Test3_3485__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
 					<Type>UINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkMoveToTarget1ThenTarget2_Test3_3401__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkMoveToTarget1ThenTarget2_Test3_3485__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
 					<Type>INT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndMoveOkMoveToTarget1ThenTarget2_Test3_3401__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndMoveOkMoveToTarget1ThenTarget2_Test3_3485__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
 					<Type>DINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndValidInterlocksThenMoveToTarget_Test4_3402__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndValidInterlocksThenMoveToTarget_Test4_3486__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
 					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndValidInterlocksThenMoveToTarget_Test4_3402__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndValidInterlocksThenMoveToTarget_Test4_3486__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
 					<Comment><![CDATA[ Hardware 
  NC Forward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndValidInterlocksThenMoveToTarget_Test4_3402__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndValidInterlocksThenMoveToTarget_Test4_3486__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
 					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndValidInterlocksThenMoveToTarget_Test4_3402__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndValidInterlocksThenMoveToTarget_Test4_3486__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
 					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndValidInterlocksThenMoveToTarget_Test4_3402__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndValidInterlocksThenMoveToTarget_Test4_3486__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
 					<Type>ULINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndValidInterlocksThenMoveToTarget_Test4_3402__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndValidInterlocksThenMoveToTarget_Test4_3486__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
 					<Type>UINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndValidInterlocksThenMoveToTarget_Test4_3402__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndValidInterlocksThenMoveToTarget_Test4_3486__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
 					<Type>INT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdAndValidInterlocksThenMoveToTarget_Test4_3402__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdAndValidInterlocksThenMoveToTarget_Test4_3486__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
 					<Type>DINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdValidInterlockAndWrongMotionParamsThenGotoErrorStateIfResetThenGotoInitState_Test5_3403__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdValidInterlockAndWrongMotionParamsThenGotoErrorStateIfResetThenGotoInitState_Test5_3487__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
 					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdValidInterlockAndWrongMotionParamsThenGotoErrorStateIfResetThenGotoInitState_Test5_3403__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdValidInterlockAndWrongMotionParamsThenGotoErrorStateIfResetThenGotoInitState_Test5_3487__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
 					<Comment><![CDATA[ Hardware 
  NC Forward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdValidInterlockAndWrongMotionParamsThenGotoErrorStateIfResetThenGotoInitState_Test5_3403__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdValidInterlockAndWrongMotionParamsThenGotoErrorStateIfResetThenGotoInitState_Test5_3487__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
 					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdValidInterlockAndWrongMotionParamsThenGotoErrorStateIfResetThenGotoInitState_Test5_3403__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdValidInterlockAndWrongMotionParamsThenGotoErrorStateIfResetThenGotoInitState_Test5_3487__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
 					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdValidInterlockAndWrongMotionParamsThenGotoErrorStateIfResetThenGotoInitState_Test5_3403__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdValidInterlockAndWrongMotionParamsThenGotoErrorStateIfResetThenGotoInitState_Test5_3487__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
 					<Type>ULINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdValidInterlockAndWrongMotionParamsThenGotoErrorStateIfResetThenGotoInitState_Test5_3403__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdValidInterlockAndWrongMotionParamsThenGotoErrorStateIfResetThenGotoInitState_Test5_3487__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
 					<Type>UINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdValidInterlockAndWrongMotionParamsThenGotoErrorStateIfResetThenGotoInitState_Test5_3403__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdValidInterlockAndWrongMotionParamsThenGotoErrorStateIfResetThenGotoInitState_Test5_3487__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
 					<Type>INT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__GivenMoveCmdValidInterlockAndWrongMotionParamsThenGotoErrorStateIfResetThenGotoInitState_Test5_3403__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__GivenMoveCmdValidInterlockAndWrongMotionParamsThenGotoErrorStateIfResetThenGotoInitState_Test5_3487__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
 					<Type>DINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__OverallStageFeaturesAndOperationalTests_Test17_3404__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__OverallStageFeaturesAndOperationalTests_Test17_3488__fbMotionStage.fbMotionInterlocksCommon.bHardwareEnable</Name>
 					<Comment><![CDATA[ NC STO Input: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__OverallStageFeaturesAndOperationalTests_Test17_3404__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__OverallStageFeaturesAndOperationalTests_Test17_3488__fbMotionStage.fbLimSwStatus.bLimitForwardEnable</Name>
 					<Comment><![CDATA[ Hardware 
  NC Forward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__OverallStageFeaturesAndOperationalTests_Test17_3404__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__OverallStageFeaturesAndOperationalTests_Test17_3488__fbMotionStage.fbLimSwStatus.bLimitBackwardEnable</Name>
 					<Comment><![CDATA[ NC Backward Limit Switch: TRUE if ok to move]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__OverallStageFeaturesAndOperationalTests_Test17_3404__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__OverallStageFeaturesAndOperationalTests_Test17_3488__fbMotionStage.fbLimSwStatus.bLimitHome</Name>
 					<Comment><![CDATA[ NO Home Switch: TRUE if at home]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__OverallStageFeaturesAndOperationalTests_Test17_3404__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__OverallStageFeaturesAndOperationalTests_Test17_3488__fbMotionStage.fbEncoderScaling.nRawEncoderULINT</Name>
 					<Type>ULINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__OverallStageFeaturesAndOperationalTests_Test17_3404__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__OverallStageFeaturesAndOperationalTests_Test17_3488__fbMotionStage.fbEncoderScaling.nRawEncoderUINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for UINT (Relative Encoders)]]></Comment>
 					<Type>UINT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__OverallStageFeaturesAndOperationalTests_Test17_3404__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__OverallStageFeaturesAndOperationalTests_Test17_3488__fbMotionStage.fbEncoderScaling.nRawEncoderINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (LVDT)]]></Comment>
 					<Type>INT</Type>
 				</Var>
 				<Var>
-					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3375__OverallStageFeaturesAndOperationalTests_Test17_3404__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
+					<Name>PRG_TEST.fb_MotionStageNC_Test.FB_MotionStageNC_Test_3459__OverallStageFeaturesAndOperationalTests_Test17_3488__fbMotionStage.fbEncoderScaling.nRawEncoderDINT</Name>
 					<Comment><![CDATA[ Raw encoder IO for INT (EL5072 LVDT)]]></Comment>
 					<Type>DINT</Type>
 				</Var>
