@@ -106,7 +106,7 @@ Below is a sample boilerplate for the motion library. It shows how to create the
 VAR
     fbMotionLogger           : FB_MotionLogger;
     fbPersistentDataStorage  : FB_PersistentDataStorage;
-    fbAxisRef                : FB_MotionAxisNC; // Replace with your axis implementation
+    fbAxisRef                : AXIS_REF
 
     fbMotionStage : FB_MotionStageNC(
         sName                   := 'Test2',                  // Name identifier for the motion stage
