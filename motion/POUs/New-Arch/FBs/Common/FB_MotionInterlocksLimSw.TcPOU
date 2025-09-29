@@ -177,6 +177,18 @@ THIS^.iLimSwStatus := iLimSwStatus;
 THIS^.iMotionLogger := iMotionLogger;]]></ST>
       </Implementation>
     </Method>
+    <Property Name="HomeSensor" Id="{47c2924d-823a-4b5a-af71-c2758c4d56fe}">
+      <Declaration><![CDATA[PROPERTY HomeSensor : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{8d440740-e69b-4404-848b-cf7cd0d39f14}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[HomeSensor := THIS^.iLimSwStatus.LimitHome;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="Message" Id="{8ea093d5-4ffa-4429-b651-9948334398fd}">
       <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
 PROPERTY Message : T_MAXSTRING

@@ -343,6 +343,13 @@ THIS^.iHome.Home(
 ]]></ST>
       </Implementation>
     </Method>
+    <Method Name="HomeAbortRecovery" Id="{5b6243f4-0db9-4182-aabf-394889d0a6bd}">
+      <Declaration><![CDATA[METHOD HomeAbortRecovery
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iHome.AbortRecovery();]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="MoveAbsolute" Id="{4f09799f-35f4-498c-b47e-65f81ea0c180}">
       <Declaration><![CDATA[METHOD MoveAbsolute
 VAR_INPUT

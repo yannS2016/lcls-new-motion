@@ -33,6 +33,12 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
+    <Property Name="HomeSensor" Id="{b89e8813-0ee5-4628-bd2c-4be6f31a4e51}">
+      <Declaration><![CDATA[PROPERTY HomeSensor : BOOL]]></Declaration>
+      <Get Name="Get" Id="{f539e5c3-02bb-443e-91d4-c06d6ae6a77f}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Property Name="Message" Id="{9f0d5caf-5e8b-49a6-9cb6-a74ac978daca}">
       <Declaration><![CDATA[PROPERTY Message : T_MAXSTRING]]></Declaration>
       <Get Name="Get" Id="{5e7d9b57-4a23-4d1a-ae3d-a3c1e73b4ad0}">

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="FB_MotionDriveStateMachine_TestDouble" Id="{bd4c0fda-2c0f-4d99-bff0-ed190100a01c}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionDriveStateMachine_TestDouble IMPLEMENTS I_StateMachine
+  <POU Name="FB_StateMachine_TestDouble" Id="{bd4c0fda-2c0f-4d99-bff0-ed190100a01c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_StateMachine_TestDouble IMPLEMENTS I_StateMachine
 VAR
 END_VAR
 ]]></Declaration>
@@ -33,10 +33,19 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="Reset" Id="{383ec148-d063-4e0d-97e4-d0532d5bda33}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD Reset
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="StateMachine" Id="{53a2f700-2d7e-4499-830f-475a67ac2b82}">
       <Declaration><![CDATA[METHOD StateMachine
 VAR_INPUT
-    Error	: BOOL;
+	Error : BOOL;
+	InterlockEvent : BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>

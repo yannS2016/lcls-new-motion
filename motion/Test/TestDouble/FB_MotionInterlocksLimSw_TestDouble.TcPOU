@@ -55,6 +55,19 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Property Name="HomeSensor" Id="{2760f0fe-2a1a-4add-9034-99f78bf03db8}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY HomeSensor : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{1a71bd82-c6e8-4066-8710-c1c0e8e29cec}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="InterlockEvent" Id="{462e9ab6-e8ad-4dc9-b9b7-9bd40388e72b}">
       <Declaration><![CDATA[PROPERTY InterlockEvent : BOOL
 ]]></Declaration>

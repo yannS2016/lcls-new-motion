@@ -1424,7 +1424,7 @@ External Setpoint Generation:
 			</Relations>
 		</DataType>
 	</DataTypes>
-	<Axis Id="24" CreateSymbols="true" AxisType="1" AxisFolder="UnitTesting\Containers">
+	<Axis Id="24" CreateSymbols="true" AxisType="1" AxisFolder="UnitTesting\Containers" GroupId="6">
 		<Name>__FILENAME__</Name>
 		<ProjectVariant PvUseDisable="true">
 			<Variant>

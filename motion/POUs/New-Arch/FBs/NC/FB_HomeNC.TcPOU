@@ -241,6 +241,37 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="AbortRecovery" Id="{94593668-05c4-46d6-adce-d009b5cea5a9}">
+      <Declaration><![CDATA[METHOD AbortRecovery
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Call this when you detect external halt/reset/request
+
+// 1. Immediately stop MC_Home and MC_SetPosition
+fbMcHome(
+    Execute := FALSE,
+    Axis    := THIS^.AxisRef
+);
+fbMcSetPosition(
+    Execute := FALSE,
+    Axis    := THIS^.AxisRef,
+    Mode    := 0,
+    Position:= THIS^.fPosition
+);
+// 2. Clear/latch all home execution state
+THIS^.bHomeRequested    := FALSE;
+THIS^.bExecLatched      := FALSE;
+THIS^.bStartHoming      := FALSE;
+THIS^.bHomeDone         := FALSE;
+THIS^.bAborted          := TRUE;     
+THIS^.bHLDone           := FALSE;
+THIS^.bHomeSwHitFirst   := FALSE;
+THIS^.bLimitHitFirst    := FALSE;
+
+// 3. Reinitialize substates if present
+THIS^.nHomeState        := 0;]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="Active" Id="{4386ac45-3e88-4c79-8d18-81c7e83c1e8e}">
       <Declaration><![CDATA[PROPERTY Active : BOOL
 ]]></Declaration>
@@ -283,7 +314,7 @@ THIS^.iLimSwStatus:= iLimSwStatus;]]></ST>
       <Declaration><![CDATA[METHOD ClearStatus
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.StopHome();
+        <ST><![CDATA[THIS^.AbortRecovery();
 // Override this as the call is a reinit one this time around.
 THIS^.bAborted          := FALSE; ]]></ST>
       </Implementation>
@@ -459,36 +490,5 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Method Name="StopHome" Id="{94593668-05c4-46d6-adce-d009b5cea5a9}">
-      <Declaration><![CDATA[METHOD StopHome
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[// Call this when you detect external halt/reset/request
-
-// 1. Immediately stop MC_Home and MC_SetPosition
-fbMcHome(
-    Execute := FALSE,
-    Axis    := THIS^.AxisRef
-);
-fbMcSetPosition(
-    Execute := FALSE,
-    Axis    := THIS^.AxisRef,
-    Mode    := 0,
-    Position:= THIS^.fPosition
-);
-// 2. Clear/latch all home execution state
-THIS^.bHomeRequested    := FALSE;
-THIS^.bExecLatched      := FALSE;
-THIS^.bStartHoming      := FALSE;
-THIS^.bHomeDone         := FALSE;
-THIS^.bAborted          := TRUE;     
-THIS^.bHLDone           := FALSE;
-THIS^.bHomeSwHitFirst   := FALSE;
-THIS^.bLimitHitFirst    := FALSE;
-
-// 3. Reinitialize substates if present
-THIS^.nHomeState        := 0;]]></ST>
-      </Implementation>
-    </Method>
   </POU>
 </TcPlcObject>

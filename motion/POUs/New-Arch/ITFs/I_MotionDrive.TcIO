@@ -3,5 +3,12 @@
   <Itf Name="I_MotionDrive" Id="{848572bc-fef8-4708-bb80-0dc37710e2cf}">
     <Declaration><![CDATA[INTERFACE I_MotionDrive
 ]]></Declaration>
+    <Property Name="SaveAxisParams" Id="{88e527c2-7636-499c-8190-d269c27617f6}">
+      <Declaration><![CDATA[PROPERTY SaveAxisParams : BOOL
+]]></Declaration>
+      <Set Name="Set" Id="{7e245f11-24dd-4e06-ae0c-8fcdf753ea2b}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
   </Itf>
 </TcPlcObject>
