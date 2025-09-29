@@ -79,6 +79,12 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
+    <Method Name="HomeAbortRecovery" Id="{59507162-377c-4452-9f5f-0bf36d55f382}">
+      <Declaration><![CDATA[METHOD HomeAbortRecovery
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
     <Method Name="MoveAbsolute" Id="{46300ff6-9821-4909-8063-8bf50bae171f}">
       <Declaration><![CDATA[METHOD MoveAbsolute
 VAR_INPUT

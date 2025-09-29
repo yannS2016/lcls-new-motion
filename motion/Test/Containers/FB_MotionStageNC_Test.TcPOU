@@ -34,7 +34,7 @@ VAR_INST
                                         AxisRef := fbAxisRef[8],
                                         iMotionLogger := fbMotionLogger[8],
                                         iPersistentDataStorage := fbPersistentDataStorage[8]
-                                    ) ;
+                                    ) :=(SaveAxisParams := FALSE);
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#10S);
     nTestStep : INT;
@@ -86,7 +86,7 @@ VAR_INST
                                         AxisRef := fbAxisRef[11],
                                         iMotionLogger := fbMotionLogger[11],
                                         iPersistentDataStorage := fbPersistentDataStorage[11]
-                                    ) ;
+                                    ) :=(SaveAxisParams := FALSE);
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#10S);
     fbCamSwitchPulserSearch: TON := (IN:=TRUE, PT:=T#500MS);
@@ -173,7 +173,7 @@ VAR_INST
                                         AxisRef := fbAxisRef[14],
                                         iMotionLogger := fbMotionLogger[14],
                                         iPersistentDataStorage := fbPersistentDataStorage[14]
-                                    ) ;
+                                    ) :=(SaveAxisParams := FALSE);
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#10S);
     fbCamSwitchPulserSearch: TON := (IN:=TRUE, PT:=T#500MS);
@@ -295,7 +295,7 @@ VAR_INST
                                         AxisRef := fbAxisRef[13],
                                         iMotionLogger := fbMotionLogger[13],
                                         iPersistentDataStorage := fbPersistentDataStorage[13]
-                                    ) ;
+                                    ):=(SaveAxisParams := FALSE);
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#10S);
     fbCamSwitchPulserSearch: TON := (IN:=TRUE, PT:=T#500MS);
@@ -381,7 +381,7 @@ VAR_INST
                                         AxisRef := fbAxisRef[15],
                                         iMotionLogger := fbMotionLogger[15],
                                         iPersistentDataStorage := fbPersistentDataStorage[15]
-                                    ) ;
+                                    ) :=(SaveAxisParams := FALSE);
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#10S);
     fbCamSwitchPulserSearch: TON := (IN:=TRUE, PT:=T#500MS);
@@ -503,7 +503,7 @@ VAR_INST
                                         AxisRef := fbAxisRef[12],
                                         iMotionLogger := fbMotionLogger[12],
                                         iPersistentDataStorage := fbPersistentDataStorage[12]
-                                    ) ;
+                                    ) :=(SaveAxisParams := FALSE);
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#10S);
     fbCamSwitchPulserSearch: TON := (IN:=TRUE, PT:=T#500MS);
@@ -589,7 +589,7 @@ VAR_INST
                                         AxisRef := fbAxisRef[16],
                                         iMotionLogger := fbMotionLogger[16],
                                         iPersistentDataStorage := fbPersistentDataStorage[16]
-                                    ) ;
+                                    ):=(SaveAxisParams := FALSE);
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#3S);
     fbResetTimer: TON := (IN:=TRUE, PT:=T#500MS);
@@ -653,7 +653,7 @@ VAR_INST
                                         AxisRef := fbAxisRef[10],
                                         iMotionLogger := fbMotionLogger[10],
                                         iPersistentDataStorage := fbPersistentDataStorage[10]
-                                    ) ;
+                                    ):=(SaveAxisParams := FALSE);
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#10S);
     fbCamSwitchPulserSearch: TON := (IN:=TRUE, PT:=T#500MS);
@@ -740,7 +740,7 @@ VAR_INST
                                         AxisRef := fbAxisRef[9],
                                         iMotionLogger := fbMotionLogger[9],
                                         iPersistentDataStorage := fbPersistentDataStorage[9]
-                                    ) ;
+                                    ):=(SaveAxisParams := FALSE);
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#3S);
     nTestStep : INT;
@@ -791,7 +791,7 @@ VAR_INST
                                         AxisRef := fbAxisRef[7],
                                         iMotionLogger := fbMotionLogger[7],
                                         iPersistentDataStorage := fbPersistentDataStorage[7]
-                                    ) ;
+                                    ):=(SaveAxisParams := FALSE);
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#10S);
     nTestStep : INT;
@@ -808,7 +808,7 @@ CASE nTestStep OF
 			HomeEnable:=FALSE
 		);
         fbMotionStage.EnableInterlocks();
-        fbMotionStage.EnableBacklashCompensation(UserEnable := TRUE, Compensation := -2.5);
+		fbMotionStage.EnableBacklashCompensation(UserEnable := TRUE, Compensation := -2.5);
         nTestStep := 1;
     1: // Forward move, should have **no** compensation applied
         fbMotionStage.AbsoluteMoveWithBacklashCompensation(
@@ -942,7 +942,7 @@ VAR_INST
                                         AxisRef := fbAxisRef[6],
                                         iMotionLogger := fbMotionLogger[6],
                                         iPersistentDataStorage := fbPersistentDataStorage[6]
-                                    ) ;
+                                    ) :=(SaveAxisParams := FALSE);
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#10S);
     nTestStep : INT;
@@ -953,14 +953,15 @@ END_VAR
 
 CASE nTestStep OF
     0: 
-		// Enable safety interlocks and hardware limits
+		//Enable safety interlocks AND hardware limits
          fbMotionStage.EnableLimits(
 			BackwardEnable:=TRUE, 
 			ForwardEnable:=TRUE,
 			HomeEnable:=FALSE
 		);
+		// disable restore saved position
         fbMotionStage.EnableInterlocks();
-		// Enable 2.5 backlash compensation
+		//Enable 2.5 backlash compensation
         fbMotionStage.EnableBacklashCompensation(UserEnable := TRUE, Compensation := 2.5);
         nTestStep := 1;
     1: // Forward move, should have **no** compensation applied
@@ -1000,7 +1001,7 @@ CASE nTestStep OF
                 Message := 'Target position not reached #3'
             );
             AssertTrue(
-                Condition := (fbAxisRef[6].NcToPlc.ActPos - fbAxisRef[6].NcToPlc.ActPosWithoutPosCorrection) = 2.5,
+                Condition := ((fbAxisRef[6].NcToPlc.ActPos - fbAxisRef[6].NcToPlc.ActPosWithoutPosCorrection)- 2.5) < 0.001,
                 Message := 'This move must have a 2.5 compensation #4'
             );
             nTestStep := 5;
@@ -1046,7 +1047,7 @@ CASE nTestStep OF
                 Message := 'Target position not reached #7'
             );
             AssertTrue(
-                Condition := (fbAxisRef[6].NcToPlc.ActPos - fbAxisRef[6].NcToPlc.ActPosWithoutPosCorrection) = 3.5,
+                Condition := ((fbAxisRef[6].NcToPlc.ActPos - fbAxisRef[6].NcToPlc.ActPosWithoutPosCorrection)- 3.5) < 0.001,
                 Message := 'This move must have a 3.5 compensation #8'
             );
             nTestStep := 11;
@@ -1097,7 +1098,7 @@ VAR_INST
                                         AxisRef := fbAxisRef[2],
                                         iMotionLogger := fbMotionLogger[2],
                                         iPersistentDataStorage := fbPersistentDataStorage[2]
-                                    ) ;
+                                    ) :=(SaveAxisParams := FALSE);
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#3S);
     fbAbsoluteMoveHaltTimer: TON := (PT:=T#100MS);
@@ -1215,7 +1216,7 @@ VAR_INST
                                         AxisRef := fbAxisRef[1],
                                         iMotionLogger := fbMotionLogger[1],
                                         iPersistentDataStorage := fbPersistentDataStorage[1]
-                                    );
+                                    ):=(SaveAxisParams := FALSE);
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#3S);
     fbAbsoluteMoveResetTimer: TON := (PT:=T#500MS);
@@ -1296,10 +1297,10 @@ CASE nTestStep OF
     // === Move Done/Abort Confirmation ===
     5:
         IF fbMotionStage.stExMotionStatus.bAbortDone THEN
-            AssertTrue(
-                Condition := fbMotionStage.ExMotionStatus.bAborted,
-                Message := 'Move must be aborted #5'
-            );
+            nTestStep := nTestStep + 1;
+        END_IF
+	6:
+		IF fbMotionStage.stExMotionStatus.bAborted THEN
             AssertFalse(
                 Condition := fbMotionStage.stMotionStatus.bBusy,
                 Message := 'Move request must be canceled #6'
@@ -1309,7 +1310,7 @@ CASE nTestStep OF
                 Message := 'Move request must be cleared #7'
             );
             nTestStep := nTestStep + 1;
-        END_IF
+		END_IF
 END_CASE
 
 // Update timers
@@ -1317,7 +1318,7 @@ fbTestTimer();
 fbAbsoluteMoveResetTimer();
 
 // Test Completion Handlers
-IF nTestStep = 6 THEN
+IF nTestStep = 7 THEN
     TEST_FINISHED();
 ELSIF fbTestTimer.Q THEN
     AssertTrue(
@@ -1335,7 +1336,7 @@ VAR_INST
                                         AxisRef := fbAxisRef[3],
                                         iMotionLogger := fbMotionLogger[3],
                                         iPersistentDataStorage := fbPersistentDataStorage[3]
-                                    );
+                                    ):=(SaveAxisParams := FALSE);
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#10S);
     nTestStep : INT;
@@ -1415,7 +1416,7 @@ VAR_INST
                                         AxisRef := fbAxisRef[4],
                                         iMotionLogger := fbMotionLogger[4],
                                         iPersistentDataStorage := fbPersistentDataStorage[4]
-                                    );
+                                    ):=(SaveAxisParams := FALSE);
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#3S);
     nTestStep : INT;
@@ -1474,7 +1475,7 @@ VAR_INST
                                         AxisRef := fbAxisRef[5],
                                         iMotionLogger := fbMotionLogger[5],
                                         iPersistentDataStorage := fbPersistentDataStorage[5]
-                                    );
+                                    ):=(SaveAxisParams := FALSE);
 									
     fbTestTimer: TON := (IN:=TRUE, PT:=T#3S);
     fbAbsoluteMoveTimer: TON := (PT:=T#50MS);

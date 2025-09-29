@@ -111,7 +111,7 @@
     </Compile>
     <Compile Include="POUs\New-Arch\FBs\Common\FB_MotionDrive.TcPOU">
       <SubType>Code</SubType>
-      <ExcludeFromBuild>true</ExcludeFromBuild>
+      <ExcludeFromBuild>false</ExcludeFromBuild>
     </Compile>
     <Compile Include="POUs\New-Arch\FBs\Common\FB_MotionInterlocksCommon.TcPOU">
       <SubType>Code</SubType>
@@ -289,7 +289,7 @@
     </Compile>
     <Compile Include="Test\Orchetration\FB_MotionDrive_Test.TcPOU">
       <SubType>Code</SubType>
-      <ExcludeFromBuild>true</ExcludeFromBuild>
+      <ExcludeFromBuild>false</ExcludeFromBuild>
     </Compile>
     <Compile Include="Test\Orchetration\FB_MoveRequest_Test.TcPOU">
       <SubType>Code</SubType>
@@ -337,7 +337,7 @@
     <Compile Include="Test\TestDouble\FB_MotionAxisNC_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Test\TestDouble\FB_MotionDriveStateMachine_TestDouble.TcPOU">
+    <Compile Include="Test\TestDouble\FB_StateMachine_TestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Test\TestDouble\FB_MotionInterlocksCommon_TestDouble.TcPOU">

@@ -13,7 +13,7 @@ TYPE E_EpicsMotorCmd :
     MOVE_MODULO := 4,
     HOME := 10,
     GEAR := 30
-);
+)INT;
 END_TYPE
 ]]></Declaration>
   </DUT>

@@ -130,6 +130,14 @@ END_VAR
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
+    <Method Name="HomeAbortRecovery" Id="{02e07ddf-b481-4070-8ea7-29732202e540}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD HomeAbortRecovery
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="ModeConfigDone" Id="{6077f8c2-be17-4f2f-80dd-8118e460311b}">
       <Declaration><![CDATA[METHOD ModeConfigDone : BOOL
 VAR_INPUT

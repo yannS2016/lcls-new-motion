@@ -10,6 +10,7 @@ VAR
 	fb_MotionInterlocksLimSw_Test : FB_MotionInterlocksLimSw_Test;
 	fb_MotionLogger_Test : FB_MotionLogger_Test;
 	fb_MotionDriveStateMachine_Test : FB_MotionDriveStateMachine_Test;
+	fb_MotionDrive_Test : FB_MotionDrive_Test;
 // 
     {attribute 'TcNcAxis' := '
         .fbAxisRef[1] := Axes_MotionAxis_Test1;
