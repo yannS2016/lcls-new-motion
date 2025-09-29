@@ -65,7 +65,7 @@ All structures are instantiated in `FB_MotionStageNC` and passed by reference to
 - **`I_MotionDrive`**: Defines the drive implementation contract.
 - **`I_MoveRequest`**: Encapsulates move/home/stop request logic.
 - **`I_MotionLogger`**: Decoupled logging and feedback for diagnostics.
-- **`I_MotionInterlocks`**, `I_Brake` and others provide specific concerns for safety, brake control, and error handling.
+- **`I_MotionInterlocks`**, `I_Brake`, and others provide specific concerns for safety, brake control, and error handling.
 
 ### Principal Function Blocks
 
@@ -95,11 +95,12 @@ Click for full resolution.
 ## Installation
 
 1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/yannS2016/lcls-new-motion.git
-```
+   ```
+   bash git clone https://github.com/yannS2016/lcls-new-motion.git
+   ```
+
 ## Usage
-Below is a sample boiler plate for the motion library. it shows how to create the logger, persistent data storage, axis reference, and motion stage, then call them in the main PLC cycle.
+Below is a sample boilerplate for the motion library. It shows how to create the logger, persistent data storage, axis reference, and motion stage, then call them in the main PLC cycle.
 ## Basic Usage
 ```pascal
 VAR
