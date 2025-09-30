@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_Reset" Id="{b13e0a07-13fe-4130-92d2-b67a6bf512d3}">
+    <Declaration><![CDATA[INTERFACE I_Reset  EXTENDS I_StatusEx
+]]></Declaration>
+    <Method Name="ClearStatus" Id="{a7bd0e6f-434f-48fb-a7cc-e5d3abf028b3}">
+      <Declaration><![CDATA[METHOD ClearStatus
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Reset" Id="{6de39cad-1884-4ec7-b494-38b114cd7658}">
+      <Declaration><![CDATA[METHOD Reset
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_MotionLogger_Test" Id="{d95d87fd-299b-4a22-9f20-cceebae3e038}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK INTERNAL FB_MotionLogger_Test EXTENDS FB_TestSuite
+
+VAR
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[GetLastWarningMessage_Test1();]]></ST>
+    </Implementation>
+    <Method Name="GetLastWarningMessage_Test1" Id="{86c45580-5f09-4e83-a7a3-2f36de9a4ff9}">
+      <Declaration><![CDATA[METHOD PRIVATE GetLastWarningMessage_Test1
+VAR_INST
+	logs : STRING(1024);
+	fbMotionLogger : FB_MotionLogger(sName:='slitX') ;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST(__POUNAME());
+fbMotionLogger.Clear();
+fbMotionLogger.Logger(Message := 'One', Level := E_MotionLogLevel.INFO, Source := 'A');
+fbMotionLogger.Logger(Message := 'Two', Level := E_MotionLogLevel.WARNING, Source := 'B');
+fbMotionLogger.Logger(Message := 'Three', Level := E_MotionLogLevel.ERROR, Source := 'C');
+
+logs := fbMotionLogger.GetAllMessages();
+
+AssertTrue(
+    Condition := FIND(logs, 'One') > 0 AND FIND(logs, 'Two') > 0 AND FIND(logs, 'Three') > 0,
+    Message := 'GetAllMessages should include all log entries'
+);
+fbMotionLogger.Clear();
+
+AssertTrue(
+    Condition := fbMotionLogger.GetMessageCount() = 0,
+    Message := 'Logger buffer must be empty'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

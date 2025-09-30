@@ -1,0 +1,486 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_MotionStageNC" Id="{27a9489d-ed3b-4885-89cd-bbc7b70f9440}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'call_after_init'}
+FUNCTION_BLOCK FB_MotionStageNC IMPLEMENTS I_MotionStage
+VAR
+
+    {attribute 'no_copy'}
+    AxisRef : REFERENCE TO AXIS_REF;
+   {attribute 'pytmc' := 'pv:'}
+    stMotionCommand : ST_MotionCommand;
+    // Misc axis status information for the IOC
+    {attribute 'pytmc' := '
+        pv: PLC:AxisStatus
+        io: i
+        field: DESC Axis motion status.
+    '}
+    stMotionStatus: ST_MotionStatus;
+   {attribute 'hide'}
+   {attribute 'pytmc' := 'pv:'}
+	stExMotionStatus : ST_ExtendedMotionStatus;
+   {attribute 'hide'}
+    iPersistentDataStorage : I_PersistentDataStorage;
+    fbMotionLogger : FB_MotionLogger(sName := sName);
+    //Brakes : brake fb participate in sync comm with fbMotionDrive, fbMotionAxis and fbMotionInterlocks
+    fbBrake : FB_BrakeNC := (BrakeMode := E_StageBrakeMode.IF_MOVING);
+    // common interlocks
+	{attribute 'pytmc' := 'pv:'}
+    fbMotionInterlocksCommon : FB_MotionInterlocksCommon(
+		iMotionLogger := fbMotionLogger, 
+	);
+    // stage with Limit switches
+    fbLimSwStatus : FB_LimSwStatus();
+	
+    fbMotionInterlocksLimSw : FB_MotionInterlocksLimSw ( 
+		iMotionInterlocksCommon:=fbMotionInterlocksCommon, 
+		iLimSwStatus:=fbLimSwStatus,
+		iMotionLogger := fbMotionLogger
+	);
+	
+	fbHome : FB_HomeNC(
+        AxisRef := AxisRef,
+        iMotionLogger := fbMotionLogger,
+        iLimSwStatus := fbLimSwStatus
+    );
+
+    fbHalt : FB_HaltNC(
+		AxisRef := AxisRef,
+		iMotionLogger := fbMotionLogger
+	);
+	
+    fbPower : FB_PowerNC(
+		AxisRef := AxisRef,
+		iMotionLogger := fbMotionLogger
+	);
+	
+    fbReset : FB_ResetNC(
+		AxisRef := AxisRef,
+		iMotionLogger := fbMotionLogger
+	);
+	
+    fbMoveAbsolute : FB_MoveAbsoluteNC(
+		AxisRef := AxisRef,
+		iMotionLogger := fbMotionLogger
+	);
+	
+    {attribute 'pytmc' := 'pv:'}
+    fbReadParameter : FB_ReadParameterNC(
+		AxisRef := AxisRef,
+		iMotionLogger := fbMotionLogger
+	);
+    fbWriteParameter : FB_WriteParameterNC(
+		AxisRef := AxisRef, 
+		iMotionLogger := fbMotionLogger
+	);
+	
+    fbParamsSaveRestore : FB_ParamsSaveRestoreNC(
+        AxisRef := AxisRef,
+        iPersistentDataStorage := iPersistentDataStorage,
+		iMotionLogger := fbMotionLogger
+    );
+
+    {attribute 'pytmc' := 'pv:'}
+    fbEncoderScaling : FB_EncoderScaling();
+
+    {attribute 'pytmc' := 'pv:'}
+    fbBacklashCompensation : FB_BacklashCompensationNC(
+		AxisRef := AxisRef, 
+		iMotionLogger := fbMotionLogger
+	);
+	
+	{attribute 'pytmc' := 'pv:'}
+    fbMotionAxis : FB_MotionAxisNC(
+		AxisRef := AxisRef,
+		iMotionLogger := fbMotionLogger,
+        iHome := fbHome,
+        iHalt := fbHalt,
+        iPower := fbPower,
+        iReset := fbReset,
+        iMoveAbsolute := fbMoveAbsolute,
+        iReadParameter := fbReadParameter,
+        iWriteParameter  := fbWriteParameter,
+        iParamsSaveRestore:= fbParamsSaveRestore,
+        iEncoderScaling := fbEncoderScaling,
+        iBacklashCompensation :=fbBacklashCompensation,
+    );
+		// Motion Requests
+	{attribute 'pytmc' := 'pv:'}
+    fbMoveRequest : FB_EpicsMoveRequest(
+		stMotionCommand:=stMotionCommand,
+		stMotionStatus:=stMotionStatus
+	);
+
+    fbStateMachine  : FB_MotionDriveStateMachine(
+		    stMotionCommand:=stMotionCommand,
+            iMotionAxis:=fbMotionAxis,
+            iMoveRequest:=fbMoveRequest,
+			iMotionLogger := fbMotionLogger
+    );
+	
+	fbMotionDrive : FB_MotionDrive(	
+		stMotionCommand :=stMotionCommand,
+		stMotionStatus:=stMotionStatus,
+		stExMotionStatus :=stExMotionStatus,
+		iInterlocks :=fbMotionInterlocksLimSw,
+		iLogger :=fbMotionLogger,
+		iAxis:=fbMotionAxis,
+		iMoveRequest :=fbMoveRequest,
+		iStateMachine :=fbStateMachine,
+		iBrake :=fbBrake
+	);
+    // Name to use for log messages, fast faults, etc.
+    {attribute 'hide'}
+    sName : T_MaxString;
+	bSaveAxisParams : BOOL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// 1. Update all hardware IO/limit/interlock state at the very start
+    fbLimSwStatus();
+    fbMotionInterlocksCommon();
+    fbMotionInterlocksLimSw();
+
+    // 2. Call move request arbitration block (process user/sequencer requests)
+    fbMoveRequest();
+
+    // 3. Call orchestration: requests, coordination, error logic (must come BEFORE NC blocks)
+    fbMotionDrive();
+
+    // 4. All NC-level and axis control function blocks (must be called EVERY scan)
+    fbReset();
+    fbHalt();
+    fbPower();
+    fbBacklashCompensation();
+    fbMoveAbsolute();
+    fbHome();
+    fbReadParameter();
+    fbWriteParameter();
+    fbParamsSaveRestore();
+    fbEncoderScaling();
+    fbMotionAxis();
+
+    // 5. State machine/coordination logic using up-to-date status after NC block execution
+    fbStateMachine();
+
+    // 6. Brake and any final safety logic
+    fbBrake();
+	
+	//7. 
+	fbMotionLogger();]]></ST>
+    </Implementation>
+    <Method Name="AbsoluteMove" Id="{6b96bfb8-b32d-4334-81ff-c0392805e3a2}">
+      <Declaration><![CDATA[METHOD AbsoluteMove
+VAR_INPUT
+	Position :LREAL;
+	Velocity :LREAL;
+	Acceleration :LREAL;
+	Deceleration :LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[stMotionCommand.fPosition := Position;
+stMotionCommand.fVelocity := Velocity;
+stMotionCommand.fAcceleration := Acceleration;
+stMotionCommand.fDeceleration := Deceleration;
+stMotionCommand.fDeceleration := Deceleration;
+stMotionCommand.bMoveCmd := TRUE;
+//stMotionInterface.bExecute:=TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AbsoluteMoveWithBacklashCompensation" Id="{f62f2af9-f0af-4e16-9630-d424e844c1e4}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD AbsoluteMoveWithBacklashCompensation
+VAR_INPUT
+	Position	: LREAL;
+	Velocity	: LREAL;
+	Acceleration	: LREAL;
+	Deceleration	: LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ AbsoluteMove(	
+	Position	:= Position,
+	Velocity	:= Velocity,
+	Acceleration	:= Acceleration,
+	Deceleration	:= Deceleration
+);
+//fbBacklashCompensation.BacklashCompensation(Enable := TRUE, RampVelo := Velocity/10.0);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CallAfterInit" Id="{e7a5e1c3-8324-4257-a302-ab714cb009e4}">
+      <Declaration><![CDATA[{attribute 'call_after_init'}
+METHOD PRIVATE CallAfterInit]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbMotionInterlocksCommon.CallAfterInit(
+	iMotionLogger := THIS^.fbMotionLogger, 
+);
+//fbLimSwStatus.CallAfterInit(iMotionLogger := THIS^.fbMotionLogger);
+fbMotionInterlocksLimSw.CallAfterInit(
+	iMotionInterlocksCommon := THIS^.fbMotionInterlocksCommon,
+	iLimSwStatus := THIS^.fbLimSwStatus,
+	iMotionLogger := THIS^.fbMotionLogger
+);
+
+// Pass correctly initialized Motion axis dependencies
+fbHome.CallAfterInit(
+        AxisRef := THIS^.AxisRef,
+        iMotionLogger := THIS^.fbMotionLogger,
+        iLimSwStatus := THIS^.fbLimSwStatus
+);
+
+fbHalt.CallAfterInit(
+	AxisRef := THIS^.AxisRef,
+	iMotionLogger := THIS^.fbMotionLogger
+);
+
+fbPower.CallAfterInit(
+	AxisRef := THIS^.AxisRef,
+	iMotionLogger := THIS^.fbMotionLogger
+);
+
+fbReset.CallAfterInit(
+	AxisRef := THIS^.AxisRef,
+	iMotionLogger := THIS^.fbMotionLogger
+);
+
+fbMoveAbsolute.CallAfterInit(
+	AxisRef := THIS^.AxisRef,
+	iMotionLogger := THIS^.fbMotionLogger
+);
+
+fbReadParameter.CallAfterInit(
+	AxisRef := THIS^.AxisRef,
+	iMotionLogger := THIS^.fbMotionLogger
+);
+
+fbWriteParameter.CallAfterInit(
+	AxisRef := THIS^.AxisRef,
+	iMotionLogger := THIS^.fbMotionLogger
+);
+
+fbParamsSaveRestore.CallAfterInit(
+	AxisRef := THIS^.AxisRef,
+	iPersistentDataStorage := THIS^.iPersistentDataStorage,
+	iMotionLogger := THIS^.fbMotionLogger
+);
+
+fbBacklashCompensation.CallAfterInit(
+	AxisRef := THIS^.AxisRef,
+	iMotionLogger := THIS^.fbMotionLogger
+);
+
+fbMotionAxis.CallAfterInit(
+	AxisRef := THIS^.AxisRef,
+	iMotionLogger := THIS^.fbMotionLogger,
+    iHome := THIS^.fbHome,
+    iHalt := THIS^.fbHalt,
+    iPower := THIS^.fbPower,
+    iReset := THIS^.fbReset,
+    iMoveAbsolute := THIS^.fbMoveAbsolute,
+    iReadParameter := THIS^.fbReadParameter,
+    iWriteParameter  := THIS^.fbWriteParameter,
+    iParamsSaveRestore:= THIS^.fbParamsSaveRestore,
+    iEncoderScaling := THIS^.fbEncoderScaling,
+    iBacklashCompensation := THIS^.fbBacklashCompensation
+);
+
+
+fbMoveRequest.CallAfterInit(
+	stMotionCommand:= THIS^.stMotionCommand,
+	stMotionStatus:= THIS^.stMotionStatus
+);
+
+fbMotionDrive.CallAfterInit(	
+	stMotionCommand :=THIS^.stMotionCommand,
+	stMotionStatus:=THIS^.stMotionStatus,
+	stExMotionStatus :=THIS^.stExMotionStatus,
+	iInterlocks :=THIS^.fbMotionInterlocksLimSw,
+	iLogger :=THIS^.fbMotionLogger,
+	iAxis:=THIS^.fbMotionAxis,
+	iMoveRequest :=THIS^.fbMoveRequest,
+	iStateMachine :=THIS^.fbStateMachine,
+	iBrake :=THIS^.fbBrake
+);
+	
+fbStateMachine.CallAfterInit(
+	iMotionAxis:=THIS^.fbMotionAxis, 
+	iMoveRequest:=THIS^.fbMoveRequest, 
+	stMotionCommand:=THIS^.stMotionCommand,
+	iMotionLogger := THIS^.fbMotionLogger
+);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="EnableBacklashCompensation" Id="{87740abd-9537-43e7-9863-d2436efc09c8}">
+      <Declaration><![CDATA[METHOD INTERNAL EnableBacklashCompensation
+VAR_INPUT
+    UserEnable : BOOL;
+    Compensation : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.fbMotionAxis.EnableBacklashCompensation(UserEnable:=UserEnable, Compensation:=Compensation);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="EnableInterlocks" Id="{01e88651-9d49-4945-987c-423a0e3265de}">
+      <Declaration><![CDATA[METHOD INTERNAL EnableInterlocks : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.fbMotionInterlocksCommon.EnableInterlocks(
+	UserEnable:=TRUE, 
+	HardwareEnable:=TRUE
+);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="EnableLimits" Id="{a4eaf3aa-cc7c-4de6-ad38-357755265135}">
+      <Declaration><![CDATA[METHOD INTERNAL EnableLimits
+VAR_INPUT
+	ForwardEnable : BOOL;
+	BackwardEnable : BOOL;
+	HomeEnable : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbLimSwStatus.LimitBackwardEnable := BackwardEnable;
+fbLimSwStatus.LimitForwardEnable:=ForwardEnable;
+fbLimSwStatus.LimitHome := HomeEnable ;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="ExMotionStatus" Id="{128987fe-11fc-46a5-8fc4-06563e725a71}">
+      <Declaration><![CDATA[PROPERTY ExMotionStatus : REFERENCE TO ST_ExtendedMotionStatus
+]]></Declaration>
+      <Get Name="Get" Id="{1f210a80-eafc-4a4f-ad0e-cb6763b7d812}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ExMotionStatus REF= stExMotionStatus;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="FB_Init" Id="{fe4c9de1-abf0-4550-ae13-2cd56df378be}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
+    AxisRef : REFERENCE TO AXIS_REF;
+    iPersistentDataStorage : I_PersistentDataStorage;
+    sName : T_MaxString;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.AxisRef REF= AxisRef;
+THIS^.iPersistentDataStorage := iPersistentDataStorage;
+THIS^.sName := sName;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Halt" Id="{2c901b2a-83fd-4fc2-92b8-e5d871ebacc1}">
+      <Declaration><![CDATA[METHOD Halt
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.stMotionCommand.bHalt := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Home" Id="{a2ae8eea-a6b7-4c20-82db-35228737cd92}">
+      <Declaration><![CDATA[METHOD Home
+VAR_INPUT
+	HomePosition	: LREAL;
+	HomeMode	: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.stMotionCommand.fHomePosition := HomePosition;
+THIS^.stMotionCommand.nCmdData := HomeMode;
+THIS^.stMotionCommand.bHomeCmd := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="MotionCmd" Id="{cff885f3-b2ab-45e5-a718-4e59c9412c91}">
+      <Declaration><![CDATA[PROPERTY MotionCmd : REFERENCE TO ST_MotionCommand
+]]></Declaration>
+      <Get Name="Get" Id="{90db2be8-cd32-4e3f-90bd-a14ca62895a8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MotionCmd REF= stMotionCommand;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MotionStatus" Id="{c60f6c35-3f3b-4a35-9111-e841cc53b467}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY MotionStatus : REFERENCE TO ST_MotionStatus
+]]></Declaration>
+      <Get Name="Get" Id="{fdf66257-32b2-45e6-ab38-2579c576b03c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MotionStatus REF= stMotionStatus;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Reset" Id="{d755df2f-0cbd-4c37-abcb-c15d293d7377}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD Reset
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[stMotionCommand.bReset:=TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="SaveAxisParams" Id="{1c83275d-a798-4543-ab85-40d4e4fbf4b9}">
+      <Declaration><![CDATA[PROPERTY SaveAxisParams : BOOL
+]]></Declaration>
+      <Set Name="Set" Id="{c0787a00-6d93-4f83-9563-6e100f349b02}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[THIS^.fbMotionDrive.SaveAxisParams := bSaveAxisParams;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="SetModeEnableLimits" Id="{98961738-8245-4a6d-ad83-dbba42b21c0d}">
+      <Declaration><![CDATA[METHOD INTERNAL SetModeEnableLimits
+VAR_INPUT  
+	LimBackward : BOOL; 
+	LimForward: BOOL; 
+	BrakeMode : E_StageBrakeMode; 
+	EnableMode: ENUM_StageEnableMode; 
+	HomeMode: E_EpicsHomeCmd;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="StateMove" Id="{56faff5b-6abb-4b77-9cef-4400d53a7eb1}">
+      <Declaration><![CDATA[METHOD StateMove
+VAR_INPUT
+	Execute : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[stMotionCommand.bMoveCmd := Execute;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="UpdateInterlockUserEnable" Id="{c607da76-5703-454d-b750-0323f82d2b59}">
+      <Declaration><![CDATA[METHOD INTERNAL UpdateInterlockUserEnable
+VAR_INPUT
+	UserEnable : BOOL;
+	HardwareEnable : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbMotionInterlocksCommon.EnableInterlocks(
+	UserEnable:=UserEnable,
+	HardwareEnable:=HardwareEnable
+);]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

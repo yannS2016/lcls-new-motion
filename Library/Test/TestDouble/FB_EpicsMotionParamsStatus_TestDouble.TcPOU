@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_EpicsMotionParamsStatus_TestDouble" Id="{ad7df8c2-1cd0-44bd-8250-1fe259d88661}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_EpicsMotionParamsStatus_TestDouble IMPLEMENTS I_EpicsMotionParamsStatus
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="MotionParamsAndStatus" Id="{8f7bda7b-2400-4fc0-8724-9d744b9c2bb5}">
+      <Declaration><![CDATA[METHOD MotionParamsAndStatus
+VAR_INPUT
+    PowerEnabled	: BOOL;
+    PowerIsEnabled	: BOOL;
+    Execute	: BOOL;
+    LimHome	: BOOL;
+    MoveBackwardEnabled	: BOOL;
+    MoveForwardEnabled	: BOOL;
+    MeasuredPositionDiff	: LREAL;
+    MeasuredPosition	: LREAL;
+    MeasuredVelocity	: LREAL;
+    PowerOverride	: LREAL;
+    Busy	: BOOL;
+    HomeDone	: BOOL;
+    MotionAxisId : UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

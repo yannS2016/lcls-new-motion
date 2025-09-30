@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_MotionLogMessage" Id="{d440da37-c9e2-434d-b5ca-0c96104eafa1}">
+    <Declaration><![CDATA[TYPE ST_MotionLogMessage :
+STRUCT
+    sSource : STRING(64);
+    sMessage : MOTION_LOGGER_MSG;
+    sTimestamp : STRING(16);
+    eLevel : E_MotionLogLevel;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

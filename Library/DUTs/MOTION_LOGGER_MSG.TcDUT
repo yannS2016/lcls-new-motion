@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="MOTION_LOGGER_MSG" Id="{a5f6d85b-a42a-48cd-968a-055b69703b65}">
+    <Declaration><![CDATA[TYPE MOTION_LOGGER_MSG : STRING(128); END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_BacklashCompensation" Id="{c0dc76c5-ea53-4a27-aade-dbf12ab6b44d}">
+    <Declaration><![CDATA[INTERFACE I_BacklashCompensation EXTENDS I_Error
+]]></Declaration>
+    <Method Name="BacklashCompensation" Id="{3665b988-9224-4240-a54c-db8e420c5cde}">
+      <Declaration><![CDATA[METHOD BacklashCompensation
+VAR_INPUT
+	Enable : BOOL := FALSE;
+	RampVelo : LREAL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="Busy" Id="{e81610e6-4246-42a9-939b-3c713737277b}">
+      <Declaration><![CDATA[PROPERTY Busy : BOOL]]></Declaration>
+      <Get Name="Get" Id="{38e42d74-d048-4efa-9d44-c00553c24d88}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="ClearStatus" Id="{ddea3c50-d1c1-4f1d-b872-442b9915424d}">
+      <Declaration><![CDATA[METHOD ClearStatus
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="CurrentBacklash" Id="{ff081112-3182-493d-846e-c2192c5f77d6}">
+      <Declaration><![CDATA[PROPERTY CurrentBacklash : LREAL]]></Declaration>
+      <Get Name="Get" Id="{5dbd065d-c6db-421a-8993-7aa4f3a00024}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="EnableBacklashCompensation" Id="{e97f2fd7-00e3-4003-9a19-7946698414f6}">
+      <Declaration><![CDATA[METHOD EnableBacklashCompensation
+VAR_INPUT
+    UserEnable : BOOL;
+    Compensation : LREAL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="Status" Id="{dd023d24-4958-4a64-8af6-f09a6b1978e9}">
+      <Declaration><![CDATA[PROPERTY Status : BOOL]]></Declaration>
+      <Get Name="Get" Id="{2244ed4b-ffad-4d7c-8cbb-2047985c42a1}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_ResetNC_TestDouble" Id="{4bec94c2-1fc0-49b9-ba47-4c9ac8090ac3}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_ResetNC_TestDouble IMPLEMENTS  I_Reset
+VAR
+    bError : BOOL;
+    nErrorID : UDINT := 20000;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <CFC>
+        <XmlArchive>
+          <Data>
+            <o xml:space="preserve" t="CFCImplementationObject">
+              <o n="Items" t="CFCItemList">
+                <l2 n="InnerList" />
+              </o>
+              <n n="ParameterInitializationMethodGenerator" />
+              <o n="RoutingPathTable" t="CFCRoutingPathTable">
+                <d2 n="InnerDictionary" />
+              </o>
+              <v n="AutoSizeCanvas">true</v>
+              <v n="CanvasWidth">2</v>
+              <v n="CanvasHeight">2</v>
+              <n n="EditorConfiguration" />
+              <v n="AreElementsSpaceOptimized">true</v>
+            </o>
+          </Data>
+          <TypeList>
+            <Type n="Boolean">System.Boolean</Type>
+            <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
+            <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
+            <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
+            <Type n="Int32">System.Int32</Type>
+          </TypeList>
+        </XmlArchive>
+      </CFC>
+    </Implementation>
+    <Property Name="Aborted" Id="{c44d03a4-d22e-42fe-8e82-58b393ba6d2f}">
+      <Declaration><![CDATA[PROPERTY Aborted : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{118471bb-28b7-41bc-9627-26a38f6d9399}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Active" Id="{5fa2a6b8-e24e-44ea-9d55-fffb9820ab01}">
+      <Declaration><![CDATA[PROPERTY Active : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{ce24c1d7-df8e-4fd0-8c1c-a9afb9182132}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Active := TRUE;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Busy" Id="{61334d3c-93dc-409f-bfb3-3ed8bc09e718}">
+      <Declaration><![CDATA[PROPERTY Busy : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{4b9c2a6b-afeb-4d0b-bb79-b9854f1f2913}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="ClearStatus" Id="{b1bfc581-c709-4547-a6b7-03233b3cf12b}">
+      <Declaration><![CDATA[METHOD ClearStatus
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Done" Id="{ceadc5dc-060c-488d-bae7-f157c6810b13}">
+      <Declaration><![CDATA[PROPERTY Done : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{9a1d1d16-8bf6-40e9-85c6-03942c899ee3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Error" Id="{f938065f-d803-4527-8a7e-2dc1fc85c1a0}">
+      <Declaration><![CDATA[PROPERTY Error : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{ae32733c-1715-491d-a6e4-4ac5b4e14aec}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Error := bError;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{c8450511-ab84-410d-b1ef-070e191692d8}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bError := Error;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="ErrorID" Id="{d6eac62a-3a87-4a2a-a106-c130598846ef}">
+      <Declaration><![CDATA[PROPERTY ErrorID : UDINT
+]]></Declaration>
+      <Get Name="Get" Id="{645fa3d5-92b4-4e15-908a-70447a9daf13}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ErrorId := nErrorID;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{bf681c9e-6414-45f2-8d90-9c511a5151dc}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[nErrorId := ErrorID;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Message" Id="{837bcae6-b221-4858-8b6c-574209efce91}">
+      <Declaration><![CDATA[PROPERTY Message : T_MAXSTRING
+]]></Declaration>
+      <Get Name="Get" Id="{d8cc70db-c18f-4b1b-97bd-30910696c78e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Reset" Id="{baceac4e-8cd9-4713-bb46-b638d35d7dae}">
+      <Declaration><![CDATA[METHOD Reset
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <ObjectProperties>
+      <XmlArchive>
+        <Data>
+          <o xml:space="preserve" t="CFCProperty">
+            <v n="UseExplicitExecutionOrder">false</v>
+          </o>
+        </Data>
+        <TypeList>
+          <Type n="Boolean">System.Boolean</Type>
+          <Type n="CFCProperty">{97c1f2ea-5995-48b9-abd5-a3ab983c5def}</Type>
+        </TypeList>
+      </XmlArchive>
+    </ObjectProperties>
+  </POU>
+</TcPlcObject>

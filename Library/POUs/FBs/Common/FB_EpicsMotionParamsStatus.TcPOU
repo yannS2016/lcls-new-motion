@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_EpicsMotionParamsStatus" Id="{9e14aba8-1e00-4525-b1a9-7974cec06878}" SpecialFunc="None">
+    <Declaration><![CDATA[//////////////////////////////////////////////////////////////////
+// Transfer NC parameter status to EPICS
+//////////////////////////////////////////////////////////////////
+FUNCTION_BLOCK FB_EpicsMotionParamsStatus IMPLEMENTS I_EpicsMotionParamsStatus
+VAR
+       // EPICS Interface
+    {attribute 'no_copy'}
+    stMotionEpicsItf : REFERENCE TO ST_MotionCommand;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="CallAfterInit" Id="{37f41f22-86ac-4ee8-bb54-b88af0913c76}">
+      <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
+VAR_INPUT
+    stMotionItf : REFERENCE TO ST_MotionCommand;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.stMotionEpicsItf REF=stMotionItf;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_Init" Id="{9e59ffaa-a1a6-49d7-8f81-8083125ba204}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
+    stMotionInterface : REFERENCE TO ST_MotionCommand;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.stMotionEpicsItf REF=stMotionInterface;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MotionParamsAndStatus" Id="{f134f110-1d08-4330-b5d0-f1fa3db27f4f}">
+      <Declaration><![CDATA[//////////////////////////////////////////////
+// Transfer NC parameter status to EPICS
+//////////////////////////////////////////////
+METHOD MotionParamsAndStatus
+VAR_INPUT
+    PowerEnabled	: BOOL;
+    PowerIsEnabled	: BOOL;
+    Execute	: BOOL;
+    LimHome	: BOOL;
+    MoveBackwardEnabled	: BOOL;
+    MoveForwardEnabled	: BOOL;
+    MeasuredPositionDiff	: LREAL;
+    MeasuredPosition	: LREAL;
+    MeasuredVelocity	: LREAL;
+    PowerOverride	: LREAL;
+    Busy	: BOOL;
+    HomeDone	: BOOL;
+    MotionAxisId : UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// THIS^.stMotionEpicsItf.stAxisStatus.bEnabled:=PowerIsEnabled;
+// THIS^.stMotionEpicsItf.stAxisStatus.bHomeSensor:=LimHome;
+// THIS^.stMotionEpicsItf.stAxisStatus.bLimitBwd:=MoveBackwardEnabled;
+// THIS^.stMotionEpicsItf.stAxisStatus.bLimitFwd:=MoveForwardEnabled;
+// THIS^.stMotionEpicsItf.stAxisStatus.fActDiff:=MeasuredPositionDiff;
+// THIS^.stMotionEpicsItf.stAxisStatus.fActPosition:=MeasuredPosition;
+// THIS^.stMotionEpicsItf.stAxisStatus.fActVelocity:=MeasuredVelocity;
+// THIS^.stMotionEpicsItf.stAxisStatus.fOverride:=PowerOverride;
+// THIS^.stMotionEpicsItf.stAxisStatus.bBusy:=Busy;
+// THIS^.stMotionEpicsItf.stAxisStatus.bDone:=Done;
+// THIS^.stMotionEpicsItf.stAxisStatus.bHomed:=HomeDone;
+// THIS^.stMotionEpicsItf.stAxisStatus.bError:=Error;
+// THIS^.stMotionEpicsItf.stAxisStatus.nErrorId:=ErrorId;
+// THIS^.stMotionEpicsItf.stAxisStatus.sErrorMessage:=ErrorMessage;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

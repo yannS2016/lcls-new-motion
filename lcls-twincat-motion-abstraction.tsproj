@@ -398,7 +398,7 @@
 			<NC File="NC.xti"/>
 		</Motion>
 		<Plc>
-			<Project File="motion.xti"/>
+			<Project File="Library.xti"/>
 		</Plc>
 		<Io/>
 		<Variants SpecificLocalBootFolder="true">

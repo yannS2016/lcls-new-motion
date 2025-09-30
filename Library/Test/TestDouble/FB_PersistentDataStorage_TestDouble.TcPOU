@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_PersistentDataStorage_TestDouble" Id="{44bca275-b094-4c6c-b0de-84278cf52d1a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_PersistentDataStorage_TestDouble IMPLEMENTS I_PersistentDataStorage
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="TriggerWriteOfPersistentData" Id="{236bb73c-de8d-49a9-bedf-b9e640dcf1eb}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY TriggerWriteOfPersistentData : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{afbc1d73-9208-4dff-a219-f99087ac23a8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{2377f624-d6a9-4b8b-8794-540331f45295}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,281 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_MotionInterlocksLimSw" Id="{3a6698ca-98dc-423f-8e31-b70e68c6cfde}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionInterlocksLimSw IMPLEMENTS I_MotionInterlocks
+VAR
+    {attribute 'no_copy'}
+    //stMotionCommand : REFERENCE TO ST_MotionCommand;
+    {attribute 'hide'}
+    iMotionInterlocksCommon : I_MotionInterlocksCommon;
+    {attribute 'hide'}
+    iLimSwStatus : I_LimSwStatus;
+    {attribute 'hide'}
+    iMotionLogger 		: I_MotionLogger;
+    {attribute 'hide'}
+    sMessage : T_MAXSTRING;
+    {attribute 'hide'}
+    bNewMoveReq : BOOL;
+    {attribute 'hide'}
+    bEnable	: BOOL;
+    {attribute 'hide'}
+    bReset : BOOL;
+    {attribute 'hide'}
+    bMoveOk : BOOL;
+    {attribute 'hide'}
+    bMoveBackwardEnabled : BOOL;
+    {attribute 'hide'}
+    bMoveForwardEnabled  : BOOL;
+    {attribute 'hide'}
+    bPowerEnable : BOOL;
+    {attribute 'hide'}
+    bLimHit : BOOL;
+    {attribute 'hide'}
+    ftForwardEnabled : F_TRIG;
+    {attribute 'hide'}
+    ftBackwardEnabled : F_TRIG;
+    {attribute 'hide'}
+    rtUserExec : R_TRIG;
+    {attribute 'hide'}
+    rtReset : R_TRIG;
+    {attribute 'hide'}
+    bWarning: BOOL;
+    {attribute 'hide'}
+    bPositiveDirection : BOOL;
+    {attribute 'hide'}
+    bNegativeDirection : BOOL;
+    {attribute 'hide'}
+    bHomeBusy : BOOL;
+	nErrorID : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// --- 1. Read current limits and update shared state ---
+bMoveBackwardEnabled := iLimSwStatus.LimitBackwardEnable;
+bMoveForwardEnabled := iLimSwStatus.LimitForwardEnable;
+
+// --- 2. Edge triggers for user exec and limit status changes ---
+rtUserExec(CLK := bNewMoveReq);
+ftForwardEnabled(CLK := bMoveForwardEnabled);
+ftBackwardEnabled(CLK := bMoveBackwardEnabled);
+
+// --- 3. Warning: Attempting to move past limits (not an error) ---
+IF NOT bHomeBusy AND (
+    (ftForwardEnabled.Q AND bPositiveDirection) OR 
+    (ftBackwardEnabled.Q AND bNegativeDirection)
+) THEN
+    // Forward limit violation
+    IF NOT bMoveForwardEnabled THEN
+        sMessage := 'Cannot move past Positive limit.';
+    // Backward limit violation
+    ELSIF NOT bMoveBackwardEnabled THEN
+        sMessage := 'Cannot move past Negative limit.';
+    END_IF
+    bLimHit := TRUE;
+    iMotionLogger.Logger(
+        Message := sMessage,
+        Level := E_MotionLogLevel.WARNING,
+        Source := 'MotionInterlocksLimSw'
+    );
+
+// --- 4. When new move request, clear warnings/flags ---
+ELSIF rtUserExec.Q THEN
+    bLimHit := FALSE;
+    sMessage := '';
+END_IF
+
+// --- 5. Error takes priority over warnings ---
+IF iMotionInterlocksCommon.Error THEN
+    sMessage := iMotionInterlocksCommon.Message;
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="AxisStatus" Id="{e692f6aa-69d1-4745-ae47-3d8e9c172232}">
+      <Declaration><![CDATA[METHOD AxisStatus
+VAR_INPUT
+    HomeBusy	: BOOL;
+    PositiveDirection	: BOOL;
+    NegativeDirection	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.bPositiveDirection := PositiveDirection;
+THIS^.bNegativeDirection := NegativeDirection;
+THIS^.bHomeBusy := HomeBusy;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CallAfterInit" Id="{d259541e-190d-451c-b2cc-cc4fe63dc10d}">
+      <Declaration><![CDATA[METHOD PUBLIC CallAfterInit
+VAR_INPUT
+    iMotionInterlocksCommon : I_MotionInterlocksCommon;
+    iLimSwStatus : I_LimSwStatus;
+    iMotionLogger 		: I_MotionLogger;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iMotionInterlocksCommon := iMotionInterlocksCommon;
+THIS^.iLimSwStatus := iLimSwStatus;
+THIS^.iMotionLogger := iMotionLogger;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DriveCommands" Id="{7d2fc5f4-f440-43f4-a066-d2e570f8099b}">
+      <Declaration><![CDATA[METHOD DriveCommands
+VAR_INPUT
+    MoveEnable: BOOL;
+    NewMoveReq : BOOL;
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.bNewMoveReq:=NewMoveReq;
+// Forward drive cmds to Generic interlocks and lim status FB
+THIS^.iMotionInterlocksCommon.DriveCommands(MoveEnable:=MoveEnable, NewMoveReq:=NewMoveReq);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Error" Id="{04b2e547-bac8-4d7b-ae73-c09a2a0b5110}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
+PROPERTY Error : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{e875a59b-4d08-449e-8c30-aa8bbe87903a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Error := iMotionInterlocksCommon.Error;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ErrorID" Id="{097f4ab2-ea11-48d4-8e76-dfc960d42126}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
+PROPERTY ErrorID : UDINT
+]]></Declaration>
+      <Get Name="Get" Id="{172694b8-8042-4a59-8074-f2f09388a9f6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ErrorID := iMotionInterlocksCommon.ErrorID;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="FB_Init" Id="{e0695441-e16a-4d42-9e82-09383cdd3af0}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
+    iMotionInterlocksCommon : I_MotionInterlocksCommon;
+    iLimSwStatus : I_LimSwStatus;
+    iMotionLogger 		: I_MotionLogger;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iMotionInterlocksCommon  := iMotionInterlocksCommon ;
+THIS^.iLimSwStatus := iLimSwStatus;
+THIS^.iMotionLogger := iMotionLogger;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="HomeSensor" Id="{47c2924d-823a-4b5a-af71-c2758c4d56fe}">
+      <Declaration><![CDATA[PROPERTY HomeSensor : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{8d440740-e69b-4404-848b-cf7cd0d39f14}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[HomeSensor := THIS^.iLimSwStatus.LimitHome;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Message" Id="{8ea093d5-4ffa-4429-b651-9948334398fd}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
+PROPERTY Message : T_MAXSTRING
+]]></Declaration>
+      <Get Name="Get" Id="{b77201ef-c1d0-49de-a15a-8769bd9bba40}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Message := sMessage;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MoveBackwardEnabled" Id="{dc8cd5fb-56d1-4863-af9d-74eb0c125d8d}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
+PROPERTY MoveBackwardEnabled : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{96b49dc2-08c3-4914-8554-05065dc0845d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MoveBackwardEnabled := bMoveBackwardEnabled;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MoveForwardEnabled" Id="{ff4eca56-e0d7-4a4d-9767-1a2e6ba199b1}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
+PROPERTY MoveForwardEnabled : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{8a47d4a2-370c-4112-93c6-e5e40a5bf00d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MoveForwardEnabled := bMoveForwardEnabled;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MoveOk" Id="{011e6648-90be-445b-8b43-809bbb14f6d4}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
+PROPERTY MoveOk : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{6d748934-4b55-4730-8c20-e8455d14e032}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MoveOk := iMotionInterlocksCommon.MoveOk;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="PowerEnabled" Id="{3b6ef10c-a9fe-440c-8397-fe5bb29ada4b}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
+PROPERTY PowerEnabled : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{bb257420-181c-4055-b13a-8105d964c13e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[PowerEnabled := iMotionInterlocksCommon.PowerEnabled;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Reset" Id="{cedcc1a5-1b9b-4d78-9375-b625cd83e0ca}">
+      <Declaration><![CDATA[METHOD Reset
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.bLimHit := FALSE;
+THIS^.sMessage := '';
+THIS^.bWarning := FALSE;
+THIS^.iMotionInterlocksCommon.Reset();]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Warning" Id="{99748d3e-ad89-4681-8215-b6eb2ee6603f}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
+PROPERTY Warning : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{50f740a6-00fb-4f30-ab85-95696b18566f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Warning := bLimHit;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_MotionStatus" Id="{599661fb-9246-4a68-9ba7-2ef6c3f03f60}">
+    <Declaration><![CDATA[TYPE ST_MotionStatus :
+STRUCT
+   {attribute 'pytmc' := '
+        pv: PLC:bLimitFwd
+        io: i
+        field: DESC Error code if nonzero
+    '}
+	bLimitFwd: BOOL;
+
+    {attribute 'pytmc' := '
+        pv: PLC:bLimitBwd
+        io: i
+        field: DESC Error code if nonzero
+    '}
+	bLimitBwd: BOOL;
+
+    {attribute 'pytmc' := '
+        pv: PLC:bHomeSensor
+        io: i
+        field: DESC Error code if nonzero
+    '}
+	bHomeSensor: BOOL;
+
+    {attribute 'pytmc' := '
+        pv: PLC:bEnabled
+        io: i
+        field: DESC Error code if nonzero
+        update: 100Hz notify
+    '}
+	bEnabled: BOOL;
+
+    // Used internally and by the IOC to pick a destination for the move
+    {attribute 'pytmc' := '
+        pv: PLC:fOverride
+        io: i
+        field: DESC Used internally to set power override
+    '}
+	fOverride : LREAL;
+
+    {attribute 'pytmc' := '
+        pv: PLC:fActVelocity
+        io: i
+        field: DESC Error code if nonzero
+    '}
+	fActVelocity: LREAL;
+
+    {attribute 'pytmc' := '
+        pv: PLC:fActPosition
+        io: i
+        field: DESC Error code if nonzero
+    '}
+	fActPosition: LREAL;
+
+    {attribute 'pytmc' := '
+        pv: PLC:fActDiff
+        io: i
+        field: DESC Error code if nonzero
+        update: 100Hz notify
+    '}
+	fActDiff: LREAL;
+
+    // TRUE if in the middle of a command
+    {attribute 'pytmc' := '
+        pv: PLC:bBusy
+        io: i
+        field: ZNAM FALSE
+        field: ONAM TRUE
+        field: DESC TRUE if in the middle of a command
+        update: 100Hz notify
+    '}
+    bBusy: BOOL;
+
+    // TRUE if we've done a command and it has finished
+    {attribute 'pytmc' := '
+        pv: PLC:bDone
+        io: i
+        field: ZNAM FALSE
+        field: ONAM TRUE
+        field: DESC TRUE if we've done a command AND it has finished
+        update: 100Hz notify
+    '}
+    bDone: BOOL;
+
+    // TRUE if the motor has been homed, or does not need to be homed
+    {attribute 'pytmc' := '
+        pv: PLC:bHomed
+        io: i
+        field: ZNAM FALSE
+        field: ONAM TRUE
+        field: DESC TRUE if the motor has been homed, or does not need to be homed
+        update: 100Hz notify
+    '}
+    bHomed: BOOL;
+	
+    {attribute 'pytmc' := '
+        pv: PLC:bWarning
+        io: i
+        field: ZNAM FALSE
+        field: ONAM TRUE
+        field: DESC Interlocks Warning
+    '}	
+	bWarning : BOOL;
+	
+    // TRUE if we're in an error state
+    {attribute 'pytmc' := '
+        pv: PLC:bError
+        io: i
+        field: ZNAM FALSE
+        field: ONAM TRUE
+        field: DESC TRUE if we are in an error state
+        update: 100Hz notify
+    '}
+    bError: BOOL;
+
+    // Error code if nonzero
+    {attribute 'pytmc' := '
+        pv: PLC:nErrorId
+        io: i
+        field: DESC Error code if nonzero
+        update: 100Hz notify
+    '}
+    nErrorId: UDINT;
+
+    // Unique ID assigned to each axis in the NC
+    {attribute 'pytmc' := '
+        pv: PLC:nMotionAxisID
+        io: i
+        field: DESC Unique ID assigned to each axis in the NC
+    '}
+    nMotionAxisID: UDINT:=0;
+
+    // Message to identify the error state
+    {attribute 'pytmc' := '
+        pv: PLC:sErrorMessage
+        io: i
+        field: DESC Message to identify the error state
+        update: 100Hz notify
+    '}
+    sErrorMessage: STRING;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

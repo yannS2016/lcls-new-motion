@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_MotionLogger_TestDouble" Id="{8442344f-b7dd-4d6a-a684-1fd8fe76a797}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionLogger_TestDouble IMPLEMENTS I_MotionLogger
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Clear" Id="{700cd089-5255-48ab-b0ac-d9696853591e}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD Clear
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ErrorCodeLookup" Id="{57c70c9e-79a8-4868-91f2-6ad94f2941a5}">
+      <Declaration><![CDATA[METHOD ErrorCodeLookup : STRING
+VAR_INPUT
+	nErrorId	: UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetAllMessages" Id="{47b21366-5964-42c2-96e2-59304927e81d}">
+      <Declaration><![CDATA[METHOD GetAllMessages :  STRING(1024)
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetMessageCount" Id="{db2cfb9c-56db-4e54-ab8b-8b51ad930e34}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD GetMessageCount : UINT
+VAR_OUTPUT
+	nCount	: UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Logger" Id="{41b373f7-4e68-4a2f-bef2-7f808d9737a0}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD Logger
+VAR_INPUT
+	Message	: STRING;
+	Level	: E_MotionLogLevel := .E_MotionLogLevel.INFO;
+	Source	: STRING := '';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Name" Id="{a1d48af6-c4e9-479f-8e5e-2c8e4f404352}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Name : STRING
+]]></Declaration>
+      <Get Name="Get" Id="{7af4c83a-b130-4525-bb39-98ec1cdc3a66}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>

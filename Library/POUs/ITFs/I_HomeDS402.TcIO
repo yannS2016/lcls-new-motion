@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_HomeDS402" Id="{7f1d3075-62c7-47b5-b35e-42b4971857a7}">
+    <Declaration><![CDATA[INTERFACE I_HomeDS402 EXTENDS I_Home
+]]></Declaration>
+    <Method Name="Status" Id="{a53b6c8c-96e3-4eb0-9dd0-0ee54d847836}">
+      <Declaration><![CDATA[METHOD Status
+VAR_INPUT
+	ModeOfOperationDisplay : SINT;
+	Bit13OpModeSpecific	: BOOL;
+	Bit12OpModeSpecific	: BOOL;
+	TargetReached	: BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>
