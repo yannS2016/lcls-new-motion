@@ -35,5 +35,11 @@ VAR_INPUT
     Source  : STRING := '';
 END_VAR]]></Declaration>
     </Method>
+    <Property Name="Name" Id="{6e33c188-92bc-4132-b7e8-d2172b8babf5}">
+      <Declaration><![CDATA[PROPERTY Name : STRING]]></Declaration>
+      <Get Name="Get" Id="{9b2948a7-ea61-4c72-84b2-8ff692b52f06}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
   </Itf>
 </TcPlcObject>

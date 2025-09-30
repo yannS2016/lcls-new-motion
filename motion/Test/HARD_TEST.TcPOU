@@ -4,12 +4,9 @@
     <Declaration><![CDATA[PROGRAM HARD_TEST
 VAR
     fbAxisRef : AXIS_REF;
-	fbMotionLogger : FB_MotionLogger;
-
 	fbPersistentDataStorage :  FB_PersistentDataStorage;
    	fbMotionStage : FB_MotionStageNC(	sName := 'Test2',
                                         AxisRef := fbAxisRef,
-                                        iMotionLogger := fbMotionLogger,
                                         iPersistentDataStorage := fbPersistentDataStorage
                                     ) ;
     nTestStep : INT;

@@ -3,7 +3,6 @@
   <POU Name="FB_MotionStageNC_Test" Id="{43fc959c-4f0c-48e3-9ba7-5e5e5850d492}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK INTERNAL FB_MotionStageNC_Test EXTENDS FB_TestSuite
 VAR
-    fbMotionLogger : ARRAY[1..17] OF FB_MotionLogger;
     fbPersistentDataStorage :  ARRAY[1..17] OF FB_PersistentDataStorage;
  	fbAxisRef :   ARRAY[1..17] OF AXIS_REF;
 END_VAR
@@ -32,7 +31,6 @@ OverallStageFeaturesAndOperationalTests_Test17();]]></ST>
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test8',
                                         AxisRef := fbAxisRef[8],
-                                        iMotionLogger := fbMotionLogger[8],
                                         iPersistentDataStorage := fbPersistentDataStorage[8]
                                     ) :=(SaveAxisParams := FALSE);
 									
@@ -84,7 +82,6 @@ END_IF]]></ST>
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test11',
                                         AxisRef := fbAxisRef[11],
-                                        iMotionLogger := fbMotionLogger[11],
                                         iPersistentDataStorage := fbPersistentDataStorage[11]
                                     ) :=(SaveAxisParams := FALSE);
 									
@@ -171,7 +168,6 @@ END_IF]]></ST>
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test14',
                                         AxisRef := fbAxisRef[14],
-                                        iMotionLogger := fbMotionLogger[14],
                                         iPersistentDataStorage := fbPersistentDataStorage[14]
                                     ) :=(SaveAxisParams := FALSE);
 									
@@ -293,7 +289,6 @@ END_IF]]></ST>
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test13',
                                         AxisRef := fbAxisRef[13],
-                                        iMotionLogger := fbMotionLogger[13],
                                         iPersistentDataStorage := fbPersistentDataStorage[13]
                                     ):=(SaveAxisParams := FALSE);
 									
@@ -379,7 +374,6 @@ END_IF]]></ST>
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test15',
                                         AxisRef := fbAxisRef[15],
-                                        iMotionLogger := fbMotionLogger[15],
                                         iPersistentDataStorage := fbPersistentDataStorage[15]
                                     ) :=(SaveAxisParams := FALSE);
 									
@@ -501,7 +495,6 @@ END_IF]]></ST>
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test12',
                                         AxisRef := fbAxisRef[12],
-                                        iMotionLogger := fbMotionLogger[12],
                                         iPersistentDataStorage := fbPersistentDataStorage[12]
                                     ) :=(SaveAxisParams := FALSE);
 									
@@ -587,7 +580,6 @@ END_IF]]></ST>
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test16',
                                         AxisRef := fbAxisRef[16],
-                                        iMotionLogger := fbMotionLogger[16],
                                         iPersistentDataStorage := fbPersistentDataStorage[16]
                                     ):=(SaveAxisParams := FALSE);
 									
@@ -651,7 +643,6 @@ END_IF
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test10',
                                         AxisRef := fbAxisRef[10],
-                                        iMotionLogger := fbMotionLogger[10],
                                         iPersistentDataStorage := fbPersistentDataStorage[10]
                                     ):=(SaveAxisParams := FALSE);
 									
@@ -738,7 +729,6 @@ END_IF]]></ST>
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test9',
                                         AxisRef := fbAxisRef[9],
-                                        iMotionLogger := fbMotionLogger[9],
                                         iPersistentDataStorage := fbPersistentDataStorage[9]
                                     ):=(SaveAxisParams := FALSE);
 									
@@ -789,7 +779,6 @@ END_IF]]></ST>
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test7',
                                         AxisRef := fbAxisRef[7],
-                                        iMotionLogger := fbMotionLogger[7],
                                         iPersistentDataStorage := fbPersistentDataStorage[7]
                                     ):=(SaveAxisParams := FALSE);
 									
@@ -940,7 +929,6 @@ END_IF]]></ST>
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test6',
                                         AxisRef := fbAxisRef[6],
-                                        iMotionLogger := fbMotionLogger[6],
                                         iPersistentDataStorage := fbPersistentDataStorage[6]
                                     ) :=(SaveAxisParams := FALSE);
 									
@@ -1096,7 +1084,6 @@ END_IF]]></ST>
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test2',
                                         AxisRef := fbAxisRef[2],
-                                        iMotionLogger := fbMotionLogger[2],
                                         iPersistentDataStorage := fbPersistentDataStorage[2]
                                     ) :=(SaveAxisParams := FALSE);
 									
@@ -1214,7 +1201,6 @@ END_IF]]></ST>
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'TEST1',
                                         AxisRef := fbAxisRef[1],
-                                        iMotionLogger := fbMotionLogger[1],
                                         iPersistentDataStorage := fbPersistentDataStorage[1]
                                     ):=(SaveAxisParams := FALSE);
 									
@@ -1334,7 +1320,6 @@ END_IF]]></ST>
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test3',
                                         AxisRef := fbAxisRef[3],
-                                        iMotionLogger := fbMotionLogger[3],
                                         iPersistentDataStorage := fbPersistentDataStorage[3]
                                     ):=(SaveAxisParams := FALSE);
 									
@@ -1414,7 +1399,6 @@ END_IF]]></ST>
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test4',
                                         AxisRef := fbAxisRef[4],
-                                        iMotionLogger := fbMotionLogger[4],
                                         iPersistentDataStorage := fbPersistentDataStorage[4]
                                     ):=(SaveAxisParams := FALSE);
 									
@@ -1473,7 +1457,6 @@ END_IF]]></ST>
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test5',
                                         AxisRef := fbAxisRef[5],
-                                        iMotionLogger := fbMotionLogger[5],
                                         iPersistentDataStorage := fbPersistentDataStorage[5]
                                     ):=(SaveAxisParams := FALSE);
 									
@@ -1529,7 +1512,6 @@ END_IF]]></ST>
 VAR_INST
    fbMotionStage : FB_MotionStageNC(	sName := 'Test17',
                                         AxisRef := fbAxisRef[17],
-                                        iMotionLogger := fbMotionLogger[17],
                                         iPersistentDataStorage := fbPersistentDataStorage[17]
                                     ) := (SaveAxisParams := FALSE);
 									

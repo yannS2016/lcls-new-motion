@@ -20,7 +20,7 @@
     <Released>false</Released>
     <POUsForPropertyAccessIncluded>false</POUsForPropertyAccessIncluded>
     <GlobalVersionStructureIncluded>false</GlobalVersionStructureIncluded>
-    <ProjectVersion>5.0.0</ProjectVersion>
+    <ProjectVersion>6.0.0</ProjectVersion>
     <Title>LCLS_OMotion</Title>
     <AllowChecksForLibrary>false</AllowChecksForLibrary>
   </PropertyGroup>

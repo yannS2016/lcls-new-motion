@@ -4,7 +4,7 @@
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionAxisNC_Test EXTENDS FB_TestSuite
 VAR
 	fbAxisRef : AXIS_REF;
-	fbMotionLogger : FB_MotionLogger;
+	fbMotionLogger : FB_MotionLogger_TestDouble;
     fbHome : FB_HomeNC_TestDouble;
     fbHalt : FB_HaltNC_TestDouble;
     fbPower : FB_PowerNC_TestDouble;
