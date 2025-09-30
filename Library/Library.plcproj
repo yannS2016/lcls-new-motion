@@ -8,7 +8,7 @@
     <DownloadApplicationInfo>true</DownloadApplicationInfo>
     <WriteProductVersion>false</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
-    <Name>motion</Name>
+    <Name>Library</Name>
     <ProgramVersion>3.1.4026.17</ProgramVersion>
     <Application>{33d664b0-6516-4278-a609-945dc6212735}</Application>
     <TypeSystem>{c65f0172-be58-4007-8d8b-64ba0ae68ce0}</TypeSystem>
@@ -20,9 +20,13 @@
     <Released>false</Released>
     <POUsForPropertyAccessIncluded>false</POUsForPropertyAccessIncluded>
     <GlobalVersionStructureIncluded>false</GlobalVersionStructureIncluded>
-    <ProjectVersion>6.0.0</ProjectVersion>
-    <Title>LCLS_OMotion</Title>
+    <ProjectVersion>1.0.0</ProjectVersion>
+    <Title>lcls-twincat-motion-abstraction</Title>
     <AllowChecksForLibrary>false</AllowChecksForLibrary>
+    <Placeholder>
+    </Placeholder>
+    <Author>YS Mandza</Author>
+    <Description>Motion Abstraction</Description>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DemoTask.TcTTO">
@@ -441,15 +445,15 @@
     </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="motion.tmc">
+    <None Include="Library.tmc">
       <SubType>Content</SubType>
     </None>
   </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-  <Data>
-    <o xml:space="preserve" t="OptionKey">
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -524,15 +528,15 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-  </Data>
-  <TypeList>
-    <Type n="Boolean">System.Boolean</Type>
-    <Type n="Hashtable">System.Collections.Hashtable</Type>
-    <Type n="Int32">System.Int32</Type>
-    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-    <Type n="String">System.String</Type>
-  </TypeList>
-</XmlArchive>
+        </Data>
+        <TypeList>
+          <Type n="Boolean">System.Boolean</Type>
+          <Type n="Hashtable">System.Collections.Hashtable</Type>
+          <Type n="Int32">System.Int32</Type>
+          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+          <Type n="String">System.String</Type>
+        </TypeList>
+      </XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>

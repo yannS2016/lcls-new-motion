@@ -982,9 +982,9 @@ External Setpoint Generation:
 			</Relations>
 		</DataType>
 	</DataTypes>
-	<Project GUID="{DA380EE4-C409-4A84-97B8-4D1FBAEE5CC8}" Name="motion" PrjFilePath="..\..\motion\motion.plcproj" TmcFilePath="..\..\motion\motion.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{7C2020EF-80C9-0FDA-CC47-0CEEF31D81F4}" TmcPath="motion\motion.tmc">
-			<Name>motion Instance</Name>
+	<Project GUID="{DA380EE4-C409-4A84-97B8-4D1FBAEE5CC8}" Name="Library" PrjFilePath="..\..\Library\Library.plcproj" TmcFilePath="..\..\Library\Library.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
+		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{0D013B46-47D1-E9E3-E5A6-6FE7CF9D66EB}" TmcPath="Library\Library.tmc">
+			<Name>Library Instance</Name>
 			<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 			<Vars VarGrpType="2" ContextId="2" AreaNo="33">
 				<Name>UnitTestTask Outputs</Name>
@@ -2223,7 +2223,7 @@ External Setpoint Generation:
 		</Instance>
 	</Project>
 	<Mappings>
-		<OwnerA Name="motion Instance">
+		<OwnerA Name="Library Instance">
 			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axes_MotionAxis_Test1">
 				<Link VarA="UnitTestTask Inputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[1].NcToPlc" VarB="Outputs^ToPlc" AutoLink="true"/>
 				<Link VarA="UnitTestTask Outputs^PRG_TEST.fb_NcMotionBlocks_Test.fbAxisRef[1].PlcToNc" VarB="Inputs^FromPlc" AutoLink="true"/>
