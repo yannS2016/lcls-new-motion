@@ -104,7 +104,6 @@ Below is a sample boilerplate for the motion library. It shows how to create the
 ## Basic Usage
 ```pascal
 VAR
-    fbMotionLogger           : FB_MotionLogger;
     fbPersistentDataStorage  : FB_PersistentDataStorage;
 	  {attribute 'pytmc' := '
 		  axis-link: GVL_Axes.Axes[1]
@@ -112,8 +111,7 @@ VAR
 	  '}
     slitX : FB_MotionStageNC(
         sName                   := 'Test2',                  // Name identifier for the motion stage
-        AxisRef                 := GVL_Axes.Axes[1],                // Reference to the axis function block
-        iMotionLogger           := fbMotionLogger,           // Logger interface
+        AxisRef                 := GVL_Axes.Axes[1],         // Reference to the axis function block
         iPersistentDataStorage  := fbPersistentDataStorage   // Persistent data storage interface
     );
 END_VAR
