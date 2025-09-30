@@ -118,7 +118,6 @@ END_VAR
 
 // Typical PLC cycle invocation
 fbPersistentDataStorage();
-fbMotionLogger();
 slitX();
 ```
 ### Typical Workflow
